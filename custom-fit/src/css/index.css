@@ -1,0 +1,37 @@
+body {
+  display: grid;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  grid-template-columns: repeat(1, 2fr);
+  grid-template-rows: repeat(1, 2fr);
+}
+
+section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  flex-wrap: wrap;
+  margin: auto;
+  height: 85vh;
+}
+
+a {
+  color: white !important;
+}
+
+.navbar.navbar-expand-lg.fixed-top {
+  background-color: transparent !important;
+  color: white !important;
+}
+
+.container .navbar-brand {
+  color: aqua;
+}
+
+.sec1 {
+  background-color: black;
+}
+
+/*# sourceMappingURL=index.css.map */

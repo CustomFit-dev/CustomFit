@@ -1,0 +1,30 @@
+@use 'responsive';
+$bg-color: transparent;
+$text-color: blue;
+
+.navbar.navbar-expand-lg.fixed-top {
+    background-color: $bg-color !important;
+    
+  }
+
+  .container{
+    .navbar-brand{
+        color: aqua;
+    }
+  }
+
+  .sec1{
+    .left-color{
+        width: 50%;
+        flex: 1;
+        background: linear-gradient(to right, #ff0000 50%, #00ff00 50%);
+    }
+
+    .right-color {
+        flex: 1;
+      }
+      
+      .right-color .container {
+        padding: 20px;
+      }
+  }

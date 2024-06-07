@@ -1,0 +1,21 @@
+@use 'responsive';
+$bg-color: transparent;
+
+.navbar.navbar-expand-lg.fixed-top {
+    background-color: $bg-color !important;
+    color: white !important;
+  }
+
+  .container{
+    .navbar-brand{
+        color: aqua;
+
+}
+
+  .sec1{
+    background-color: black;
+  }
+
+  a{
+    color: white;
+  }

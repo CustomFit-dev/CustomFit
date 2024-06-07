@@ -1,0 +1,8 @@
+@use 'responsive';
+$bg-color: transparent;
+$text-color: blue;
+
+.navbar.navbar-expand-lg.fixed-top {
+    background-color: $bg-color !important;
+    color: $text-color !important;
+  }

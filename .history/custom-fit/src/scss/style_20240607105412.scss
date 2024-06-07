@@ -1,0 +1,22 @@
+@use 'responsive';
+$bg-color: transparent;
+$text-color: blue;
+
+.navbar.navbar-expand-lg.fixed-top {
+    background-color: $bg-color !important;
+    color: white !important;
+  }
+
+  .container{
+    .navbar-brand{
+        color: aqua;
+    }
+    .collapse .navbar-collapse{
+        background-color: $bg-color !important;
+        color: $text-color !important;
+    }
+  }
+
+  .sec1{
+    background-color: black;
+  }

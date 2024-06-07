@@ -1,0 +1,19 @@
+import React,{ Fragment } from "react";
+import Header from "./components/header.jsx"
+
+function App() {
+  return (
+    <Fragment>
+
+    <Header />
+    <section className='container'>
+      <div className='container'>
+
+      </div>
+    </section>
+    
+    </Fragment>
+  );
+}
+
+export default App;
