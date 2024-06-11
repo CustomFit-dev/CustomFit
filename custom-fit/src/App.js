@@ -11,6 +11,7 @@ function App() {
       <section className='sec1'> 
         <div className='container'>
           <h1>Hola</h1>
+          <h2></h2>
         </div>
       </section>
     </Fragment>
