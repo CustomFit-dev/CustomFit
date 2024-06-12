@@ -1,5 +1,4 @@
 import React from 'react';
-import '../css/index.css';
 const Header = () => {
     return (
         <nav className="navbar navbar-expand-lg fixed-top">

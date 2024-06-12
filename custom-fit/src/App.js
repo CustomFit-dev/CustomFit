@@ -1,13 +1,14 @@
 import React,{ Fragment } from "react";
-import Header from "./components/header.jsx"
-
+import Header from "./components/header.jsx";
+import Cam from "./img/Camisa-prueba.png";
 function App() {
   return (
     <Fragment>
       <Header />
       <section className='sec1'>
         <div className='container'>
-          <div className='content-container'>
+          <div className='row'>
+            <div className='col'>
             <h1>
               Encuentra la <br /> Inspiración y <br />
               <span className='highlight'>Personaliza</span> con <br /> Nosotros
@@ -16,9 +17,13 @@ function App() {
               <button className='btn btn-primary'>Diseñar ya</button>
               <button className='btn btn-secondary'>Tienda</button>
             </div>
-          </div>
-          <div className='image-container'>
-            <img src='ruta-de-tu-imagen.png' alt='Descripción de la imagen' />
+            </div>
+            <div className="col" id="col2">
+              <div className="image-container">
+                  <img src= {Cam} />
+              </div>
+
+            </div>
           </div>
         </div>
       </section>
