@@ -13,16 +13,16 @@ const Header = () => {
                 <a className="nav-link" href="#">Inicio</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">Presentacion</a>
+                <a className="nav-link" href="#">Sobre nosotros</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">Como funciona</a>
+                <a className="nav-link" href="#">Alcances</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">Comentarios</a>
+                <a className="nav-link" href="#">Productos</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#"><i className='fa-solid fa-cart-shopping'></i></a>
+                <a className="nav-link" href="#"><i class="fa-regular fa-user"></i></a>
               </li>
             </ul>
           </div>

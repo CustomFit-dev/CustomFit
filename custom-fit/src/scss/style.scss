@@ -4,10 +4,14 @@ $text-color: white;
 $page-color: rgb(23,23,23);
 
 body{
-  .navbar.navbar-expand-lg.fixed-top {
-    background-color: $bg-color !important;
-    color: $text-color !important;
+  background-color: $page-color;
+  header{
+    .navbar.navbar-expand-lg.fixed-top {
+      background-color: $bg-color !important;
+      color: $text-color !important;
+    }
   }
+
 
   .container{
     .navbar-brand{
@@ -15,10 +19,9 @@ body{
     }
 }
 
-}
+
 
   .sec1{
-    background-color: $page-color;
     text-align: left !important;
     color: $text-color;
     
@@ -64,3 +67,55 @@ body{
   }
   
   
+  .sec2{
+    text-align: left !important;
+    color: $text-color;
+    p{
+      font-size: large;
+    }
+
+      .buttons {
+        margin-top: 20px;
+      }
+      
+      .btn {
+        padding: 10px 20px;
+        margin-right: 10px;
+        border: none;
+        cursor: pointer;
+        font-size: 1em;
+      }
+      
+      .btn-primary {
+        background-color: #00a99d;
+        color: white;
+      }
+      
+      .btn-secondary {
+        background-color: #f5f5f5;
+        color: #333;
+      }
+      
+      .image-container {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        height: 100%;
+      }
+      
+      .image-container img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+      }
+  }
+
+  #sec2-f{
+    padding: 2rem;
+    position: relative;
+    background-color: $text-color;
+    z-index: 10;
+  }
+}
+
