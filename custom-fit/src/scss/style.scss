@@ -1,6 +1,7 @@
 @use 'responsive';
 $bg-color: transparent;
 $text-color: white;
+$page-color: rgb(23,23,23);
 
 body{
   .navbar.navbar-expand-lg.fixed-top {
@@ -17,7 +18,7 @@ body{
 }
 
   .sec1{
-    background-color: black;
+    background-color: $page-color;
     text-align: left !important;
     color: $text-color;
     
