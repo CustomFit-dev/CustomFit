@@ -4,20 +4,25 @@ import Header from "./components/header.jsx"
 function App() {
   return (
     <Fragment>
-
-    <Header />
-    <Fragment>
       <Header />
-      <section className='sec1'> 
+      <section className='sec1'>
         <div className='container'>
-          <h1>Hola</h1>
-          <h2></h2>
+          <div className='content-container'>
+            <h1>
+              Encuentra la <br /> Inspiración y <br />
+              <span className='highlight'>Personaliza</span> con <br /> Nosotros
+            </h1>
+            <div className='buttons'>
+              <button className='btn btn-primary'>Diseñar ya</button>
+              <button className='btn btn-secondary'>Tienda</button>
+            </div>
+          </div>
+          <div className='image-container'>
+            <img src='ruta-de-tu-imagen.png' alt='Descripción de la imagen' />
+          </div>
         </div>
       </section>
     </Fragment>
-    
-    </Fragment>
-
   );
 }
 
