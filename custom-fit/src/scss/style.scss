@@ -4,11 +4,26 @@ $text-color: white;
 $page-color: rgb(23,23,23);
 
 body{
-  background-color: $page-color;
+  background-color: $page-color !important;
   header{
     .navbar.navbar-expand-lg.fixed-top {
-      background-color: $bg-color !important;
+      background-color: $page-color !important;
       color: $text-color !important;
+      z-index: 10;
+
+      .navbar-brand{
+        max-width: 80vh;
+      }
+      .image-container{
+        display: flex !important;
+        justify-content: start;
+        align-items: start;
+        position: relative;
+      }
+      .image-container img{
+        max-width: 20%;
+        object-fit: contain;
+      }
     }
   }
 
@@ -26,11 +41,12 @@ body{
     color: $text-color;
     
       .highlight {
-        color: #00a99d; /* Cambia esto al color que desees */
+        color: #00a99d;
       }
       
       .buttons {
-        margin-top: 20px;
+        margin-top:2rem;
+        
       }
       
       .btn {
@@ -44,11 +60,14 @@ body{
       .btn-primary {
         background-color: #00a99d;
         color: white;
+        width: 8rem;
       }
       
       .btn-secondary {
         background-color: #f5f5f5;
         color: #333;
+        width: 8rem;
+        margin-left: 1rem;
       }
       
       .image-container {
@@ -57,12 +76,16 @@ body{
         align-items: center;
         position: relative;
         height: 100%;
-      }
+
+    }
+
+
       
       .image-container img {
         max-width: 100%;
         max-height: 100%;
         object-fit: contain;
+
       }
   }
   
@@ -115,7 +138,37 @@ body{
     padding: 2rem;
     position: relative;
     background-color: $text-color;
-    z-index: 10;
+    z-index: 5;
   }
+
+  .sec3{
+    color: $text-color;
+    h3{
+      text-align: left;
+      font-weight: bold;
+      padding-top: 2rem;
+    }
+    .image-container{
+      background-color: $text-color;
+      padding: 5rem 1rem 5rem 1rem;
+    }
+    #img-c1 {
+      border-radius: 200px 0px 0px 0px;
+    
+    }
+    #img-c2 {
+      border-radius: 200px 200px 0px 0px;
+      
+    }
+    #img-c3 {
+      border-radius: 200px 200px 0px 0px;
+      
+    }
+    #img-c4 {
+      border-radius: 0px 200px 0px 0px;
+    }    
+
+
 }
 
+}
