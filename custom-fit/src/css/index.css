@@ -1,3 +1,12 @@
+html {
+  height: 100% !important;
+}
+@media (max-width: 560px) {
+  html {
+    width: 80vh;
+  }
+}
+
 body {
   display: grid;
   padding: 0;
@@ -5,6 +14,17 @@ body {
   box-sizing: border-box;
   grid-template-columns: repeat(1, 2fr);
   grid-template-rows: repeat(1, 2fr);
+  height: 100% !important;
+}
+body::-webkit-scrollbar {
+  width: 0.5rem;
+}
+body::-webkit-scrollbar-track {
+  background: #02504b;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: #00a99d;
+  border-radius: 0.5rem;
 }
 
 section {
@@ -23,6 +43,7 @@ section {
 
 a {
   color: white !important;
+  text-decoration: none;
 }
 
 .highlight {
@@ -35,10 +56,20 @@ body {
 body header .navbar.navbar-expand-lg.fixed-top {
   background-color: rgb(23, 23, 23) !important;
   color: white !important;
-  z-index: 10;
+  z-index: 20;
 }
 body header .navbar.navbar-expand-lg.fixed-top .navbar-brand {
-  max-width: 80vh;
+  max-width: 65vh;
+}
+@media (max-width: 425px) {
+  body header .navbar.navbar-expand-lg.fixed-top .navbar-brand {
+    max-width: 30vh !important;
+  }
+}
+@media (max-width: 560px) {
+  body header .navbar.navbar-expand-lg.fixed-top .navbar-brand {
+    max-width: 45vh;
+  }
 }
 body header .navbar.navbar-expand-lg.fixed-top .image-container {
   display: flex !important;
@@ -47,15 +78,51 @@ body header .navbar.navbar-expand-lg.fixed-top .image-container {
   position: relative;
 }
 body header .navbar.navbar-expand-lg.fixed-top .image-container img {
-  max-width: 20%;
+  max-width: 30%;
   object-fit: contain;
 }
 body .container .navbar-brand {
   color: aqua;
 }
+body .overlay-div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 85vh;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+body .overlay-div .trapezoid-container {
+  width: 200px;
+  height: 100px;
+  overflow: hidden;
+  position: relative;
+}
+body .overlay-div .trapezoid {
+  width: 135vh;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background-color: rgb(23, 23, 23);
+  clip-path: polygon(0% 0%, 80% 0%, 100% 100%, 0% 100%);
+}
 body .sec1 {
   text-align: left !important;
   color: white;
+  height: 100vh;
+  background-image: url(../img/Fondo-d.png);
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 90vh 0;
+}
+body .sec1 .container {
+  position: relative;
+  z-index: 12;
 }
 body .sec1 .highlight {
   color: #00a99d;
@@ -66,7 +133,6 @@ body .sec1 .buttons {
 body .sec1 .btn {
   padding: 10px 20px;
   margin-right: 10px;
-  border: none;
   cursor: pointer;
   font-size: 1em;
 }
@@ -76,8 +142,8 @@ body .sec1 .btn-primary {
   width: 8rem;
 }
 body .sec1 .btn-secondary {
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: #00a99d;
+  color: white;
   width: 8rem;
   margin-left: 1rem;
 }
@@ -92,6 +158,13 @@ body .sec1 .image-container img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+}
+body .sec1 h1 {
+  font-size: 3rem;
+  font-style: italic;
+  font-family: "rubik";
+  font-weight: 900;
+  line-height: 60px;
 }
 body .sec2 {
   text-align: left !important;
@@ -138,6 +211,8 @@ body #sec2-f {
 }
 body .sec3 {
   color: white;
+  min-height: 130vh;
+  margin-bottom: 2rem;
 }
 body .sec3 h3 {
   text-align: left;
@@ -146,19 +221,54 @@ body .sec3 h3 {
 }
 body .sec3 .image-container {
   background-color: white;
-  padding: 5rem 1rem 5rem 1rem;
+  padding: 5rem 1rem;
+  height: 22rem;
 }
 body .sec3 #img-c1 {
   border-radius: 200px 0px 0px 0px;
+  background-image: url(../img/Muestras/Muestra-1.png);
 }
 body .sec3 #img-c2 {
   border-radius: 200px 200px 0px 0px;
+  background-image: url(../img/Muestras/Muestra-2.jpg);
+  background-size: cover;
 }
 body .sec3 #img-c3 {
   border-radius: 200px 200px 0px 0px;
+  background-image: url(../img/Muestras/Muestra-3.png);
+  background-size: cover;
 }
 body .sec3 #img-c4 {
   border-radius: 0px 200px 0px 0px;
+  background-image: url(../img/Muestras/Muestra-4.png);
+  background-size: cover;
+}
+@media (max-width: 475px) {
+  body .sec3 {
+    min-height: 250vh;
+  }
+}
+body footer {
+  position: static;
+  background-color: #02504b !important;
+  color: white;
+}
+body footer .image-container {
+  display: flex !important;
+  justify-content: start;
+  align-items: start;
+  position: relative;
+}
+body footer .image-container img {
+  max-width: 30%;
+  object-fit: contain;
+}
+body footer li {
+  margin-bottom: 1rem;
+}
+body .foot-c {
+  margin-top: 2rem;
+  text-align: center;
 }
 
 /*# sourceMappingURL=index.css.map */

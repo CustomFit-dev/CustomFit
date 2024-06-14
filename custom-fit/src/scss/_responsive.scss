@@ -1,3 +1,12 @@
+$scroll-o: #00a99d;
+$scroll-i: #02504b;
+
+html{
+  height: 100% !important;
+  @media (max-width: 560px) {
+    width: 80vh;
+   }
+}
 body{
     display: grid;
     padding: 0;
@@ -5,7 +14,20 @@ body{
     box-sizing: border-box;
     grid-template-columns: repeat(1, 2fr);
     grid-template-rows: repeat(1, 2fr);
+    height: 100% !important;
+
+    &::-webkit-scrollbar{
+      width: 0.5rem;
+    }
+    &::-webkit-scrollbar-track {
+      background: $scroll-i;
   }
+    &::-webkit-scrollbar-thumb{
+      background-color: $scroll-o;
+      border-radius: 0.5rem;
+    }
+  }
+
 
   section {        
     display: flex;
@@ -17,15 +39,18 @@ body{
     height: 85vh;
   }
 
+
+
   #sec2-f{
     margin-bottom: 3rem;
   }
   a{
     color: white !important;
+    text-decoration: none;
   }
 
       
   .highlight {
     color: #00a99d; 
   }
-  
+
