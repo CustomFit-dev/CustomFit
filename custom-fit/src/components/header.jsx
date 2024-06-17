@@ -1,8 +1,11 @@
 import React from 'react';
+import {BrowserRouter,Routes ,Route ,Link} from 'react-router-dom';
 import Logo from '../img/Logo-prin-f.png';
+import Sec1 from './sec1.jsx';
 const Header = () => {
 
     return (
+      <BrowserRouter>
         <nav className="navbar navbar-expand-lg fixed-top shadow p-3 mb-5 bg-white rounded">
         <div className="container">
           <a className="navbar-brand" href="#"><div className='image-container'><img src= {Logo} alt="Logo" /></div></a>
@@ -12,7 +15,7 @@ const Header = () => {
           <div className="collapse navbar-collapse" id="navbarResponsive">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item active">
-                <a className="nav-link" href="#">Inicio</a>
+                <Link className="nav-link" to="/test">Inicio</Link>
               </li>
               <li className="nav-item">
                 <a className="nav-link" href="#">Sobre nosotros</a>
@@ -30,7 +33,10 @@ const Header = () => {
           </div>
         </div>
       </nav>
-
+      <Routes>
+      <Route path="/test" element={<Sec1 />} />
+      </Routes>
+      </BrowserRouter>
     )
 }
 

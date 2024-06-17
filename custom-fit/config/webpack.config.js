@@ -753,3 +753,51 @@ module.exports = function (webpackEnv) {
     performance: false,
   };
 };
+
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+module.exports = {
+    entry: {
+        index: './src/index.js',
+        paginaPrincipal: './src/iniciado.js'
+    },
+    output: {
+        filename: '[name].bundle.js',
+        path: path.resolve(__dirname, 'dist')
+    },
+    module: {
+        rules: [
+            {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader'
+                }
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
+            },
+            {
+                test: /\.(png|svg|jpg|gif)$/,
+                use: ['file-loader']
+            }
+        ]
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: './public/index.html',
+            chunks: ['index'],
+            filename: 'index.html'
+        }),
+        new HtmlWebpackPlugin({
+            template: './public/iniciado.html',
+            chunks: ['iniciado'],
+            filename: 'iniciado.html'
+        })
+    ],
+    devServer: {
+        contentBase: './dist'
+    }
+};
