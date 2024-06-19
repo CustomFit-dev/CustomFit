@@ -50,6 +50,41 @@ a {
   color: #00a99d;
 }
 
+@media (max-width: 1000px) {
+  header .image-container {
+    width: 40vh;
+  }
+  html {
+    width: 80vh;
+  }
+  .sec1 .container {
+    text-align: center;
+    align-items: center;
+  }
+  .sec1 .container h1 {
+    font-size: 3rem;
+    line-height: 75px;
+  }
+  .sec1 .container .btn {
+    margin-top: 2rem;
+    font-size: 1.5em;
+  }
+  .section-container {
+    background-image: url(../img/Fondo-d.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: -20vh 0;
+  }
+  .section-container .trapezoid {
+    display: none;
+  }
+  .sec2 .row {
+    --bs-gutter-x: -8.5rem;
+  }
+  .sec3 .row {
+    --bs-gutter-x: 1rem;
+  }
+}
 body {
   background-color: rgb(23, 23, 23) !important;
 }
@@ -58,24 +93,15 @@ body header .navbar.navbar-expand-lg.fixed-top {
   color: white !important;
   z-index: 20;
 }
-body header .navbar.navbar-expand-lg.fixed-top .navbar-brand {
-  max-width: 65vh;
-}
-@media (max-width: 425px) {
-  body header .navbar.navbar-expand-lg.fixed-top .navbar-brand {
-    max-width: 30vh !important;
-  }
-}
-@media (max-width: 560px) {
-  body header .navbar.navbar-expand-lg.fixed-top .navbar-brand {
-    max-width: 45vh;
-  }
+body header .navbar.navbar-expand-lg.fixed-top .navbar-toggler-icon {
+  background-image: url(../img/nav.png) !important;
 }
 body header .navbar.navbar-expand-lg.fixed-top .image-container {
   display: flex !important;
   justify-content: start;
   align-items: start;
   position: relative;
+  width: 60vh;
 }
 body header .navbar.navbar-expand-lg.fixed-top .image-container img {
   max-width: 30%;
@@ -95,6 +121,13 @@ body .overlay-div {
   justify-content: center;
   align-items: center;
   z-index: 10;
+}
+body .overlay-div hr {
+  background-color: white;
+  width: 100%;
+  position: relative;
+  left: 20rem;
+  rotate: 85deg;
 }
 body .overlay-div .trapezoid-container {
   width: 200px;
@@ -135,10 +168,13 @@ body .sec1 .btn {
   margin-right: 10px;
   cursor: pointer;
   font-size: 1em;
+  color: white !important;
+  border-width: 2px !important;
+  border-color: #00a99d !important;
 }
 body .sec1 .btn-primary {
   background-color: #00a99d;
-  color: white;
+  color: white !important;
   width: 8rem;
 }
 body .sec1 .btn-secondary {
@@ -146,6 +182,7 @@ body .sec1 .btn-secondary {
   color: white;
   width: 8rem;
   margin-left: 1rem;
+  border-color: #00a99d;
 }
 body .sec1 .image-container {
   display: flex !important;
@@ -172,24 +209,6 @@ body .sec2 {
 }
 body .sec2 p {
   font-size: large;
-}
-body .sec2 .buttons {
-  margin-top: 20px;
-}
-body .sec2 .btn {
-  padding: 10px 20px;
-  margin-right: 10px;
-  border: none;
-  cursor: pointer;
-  font-size: 1em;
-}
-body .sec2 .btn-primary {
-  background-color: #00a99d;
-  color: white;
-}
-body .sec2 .btn-secondary {
-  background-color: #f5f5f5;
-  color: #333;
 }
 body .sec2 .image-container {
   display: flex !important;
@@ -245,7 +264,7 @@ body .sec3 #img-c4 {
 }
 @media (max-width: 475px) {
   body .sec3 {
-    min-height: 250vh;
+    min-height: 100vh;
   }
 }
 body footer {
@@ -269,6 +288,16 @@ body footer li {
 body .foot-c {
   margin-top: 2rem;
   text-align: center;
+}
+body .form {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.774) !important;
+  z-index: 25;
+}
+body .form h1 {
+  color: white;
 }
 
 /*# sourceMappingURL=index.css.map */

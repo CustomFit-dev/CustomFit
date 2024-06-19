@@ -4,6 +4,53 @@ $text-color: white;
 $page-color: rgb(23,23,23);
 $foot: #02504b; 
 
+@media (max-width: 1000px) {
+  header{
+    .image-container{
+      width: 40vh;
+    }
+  }
+  html {
+    width: 80vh;
+  }
+  .sec1{
+    .container{
+      text-align: center;
+      align-items: center;
+
+      h1{
+        font-size: 3rem;
+        line-height: 75px;
+      }
+      .btn{
+        margin-top: 2rem;
+        font-size: 1.5em;
+      }
+
+    }
+  }
+  .section-container{
+    background-image: url(../img/Fondo-d.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: -20vh 0;
+
+    .trapezoid {
+      display: none;
+    }
+  }
+  .sec2{
+    .row{
+      --bs-gutter-x: -8.5rem;
+    }
+  }
+  .sec3{
+    .row{
+      --bs-gutter-x: 1rem;
+    }
+  }
+}
+
 
 body{
   background-color: $page-color !important;
@@ -13,20 +60,25 @@ body{
       color: $text-color !important;
       z-index: 20;
 
-      .navbar-brand{
-        max-width: 65vh;
-        @media (max-width:425px){
-          max-width: 30vh !important; 
-        }
-        @media (max-width: 560px) {
-         max-width: 45vh;
-        }
+      .navbar-toggler-icon{
+        background-image: url(../img/nav.png)!important;
       }
+
+      // .navbar-brand{
+      //   max-width: 65vh;
+      //   @media (max-width:425px){
+      //     max-width: 30vh !important; 
+      //   }
+      //   @media (max-width: 560px) {
+      //    max-width: 45vh;
+      //   }
+      // }
       .image-container{
         display: flex !important;
         justify-content: start;
         align-items: start;
         position: relative;
+        width: 60vh;
       }
       .image-container img{
         max-width: 30%;
@@ -54,6 +106,14 @@ body{
   justify-content: center;
   align-items: center;
   z-index: 10;
+
+  hr{
+    background-color: white;
+    width: 100%;
+    position: relative;
+    left: 20rem;
+    rotate: (85deg);
+  }
 
   .trapezoid-container {
     width: 200px;
@@ -101,11 +161,14 @@ body{
         margin-right: 10px;
         cursor: pointer;
         font-size: 1em;
+        color: white !important;
+        border-width: 2px !important;
+        border-color: #00a99d !important;
       }
       
       .btn-primary {
         background-color: #00a99d;
-        color: white;
+        color: white !important;
         width: 8rem;
       }
       
@@ -114,6 +177,7 @@ body{
         color: $text-color;
         width: 8rem;
         margin-left: 1rem;
+        border-color: #00a99d;
       }
       
       .image-container {
@@ -149,28 +213,6 @@ body{
       font-size: large;
     }
 
-      .buttons {
-        margin-top: 20px;
-      }
-      
-      .btn {
-        padding: 10px 20px;
-        margin-right: 10px;
-        border: none;
-        cursor: pointer;
-        font-size: 1em;
-      }
-      
-      .btn-primary {
-        background-color: #00a99d;
-        color: white;
-      }
-      
-      .btn-secondary {
-        background-color: #f5f5f5;
-        color: #333;
-      }
-      
       .image-container {
         display: flex !important;
         justify-content: center;
@@ -228,7 +270,7 @@ body{
     }
 
     @media (max-width: 475px) {
-      min-height: 250vh;
+      min-height: 100vh;
     }
 }
 
@@ -254,6 +296,18 @@ footer{
 .foot-c{
   margin-top: 2rem;
   text-align: center;
+}
+
+
+.form{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.774) !important;
+  z-index: 25;
+  h1{
+    color: white;
+  }
 }
 
 }
