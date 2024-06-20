@@ -7,7 +7,7 @@ const form = () => {
             <Link className='btn btn-outline-primary' to="/cerrar"></Link>
 
         <div className='container'>
-        <h1>Desde form</h1>
+        <h1>Desde </h1>
         </div>
     
 
