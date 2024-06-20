@@ -6,9 +6,9 @@ const form = () => {
        <div className='form'>
             <Link className='btn btn-outline-primary' to="/cerrar"></Link>
 
-
+        <div className='container'>
         <h1>Desde form</h1>
-
+        </div>
     
 
         </div> 
