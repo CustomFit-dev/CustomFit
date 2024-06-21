@@ -49,6 +49,26 @@ $foot: #02504b;
       --bs-gutter-x: 1rem;
     }
   }
+  .form-row{
+    width: 70% !important;
+  }
+  .form-con{
+    display: inline-flex;
+    align-items: center;
+    flex-direction: column;
+    width: 10%;
+  }
+  .fondo {
+    display: none;
+}
+.mydict div {
+    display: flex;
+    flex-wrap: wrap;
+    margin: auto;
+    margin-left: 55% !important;
+    justify-content: center;
+    width: 50%;
+}
 }
 
 
@@ -78,7 +98,7 @@ body{
         justify-content: start;
         align-items: start;
         position: relative;
-        width: 60vh;
+        width: 50vh;
       }
       .image-container img{
         max-width: 30%;
@@ -310,4 +330,150 @@ footer{
   }
 }
 
+// estilos form 
+
+.form-row {
+  position: fixed;
+  z-index: 25;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: auto;
+  max-width: 1000px;
+  padding: 20px;
+  background: #000000;
+  border-radius: 30px;
+  margin: 20px auto;
+  box-shadow: #00a99e5a 30px 30px 30px -20px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+
+
+}
+
+.form-row .fondo {
+  background-image: url(../img/registro.png);
+  background-repeat: no-repeat;
+  width: 100%;
+  max-width: 500px;
+  height: 450px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(10%, -50%);
+  
+  z-index: 30;
+
+}
+
+.form-row h1 {
+  color: #00a99d;
+  margin-bottom: 20px;
+  margin-left: 160px;
+}
+
+.form-group {
+  display: flex;
+
+padding-left: 40px;
+  width: 100%;
+  max-width: 100px;
+}
+
+.form-group input {
+  background-color: transparent;
+  border-bottom: 2px solid #00a99d;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  color: white;
+  margin: 40px 50px 0px 0px ;
+  
+  
+}
+
+.btn-outline-primary1 {
+  background-color: #00a99d;
+  color: rgb(0, 0, 0);
+  font-size: 20px;
+  margin-top: 20px;
+  margin-left: 190px;
+  margin-top: 50px;
+}
+
+.btn-outline-primary1:hover {
+  border: 2px solid #00a99d;
+  color: white;
+}
+
+:focus {
+  outline: 0;
+  border: 2PX solid#2260ff;
+  color: white;
+
+}
+.btn-outline-primaryX{
+    color: white;
+}
+.btn-outline-primaryX:hover{
+  background-color: #00a99d;
+}
+.mydict div {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: -2rem;
+  margin-left: 75%;
+  justify-content: center;
+}
+
+.mydict input[type="radio"] {
+  clip: rect(0 0 0 0);
+  clip-path: inset(100%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+  background-color: transparent;
+  border: 2px solid #00a99d;
+}
+
+.mydict input[type="radio"]:checked + span {
+  box-shadow: 0 0 0 0.0625em #00a99d;
+  background-color: #00a99d;
+  z-index: 1;
+  color: #ffffff;
+}
+
+label span {
+  display: block;
+  cursor: pointer;
+
+  padding: 0.375em .75em;
+  position: relative;
+  margin-left: .0625em;
+  box-shadow: 0 0 0 0.0625em #b5bfd9;
+  letter-spacing: .05em;
+  color: white;
+  text-align: center;
+  transition: background-color .5s ease;
+}
+
+label:first-child span {
+  border-radius: .375em 0 0 .375em;
+}
+
+label:last-child span {
+  border-radius: 0 .375em .375em 0;
+}
+
+#oscure{
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.644);
+  width: 100%;
+  height: 100%;
+  z-index: 25;
+}
 }
