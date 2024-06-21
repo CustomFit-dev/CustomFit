@@ -4,9 +4,9 @@ const Section = () => {
       <div className="section-container">
           <div className="overlay-div trapezoid-container">
                 <div className="trapezoid"></div>
-                <hr />
+                {/* <hr /> */}
             </div>
-        <section className='sec1'>
+        <section className='sec1' id='inicio'>
         <div className='container'>
           <div className='row'>
             <div className='col'>

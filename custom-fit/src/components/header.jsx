@@ -16,16 +16,15 @@ const Header = () => {
           <div className="collapse navbar-collapse" id="navbarResponsive">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item active">
-                <a className="nav-link">Inicio</a>
+              <li className="nav-item">
+                <a className="nav-link" href="#inicio">Inicio</a>
+              </li>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">Sobre nosotros</a>
+                <a className="nav-link" href="#sobre">Sobre nosotros</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">Alcances</a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">Productos</a>
+                <a className="nav-link" href="#prod">Productos</a>
               </li>
               <li className="nav-item">
                 <Link className="nav-link" to="/test"><i class="fa-regular fa-user"></i></Link>
