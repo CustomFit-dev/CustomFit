@@ -85,13 +85,13 @@ a {
     --bs-gutter-x: 1rem;
   }
   .form-row {
-    width: 68vh !important;
+    width: 75vh !important;
   }
   .form-con {
     display: inline-flex;
     align-items: center;
     flex-direction: column;
-    width: 30%;
+    width: 60%;
   }
   .fondo {
     display: none;
@@ -104,7 +104,16 @@ a {
     justify-content: center;
     width: 50%;
   }
+  .social-buttons{
+    margin: 40px 20px 0px 200px !important;
+    
+  }
+  .btn-outline-primary1{
+    width: 150%;
+    margin: 40px -50px;
+  }
 }
+
 body {
   background-color: rgb(23, 23, 23) !important;
 }
@@ -371,12 +380,12 @@ body .btn-outline-primary1 {
   color: rgb(0, 0, 0);
   font-size: 20px;
   margin-top: 20px;
-  margin-left: 190px;
-  margin-top: 50px;
+  margin-left: 160px;
 }
 body .btn-outline-primary1:hover {
   border: 2px solid #00a99d;
-  color: white;
+  color: #ffffff;
+
 }
 body :focus {
   outline: 0;
@@ -438,5 +447,89 @@ body #oscure {
   height: 100%;
   z-index: 25;
 }
+/*Iconos redes sociales formulario registro*/
+.social-buttons {
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+  margin-left: 15px;
+  margin-top: 20px;
+}
+
+.social-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin: 0 10px;
+  background-color: #fff;
+  box-shadow: 0px 0px 4px #00000027;
+  transition: 0.3s;
+}
+
+.social-button:hover {
+  background-color: #f2f2f2;
+  box-shadow: 0px 0px 6px 3px #00000027;
+}
+
+.social-buttons svg {
+  transition: 0.3s;
+  height: 20px;
+}
+
+.facebook {
+  background-color: #3b5998;
+}
+
+.facebook svg {
+  fill: #f2f2f2;
+}
+
+.facebook:hover svg {
+  fill: #3b5998;
+}
+
+.github {
+  background-color: #333;
+}
+
+.github svg {
+  width: 25px;
+  height: 25px;
+  fill: #f2f2f2;
+}
+
+.github:hover svg {
+  fill: #333;
+}
+
+.linkedin {
+  background-color: #0077b5;
+}
+
+.linkedin svg {
+  fill: #f2f2f2;
+}
+
+.linkedin:hover svg {
+  fill: #0077b5;
+}
+
+.instagram {
+  background-color: #c13584;
+}
+
+.instagram svg {
+  fill: #f2f2f2;
+}
+
+.instagram:hover svg {
+  fill: #c13584;
+}
+
 
 /*# sourceMappingURL=index.css.map */
