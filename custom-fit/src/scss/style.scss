@@ -50,13 +50,13 @@ $foot: #02504b;
     }
   }
   .form-row{
-    width: 70% !important;
+    width: 68vh !important;
   }
   .form-con{
     display: inline-flex;
     align-items: center;
     flex-direction: column;
-    width: 10%;
+    width: 30%;
   }
   .fondo {
     display: none;
@@ -376,10 +376,7 @@ footer{
 
 .form-group {
   display: flex;
-
-padding-left: 40px;
   width: 100%;
-  max-width: 100px;
 }
 
 .form-group input {

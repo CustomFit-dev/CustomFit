@@ -23,7 +23,7 @@ const Form = () => {
         <div id='oscure'>
             <form>
                 <div className="form-row">
-                    <Link className='fa-solid fa-x btn btn-outline-primaryX' to="/cerrar"></Link>
+                    <Link className='fa-solid fa-x btn btn-outline-primaryX' to="/"></Link>
                     <div className="mydict">
                         <div>
                             <label>

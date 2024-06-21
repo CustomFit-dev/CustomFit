@@ -36,7 +36,7 @@ const Header = () => {
       </nav>
       <Routes>
       <Route path="/test" element={<Form />} />
-      <Route path="/cerrar" />
+      <Route path="/"/>
       </Routes>
       </BrowserRouter>
     )

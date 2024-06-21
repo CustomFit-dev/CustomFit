@@ -85,13 +85,13 @@ a {
     --bs-gutter-x: 1rem;
   }
   .form-row {
-    width: 70% !important;
+    width: 68vh !important;
   }
   .form-con {
     display: inline-flex;
     align-items: center;
     flex-direction: column;
-    width: 10%;
+    width: 30%;
   }
   .fondo {
     display: none;
@@ -355,9 +355,7 @@ body .form-row h1 {
 }
 body .form-group {
   display: flex;
-  padding-left: 40px;
   width: 100%;
-  max-width: 100px;
 }
 body .form-group input {
   background-color: transparent;
