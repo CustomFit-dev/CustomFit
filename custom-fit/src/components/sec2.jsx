@@ -10,7 +10,7 @@ let Productos = 538;
 const Section2 = () => {
     return(
     <div>
-        <section className='sec2'>
+        <section className='sec2' id='sobre'>
           <div className='container'>
           <div className='row'>
             <div className='col'>

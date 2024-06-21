@@ -2,7 +2,7 @@ import React from 'react';
 import '../css/index.css';
 const Section3 = () => {
     return(
-        <section className='sec3'>
+        <section className='sec3' id='prod'>
         <div className='container'>
           <div className='row'>
             <div className='col'>

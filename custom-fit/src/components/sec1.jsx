@@ -6,7 +6,7 @@ const Section = () => {
                 <div className="trapezoid"></div>
                 <hr />
             </div>
-        <section className='sec1'>
+        <section className='sec1' id='inicio'>
         <div className='container'>
           <div className='row'>
             <div className='col'>
