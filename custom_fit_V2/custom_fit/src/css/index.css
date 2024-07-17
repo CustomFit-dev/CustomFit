@@ -108,24 +108,16 @@ a {
 body {
   background-color: rgb(23, 23, 23) !important;
 }
-body header .navbar.navbar-expand-lg.fixed-top {
-  background-color: rgb(23, 23, 23) !important;
-  color: white !important;
+body header {
+  position: fixed;
   z-index: 20;
+  width: 100%;
 }
-body header .navbar.navbar-expand-lg.fixed-top .navbar-toggler-icon {
-  background-image: url(../img/nav.png) !important;
+body header .css-10h3fe2-MuiPaper-root-MuiAppBar-root {
+  background-color: rgb(23, 23, 23) !important;
 }
-body header .navbar.navbar-expand-lg.fixed-top .image-container {
-  display: flex !important;
-  justify-content: start;
-  align-items: start;
-  position: relative;
-  width: 50vh;
-}
-body header .navbar.navbar-expand-lg.fixed-top .image-container img {
-  max-width: 30%;
-  object-fit: contain;
+body header #logo {
+  max-width: 8rem;
 }
 body .container .navbar-brand {
   color: aqua;

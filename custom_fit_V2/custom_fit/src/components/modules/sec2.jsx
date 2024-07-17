@@ -1,5 +1,5 @@
 import React from 'react';
-import Cus from '../img/Customfit-sec2.png';
+import Cus from './mod_img/Customfit-sec2.png';
 
 let ClientesF = 300;
 let AñosEx = 25;

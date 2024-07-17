@@ -1,5 +1,4 @@
 import React from 'react';
-import '../css/index.css';
 const Section3 = () => {
     return(
         <section className='sec3' id='prod'>
