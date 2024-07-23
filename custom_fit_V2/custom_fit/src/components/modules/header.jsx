@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import logo from './mod_img/Logo-prin-f.png';
-import { Link } from 'react-router-dom';
+import Form from './Form'; // Importa tu componente Form
 
 const pages = [
   { name: 'Inicio', route: '' },
@@ -21,12 +21,13 @@ const pages = [
 ];
 
 const settings = [
-  { name: 'Iniciar sesión', route: '/Form' },
+  { name: 'Iniciar sesión', route: '#' },
 ];
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [isFormVisible, setFormVisible] = React.useState(false);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -42,6 +43,14 @@ function Header() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleOpenForm = () => {
+    setFormVisible(true);
+  };
+
+  const handleCloseForm = () => {
+    setFormVisible(false);
   };
 
   return (
@@ -99,9 +108,9 @@ function Header() {
                 {pages.map((page) => (
                   <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">
-                      <Link to={page.route} style={{ textDecoration: 'none', color: 'inherit' }}>
+                      <a href={page.route} style={{ textDecoration: 'none', color: 'inherit' }}>
                         {page.name}
-                      </Link>
+                      </a>
                     </Typography>
                   </MenuItem>
                 ))}
@@ -161,11 +170,11 @@ function Header() {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
+                  <MenuItem key={setting.name} onClick={() => { handleCloseUserMenu(); handleOpenForm(); }}>
                     <Typography textAlign="center">
-                      <Link to={setting.route} style={{ textDecoration: 'none', color: 'black' }}>
+                      <a href="#" style={{ textDecoration: 'none', color: 'black' }}>
                         {setting.name}
-                      </Link>
+                      </a>
                     </Typography>
                   </MenuItem>
                 ))}
@@ -174,6 +183,13 @@ function Header() {
           </Toolbar>
         </Container>
       </AppBar>
+      {isFormVisible && (
+        <div className="overlay">
+          <div className="form-container">
+            <Form onClose={handleCloseForm} />
+          </div>
+        </div>
+      )}
     </header>
   );
 }
