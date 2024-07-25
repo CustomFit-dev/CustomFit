@@ -2,7 +2,7 @@ import './css/index.css';
 import {Routes, Route} from 'react-router-dom';
 import Home from './components/Home';
 import Store from './components/Store';
-import Form from './components/modules/Form';
+import Form from './components/modules/Registrar';
 
 function App() {
   return (

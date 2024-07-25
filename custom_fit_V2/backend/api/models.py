@@ -11,3 +11,15 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+
+class UserProfile(models.Model):
+    nombres = models.CharField(max_length=100)
+    apellidos = models.CharField(max_length=100)
+    nombre_usuario = models.CharField(max_length=100)
+    celular = models.CharField(max_length=15)
+    correo_electronico = models.EmailField()
+    conf_correo_electronico = models.EmailField()
+
+    def __str__(self):
+        return self.nombre_usuario
+

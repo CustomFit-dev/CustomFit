@@ -1,46 +1,58 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from rest_framework import viewsets, permissions
-from .serializers import *
 from rest_framework.response import Response
-from .models import *
+from .serializers import ProjectSerializer
+from .models import Project
+from rest_framework import status
+from rest_framework.decorators import api_view
+from .models import UserProfile
+from .serializers import UserProfileSerializer
 
 def home(request):
     return HttpResponse("Principal")
 
-
-class ProjectViewset(viewsets.ViewSet):
+class ProjectViewSet(viewsets.ViewSet):
     permission_classes = [permissions.AllowAny]
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
 
     def list(self, request):
-        queryset = self.queryset
-        serializer = self.serializer_class(queryset, many=True)
+        queryset = Project.objects.all()
+        serializer = ProjectSerializer(queryset, many=True)
         return Response(serializer.data)
+
     def create(self, request):
-        serializer = self.serializer_class(data=request.data)
+        serializer = ProjectSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status= 404)
+        return Response(serializer.errors, status=400)
 
     def retrieve(self, request, pk=None):
-        project = self.queryset.get(pk=pk)
-        serializer = self.serializer_class(project)
+        queryset = Project.objects.all()
+        project = get_object_or_404(queryset, pk=pk)
+        serializer = ProjectSerializer(project)
         return Response(serializer.data)
 
     def update(self, request, pk=None):
-        project = self.queryset.get(pk=pk)
-        serializer = self.serializer_class(project,data=request.data)
+        queryset = Project.objects.all()
+        project = get_object_or_404(queryset, pk=pk)
+        serializer = ProjectSerializer(project, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        else:
-            return Response(serializer.errors, status= 404)
+        return Response(serializer.errors, status=400)
 
     def destroy(self, request, pk=None):
-        project = self.queryset.get(pk=pk)
+        queryset = Project.objects.all()
+        project = get_object_or_404(queryset, pk=pk)
         project.delete()
         return Response(status=204)
+
+@api_view(['POST'])
+def register_user(request):
+    if request.method == 'POST':
+        serializer = UserProfileSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,14 +1,11 @@
-from django.urls import path
-from .views import *
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-
+from .views import ProjectViewSet,register_user
 
 router = DefaultRouter()
-router.register('project', ProjectViewset, basename='project')
+router.register(r'projects', ProjectViewSet, basename='project')
 
-urlpatterns = router.urls
-
-# urlpatterns = [
-    
-#     path('', home)
-# ]
+urlpatterns = [
+    path('', include(router.urls)),
+    path('api/register/', register_user, name='register_user'),
+]

@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import logo from './mod_img/Logo-prin-f.png';
-import Form from './Form'; // Importa tu componente Form
+import Form from './Registrar'; 
 
 const pages = [
   { name: 'Inicio', route: '' },
