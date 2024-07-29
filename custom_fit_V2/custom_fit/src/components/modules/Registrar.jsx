@@ -5,7 +5,6 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { Link } from '@mui/material';
-
 const theme = createTheme({
     palette: {
         primary: {
@@ -21,19 +20,19 @@ const theme = createTheme({
                 root: {
                     margin: '10px',
                     '& .MuiInputBase-root': {
-                        color: '#ffffff', // Color del texto
+                        color: '#ffffff',
                     },
                     '& .MuiInputLabel-root': {
-                        color: '#ffffff', // Color del label
+                        color: '#ffffff',
                     },
                     '& .MuiInput-underline:before': {
-                        borderBottomColor: '#00a99d', // Color del borde antes de focus
+                        borderBottomColor: '#00a99d',
                     },
                     '& .MuiInput-underline:hover:before': {
-                        borderBottomColor: '#00a99d', // Color del borde al hover
+                        borderBottomColor: '#00a99d',
                     },
                     '& .MuiInput-underline:after': {
-                        borderBottomColor: '#00a99d', // Color del borde después de focus
+                        borderBottomColor: '#00a99d',
                     },
                 },
             },
@@ -41,10 +40,10 @@ const theme = createTheme({
         MuiButton: {
             styleOverrides: {
                 root: {
-                    margin: '10px', // Margen del botón
-                    padding: '10px 20px', // Padding del botón
-                    backgroundColor: '#1976d2', // Color de fondo
-                    color: '#ffffff', // Color del texto
+                    margin: '10px',
+                    padding: '10px 20px',
+                    backgroundColor: '#1976d2',
+                    color: '#ffffff',
                     display: 'block',
                     marginLeft: 'auto',
                     marginRight: 'auto',
@@ -54,12 +53,13 @@ const theme = createTheme({
         MuiIconButton: {
             styleOverrides: {
                 root: {
-                    color: '#ffffff', // Color del ícono
+                    color: '#ffffff',
                 },
             },
         },
     },
 });
+
 
 const Form = ({ onClose }) => {
     const [nombres, setNombres] = useState('');

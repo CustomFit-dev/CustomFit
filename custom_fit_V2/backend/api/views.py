@@ -2,12 +2,10 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
-from .serializers import ProjectSerializer
-from .models import Project
+from .serializers import ProjectSerializer, UserProfileSerializer
+from .models import Project, UserProfile
 from rest_framework import status
 from rest_framework.decorators import api_view
-from .models import UserProfile
-from .serializers import UserProfileSerializer
 
 def home(request):
     return HttpResponse("Principal")
@@ -47,6 +45,11 @@ class ProjectViewSet(viewsets.ViewSet):
         project = get_object_or_404(queryset, pk=pk)
         project.delete()
         return Response(status=204)
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.AllowAny]
 
 @api_view(['POST'])
 def register_user(request):
