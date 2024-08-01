@@ -3,16 +3,16 @@ import {Routes, Route} from 'react-router-dom';
 import Home from './components/Home';
 import Store from './components/Store';
 import Form from './components/modules/Registrar';
-import Test from './components/modules/test';
+import Crud from './components/modules/Crud';
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="" element={<Home/>}/>
+        <Route path="/Home" element={<Home/>}/>
         <Route path="/Store" element={<Store/>}/>
         <Route path="/Form" element={<Form/>}/>
-        <Route path="/Test" element={<Test/>}/>
+        <Route path="/Crud" element={<Crud/>}/>
       </Routes>
     </div>
   );

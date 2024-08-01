@@ -11,6 +11,15 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+    
+class rol(models.Model):
+    nombrerol = models.CharField(max_length=20, default= "User", null=True, blank=True)
+    descripcion = models.CharField(max_length=255, default= "Usuario normal con permisos limitados", null=True, blank=True)
+
+
+    def __str__(self):
+        return self.nombrerol
+
 
 class UserProfile(models.Model):
     nombres = models.CharField(max_length=100)
@@ -19,7 +28,13 @@ class UserProfile(models.Model):
     celular = models.CharField(max_length=15)
     correo_electronico = models.EmailField()
     conf_correo_electronico = models.EmailField()
+    rol = models.ForeignKey(rol, on_delete=models.CASCADE, default=2, null=True, blank=True)
+    fecha_sesion = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    
 
     def __str__(self):
         return self.nombre_usuario
+    
+
+
 

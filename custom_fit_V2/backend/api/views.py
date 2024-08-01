@@ -2,49 +2,14 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
-from .serializers import ProjectSerializer, UserProfileSerializer
-from .models import Project, UserProfile
+from .serializers import UserProfileSerializer
+from .models import UserProfile
 from rest_framework import status
 from rest_framework.decorators import api_view
+from rest_framework.exceptions import ValidationError
 
 def home(request):
     return HttpResponse("Principal")
-
-class ProjectViewSet(viewsets.ViewSet):
-    permission_classes = [permissions.AllowAny]
-
-    def list(self, request):
-        queryset = Project.objects.all()
-        serializer = ProjectSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def create(self, request):
-        serializer = ProjectSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=400)
-
-    def retrieve(self, request, pk=None):
-        queryset = Project.objects.all()
-        project = get_object_or_404(queryset, pk=pk)
-        serializer = ProjectSerializer(project)
-        return Response(serializer.data)
-
-    def update(self, request, pk=None):
-        queryset = Project.objects.all()
-        project = get_object_or_404(queryset, pk=pk)
-        serializer = ProjectSerializer(project, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=400)
-
-    def destroy(self, request, pk=None):
-        queryset = Project.objects.all()
-        project = get_object_or_404(queryset, pk=pk)
-        project.delete()
-        return Response(status=204)
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
@@ -55,7 +20,12 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 def register_user(request):
     if request.method == 'POST':
         serializer = UserProfileSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except ValidationError as e:
+            return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    

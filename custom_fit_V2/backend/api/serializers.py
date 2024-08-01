@@ -1,13 +1,17 @@
+# serializers.py
 from rest_framework import serializers
-from .models import *
+from .models import UserProfile, rol
 
-class ProjectSerializer(serializers.ModelSerializer):
+class RolSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Project
-        fields = ('name','start_date','end_date','comentarios','status')
-
+        model = rol
+        fields = '__all__'
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    rol = RolSerializer(read_only=True) 
+
     class Meta:
         model = UserProfile
         fields = '__all__'
+
+        

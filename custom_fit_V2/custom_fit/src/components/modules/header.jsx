@@ -13,6 +13,39 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import logo from './mod_img/Logo-prin-f.png';
 import Form from './Registrar'; 
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+
+const theme = createTheme({
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'rgb(23,23,23)',
+        },
+      },
+    },
+    MuiMenu: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: 'rgb(23,23,23)',
+          color: '#ffffff'
+        },
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          color: '#ffffff',
+          '&.Mui-selected': {
+            backgroundColor: 'rgb(23,23,23)',
+            color: '#ffffff', 
+          },
+        },
+      },
+    },
+  },
+});
 
 const pages = [
   { name: 'Inicio', route: '' },
@@ -54,6 +87,7 @@ function Header() {
   };
 
   return (
+    <ThemeProvider theme={theme}>
     <header>
       <AppBar position="static" sx={{ zIndex: 1300 }}>
         <Container maxWidth="xl">
@@ -191,6 +225,7 @@ function Header() {
         </div>
       )}
     </header>
+    </ThemeProvider>
   );
 }
 

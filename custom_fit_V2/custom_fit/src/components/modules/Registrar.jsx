@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { Link } from '@mui/material';
+
 const theme = createTheme({
     palette: {
         primary: {
@@ -60,7 +61,6 @@ const theme = createTheme({
     },
 });
 
-
 const Form = ({ onClose }) => {
     const [nombres, setNombres] = useState('');
     const [apellidos, setApellidos] = useState('');
@@ -68,6 +68,7 @@ const Form = ({ onClose }) => {
     const [celular, setCelular] = useState('');
     const [correoElectronico, setCorreoElectronico] = useState('');
     const [confCorreoElectronico, setConfCorreoElectronico] = useState('');
+    const [rol] = useState(1);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -75,10 +76,11 @@ const Form = ({ onClose }) => {
         const formData = {
             nombres,
             apellidos,
-            nombre_usuario: nombreUsuario, // Asegúrate de que los nombres de las claves coincidan con los del modelo en Django
+            nombre_usuario: nombreUsuario,
             celular,
             correo_electronico: correoElectronico,
             conf_correo_electronico: confCorreoElectronico,
+            rol: { id: 1 }, 
         };
 
         try {
