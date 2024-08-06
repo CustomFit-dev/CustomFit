@@ -8,4 +8,5 @@ router.register(r'userprofiles', UserProfileViewSet)
 urlpatterns = [
     path('api/register/', register_user, name='register_user'),
     path('api/userprofiles/', UserProfileViewSet.as_view({'get': 'list'}), name='userprofile-list'),
+    
 ]

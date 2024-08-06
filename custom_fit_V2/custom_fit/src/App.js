@@ -1,19 +1,23 @@
 import './css/index.css';
-import {Routes, Route} from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import Store from './components/Store';
-import Form from './components/modules/Registrar';
-import Crud from './components/modules/Crud';
+import Form_R from './components/modules/Registrar';
+import Form_I from './components/modules/Iniciar';
+import Crud from './components/Crud';
 
 function App() {
   return (
     <div className="App">
-      <Routes>
-        <Route path="/Home" element={<Home/>}/>
-        <Route path="/Store" element={<Store/>}/>
-        <Route path="/Form" element={<Form/>}/>
-        <Route path="/Crud" element={<Crud/>}/>
-      </Routes>
+        <Routes>
+          <Route path="/Home" element={<Home />} />
+          <Route path="/Store" element={<Store />} />
+          <Route path="/Registrar" element={<Form_R />} />
+          <Route path="/Iniciar" element={<Form_I />} />
+          <Route path="/Crud" element={<Crud />} />
+          <Route path="*" element={<Navigate to="/Home" />} />
+        </Routes>
+
     </div>
   );
 }

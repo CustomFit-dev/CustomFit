@@ -4,7 +4,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { Link } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 
 const theme = createTheme({
     palette: {
@@ -61,7 +61,7 @@ const theme = createTheme({
     },
 });
 
-const Form = ({ onClose }) => {
+const Form_R = () => {
     const [nombres, setNombres] = useState('');
     const [apellidos, setApellidos] = useState('');
     const [nombreUsuario, setNombreUsuario] = useState('');
@@ -69,6 +69,7 @@ const Form = ({ onClose }) => {
     const [correoElectronico, setCorreoElectronico] = useState('');
     const [confCorreoElectronico, setConfCorreoElectronico] = useState('');
     const [rol] = useState(1);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -109,14 +110,14 @@ const Form = ({ onClose }) => {
             <div id='oscure'>
                 <form onSubmit={handleSubmit}>
                     <div className="form-row">
-                        <IconButton onClick={onClose}>
+                        <IconButton onClick={() => navigate('/login')}>
                             <CloseIcon />
                         </IconButton>
                         <div className="mydict">
                             <div>
                                 <label>
                                     <input type="radio" name="radio" />
-                                    <span><Link to="/">Inicio</Link></span>
+                                    <span><Link to="/Iniciar">Inicio</Link></span>
                                 </label>
                                 <label>
                                     <input type="radio" name="radio" />
@@ -185,14 +186,13 @@ const Form = ({ onClose }) => {
                             <Button type='submit' variant="contained">
                                 Registrar
                             </Button>
-                            <div className="fondo">
-                            </div>
+                            <div className="fondo"></div>
                         </div>
                     </div>
                 </form>
             </div>
         </ThemeProvider>
     );
-}
+};
 
-export default Form;
+export default Form_R;

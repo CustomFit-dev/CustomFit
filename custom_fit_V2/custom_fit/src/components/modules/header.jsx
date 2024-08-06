@@ -14,43 +14,12 @@ import MenuItem from '@mui/material/MenuItem';
 import logo from './mod_img/Logo-prin-f.png';
 import Form from './Registrar'; 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-
-const theme = createTheme({
-  components: {
-    MuiAppBar: {
-      styleOverrides: {
-        root: {
-          backgroundColor: 'rgb(23,23,23)',
-        },
-      },
-    },
-    MuiMenu: {
-      styleOverrides: {
-        paper: {
-          backgroundColor: 'rgb(23,23,23)',
-          color: '#ffffff'
-        },
-      },
-    },
-    MuiMenuItem: {
-      styleOverrides: {
-        root: {
-          color: '#ffffff',
-          '&.Mui-selected': {
-            backgroundColor: 'rgb(23,23,23)',
-            color: '#ffffff', 
-          },
-        },
-      },
-    },
-  },
-});
+import theme from './Themes';
 
 const pages = [
-  { name: 'Inicio', route: '' },
-  { name: 'Productos', route: '#sobre' },
-  { name: 'Nosotros', route: '#prod' }
+  { name: 'Inicio', route: '#inicio' },
+  { name: 'Nosotros', route: '#sobre' },
+  { name: 'Productos', route: '#prod' },
 ];
 
 const settings = [
