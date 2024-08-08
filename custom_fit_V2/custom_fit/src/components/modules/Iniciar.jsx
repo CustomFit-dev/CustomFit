@@ -4,7 +4,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const theme = createTheme({
     palette: {
@@ -61,16 +62,45 @@ const theme = createTheme({
     },
 });
 
+const enviarCodigo = async (correoElectronico) => {
+    try {
+        const response = await axios.post('http://localhost:8000/api/enviar_codigo/', {
+            correo_electronico: correoElectronico
+        }, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        console.log('Código enviado:', response.data.message);
+        alert('Código enviado al correo electrónico.');
+    } catch (error) {
+        console.error('Error en la solicitud:', error.response ? error.response.data : error.message);
+        alert('Error al enviar el código.');
+    }
+};
 const Form_I = ({ onClose }) => {
     const [correoElectronico, setCorreoElectronico] = useState('');
     const [codigo, setCodigo] = useState('');
+    const [correoCodigoEnviado, setCorreoCodigoEnviado] = useState('');
+
+    const handleEnviarCodigo = async () => {
+        const codigoEnviado = await enviarCodigo(correoElectronico);
+        if (codigoEnviado) {
+            setCorreoCodigoEnviado(correoElectronico);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (correoElectronico !== correoCodigoEnviado) {
+            alert('El correo electrónico no coincide con el correo al que se envió el código.');
+            return;
+        }
+
         const formData = {
             correo_electronico: correoElectronico,
-            codigo,
+            codigo_verificacion: codigo,
         };
 
         try {
@@ -135,6 +165,13 @@ const Form_I = ({ onClose }) => {
                             </div>
                             <Button type='submit' variant="contained">
                                 Iniciar sesión
+                            </Button>
+                            <Button
+                                type='button'
+                                variant="outlined"
+                                onClick={handleEnviarCodigo}
+                            >
+                                Enviar Código
                             </Button>
                             <div className="fondo">
                             </div>

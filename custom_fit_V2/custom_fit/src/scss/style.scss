@@ -462,4 +462,42 @@ label:last-child span {
     }
   }
 }
+.carousel-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+
+  .carousel-list {
+    display: flex;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    /* El ancho del ul debe ser igual al número de imágenes multiplicado por 100% */
+    width: 100%;
+  }
+
+  .carousel-item {
+    min-width: 100%; /* Cada imagen ocupa el 100% del contenedor */
+    height: 280px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .leftArrow,
+  .rightArrow {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+}
 }

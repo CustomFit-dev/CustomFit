@@ -29,6 +29,7 @@ class UserProfile(models.Model):
     correo_electronico = models.EmailField()
     conf_correo_electronico = models.EmailField()
     rol = models.ForeignKey(rol, on_delete=models.CASCADE, default=2, null=True, blank=True)
+    codigo_verificacion = models.CharField(max_length=6, null=True, blank=True)
     fecha_sesion = models.DateTimeField(null=True, blank=True, auto_now_add=True)
     
 
