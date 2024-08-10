@@ -39,6 +39,7 @@ const theme = createTheme({
                 },
             },
         },
+        
         MuiButton: {
             styleOverrides: {
                 root: {
@@ -173,7 +174,7 @@ const Form_I = ({ onClose }) => {
                             >
                                 Enviar Código
                             </Button>
-                            <div className="fondo">
+                            <div className="fondoInicio">
                             </div>
                         </div>
                     </div>

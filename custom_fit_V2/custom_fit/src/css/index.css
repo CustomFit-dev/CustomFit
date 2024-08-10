@@ -472,5 +472,17 @@ body .carousel-container .leftArrow:hover,
 body .carousel-container .rightArrow:hover {
   background-color: #0056b3;
 }
-
+/*css del inicio*/
+.fondoInicio{
+  background-image: url(../img/fondoInicio.png);
+  background-repeat: no-repeat;
+  width: 100%;
+  max-width: 200px;
+  height: 200px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(10%, -50%);
+  z-index: 30;
+}
 /*# sourceMappingURL=index.css.map */
