@@ -9,7 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#00a99d',
+            main: '#00a99d',    
         },
         text: {
             primary: '#00a99d',
@@ -43,11 +43,13 @@ const theme = createTheme({
                 root: {
                     margin: '10px',
                     padding: '10px 20px',
-                    backgroundColor: '#1976d2',
+                    backgroundColor: 'transparent',
+                    border:'1px solid #00a99d',
                     color: '#ffffff',
                     display: 'block',
-                    marginLeft: 'auto',
+                    marginLeft: '150px',
                     marginRight: 'auto',
+                    marginTop:'40px',
                 },
             },
         },
@@ -110,7 +112,7 @@ const Form_R = () => {
             <div id='oscure'>
                 <form onSubmit={handleSubmit}>
                     <div className="form-row">
-                        <IconButton onClick={() => navigate('/login')}>
+                        <IconButton className="salirx" onClick={() => navigate('/login')}>
                             <CloseIcon />
                         </IconButton>
                         <div className="mydict">

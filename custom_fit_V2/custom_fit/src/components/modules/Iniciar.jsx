@@ -6,6 +6,8 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 const theme = createTheme({
     palette: {
@@ -45,7 +47,8 @@ const theme = createTheme({
                 root: {
                     margin: '10px',
                     padding: '10px 20px',
-                    backgroundColor: '#1976d2',
+                    backgroundColor: 'transparent',
+                    border:'1px solid #00a99d',
                     color: '#ffffff',
                     display: 'block',
                     marginLeft: 'auto',
@@ -83,6 +86,7 @@ const Form_I = ({ onClose }) => {
     const [correoElectronico, setCorreoElectronico] = useState('');
     const [codigo, setCodigo] = useState('');
     const [correoCodigoEnviado, setCorreoCodigoEnviado] = useState('');
+    const navigate = useNavigate();
 
     const handleEnviarCodigo = async () => {
         const codigoEnviado = await enviarCodigo(correoElectronico);
@@ -130,22 +134,24 @@ const Form_I = ({ onClose }) => {
             <div id='oscure'>
                 <form onSubmit={handleSubmit}>
                     <div className="form-row">
-                        <IconButton onClick={onClose}>
+                        <IconButton className="salirx" onClick={() => navigate('/login')}>
                             <CloseIcon />
                         </IconButton>
                         <div className="mydict">
                             <div>
-                                <Link to="/Iniciar">
-                                    <span>Inicio</span>
-                                </Link>
-                                <Link to="/Home">
-                                    <span>Registrar</span>
-                                </Link>
+                                <label>
+                                    <input type="radio" name="radio" />
+                                    <span><Link to="/Iniciar">Inicio</Link></span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="radio" />
+                                    <span>Registro</span>
+                                </label>
                             </div>
                         </div>
-                        <h1>Iniciar Sesión</h1>
+                        <h1 id="h1inicio">Iniciar Sesión</h1>
                         <div className='form-con'>
-                            <div className="form-group col-md-6">
+                            <div className="form-group col-md-6" id="inputin">
                                 <TextField
                                     id="correo-electronico"
                                     label="Correo Electrónico"
@@ -164,16 +170,23 @@ const Form_I = ({ onClose }) => {
                                     onChange={(e) => setCodigo(e.target.value)}
                                 />
                             </div>
-                            <Button type='submit' variant="contained">
+                            <div className="btnIncio">
+                            <Button 
+                            type='submit' 
+                            variant="contained"
+                            id="bot"
+                            >
                                 Iniciar sesión
                             </Button>
                             <Button
+                                id="bot"
                                 type='button'
                                 variant="outlined"
                                 onClick={handleEnviarCodigo}
                             >
                                 Enviar Código
                             </Button>
+                            </div>
                             <div className="fondoInicio">
                             </div>
                         </div>
