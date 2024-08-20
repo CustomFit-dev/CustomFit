@@ -2,7 +2,7 @@
 $bg-color: transparent;
 $text-color: white;
 $page-color: rgb(23,23,23);
-$foot: #02504b; 
+$foot: #6b6b6b; 
 
 @media (max-width: 1000px) {
   header{
@@ -500,4 +500,14 @@ label:last-child span {
     }
   }
 }
+
+#c1{
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.Myswiper{
+
+}
+
 }

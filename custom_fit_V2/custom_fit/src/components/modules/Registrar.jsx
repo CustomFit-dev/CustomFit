@@ -5,11 +5,12 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { Link, useNavigate } from 'react-router-dom';
+import Nav from '../modules/Nav';
 
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#00a99d',    
+            main: '#00a99d',
         },
         text: {
             primary: '#00a99d',
@@ -44,12 +45,12 @@ const theme = createTheme({
                     margin: '10px',
                     padding: '10px 20px',
                     backgroundColor: 'transparent',
-                    border:'1px solid #00a99d',
+                    border: '1px solid #00a99d',
                     color: '#ffffff',
                     display: 'block',
                     marginLeft: '150px',
                     marginRight: 'auto',
-                    marginTop:'40px',
+                    marginTop: '40px',
                 },
             },
         },
@@ -70,7 +71,6 @@ const Form_R = () => {
     const [celular, setCelular] = useState('');
     const [correoElectronico, setCorreoElectronico] = useState('');
     const [confCorreoElectronico, setConfCorreoElectronico] = useState('');
-    const [rol] = useState(1);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -115,18 +115,7 @@ const Form_R = () => {
                         <IconButton className="salirx" onClick={() => navigate('/login')}>
                             <CloseIcon />
                         </IconButton>
-                        <div className="mydict">
-                            <div>
-                                <label>
-                                    <input type="radio" name="radio" />
-                                    <span><Link to="/Iniciar">Inicio</Link></span>
-                                </label>
-                                <label>
-                                    <input type="radio" name="radio" />
-                                    <span>Registro</span>
-                                </label>
-                            </div>
-                        </div>
+                        {/* <Nav />  */}
                         <h1>Registrate</h1>
                         <div className='form-con'>
                             <div className="form-group col-md-6" id='input1'>
@@ -188,7 +177,6 @@ const Form_R = () => {
                             <Button type='submit' variant="contained">
                                 Registrar
                             </Button>
-                            <div className="fondo"></div>
                         </div>
                     </div>
                 </form>

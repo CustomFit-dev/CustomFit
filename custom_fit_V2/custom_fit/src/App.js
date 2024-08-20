@@ -1,4 +1,4 @@
-import './css/index.css';
+import './scss/style.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './components/Home';
 import Store from './components/Store';
@@ -12,7 +12,8 @@ function App() {
         <Routes>
           <Route path="/Home" element={<Home />} />
           <Route path="/Store" element={<Store />} />
-          <Route path="/Registrar" element={<Form_R />} />
+          <Route path="/inicio" component={Form_I} />
+          <Route path="/registro" component={Form_R} />
           <Route path="/Iniciar" element={<Form_I />} />
           <Route path="/Crud" element={<Crud />} />
           <Route path="*" element={<Navigate to="/Home" />} />
