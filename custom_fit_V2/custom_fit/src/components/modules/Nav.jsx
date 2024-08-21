@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link, Routes, Route } from 'react-router-dom';
 import Form_R from './Registrar';
 import Form_I from './Iniciar';
 
@@ -11,38 +12,32 @@ const Navigation = () => {
 
   return (
     <div className="mydict">
-      <div>
-        <label>
-          <input
-            type="radio"
-            name="radio"
-            checked={activeSection === 'inicio'}
-            onChange={() => handleNavigate('inicio')}
-          />
-          <span>
-            <a href="#inicio" onClick={() => handleNavigate('inicio')}>
-              Inicio
-            </a>
-          </span>
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="radio"
-            checked={activeSection === 'registro'}
-            onChange={() => handleNavigate('registro')}
-          />
-          <span>
-            <a href="#registro" onClick={() => handleNavigate('registro')}>
-              Registro
-            </a>
-          </span>
-        </label>
-      </div>
-      <div className="form-container">
-        {activeSection === 'inicio' && <Form_I />}
-        {activeSection === 'registro' && <Form_R />}
-      </div>
+      <label>
+        <input
+          type="radio"
+          name="radio"
+          checked={activeSection === 'inicio'}
+          onChange={() => handleNavigate('inicio')}
+        />
+        <span>
+          <Link to="/Iniciar" onClick={() => handleNavigate('inicio')}>
+            Inicio
+          </Link>
+        </span>
+      </label>
+      <label>
+        <input
+          type="radio"
+          name="radio"
+          checked={activeSection === 'registro'}
+          onChange={() => handleNavigate('registro')}
+        />
+        <span>
+          <Link to="/Registro" onClick={() => handleNavigate('registro')}>
+            Registro
+          </Link>
+        </span>
+      </label>
     </div>
   );
 };

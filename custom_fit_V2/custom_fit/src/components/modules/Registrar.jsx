@@ -4,7 +4,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Nav from '../modules/Nav';
 
 const theme = createTheme({
@@ -71,10 +71,13 @@ const Form_R = () => {
     const [celular, setCelular] = useState('');
     const [correoElectronico, setCorreoElectronico] = useState('');
     const [confCorreoElectronico, setConfCorreoElectronico] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        setLoading(true);
 
         const formData = {
             nombres,
@@ -98,12 +101,18 @@ const Form_R = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Registro exitoso:', data);
+                alert('Datos enviados. Por favor, confirma que todo está correcto.');
+                navigate('/Iniciar');
             } else {
                 const errorData = await response.json();
                 console.error('Registration failed:', errorData);
+                alert('Error al enviar los datos. Por favor, inténtalo de nuevo.');
             }
         } catch (error) {
             console.error('Error:', error);
+            alert('Error en la conexión. Por favor, verifica tu conexión a internet y vuelve a intentarlo.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -115,7 +124,7 @@ const Form_R = () => {
                         <IconButton className="salirx" onClick={() => navigate('/login')}>
                             <CloseIcon />
                         </IconButton>
-                        {/* <Nav />  */}
+                        <Nav /> 
                         <h1>Registrate</h1>
                         <div className='form-con'>
                             <div className="form-group col-md-6" id='input1'>
@@ -174,7 +183,11 @@ const Form_R = () => {
                                     onChange={(e) => setConfCorreoElectronico(e.target.value)}
                                 />
                             </div>
-                            <Button type='submit' variant="contained">
+                            <Button 
+                                type='submit' 
+                                variant="contained"
+                                disabled={loading}
+                            >
                                 Registrar
                             </Button>
                         </div>

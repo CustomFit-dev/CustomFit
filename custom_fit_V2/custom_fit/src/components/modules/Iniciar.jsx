@@ -4,10 +4,9 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
+import Nav from './Nav';
 
 const theme = createTheme({
     palette: {
@@ -41,14 +40,13 @@ const theme = createTheme({
                 },
             },
         },
-        
         MuiButton: {
             styleOverrides: {
                 root: {
                     margin: '10px',
                     padding: '10px 20px',
                     backgroundColor: 'transparent',
-                    border:'1px solid #00a99d',
+                    border: '1px solid #00a99d',
                     color: '#ffffff',
                     display: 'block',
                     marginLeft: 'auto',
@@ -66,7 +64,7 @@ const theme = createTheme({
     },
 });
 
-const enviarCodigo = async (correoElectronico) => {
+const enviarCodigo = async (correoElectronico, setCodigoEnviado) => {
     try {
         const response = await axios.post('http://localhost:8000/api/enviar_codigo/', {
             correo_electronico: correoElectronico
@@ -77,29 +75,28 @@ const enviarCodigo = async (correoElectronico) => {
         });
         console.log('Código enviado:', response.data.message);
         alert('Código enviado al correo electrónico.');
+        setCodigoEnviado(response.data.codigo); // Asumiendo que el servidor devuelve el código
     } catch (error) {
         console.error('Error en la solicitud:', error.response ? error.response.data : error.message);
         alert('Error al enviar el código.');
     }
 };
+
 const Form_I = ({ onClose }) => {
     const [correoElectronico, setCorreoElectronico] = useState('');
     const [codigo, setCodigo] = useState('');
-    const [correoCodigoEnviado, setCorreoCodigoEnviado] = useState('');
+    const [codigoEnviado, setCodigoEnviado] = useState('');
     const navigate = useNavigate();
 
     const handleEnviarCodigo = async () => {
-        const codigoEnviado = await enviarCodigo(correoElectronico);
-        if (codigoEnviado) {
-            setCorreoCodigoEnviado(correoElectronico);
-        }
+        await enviarCodigo(correoElectronico, setCodigoEnviado);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (correoElectronico !== correoCodigoEnviado) {
-            alert('El correo electrónico no coincide con el correo al que se envió el código.');
+        if (codigo !== codigoEnviado) {
+            alert('El código ingresado no es correcto.');
             return;
         }
 
@@ -120,12 +117,15 @@ const Form_I = ({ onClose }) => {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Inicio de sesión exitoso:', data);
+                navigate('/home'); // O la ruta que desees redirigir
             } else {
                 const errorData = await response.json();
                 console.error('Inicio de sesión fallido:', errorData);
+                alert('Código de verificación incorrecto o expirado.');
             }
         } catch (error) {
             console.error('Error:', error);
+            alert('Error en la conexión. Por favor, verifica tu conexión a internet y vuelve a intentarlo.');
         }
     };
 
@@ -137,18 +137,7 @@ const Form_I = ({ onClose }) => {
                         <IconButton className="salirx" onClick={() => navigate('/login')}>
                             <CloseIcon />
                         </IconButton>
-                        <div className="mydict">
-                            <div>
-                                <label>
-                                    <input type="radio" name="radio" />
-                                    <span><Link to="/Iniciar">Inicio</Link></span>
-                                </label>
-                                <label>
-                                    <input type="radio" name="radio" />
-                                    <span>Registro</span>
-                                </label>
-                            </div>
-                        </div>
+                        <Nav />
                         <h1 id="h1inicio">Iniciar Sesión</h1>
                         <div className='form-con'>
                             <div className="form-group col-md-6" id="inputin">
@@ -171,21 +160,21 @@ const Form_I = ({ onClose }) => {
                                 />
                             </div>
                             <div className="btnIncio">
-                            <Button 
-                            type='submit' 
-                            variant="contained"
-                            id="bot"
-                            >
-                                Iniciar sesión
-                            </Button>
-                            <Button
-                                id="bot"
-                                type='button'
-                                variant="outlined"
-                                onClick={handleEnviarCodigo}
-                            >
-                                Enviar Código
-                            </Button>
+                                <Button 
+                                    type='submit' 
+                                    variant="contained"
+                                    id="bot"
+                                >
+                                    Iniciar sesión
+                                </Button>
+                                <Button
+                                    id="bot"
+                                    type='button'
+                                    variant="outlined"
+                                    onClick={handleEnviarCodigo}
+                                >
+                                    Enviar Código
+                                </Button>
                             </div>
                             <div className="fondoInicio">
                             </div>
@@ -195,6 +184,6 @@ const Form_I = ({ onClose }) => {
             </div>
         </ThemeProvider>
     );
-}
+};
 
 export default Form_I;

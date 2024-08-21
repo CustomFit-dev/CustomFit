@@ -81,5 +81,5 @@ def login_view(request):
     except UserProfile.DoesNotExist:
         return Response({'status': 'error', 'message': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
-        print(f"Error en login_view: {e}")  # Imprimir el error para debug
+        print(f"Error en login_view: {e}") 
         return Response({'status': 'error', 'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

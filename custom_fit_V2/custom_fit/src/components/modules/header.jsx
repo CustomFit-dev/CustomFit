@@ -18,7 +18,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from './Themes';
 
 const pages = [
-  { name: 'Inicio', route: '#inicio' },
+  { name: 'Inicio', route: '/Home' },
   { name: 'Nosotros', route: '#sobre' },
   { name: 'Productos', route: '#prod' },
 ];
@@ -66,7 +66,7 @@ function Header() {
                 variant="h6"
                 noWrap
                 component={Link}
-                to=""
+                to="/Home"
                 sx={{
                   mr: 2,
                   display: { xs: 'none', md: 'flex' },
@@ -112,9 +112,9 @@ function Header() {
                   {pages.map((page) => (
                     <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                       <Typography textAlign="center">
-                        <a href={page.route} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Link to={page.route} style={{ textDecoration: 'none', color: 'inherit' }}>
                           {page.name}
-                        </a>
+                        </Link>
                       </Typography>
                     </MenuItem>
                   ))}
@@ -124,7 +124,7 @@ function Header() {
                 variant="h5"
                 noWrap
                 component={Link}
-                to="/Home"
+                to="/Home" // Cambié el 'to' a '/Home' aquí también
                 sx={{
                   mr: 2,
                   display: { xs: 'flex', md: 'none' },
@@ -142,8 +142,8 @@ function Header() {
                 {pages.map((page) => (
                   <Button
                     key={page.name}
-                    component="a"
-                    href={page.route}
+                    component={Link} // Cambié 'component="a"' a 'component={Link}'
+                    to={page.route}
                     sx={{ my: 2, color: 'white', display: 'block' }}
                   >
                     {page.name}
