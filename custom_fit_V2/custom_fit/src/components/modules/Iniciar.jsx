@@ -138,7 +138,9 @@ const Form_I = ({ onClose }) => {
                             <CloseIcon />
                         </IconButton>
                         <Nav />
-                        <h1 id="h1inicio">Iniciar Sesión</h1>
+                        <div id="h1inicio">
+                        <h1>Iniciar Sesión</h1>
+                        </div>
                         <div className='form-con'>
                             <div className="form-group col-md-6" id="inputin">
                                 <TextField
@@ -159,7 +161,7 @@ const Form_I = ({ onClose }) => {
                                     onChange={(e) => setCodigo(e.target.value)}
                                 />
                             </div>
-                            <div className="btnIncio">
+                            <div className="btnIncio" id="bott">
                                 <Button 
                                     type='submit' 
                                     variant="contained"

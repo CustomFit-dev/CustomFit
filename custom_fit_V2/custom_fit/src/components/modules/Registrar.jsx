@@ -120,13 +120,14 @@ const Form_R = () => {
         <ThemeProvider theme={theme}>
             <div id='oscure'>
                 <form onSubmit={handleSubmit}>
-                    <div className="form-row">
+                    <div className="form-row glow">
                         <IconButton className="salirx" onClick={() => navigate('/login')}>
                             <CloseIcon />
                         </IconButton>
                         <Nav /> 
                         <h1>Registrate</h1>
                         <div className='form-con'>
+                        <div className="fondo"></div>
                             <div className="form-group col-md-6" id='input1'>
                                 <TextField
                                     id="Nombres"
@@ -182,6 +183,7 @@ const Form_R = () => {
                                     value={confCorreoElectronico}
                                     onChange={(e) => setConfCorreoElectronico(e.target.value)}
                                 />
+                                
                             </div>
                             <Button 
                                 type='submit' 

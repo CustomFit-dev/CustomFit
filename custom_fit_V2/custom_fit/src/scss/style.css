@@ -96,11 +96,19 @@ a {
   .fondo {
     display: none;
   }
+  .fondoInicio{
+    display: none;
+  }
+  #h1inicio{
+    display: flex;
+    justify-content: center;
+  }
   .mydict div {
     display: flex;
     flex-wrap: wrap;
     margin: auto;
     margin-left: 18% !important;
+    
     justify-content: center;
     width: 66%;
   }
@@ -324,27 +332,39 @@ body .form-row {
   background-color: rgb(23, 23, 23) !important;
   border-radius: 30px;
   margin: 20px auto;
-  box-shadow: rgba(0, 169, 158, 0.3529411765) 30px 30px 30px -20px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  border: 0px solid #00FFFF; 
+  box-shadow: 
+  0 0 0px #00FFFF,  /* Sombra cercana */
+  0 0 0px #00FFFF,  /* Sombra intermedia */
+  0 0 2px #00FFFF,  /* Sombra más lejana */
+  0 0 0px #00FFFF, 
+  0 0 20px #00FFFF;
+  
 }
 body .form-row .fondo {
-  background-image: url(../img/registro.png);
+  background-image: url(../img/fo.png);
   background-repeat: no-repeat;
-  width: 100%;
+  width: 80%;
   max-width: 500px;
-  height: 450px;
+  height: 350px;
+  background-size: 100%;
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 55%;
+  left: 45%;
   transform: translate(10%, -50%);
   z-index: 30;
 }
 body .form-row h1 {
   color: #00a99d;
-  margin: auto;
+  font-weight: 1000;
+  display: flex;
   text-align: center;
+  justify-content: center;
+  font-family: 'Great Vibes', cursive;
+  width: 45%;
 }
 body .form-group {
   display: flex;
@@ -375,15 +395,13 @@ body :focus {
 body .btn-outline-primaryX {
   color: white;
 }
-body .btn-outline-primaryX:hover {
-  background-color: #00a99d;
-}
-body .mydict div {
+
+.mydict {
+  
+  float: right;
   display: flex;
   flex-wrap: wrap;
-  margin-top: -2rem;
-  margin-left: 75%;
-  justify-content: center;
+
 }
 body .mydict input[type=radio] {
   clip: rect(0 0 0 0);
@@ -467,6 +485,7 @@ body .carousel-container .rightArrow {
   margin: 5px;
   cursor: pointer;
   border-radius: 5px;
+  
 }
 body .carousel-container .leftArrow:hover,
 body .carousel-container .rightArrow:hover {
@@ -499,5 +518,43 @@ body .form-container {
   padding: 20px;
   border-radius: 8px;
 }
-
+#h1inicio h1{
+  margin-top: 5%;
+  float: right;
+  width: 60%;
+}
+#inputin{
+  margin-top: 5%;
+  float: right;
+  width: 60%;
+  flex-direction: column;
+    gap: 10px;
+}
+#bott{
+  
+  float: right;
+  width: 60%;
+  margin-top: 5%; 
+  
+}
+#bott #bot{
+  display: flex;
+  float: left;
+  margin: 20px;
+  margin-left: 90px;
+}
+body .form-row .fondoInicio {
+  background-image: url(../img/fondoInicio.png);
+  background-repeat: no-repeat;
+  width: 100%;
+  max-width: 400px;
+  height: 600px;
+  background-size: 100%;
+  position: fixed;
+  top: 60%;
+  left: 0%;
+  transform: translate(10%, -50%);
+  z-index: 30;
+  
+}
 /*# sourceMappingURL=style.css.map */
