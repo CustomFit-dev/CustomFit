@@ -75,7 +75,7 @@ const enviarCodigo = async (correoElectronico, setCodigoEnviado) => {
         });
         console.log('Código enviado:', response.data.message);
         alert('Código enviado al correo electrónico.');
-        setCodigoEnviado(response.data.codigo); // Asumiendo que el servidor devuelve el código
+        setCodigoEnviado(response.data.codigo); 
     } catch (error) {
         console.error('Error en la solicitud:', error.response ? error.response.data : error.message);
         alert('Error al enviar el código.');
@@ -94,18 +94,26 @@ const Form_I = ({ onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (codigo !== codigoEnviado) {
-            alert('El código ingresado no es correcto.');
+        
+        if (!correoElectronico || !codigo) {
+            alert('Por favor, ingresa tanto el correo como el código de verificación.');
             return;
         }
 
-        const formData = {
-            correo_electronico: correoElectronico,
-            codigo_verificacion: codigo,
-        };
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(correoElectronico)) {
+            alert('Ingrese un correo electrónico válido.');
+            return;
+        }
+
+        const codigoInt = parseInt(codigo);
 
         try {
+            const formData = {
+                correo_electronico: correoElectronico,
+                codigo_verificacion: codigoInt,
+            };
+
             const response = await fetch('http://localhost:8000/api/login/', {
                 method: 'POST',
                 headers: {
@@ -117,11 +125,12 @@ const Form_I = ({ onClose }) => {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Inicio de sesión exitoso:', data);
-                navigate('/home'); // O la ruta que desees redirigir
+                const Usuario_actual = data.user && Object.keys(data.user).length > 0 ? data.user : null;
+                navigate('/home');
             } else {
                 const errorData = await response.json();
                 console.error('Inicio de sesión fallido:', errorData);
-                alert('Código de verificación incorrecto o expirado.');
+                alert(errorData.message || 'Código de verificación incorrecto o expirado.');
             }
         } catch (error) {
             console.error('Error:', error);
@@ -131,59 +140,56 @@ const Form_I = ({ onClose }) => {
 
     return (
         <ThemeProvider theme={theme}>
-            <div id='oscure'>
-                <form onSubmit={handleSubmit}>
-                    <div className="form-row">
-                        <IconButton className="salirx" onClick={() => navigate('/login')}>
-                            <CloseIcon />
-                        </IconButton>
-                        <Nav />
-                        <div id="h1inicio">
+            <form onSubmit={handleSubmit}>
+                <div className="form-row">
+                    <IconButton className="salirx" onClick={() => navigate('/login')}>
+                        <CloseIcon />
+                    </IconButton>
+                    <Nav />
+                    <div id="h1inicio">
                         <h1>Iniciar Sesión</h1>
+                    </div>
+                    <div className="form-con">
+                        <div className="form-group col-md-6" id="inputin">
+                            <TextField
+                                id="correo-electronico"
+                                label="Correo Electrónico"
+                                type="email"
+                                variant="standard"
+                                color="primary"
+                                value={correoElectronico}
+                                onChange={(e) => setCorreoElectronico(e.target.value)}
+                            />
+                            <TextField
+                                id="codigo"
+                                label="Código"
+                                variant="standard"
+                                color="primary"
+                                value={codigo}
+                                onChange={(e) => setCodigo(e.target.value)}
+                                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                            />
                         </div>
-                        <div className='form-con'>
-                            <div className="form-group col-md-6" id="inputin">
-                                <TextField
-                                    id="correo-electronico"
-                                    label="Correo Electrónico"
-                                    type="email"
-                                    variant="standard"
-                                    color="primary"
-                                    value={correoElectronico}
-                                    onChange={(e) => setCorreoElectronico(e.target.value)}
-                                />
-                                <TextField
-                                    id="codigo"
-                                    label="Código"
-                                    variant="standard"
-                                    color="primary"
-                                    value={codigo}
-                                    onChange={(e) => setCodigo(e.target.value)}
-                                />
-                            </div>
-                            <div className="btnIncio" id="bott">
-                                <Button 
-                                    type='submit' 
-                                    variant="contained"
-                                    id="bot"
-                                >
-                                    Iniciar sesión
-                                </Button>
-                                <Button
-                                    id="bot"
-                                    type='button'
-                                    variant="outlined"
-                                    onClick={handleEnviarCodigo}
-                                >
-                                    Enviar Código
-                                </Button>
-                            </div>
-                            <div className="fondoInicio">
-                            </div>
+                        <div className="btnIncio" id="bott">
+                            <Button 
+                                type='submit' 
+                                variant="contained"
+                                id="bot"
+                            >
+                                Iniciar sesión
+                            </Button>
+                            <Button
+                                id="bot"
+                                type='button'
+                                variant="outlined"
+                                onClick={handleEnviarCodigo}
+                            >
+                                Enviar Código
+                            </Button>
                         </div>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
         </ThemeProvider>
     );
 };

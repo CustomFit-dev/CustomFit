@@ -531,11 +531,8 @@ body .form-container {
     gap: 10px;
 }
 #bott{
-  
   float: right;
-  width: 60%;
   margin-top: 5%; 
-  
 }
 #bott #bot{
   display: flex;

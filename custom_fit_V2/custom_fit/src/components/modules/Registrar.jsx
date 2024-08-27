@@ -118,7 +118,6 @@ const Form_R = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <div id='oscure'>
                 <form onSubmit={handleSubmit}>
                     <div className="form-row glow">
                         <IconButton className="salirx" onClick={() => navigate('/login')}>
@@ -195,7 +194,6 @@ const Form_R = () => {
                         </div>
                     </div>
                 </form>
-            </div>
         </ThemeProvider>
     );
 };
