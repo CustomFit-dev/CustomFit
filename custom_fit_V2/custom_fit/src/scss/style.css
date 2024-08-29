@@ -442,7 +442,7 @@ body .btn-outline-primaryX {
   flex-wrap: wrap;
 }
 
-body .mydict input[type=radio] {
+.mydict input[type=radio] {
   clip: rect(0 0 0 0);
   clip-path: inset(100%);
   height: 1px;
@@ -454,14 +454,14 @@ body .mydict input[type=radio] {
   border: 2px solid #00a99d;
 }
 
-body .mydict input[type=radio]:checked + span {
+.mydict input[type=radio]:checked + span {
   box-shadow: 0 0 0 0.0625em #00a99d;
   background-color: #00a99d;
   z-index: 1;
   color: #ffffff;
 }
 
-body label span {
+.mydict label span {
   display: block;
   cursor: pointer;
   padding: 0.375em 0.75em;
@@ -474,11 +474,11 @@ body label span {
   transition: background-color 0.5s ease;
 }
 
-body label:first-child span {
+.mydict label:first-child span {
   border-radius: 0.375em 0 0 0.375em;
 }
 
-body label:last-child span {
+.mydict label:last-child span {
   border-radius: 0 0.375em 0.375em 0;
 }
 

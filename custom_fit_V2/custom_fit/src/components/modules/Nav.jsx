@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Routes, Route } from 'react-router-dom';
-import Form_R from './Registrar';
-import Form_I from './Iniciar';
+import { Link } from 'react-router-dom';
 
 const Navigation = () => {
   const [activeSection, setActiveSection] = useState('inicio');
@@ -19,11 +17,13 @@ const Navigation = () => {
           checked={activeSection === 'inicio'}
           onChange={() => handleNavigate('inicio')}
         />
-        <span>
-          <Link to="/Iniciar" onClick={() => handleNavigate('inicio')}>
-            Inicio
+        <Link to="/Iniciar">
+        <span
+          className={activeSection === 'inicio' ? 'active' : ''}
+          onClick={() => handleNavigate('inicio')}
+        >Inicio</span>
           </Link>
-        </span>
+ 
       </label>
       <label>
         <input
@@ -32,11 +32,13 @@ const Navigation = () => {
           checked={activeSection === 'registro'}
           onChange={() => handleNavigate('registro')}
         />
-        <span>
-          <Link to="/Registro" onClick={() => handleNavigate('registro')}>
-            Registro
+          <Link to="/Registro">
+          <span
+          className={activeSection === 'registro' ? 'active' : ''}
+          onClick={() => handleNavigate('registro')}
+        >Registro</span>
           </Link>
-        </span>
+
       </label>
     </div>
   );
