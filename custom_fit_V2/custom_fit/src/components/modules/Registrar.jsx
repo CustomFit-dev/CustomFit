@@ -5,6 +5,15 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
+import {
+    validateApe,
+    validatecel,
+    validateEmail,
+    validateNom,
+    validatenom_u,
+    validateEmailconf
+
+} from './validation';
 import Nav from '../modules/Nav';
 
 const theme = createTheme({
@@ -72,11 +81,30 @@ const Form_R = () => {
     const [correoElectronico, setCorreoElectronico] = useState('');
     const [confCorreoElectronico, setConfCorreoElectronico] = useState('');
     const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+
+    const validateForm = () => {
+        const errores = {
+            nombres: validateNom(nombres),
+            apellidos: validateApe(apellidos),
+            nombreUsuario: validatenom_u(nombreUsuario),
+            celular: validatecel(celular),
+            correoElectronico: validateEmail(correoElectronico),
+            confCorreoElectronico: validateEmailconf(confCorreoElectronico, correoElectronico),
+        }
+        setErrors(errores);
+        return Object.values(errores).every(error =>!error);
+
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!validateForm()) {
+            alert('Por favor, revisa los campos del formulario.');
+            return;
+        }
         setLoading(true);
 
         const formData = {
@@ -134,6 +162,8 @@ const Form_R = () => {
                                     variant="standard"
                                     color="primary"
                                     value={nombres}
+                                    error={!!errors.nombres}
+                                    helperText={errors.nombres}
                                     onChange={(e) => setNombres(e.target.value)}
                                 />
                                 <TextField
@@ -142,6 +172,8 @@ const Form_R = () => {
                                     variant="standard"
                                     color="primary"
                                     value={apellidos}
+                                    error={!!errors.apellidos}
+                                    helperText={errors.apellidos}
                                     onChange={(e) => setApellidos(e.target.value)}
                                 />
                             </div>
@@ -151,6 +183,8 @@ const Form_R = () => {
                                     label="Nombre De Usuario"
                                     variant="standard"
                                     color="primary"
+                                    error={!!errors.nombreUsuario}
+                                    helperText={errors.nombreUsuario}
                                     value={nombreUsuario}
                                     onChange={(e) => setNombreUsuario(e.target.value)}
                                 />
@@ -160,6 +194,9 @@ const Form_R = () => {
                                     variant="standard"
                                     color="primary"
                                     value={celular}
+                                    type='number'
+                                    error={!!errors.celular}
+                                    helperText={errors.celular}
                                     onChange={(e) => setCelular(e.target.value)}
                                 />
                             </div>
@@ -171,6 +208,8 @@ const Form_R = () => {
                                     variant="standard"
                                     color="primary"
                                     value={correoElectronico}
+                                    error={!!errors.correoElectronico}
+                                    helperText={errors.correoElectronico}
                                     onChange={(e) => setCorreoElectronico(e.target.value)}
                                 />
                                 <TextField
@@ -180,6 +219,8 @@ const Form_R = () => {
                                     type="email"
                                     color="primary"
                                     value={confCorreoElectronico}
+                                    error={!!errors.confCorreoElectronico}
+                                    helperText={errors.confCorreoElectronico || ''}
                                     onChange={(e) => setConfCorreoElectronico(e.target.value)}
                                 />
                                 

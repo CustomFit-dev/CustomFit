@@ -6,6 +6,10 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import {
+    validateEmail,
+    validateCode
+} from './validation';
 import Nav from './Nav';
 
 const theme = createTheme({
@@ -86,6 +90,7 @@ const Form_I = ({ onClose }) => {
     const [correoElectronico, setCorreoElectronico] = useState('');
     const [codigo, setCodigo] = useState('');
     const [codigoEnviado, setCodigoEnviado] = useState('');
+    const [errors, setErrors] = useState({});
     const navigate = useNavigate();
 
     const handleEnviarCodigo = async () => {
@@ -94,15 +99,17 @@ const Form_I = ({ onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        if (!correoElectronico || !codigo) {
-            alert('Por favor, ingresa tanto el correo como el código de verificación.');
-            return;
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(correoElectronico)) {
-            alert('Ingrese un correo electrónico válido.');
+    
+        const validateForm = () => {
+            const errores = {
+                correoElectronico: validateEmail(correoElectronico),
+                codigo: validateCode(codigo),
+            };
+            setErrors(errores);
+            return Object.values(errores).every(error => !error);
+        };
+    
+        if (!validateForm()) {
             return;
         }
 
@@ -152,22 +159,27 @@ const Form_I = ({ onClose }) => {
                     <div className="form-con">
                         <div className="form-group col-md-6" id="inputin">
                             <TextField
-                                id="correo-electronico"
-                                label="Correo Electrónico"
-                                type="email"
-                                variant="standard"
-                                color="primary"
-                                value={correoElectronico}
-                                onChange={(e) => setCorreoElectronico(e.target.value)}
+                            id="correo-electronico"
+                            label="Correo Electrónico"
+                            type="email"
+                            variant="standard"
+                            color="primary"
+                            value={correoElectronico}
+                            error={!!errors.correoElectronico}
+                            helperText={errors.correoElectronico || ''}
+                            onChange={(e) => setCorreoElectronico(e.target.value)}
                             />
                             <TextField
-                                id="codigo"
-                                label="Código"
-                                variant="standard"
-                                color="primary"
-                                value={codigo}
-                                onChange={(e) => setCodigo(e.target.value)}
-                                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+                            id="codigo"
+                            label="Código"
+                            variant="standard"
+                            color="primary"
+                            value={codigo}
+                            type='number'
+                            onChange={(e) => setCodigo(e.target.value)}
+                            error={!!errors.codigo} 
+                            helperText={errors.codigo || ''}
+                            inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
                             />
                         </div>
                         <div className="btnIncio" id="bott">
