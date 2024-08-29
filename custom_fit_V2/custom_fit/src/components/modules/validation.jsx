@@ -23,7 +23,7 @@ export const validatecel = (celular) =>{
     const celularP = /^[0-9]{10}$/;
     if (!celular.trim()){
         return'El celular es requerido';
-    }else if(!celularP(celular)){
+    }else if(!celularP.test(celular)){
         return 'EL numero celular no es valido';
     }
     return '';

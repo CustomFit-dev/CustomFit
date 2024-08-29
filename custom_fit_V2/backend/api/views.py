@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
@@ -8,6 +8,7 @@ from rest_framework.exceptions import ValidationError
 from django.core.mail import send_mail
 from .serializers import UserProfileSerializer
 from .models import UserProfile
+from django.db import connection
 import random
 from datetime import datetime, timedelta
 
@@ -84,3 +85,8 @@ def login_view(request):
     except Exception as e:
         print(f"Error en login_view: {e}")
         return Response({'status': 'error','message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+def borrar(request, iduser):
+    with connection.cursor() as cursor:
+        cursor.execute("CALL borrar(%s)", [iduser])
+    return redirect('/ruta_a_donde_redirigir_despues')
