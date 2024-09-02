@@ -574,3 +574,81 @@ body .form-row .fondoInicio {
 .sec1_s{
   padding-top: 6rem;
 }
+
+.MuiPaginationItem-root {
+  color: white !important;
+  background-color: blue;
+}
+
+.MuiPaginationItem-root.Mui-selected {
+  background-color: red;
+  color: white !important;
+}
+
+.css-uqq6zz-MuiFormLabel-root-MuiInputLabel-root {
+  color: white !important; 
+}
+
+.css-1rxz5jq-MuiSelect-select-MuiInputBase-input-MuiInput-input {
+  color: white !important;
+}
+
+.css-pqjvzy-MuiSvgIcon-root-MuiSelect-icon {
+  fill: white !important; 
+}
+
+.css-1v8abvc-MuiInputBase-root-MuiOutlinedInput-root {
+  color: white !important;
+}
+
+.css-i4bv87-MuiSvgIcon-root {
+  fill: white !important;
+  margin-right: 8px;
+}
+
+
+.css-1d3z3hw-MuiOutlinedInput-notchedOutline {
+  border-color: white !important;
+}
+
+.css-1vtrqgs-MuiPaper-root-MuiAppBar-root{
+  position: fixed !important;
+}
+
+div:where(.swal2-container).swal2-center>.swal2-popup {
+  background-color: black !important;
+}
+
+div:where(.swal2-container) h2:where(.swal2-title) {
+  color: white !important;
+}
+
+div:where(.swal2-container) .swal2-html-container{
+  color: white !important;
+}
+
+div:where(.swal2-icon).swal2-warning {
+  border-color: #00FFFF !important;
+  color:#00a99d !important;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm) {
+  border: solid white 1px !important;
+  background-color: transparent !important;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel){
+  border: solid white 1px !important;
+  background-color: transparent !important;
+
+}
+
+div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm):hover {
+  background-color: #00a99d !important;
+  color: white !important;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hover {
+  background-color: #00a99d !important;
+  color: white !important;
+}

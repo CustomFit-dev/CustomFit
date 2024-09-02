@@ -46,22 +46,63 @@ const Crud = () => {
     navigate('/Home');
   };
 
-  const handleDeleteUser = async (iduser) => {
-    try {
-      await axios.delete(`http://localhost:8000/api/borrar/${iduser}/`);
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+      const cookies = document.cookie.split(';');
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + '=') {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+const handleDeleteUser = async (iduser) => {
+  try {
+    const response = await axios.delete(`http://localhost:8000/api/delete-user/${iduser}/`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.status === 204) {
+      // User deleted successfully
       setUserProfiles((prevProfiles) =>
         prevProfiles.filter((profile) => profile.id !== iduser)
       );
-    } catch (error) {
-      console.error('Error al borrar el usuario:', error);
+    } else {
+      throw new Error(`Unexpected response status: ${response.status}`);
     }
-  };
+  } catch (error) {
+    console.error('Error al borrar el usuario:', error.response?.data || error.message);
+  }
+};
+
 
   const columns = [
     { accessorKey: 'nombres', header: 'Nombres' },
     { accessorKey: 'apellidos', header: 'Apellidos' },
     { accessorKey: 'correo_electronico', header: 'Correo' },
-    { accessorKey: 'nombre_usuario', header: 'Nombre de usuario' },
+    {
+      accessorKey: 'nombre_usuario',
+      header: 'Nombre de usuario',
+      Cell: ({ row }) => (
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography variant="body2">{row.original.nombre_usuario}</Typography>
+          <IconButton
+            color="error"
+            onClick={() => handleDeleteUser(row.original.id)}
+            size="small"
+          >
+            <DeleteIcon />
+          </IconButton>
+        </Box>
+      ),
+    },
     { accessorKey: 'rol.nombrerol', header: 'Rol' },
   ];
 
@@ -93,6 +134,18 @@ const Crud = () => {
       pagination: {
         ...MRT_Localization_ES.pagination,
         rowsPerPage: 'Filas por página',
+      },
+    },
+    MuiPaginationItem: {
+      styleOverrides: {
+        root: {
+          color: 'white',
+          backgroundColor: 'blue',
+          '&.Mui-selected': {
+            backgroundColor: 'red',
+            color: 'white',
+          },
+        },
       },
     },
   });

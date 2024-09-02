@@ -5,6 +5,7 @@ import Store from './components/Store';
 import Form_r from './components/modules/Registrar';
 import Form_i from './components/modules/Iniciar';
 import Crud from './components/Crud';
+import Home_l from './components/Home_L'
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/Registro" element={<Form_r />} />
           <Route path="/Iniciar" element={<Form_i />} />
           <Route path="/Crud" element={<Crud />} />
+          <Route path="/Home_L" element={<Home_l />} />
           <Route path="*" element={<Navigate to="/Home" />} />
         </Routes>
 
