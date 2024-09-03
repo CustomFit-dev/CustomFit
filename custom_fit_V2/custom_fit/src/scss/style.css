@@ -315,6 +315,12 @@ body .sec3 #img-c4 {
   border-radius: 0px 200px 0px 0px;
   background-image: url(../img/Muestras/Muestra-4.png);
   background-size: cover;
+  
+}
+
+body .sec3 #img-c4:hover{
+  background-image:url(../img/Muestras/Muestra-1.png);
+  transition-duration: 2s;
 }
 
 @media (max-width: 475px) {
