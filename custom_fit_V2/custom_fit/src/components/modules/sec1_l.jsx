@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import Typewriter from 'typewriter-effect';
 
 const Section = () => {
 
