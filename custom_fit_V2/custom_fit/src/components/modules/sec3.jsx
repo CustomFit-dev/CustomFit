@@ -5,25 +5,12 @@ const Section3 = () => {
         <div className='container'>
           <div className='row'>
             <div className='col'>
-            <div className='image-container' id='img-c1'>
-              </div>
-              <h3>Camisetas</h3>
-              </div>
-              <div className='col'>
-            <div className='image-container' id='img-c2'>
-              </div>
-              <h3>Gorras</h3>
-              </div>
-              <div className='col'>
-            <div className='image-container' id='img-c3'>
-              </div>
-              <h3>Buzos</h3>
-              </div>
-              <div className='col' id='col-4'>
-            <div className='image-container' id='img-c4'>
-              </div>
-              <h3>Medias</h3>
-            </div>
+            <div class="main">
+        <div class="caja caja1"></div>
+        <div class="caja caja2"></div>
+        <div class="caja caja3"></div>
+    </div>
+    </div>
           </div>
         </div>
       </section>
