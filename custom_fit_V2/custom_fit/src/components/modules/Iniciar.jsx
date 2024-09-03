@@ -133,6 +133,7 @@ const Form_I = ({ onClose }) => {
                 const data = await response.json();
                 console.log('Inicio de sesión exitoso:', data);
                 const Usuario_actual = data.user && Object.keys(data.user).length > 0 ? data.user : null;
+                console.log('Enviando datos:', formData);
                 navigate('/Home_L');
             } else {
                 const errorData = await response.json();

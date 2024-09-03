@@ -16,17 +16,22 @@ import logo from './mod_img/Logo-prin-f.png';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './Themes';
 import { useAuth } from './authcontext';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import BuildIcon from '@mui/icons-material/Build';
 
 const pages = [
-  { name: 'Inicio', route: '/Home_L' },
-  { name: 'Nosotros', route: '#sobre' },
-  { name: 'Productos', route: '#prod' },
-  { name: 'Tienda', route: '/Store' },
+  { name: 'Inicio', route: '/Home_L'},
+  { name: 'Comentarios', route: '#sobre'},
+  { name: 'Como funciona', route: '#prod'},
+  { name: 'Tienda', route: '/Store', icon: <ShoppingCartIcon /> },
 ];
 
 const settings = [
-  { name: 'Crud', route: '/Crud' },
-  { name: 'Cerrar sesión', route: '#' }
+  { name: 'Crud', route: '/Crud', icon: <BuildIcon /> },
+  { name: 'Perfil', route: '/Profile', icon: <AccountCircleIcon /> },
+  { name: 'Cerrar sesión', route: '#', icon: <ExitToAppIcon /> }
 ];
 
 function Header() {
@@ -148,9 +153,10 @@ function Header() {
                   key={page.name}
                   component={Link}
                   to={page.route}
-                  sx={{ my: 2, color: 'white', display: 'block' }}
+                  sx={{ my: 2, color: 'white', display: 'flex', alignItems: 'center' }}
                 >
-                  {page.name}
+                  {page.icon}
+                  <Typography sx={{ ml: 1 }}>{page.name}</Typography>
                 </Button>
               ))}
             </Box>
@@ -173,32 +179,34 @@ function Header() {
                   NULO
                 </Button>
               )}
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting.name} onClick={setting.name === 'Cerrar sesión' ? handleLogout : handleCloseUserMenu}>
-                    <Typography textAlign="center">
-                      <Link to={setting.route} style={{ textDecoration: 'none', color: 'inherit' }}>
-                        {setting.name}
-                      </Link>
-                    </Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
+             <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting) => (
+                <MenuItem key={setting.name} onClick={setting.name === 'Cerrar sesión' ? handleLogout : handleCloseUserMenu}>
+                  {setting.icon}
+                  <Typography textAlign="center" sx={{ ml: 1 }}>
+                    <Link to={setting.route} style={{ textDecoration: 'none', color: 'inherit' }}>
+                      {setting.name}
+                    </Link>
+                  </Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+
             </Box>
           </Toolbar>
         </Container>

@@ -1,68 +1,54 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { createContext, useState, useEffect } from 'react';
+import useLocalStorage from './useLocalStorage';
+import axios from './axiosp';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [storedUser, setStoredUser] = useLocalStorage('user', null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    console.log('AuthProvider useEffect triggered');
+    
     if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        console.log('Restoring user from localStorage:', parsedUser);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error('Error parsing user from localStorage:', error);
-      }
+      console.log('Retrieved stored user:', storedUser);
+      setUser(storedUser);
+      setIsAuthenticated(true);
+    } else {
+      console.log('No stored user found');
     }
-  }, []);
+  }, [storedUser]);
 
   const login = async (userData) => {
-    try {
-      const response = await axios.post('http://localhost:8000/api/login/', userData);
-      if (response.data && response.data.user) {
-        setUser(response.data.user);
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        navigate('/Home_L');
-      } else {
-        console.error('Unexpected response structure:', response.data);
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-    }
-  };
-  
+    console.log('Login function called with:', userData);
+    setUser(userData);
+    setIsAuthenticated(true);
+    setStoredUser(userData);
+    console.log('User logged in successfully');
 
-  const logout = async () => {
     try {
-      await axios.post('http://localhost:8000/api/logout/');
-      setUser(null);
-      localStorage.removeItem('user');
-      navigate('/home');
+      await axios.post('/api/login/', userData);
+      console.log('User data sent to backend successfully');
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('Error sending user data to backend:', error);
     }
   };
 
-  const isAuthenticated = !!user;
+  const logout = () => {
+    console.log('Logout function called');
+    setUser(null);
+    setIsAuthenticated(false);
+    setStoredUser(null);
+    console.log('User logged out successfully');
+  };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAuthenticated }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
-export default AuthProvider;
+export const useAuth = () => React.useContext(AuthContext);

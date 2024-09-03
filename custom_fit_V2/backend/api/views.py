@@ -1,9 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import status
 from rest_framework.exceptions import ValidationError
 from django.core.mail import send_mail
 from .serializers import UserProfileSerializer
@@ -11,13 +10,9 @@ from .models import UserProfile
 from django.db import connection
 import random
 from datetime import datetime, timedelta
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.authtoken.models import Token
+from rest_framework.views import APIView
 
 def home(request):
     return HttpResponse("Principal")
@@ -87,34 +82,40 @@ def login_view(request):
         user = UserProfile.objects.get(correo_electronico=correo_electronico)
         
         if user.codigo_verificacion == str(codigo_verificacion):
-            user.codigo_verificacion = None
+            user.codigo_verificacion = None  # Limpia el código de verificación
             user.save()
-            # Se podría guardar alguna sesión aquí si fuera necesario
-            return Response({'status': 'ok', 'nombre_usuario': user.nombre_usuario}, status=status.HTTP_200_OK)
+
+            # Enviar datos adicionales del usuario en la respuesta
+            return Response({
+                'status': 'ok',
+                'nombre_usuario': user.nombre_usuario,
+                'nombres': user.nombres,
+                'apellidos': user.apellidos,
+                'correo_electronico': user.correo_electronico,
+            }, status=status.HTTP_200_OK)
         else:
-            return Response({'status': 'error','message': 'Código incorrecto'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'status': 'error', 'message': 'Código incorrecto'}, status=status.HTTP_401_UNAUTHORIZED)
+
     except UserProfile.DoesNotExist:
-        return Response({'status': 'error','message': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'status': 'error', 'message': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         print(f"Error en login_view: {e}")
-        return Response({'status': 'error','message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'status': 'error', 'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class CustomAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data,
-                                           context={'request': request})
+        serializer = self.serializer_class(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
-        
+
         return Response({
             'token': token.key,
             'user_id': user.pk,
             'email': user.email,
             'name': user.nombre_usuario,
-            'avatarUrl': user.avatarUrl
+            'avatarUrl': getattr(user, 'avatarUrl', None),
         })
-
 
 @api_view(['POST'])
 def logout_view(request):
@@ -122,8 +123,8 @@ def logout_view(request):
         return Response({'status': 'ok', 'message': 'Sesión cerrada correctamente'}, status=status.HTTP_200_OK)
     except Exception as e:
         print(f"Error en logout_view: {e}")
-        return Response({'status': 'error','message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+        return Response({'status': 'error', 'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 @api_view(['DELETE'])
 def delete_user(request, pk):
     try:
@@ -132,3 +133,5 @@ def delete_user(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
     except UserProfile.DoesNotExist:
         return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
