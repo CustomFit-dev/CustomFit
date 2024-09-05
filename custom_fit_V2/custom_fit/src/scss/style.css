@@ -6,6 +6,7 @@ html {
   html {
     width: 80vh;
   }
+  
 }
 body {
   display: grid;
@@ -51,6 +52,18 @@ a {
 
 .highlight {
   color: #00a99d;
+  font-family: "Dancing Script", cursive;
+  font-size: 70px !important;
+}
+.hi {
+  color: #00a99d;
+  font-family: "Dancing Script", cursive;
+  font-size: 25px !important;
+}
+.tex{
+  font-family: "Dancing Script", cursive;
+  font-size: 20px !important;
+  line-height: 30px;
 }
 
 @media (max-width: 1000px) {
@@ -101,6 +114,9 @@ a {
   .fondoInicio {
     display: none;
   }
+  .sec2 .image-container img{
+    display: none;
+  }
   #h1inicio {
     display: flex;
     justify-content: center;
@@ -114,6 +130,7 @@ a {
     width: 66%;
   }
 }
+
 @media (max-width: 500px) {
   .form-row {
     width: 100% !important;
@@ -128,7 +145,9 @@ body header {
   z-index: 20;
   width: 100%;
 }
-
+.sec2 .image-container{
+  display: none;
+}
 body header #logo {
   max-width: 8rem;
 }
@@ -193,34 +212,214 @@ body .sec1 .container {
 body .sec1 .highlight {
   color: #00a99d;
 }
-
-body .sec1 .buttons {
+.sec1 .buttons{
+  width:auto;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  gap: 60px;
   margin-top: 2rem;
+  margin-left: 50px;
 }
-
-body .sec1 .btn {
-  padding: 10px 20px;
-  margin-right: 10px;
+.sec1 .btn-outline-primary{
+  display: flex;
+  position: relative;
+  padding: 10px 22px;
+  border-radius: 6px;
+  border: none;
+  color: #fff;
   cursor: pointer;
-  font-size: 1em;
-  color: white !important;
-  border-width: 2px !important;
-  border-color: #00a99d !important;
+  background-color: transparent;
+  border: 2px solid #00a99d;
+  transition: all 0.2s ease;
+  
 }
 
-body .sec1 .btn-primary {
+.sec1 .btn-outline-primary:active {
+  transform: scale(0.96);
+}
+.sec1 .btn-outline-primary:hover{
   background-color: #00a99d;
-  color: white !important;
-  width: 8rem;
+  color: black;
+}
+.sec1 .btn-outline-primary:before,
+.sec1 .btn-outline-primary:after {
+  position: absolute;
+  content: "";
+  width: 150%;
+  left: 50%;
+  height: 100%;
+  transform: translateX(-50%);
+  z-index: -1000;
+  background-repeat: no-repeat;
 }
 
-body .sec1 .btn-secondary {
-  background-color: #00a99d;
-  color: white;
-  width: 8rem;
-  margin-left: 1rem;
-  border-color: #00a99d;
+.sec1 .btn-outline-primary:hover:before {
+  top: -70%;
+  background-image: radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, transparent 20%, #00a99d 20%, transparent 30%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, transparent 10%, #00a99d 15%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%);
+  background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%,
+    10% 10%, 18% 18%;
+  background-position: 50% 120%;
+  animation: greentopBubbles 0.6s ease;
+  
 }
+
+@keyframes greentopBubbles {
+  0% {
+    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%,
+      40% 90%, 55% 90%, 70% 90%;
+  }
+
+  50% {
+    background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%,
+      50% 50%, 65% 20%, 90% 30%;
+  }
+
+  100% {
+    background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%,
+      50% 40%, 65% 10%, 90% 20%;
+    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+  }
+}
+
+.sec1 .btn-outline-primary:hover::after {
+  bottom: -70%;
+  background-image: radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, transparent 10%, #00a99d 15%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%);
+  background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%, 18% 18%;
+  background-position: 50% 0%;
+  animation: greenbottomBubbles 0.6s ease;
+}
+
+@keyframes greenbottomBubbles {
+  0% {
+    background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%,
+      70% -10%, 70% 0%;
+  }
+
+  50% {
+    background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%,
+      105% 0%;
+  }
+
+  100% {
+    background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%,
+      110% 10%;
+    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+  }
+}
+/* From Uiverse.io by zjssun */ 
+.sec1 .btn-secondary {
+  position: relative;
+  padding: 10px 40px;
+  border-radius: 6px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  background-color: transparent;
+  border: 2px solid #00a99d;
+  transition: all 0.2s ease;
+}
+.sec1 .btn-secondary:hover{
+  background-color: #00a99d;
+  color: black;
+}
+.sec1 .btn-secondary:active {
+  transform: scale(0.96);
+}
+
+.sec1 .btn-secondary:before,
+.sec1 .btn-secondary:after {
+  position: absolute;
+  content: "";
+  width: 150%;
+  left: 50%;
+  height: 100%;
+  transform: translateX(-50%);
+  z-index: -1000;
+  background-repeat: no-repeat;
+}
+
+.sec1 .btn-secondary:hover:before {
+  top: -70%;
+  background-image: radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, transparent 20%, #00a99d 20%, transparent 30%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, transparent 10%, #00a99d 15%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%);
+  background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%,
+    10% 10%, 18% 18%;
+  background-position: 50% 120%;
+  animation: greentopBubbles 0.6s ease;
+}
+
+@keyframes greentopBubbles {
+  0% {
+    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%,
+      40% 90%, 55% 90%, 70% 90%;
+  }
+
+  50% {
+    background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%,
+      50% 50%, 65% 20%, 90% 30%;
+  }
+
+  100% {
+    background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%,
+      50% 40%, 65% 10%, 90% 20%;
+    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+  }
+}
+
+.sec1 .btn-secondary:hover::after {
+  bottom: -70%;
+  background-image: radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, transparent 10%, #00a99d 15%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%),
+    radial-gradient(circle, #00a99d 20%, transparent 20%);
+  background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%, 18% 18%;
+  background-position: 50% 0%;
+  animation: greenbottomBubbles 0.6s ease;
+}
+
+@keyframes greenbottomBubbles {
+  0% {
+    background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%,
+      70% -10%, 70% 0%;
+  }
+
+  50% {
+    background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%,
+      105% 0%;
+  }
+
+  100% {
+    background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%,
+      110% 10%;
+    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
+  }
+}
+
 
 body .sec1 .image-container {
   display: flex !important;
@@ -429,7 +628,7 @@ body .btn-outline-primary1 {
   margin-top: 50px;
 }
 
-body .btn-outline-primary1:hover {
+body .btn .btn-outline-primary:hover {
   border: 2px solid #00a99d;
   color: white;
 }
@@ -442,6 +641,7 @@ body :focus {
 
 body .btn-outline-primaryX {
   color: white;
+  
 }
 
 .mydict {
@@ -813,5 +1013,18 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hov
       
       z-index: 1; /* Asegura que la imagen seleccionada se superponga a las otras */
   }
+}
+.sec3 .sec3texto {
+  color: #00a99d;
+  font-family: "Charmonman", cursive;
+  font-weight: 400;
+  font-style: normal;
+  margin: 0px auto;
+  margin-bottom: 50px;
+}
+.sec3 .sec3texto h2{
+  color: white;
+  margin: 0px auto;
+  font-size: 30px;
 }
 /*# sourceMappingURL=style.css.map */
