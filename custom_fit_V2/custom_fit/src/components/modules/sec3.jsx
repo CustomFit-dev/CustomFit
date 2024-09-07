@@ -13,12 +13,13 @@ const Section3 = () => {
           <div className='row'>
             <div className='col'>
             
-            <div class="main" >
-              
-        <div class="caja caja1" ></div>
-        <div class="caja caja2"></div>
-        <div class="caja caja3"></div>
-    </div>
+            <div class="main1" >
+              <div className='caj1'></div>
+              <div className='caj2'></div>
+              <div className='caj3'></div>
+              <div className='caj4'></div>
+              <div className='caj6'></div>
+            </div>
     </div>
           </div>
         </div>

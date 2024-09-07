@@ -202,6 +202,7 @@ body .sec1 {
   background-repeat: no-repeat;
   background-size: contain;
   background-position: 90vh 0;
+  background-attachment: fixed;
 }
 
 body .sec1 .container {
@@ -446,6 +447,8 @@ body .sec1 h1 {
 body .sec2 {
   text-align: left !important;
   color: white;
+  background-attachment: fixed;
+  
 }
 
 body .sec2 p {
@@ -473,6 +476,7 @@ body #sec2-f {
   z-index: 5;
   font-size: 1.5rem;
   font-weight: 600;
+  background-attachment: fixed;
 }
 
 body .sec3 {
@@ -939,7 +943,6 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hov
   height: 700px;
   margin-top: 40px;
   border: 2px solid rgb(255, 255, 255);
- 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -1020,7 +1023,7 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hov
   font-weight: 400;
   font-style: normal;
   margin: 0px auto;
-  margin-bottom: 50px;
+
 }
 .sec3 .sec3texto h2{
   color: white;
@@ -1028,3 +1031,43 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hov
   font-size: 30px;
 }
 /*# sourceMappingURL=style.css.map */
+.caj1{
+  background-image: url(../img/sec111.png);
+}
+.caj2{
+  background-image: url(../img/sect222.png);
+}
+.caj3{
+  background-image: url(../img//sect33.png);
+}
+.caj4{
+  background-image: url(../img/sec6.png);
+}
+.caj6{
+  background-image: url(../img/sect5.png);
+  
+}
+.main1{
+  display: flex;
+  height: 40rem;
+  gap: 10px;
+  
+
+}
+.main1 > div{
+  flex: 1;
+  border-radius: 1rem;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: auto 100%;
+  transition: all .8s cubic-bezier(.24, .4, .45, 1.4);
+  
+}
+.main1:hover > :not(:hover){
+  filter: grayscale(100%) opacity(20%);
+}
+.main1 > div:hover{
+  flex:5;
+  background-size: auto 100%;
+  
+}
