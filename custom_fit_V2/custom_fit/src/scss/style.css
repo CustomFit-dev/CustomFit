@@ -1071,3 +1071,318 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hov
   background-size: auto 100%;
   
 }
+.redes{
+  display: flex;
+  gap: 10px;
+  width: auto ;
+  height: auto;
+
+  flex-direction: column;
+}
+.redes h2{
+  font-size: 0.8rem;
+  color: white;
+  
+  width: 25rem;
+  text-align: center;
+}
+.bntredes{
+  width: 25rem;
+  height: 100%;
+  display: flex;
+  font-size: 1.3rem;
+  color: white;
+  justify-content: center;
+  transition: all 0.3s ease;
+  
+  flex-direction: row;
+  gap: 30px;
+}
+.Google1 {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition-duration: .3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+  background-color: transparent;
+  border: 2px solid red;
+}
+.sign {
+  width: 100%;
+  transition-duration: .3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign svg {
+  width: 30px;
+}
+
+.sign svg path {
+  fill: white;
+}
+/* text */
+.text {
+  position: absolute;
+  right: 0%;
+  width: 0%;
+  opacity: 0;
+  color: white;
+  font-size: 1.2em;
+  font-weight: 600;
+  transition-duration: .3s;
+}
+/* hover effect on button width */
+.Google1:hover {
+  width: 150px;
+  border-radius: 40px;
+  transition-duration: .3s;
+  background-color: red;
+}
+
+.Google1:hover .sign {
+  width: 30%;
+  transition-duration: .3s;
+  padding-left: 10px;
+}
+/* hover effect button's text */
+.Google1:hover .text {
+  opacity: 1;
+  width: 70%;
+  transition-duration: .3s;
+  padding-left: 5px;
+}
+/* button click effect*/
+.Google1:active {
+  transform: translate(2px ,2px);
+}
+
+.Fecebook {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition-duration: .3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+  background-color: transparent;
+  border: 2px solid rgb(13, 0, 255);
+}
+.sign {
+  width: 100%;
+  transition-duration: .3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign svg {
+  width: 30px;
+}
+
+.sign svg path {
+  fill: white;
+}
+/* text */
+.text1 {
+  position: absolute;
+  right: 0%;
+  width: 0%;
+  opacity: 0;
+  color: white;
+  font-size: 1.em;
+  font-weight: 600;
+  transition-duration: .3s;
+}
+/* hover effect on button width */
+.Fecebook:hover {
+  width: 150px;
+  border-radius: 40px;
+  transition-duration: .3s;
+  background-color: rgb(13, 0, 255);
+}
+
+.Fecebook:hover .sign {
+  width: 30%;
+  transition-duration: .3s;
+  padding-left: 10px;
+}
+/* hover effect button's text */
+.Fecebook:hover .text1 {
+  opacity: 1;
+  width: 70%;
+  transition-duration: .3s;
+  padding-left: 5px;
+}
+/* button click effect*/
+.Fecebook:active {
+  transform: translate(2px ,2px);
+}
+.Github {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition-duration: .3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+  background-color: transparent;
+  border: 2px solid purple;
+}
+.sign {
+  width: 100%;
+  transition-duration: .3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign svg {
+  width: 30px;
+}
+
+.sign svg path {
+  fill: white;
+}
+/* text */
+.text2{
+  position: absolute;
+  right: 0%;
+  width: 0%;
+  opacity: 0;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  transition-duration: .3s;
+}
+/* hover effect on button width */
+.Github:hover {
+  width: 150px;
+  border-radius: 40px;
+  transition-duration: .3s;
+  background-color: purple;
+}
+
+.Github:hover .sign {
+  width: 30%;
+  transition-duration: .3s;
+  padding-left: 10px;
+}
+/* hover effect button's text */
+.Github:hover .text2 {
+  opacity: 1;
+  width: 70%;
+  transition-duration: .3s;
+  padding-left: 5px;
+}
+/* button click effect*/
+.Github:active {
+  transform: translate(2px ,2px);
+}
+.Microsoft {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition-duration: .3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+  background-color: transparent;
+  border: 2px solid #036f9e;
+}
+.sign {
+  width: 100%;
+  transition-duration: .3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign svg {
+  width: 30px;
+}
+
+.sign svg path {
+  fill: white;
+}
+/* text */
+.text3{
+  position: absolute;
+  right: 0%;
+  width: 0%;
+  opacity: 0;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  transition-duration: .3s;
+}
+/* hover effect on button width */
+.Microsoft:hover {
+  width: 150px;
+  border-radius: 40px;
+  transition-duration: .3s;
+  background-color: #036f9e;
+}
+
+.Microsoft:hover .sign {
+  width: 30%;
+  transition-duration: .3s;
+  padding-left: 10px;
+}
+/* hover effect button's text */
+.Microsoft:hover .text3 {
+  opacity: 1;
+  width: 70%;
+  transition-duration: .3s;
+  padding-left: 5px;
+}
+/* button click effect*/
+.Microsoft:active {
+  transform: translate(2px ,2px);
+}
+.separator {
+  
+  width: 100 auto;
+  color: white;
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.separator > div {
+  width: 130px;
+  color: white;
+  height: 2px;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.separator > span {
+  color: #00a99d;
+  font-size: 15px;
+  font-weight: 600;
+}

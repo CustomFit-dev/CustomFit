@@ -158,6 +158,7 @@ const Form_I = ({ onClose }) => {
                         <h1>Iniciar Sesión</h1>
                     </div>
                     <div className="form-con">
+                    <div className="fondoInicio"></div>
                         <div className="form-group col-md-6" id="inputin">
                             <TextField
                             id="correo-electronico"

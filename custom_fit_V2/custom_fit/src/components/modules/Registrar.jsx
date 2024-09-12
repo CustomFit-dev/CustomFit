@@ -5,6 +5,14 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGoogle } from '@fortawesome/free-brands-svg-icons';
+import { faFacebook } from '@fortawesome/free-brands-svg-icons';
+import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import { faMicrosoft } from '@fortawesome/free-brands-svg-icons';
+
+
+
 import {
     validateApe,
     validatecel,
@@ -224,6 +232,46 @@ const Form_R = () => {
                                     onChange={(e) => setConfCorreoElectronico(e.target.value)}
                                 />
                                 
+                            </div>
+                            <div className='redes'>
+                            <div class="separator">
+                                <div></div>
+                                <span> O inicia sesión con </span>
+                                <div></div>
+                                </div>
+                                
+                                <div className='bntredes'>
+                                <button type='button' className='Google1'> 
+                                <div class="sign">
+
+                                <FontAwesomeIcon icon={faGoogle} size="lg" style={{color: "#ffffff",}} />
+                                <div class="text">Google</div>
+                                </div>
+                                </button>
+
+                                <button type='button' className='Fecebook'>
+                                <div class="sign">
+                                <FontAwesomeIcon icon={faFacebook} size="lg" style={{color: "#ffffff",}}/>
+                                <div class="text1">Facebook</div>
+                                </div>
+                                
+                                </button>
+                                <button type='button' className='Github'>
+                                <div class="sign">
+                                <FontAwesomeIcon icon={faGithub} size="lg" />
+                                <div class="text2">GitHub</div>
+                                </div>
+
+                                </button>
+                                <button type='button' className='Microsoft'>
+                                <div class="sign">
+                                <FontAwesomeIcon icon={faMicrosoft} size="lg" />
+                                <div class="text3">Microsoft</div>
+                                </div>
+
+                                </button>
+                                    </div>
+                                    
                             </div>
                             <Button 
                                 type='submit' 
