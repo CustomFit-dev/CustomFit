@@ -1,16 +1,22 @@
-export const validateNom = (nombres) =>{
-    if (!nombres.trim()){
-        return'Los nombres son requeridos'
-    }
-    return '';
-}
+const soloLetras = /^[a-zA-Z\s]+$/;
 
-export const validateApe = (apellidos) =>{
-    if (!apellidos.trim()){
-        return'Los apellidos son requeridos'
+export const validateNom = (nombres) => {
+    if (!nombres.trim()) {
+        return 'Los nombres son requeridos';
+    } else if (!soloLetras.test(nombres)) {
+        return 'Los nombres no pueden contener números';
     }
     return '';
-}
+};
+
+export const validateApe = (apellidos) => {
+    if (!apellidos.trim()) {
+        return 'Los apellidos son requeridos';
+    } else if (!soloLetras.test(apellidos)) {
+        return 'Los apellidos no pueden contener números';
+    }
+    return '';
+};
 
 export const validatenom_u = (nombre_usuario) =>{
     if (!nombre_usuario.trim()){
