@@ -1,47 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-function useLocalStorage(key, defaultValue) {
-  // Create state variable to store localStorage value in state
-  const [localStorageValue, setLocalStorageValue] = useState(() => {
+function useLocalStorage(key, initialValue) {
+  const [storedValue, setStoredValue] = useState(() => {
     try {
-      const value = localStorage.getItem(key);
-      
-      // If value is already present in localStorage then return it
-      if (value) {
-        return JSON.parse(value);
-      }
-      
-      // Else set default value in localStorage and then return it
-      else {
-        localStorage.setItem(key, JSON.stringify(defaultValue));
-        return defaultValue;
-      }
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      console.error(`Error retrieving value from localStorage: ${error}`);
-      return defaultValue;
+      console.error(error);
+      return initialValue;
     }
   });
 
-  // this method update our localStorage and our state
-  const setLocalStorageStateValue = (valueOrFn) => {
-    let newValue;
-    
-    if (typeof valueOrFn === 'function') {
-      const fn = valueOrFn;
-      newValue = fn(localStorageValue);
-    } else {
-      newValue = valueOrFn;
-    }
-
+  const setValue = (value) => {
     try {
-      localStorage.setItem(key, JSON.stringify(newValue));
-      setLocalStorageValue(newValue);
+      setStoredValue(value);
+      window.localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.error(`Error setting value in localStorage: ${error}`);
+      console.error(error);
     }
   };
 
-  return [localStorageValue, setLocalStorageStateValue];
+  return [storedValue, setValue];
 }
 
 export default useLocalStorage;

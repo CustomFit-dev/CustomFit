@@ -8,6 +8,7 @@ import Crud from './components/Crud';
 import Home_l from './components/Home_L';
 import Profile from './components/modules/profile';
 import axiosP from './components/modules/axiosp';
+import Verificar from './components/modules/verificar';
 
 function App() {
   const { sendUserData } = axiosP();
@@ -19,6 +20,7 @@ function App() {
           <Route path="/Store" element={<Store />} />
           <Route path="/Registro" element={<Form_r />} />
           <Route path="/Iniciar" element={<Form_i />} />
+          <Route path="/Verificar" element={<Verificar />} />
           <Route path="/Crud" element={<Crud />} />
           <Route path="/Home_L" element={<Home_l />} />
           <Route path="/Profile" element={<Profile />} />

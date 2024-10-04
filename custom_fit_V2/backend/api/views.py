@@ -13,6 +13,8 @@ from datetime import datetime, timedelta
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
+from rest_framework.authtoken.models import Token
+
 
 def home(request):
     return HttpResponse("Principal")
@@ -71,36 +73,35 @@ def enviar_codigo_view(request):
     except Exception as e:
         print(f"Error en enviar_codigo_view: {e}")
         return Response({'status': 'error', 'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 @api_view(['POST'])
 def login_view(request):
     correo_electronico = request.data.get('correo_electronico')
     codigo_verificacion = request.data.get('codigo_verificacion')
-    print(f"Intento de login con correo: {correo_electronico} y código: {codigo_verificacion}")
 
     try:
         user = UserProfile.objects.get(correo_electronico=correo_electronico)
         
         if user.codigo_verificacion == str(codigo_verificacion):
-            user.codigo_verificacion = None  # Limpia el código de verificación
+            user.codigo_verificacion = None
             user.save()
 
-            # Enviar datos adicionales del usuario en la respuesta
+            # Si estás usando un sistema de tokens para la autenticación
+            token, created = Token.objects.get_or_create(user=user)
+
             return Response({
                 'status': 'ok',
                 'nombre_usuario': user.nombre_usuario,
                 'nombres': user.nombres,
                 'apellidos': user.apellidos,
                 'correo_electronico': user.correo_electronico,
+                'token': token.key  # Incluye el token aquí
             }, status=status.HTTP_200_OK)
         else:
             return Response({'status': 'error', 'message': 'Código incorrecto'}, status=status.HTTP_401_UNAUTHORIZED)
 
     except UserProfile.DoesNotExist:
         return Response({'status': 'error', 'message': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
-    except Exception as e:
-        print(f"Error en login_view: {e}")
-        return Response({'status': 'error', 'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 class CustomAuthToken(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
