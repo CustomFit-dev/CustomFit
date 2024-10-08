@@ -122,7 +122,7 @@ const Form_R = () => {
             celular,
             correo_electronico: correoElectronico,
             conf_correo_electronico: confCorreoElectronico,
-            rol: { id: 1 }, 
+            rol: 1, 
         };
 
         try {
