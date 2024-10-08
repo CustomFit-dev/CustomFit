@@ -108,13 +108,16 @@ const Form_R = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
         if (!validateForm()) {
             alert('Por favor, revisa los campos del formulario.');
             return;
         }
         setLoading(true);
-
+    
+        // Genera el `user_id` si es necesario, por ejemplo, podrías asignarlo desde el frontend si ya lo tienes disponible.
+        // O si es algo que el backend lo asignará automáticamente (como en muchos sistemas), lo puedes omitir aquí.
+    
         const formData = {
             nombres,
             apellidos,
@@ -122,9 +125,10 @@ const Form_R = () => {
             celular,
             correo_electronico: correoElectronico,
             conf_correo_electronico: confCorreoElectronico,
-            rol: 1, 
+            rol: 1,  // Enviar solo el valor numérico para `rol`
+            user_id: 123, // Aquí deberías incluir el `user_id` si ya lo tienes, o el backend lo asignará automáticamente
         };
-
+    
         try {
             const response = await fetch('http://localhost:8000/api/register/', {
                 method: 'POST',
@@ -133,7 +137,7 @@ const Form_R = () => {
                 },
                 body: JSON.stringify(formData),
             });
-
+    
             if (response.ok) {
                 const data = await response.json();
                 console.log('Registro exitoso:', data);
@@ -141,7 +145,10 @@ const Form_R = () => {
                 navigate('/Iniciar');
             } else {
                 const errorData = await response.json();
-                console.error('Registration failed:', errorData);
+                console.error('Error en el registro:', errorData);
+                if (errorData.errors) {
+                    setErrors(errorData.errors);  // Mostrar los errores del backend
+                }
                 alert('Error al enviar los datos. Por favor, inténtalo de nuevo.');
             }
         } catch (error) {
@@ -151,7 +158,7 @@ const Form_R = () => {
             setLoading(false);
         }
     };
-
+    
     return (
         <ThemeProvider theme={theme}>
                 <form onSubmit={handleSubmit}>

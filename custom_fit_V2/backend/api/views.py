@@ -39,26 +39,31 @@ def register_user(request):
     serializer = UserProfileSerializer(data=request.data)
     try:
         if serializer.is_valid(raise_exception=True):
+            # Creación del usuario con el modelo User
             user_data = {
                 'username': request.data.get('nombre_usuario'),
                 'email': request.data.get('correo_electronico'),
+                'password': request.data.get('password'),  # Asumiendo que también envías una contraseña
             }
             user = User.objects.create_user(**user_data)
             
+            # Creación del perfil de usuario sin necesidad de enviar `user_id` desde el frontend
             profile_data = {
-                'user': user,
+                'user': user,  # El `user` es asignado automáticamente por el backend
                 'nombres': request.data.get('nombres'),
                 'apellidos': request.data.get('apellidos'),
                 'nombre_usuario': user.username,
                 'celular': request.data.get('celular'),
                 'correo_electronico': user.email,
                 'conf_correo_electronico': user.email,
-                'rol_id': request.data.get('rol', 2),
+                'rol_id': request.data.get('rol', 2),  # Rol se pasa, puede ser 1 por default o lo que necesites
             }
-            
+
+            # Guardamos el UserProfile asociado
             UserProfile.objects.create(**profile_data)
-            
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
     except ValidationError as e:
         return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
@@ -95,12 +100,6 @@ def enviar_codigo_view(request):
     except Exception as e:
         logger.error(f"Error during code sending: {str(e)}")
         return Response({'status': 'error', 'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth.models import User
-from .models import UserProfile
-from rest_framework.authtoken.models import Token
 
 @api_view(['POST'])
 def login_view(request):
