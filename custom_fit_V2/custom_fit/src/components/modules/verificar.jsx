@@ -7,22 +7,21 @@ import styled from 'styled-components';
 const Form = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const [codigo, setCodigo] = useState(['', '', '', '','','']); // Estado para múltiples entradas
+  const [codigo, setCodigo] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState('');
 
   const handleInputChange = (index, value) => {
     const newCodigo = [...codigo];
-    newCodigo[index] = value.slice(0, 1); // Limitar a un solo carácter
+    newCodigo[index] = value.slice(0, 1);
     setCodigo(newCodigo);
 
-    // Mover el foco al siguiente input
-    if (value && index < 3) {
+    if (value && index < 5) {
       document.getElementById(`input-${index + 1}`).focus();
     }
   };
 
   const handleVerificarCodigo = async () => {
-    const codigoVerificacion = codigo.join(''); // Unir los caracteres del código
+    const codigoVerificacion = codigo.join('');
 
     try {
       const response = await axios.post('http://localhost:8000/api/login/', {
@@ -52,18 +51,26 @@ const Form = () => {
     }
   };
 
+  const handleReenviarCodigo = () => {
+    console.log('Reenviar código');
+  };
+
   return (
     <StyledWrapper>
       <form className="form">
         <span className="close">X</span>
 
         <div className="info">
-          <span className="title">Verificar Código</span>
+          <div className='img'>
+            <img src={require('../../img/verifi.png')} alt="Verificación" />
+          </div>
+          <span className="title">Ingresa el código</span>
           <p className="description">
-            Introduzca el código de verificación proporcionado.
+            Hemos enviado un código de verificación 
+            a tu Correo Electrónico.
           </p>
         </div>
-
+          
         <div className="input-fields">
           {codigo.map((value, index) => (
             <input
@@ -73,23 +80,80 @@ const Form = () => {
               maxLength={1}
               value={value}
               onChange={(e) => handleInputChange(index, e.target.value)}
-              onFocus={(e) => e.target.select()} // Seleccionar texto al enfocar
+              onFocus={(e) => e.target.select()}
             />
           ))}
         </div>
 
-        {error && <p className="error-message">{error}</p>} {/* Mostrar mensaje de error */}
+        <p className="description">
+          ¿No recibiste el código?
+        </p>
+
+        <ReenviarLink href="#" onClick={handleReenviarCodigo}>
+          Reenviar Código
+        </ReenviarLink>
+
+        {error && <p className="error-message">{error}</p>}
 
         <div className="action-btns">
-          <Button variant="contained" onClick={handleVerificarCodigo}>Verificar</Button>
-          <Button variant="outlined" onClick={() => setCodigo(['', '', '', ''])}>Limpiar</Button>
+          <Button 
+            className='btn1' 
+            variant="contained" 
+            sx={{ 
+              backgroundColor: '#17BEBB', 
+              color: 'white', 
+              '&:hover': { backgroundColor: '#0f9c99' } 
+            }} 
+            onClick={handleVerificarCodigo}>
+            Verificar
+          </Button>
+          <Button 
+            variant="outlined" 
+            sx={{ 
+              borderColor: '#17BEBB', 
+              color: 'white', 
+              '&:hover': {  backgroundColor: '#0f9c99',borderColor: '#0f9c99' } 
+            }} 
+            onClick={() => setCodigo(['', '', '', '', '', ''])}>
+            Cancelar
+          </Button>
         </div>
+
       </form>
     </StyledWrapper>
   );
 };
 
+const ReenviarLink = styled.a`
+  color: #17BEBB !important; 
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: #0f9c99; 
+  }
+`;
+
 const StyledWrapper = styled.div`
+  .img {
+    width: 90%;
+    height: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    margin-bottom: 10px;
+    margin-left: 40px;
+  }
+
+  .img img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
   .form {
     --black: #000000;
     --ch-black: #141414;
@@ -100,9 +164,9 @@ const StyledWrapper = styled.div`
     --ch-white: #e1e1e1;
     --tomato: #fa5656;
     font-family: Helvetica, sans-serif;
-    padding: 25px;
+    padding: 60px;
     display: flex;
-    max-width: 420px;
+    max-width: 520px;
     flex-direction: column;
     align-items: center;
     overflow: hidden;
@@ -111,6 +175,7 @@ const StyledWrapper = styled.div`
     border-radius: 8px;
     position: relative;
     box-shadow: 10px 10px 10px rgba(0, 0, 0, .1);
+    margin: 0 auto;
   }
 
   .info {
@@ -122,6 +187,7 @@ const StyledWrapper = styled.div`
   }
 
   .title {
+    color: #17BEBB !important;
     font-size: 1.5rem;
     font-weight: 900;
   }
@@ -134,7 +200,7 @@ const StyledWrapper = styled.div`
   .input-fields {
     margin-bottom: 20px;
     display: flex;
-    gap: 10px; /* Espaciado entre inputs */
+    gap: 10px;
   }
 
   .input-fields input {
@@ -142,16 +208,15 @@ const StyledWrapper = styled.div`
     width: 2.5em;
     outline: none;
     text-align: center;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: 'Trebuchet MS', Arial, sans-serif;
     font-size: 1.5rem;
-    color: var(--af-white);
     border-radius: 5px;
-    border: 2.5px solid var(--eer-black);
-    background-color: var(--eer-black);
+    border: 2px solid #17BEBB;
+    background-color: transparent;
   }
 
   .input-fields input:focus {
-    border: 1px solid var(--af-white);
+    border: 2px solid #0f9c99;
     box-shadow: inset 10px 10px 10px rgba(0, 0, 0, .15);
     transform: scale(1.05);
     transition: 0.5s;
@@ -160,7 +225,7 @@ const StyledWrapper = styled.div`
   .action-btns {
     display: flex;
     margin-top: 20px;
-    gap: 10px; /* Espaciado entre botones */
+    gap: 10px;
   }
 
   .close {
