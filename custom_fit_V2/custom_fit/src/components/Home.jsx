@@ -1,5 +1,4 @@
 import React from 'react';
-import '../scss/style.css'
 import Header from './modules/header'
 import Sec1 from './modules/sec1';
 import Sec2 from './modules/sec2';

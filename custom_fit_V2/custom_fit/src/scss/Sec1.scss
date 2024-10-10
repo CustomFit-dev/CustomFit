@@ -1,0 +1,59 @@
+.sec1 .buttons{
+    width:auto;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    gap: 60px;
+    margin-top: 2rem;
+    margin-left: 50px;
+  }
+  .sec1 .btn-outline-primary{
+    display: flex;
+    position: relative;
+    padding: 10px 22px;
+    border-radius: 6px;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    background-color: transparent;
+    border: 2px solid #00a99d;
+    transition: all 0.2s ease;
+    
+  }
+  
+  .sec1 .btn-outline-primary:active {
+    transform: scale(0.96);
+  }
+  .sec1 .btn-outline-primary:hover{
+    background-color: #00a99d;
+    color: black;
+  }
+  .sec1 .btn-outline-primary:before,
+  .sec1 .btn-outline-primary:after {
+    position: absolute;
+    content: "";
+    width: 150%;
+    left: 50%;
+    height: 100%;
+    transform: translateX(-50%);
+    z-index: -1000;
+    background-repeat: no-repeat;
+  }
+  
+  .sec1 .btn-outline-primary:hover:before {
+    top: -70%;
+    background-image: radial-gradient(circle, #00a99d 20%, transparent 20%),
+      radial-gradient(circle, transparent 20%, #00a99d 20%, transparent 30%),
+      radial-gradient(circle, #00a99d 20%, transparent 20%),
+      radial-gradient(circle, #00a99d 20%, transparent 20%),
+      radial-gradient(circle, transparent 10%, #00a99d 15%, transparent 20%),
+      radial-gradient(circle, #00a99d 20%, transparent 20%),
+      radial-gradient(circle, #00a99d 20%, transparent 20%),
+      radial-gradient(circle, #00a99d 20%, transparent 20%),
+      radial-gradient(circle, #00a99d 20%, transparent 20%);
+    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%,
+      10% 10%, 18% 18%;
+    background-position: 50% 120%;
+    animation: greentopBubbles 0.6s ease;
+    
+  }

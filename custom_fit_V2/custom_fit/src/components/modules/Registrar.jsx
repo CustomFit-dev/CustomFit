@@ -10,8 +10,7 @@ import { faGoogle } from '@fortawesome/free-brands-svg-icons';
 import { faFacebook } from '@fortawesome/free-brands-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faMicrosoft } from '@fortawesome/free-brands-svg-icons';
-
-
+import '../../scss/form.scss'
 
 import {
     validateApe,

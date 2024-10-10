@@ -1,3 +1,4 @@
+// src/useLocalStorage.js
 import { useState } from 'react';
 
 function useLocalStorage(key, initialValue) {
@@ -6,17 +7,23 @@ function useLocalStorage(key, initialValue) {
       const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      console.error(error);
+      console.log(error);
       return initialValue;
     }
   });
 
   const setValue = (value) => {
     try {
-      setStoredValue(value);
-      window.localStorage.setItem(key, JSON.stringify(value));
+      const valueToStore =
+        value instanceof Function ? value(storedValue) : value;
+      setStoredValue(valueToStore);
+      if (valueToStore === null) {
+        window.localStorage.removeItem(key);
+      } else {
+        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 

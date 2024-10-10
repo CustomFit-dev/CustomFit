@@ -1,4 +1,6 @@
-import * as React from 'react';
+// src/components/Header.jsx
+import React from 'react';
+import { useAuth } from './authcontext'; // Asegúrate de la ruta correcta
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -11,39 +13,33 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from './mod_img/Logo-prin-f.png';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './Themes';
-import { useAuth } from './authcontext';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import BuildIcon from '@mui/icons-material/Build';
 
 const pages = [
-  { name: 'Inicio', route: '/Home_L'},
-  { name: 'Comentarios', route: '#sobre'},
-  { name: 'Como funciona', route: '#prod'},
+  { name: 'Inicio', route: '/Home_L' },
+  { name: 'Comentarios', route: '#sobre' },
+  { name: 'Como funciona', route: '#prod' },
   { name: 'Tienda', route: '/Store', icon: <ShoppingCartIcon /> },
 ];
 
 const settings = [
   { name: 'Crud', route: '/Crud', icon: <BuildIcon /> },
   { name: 'Perfil', route: '/Profile', icon: <AccountCircleIcon /> },
-  { name: 'Cerrar sesión', route: '#', icon: <ExitToAppIcon /> }
+  { name: 'Cerrar sesión', route: '#', icon: <ExitToAppIcon /> },
 ];
 
-function Header() {
+function Header_l() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const { user, logout, isAuthenticated } = useAuth();
-
-  React.useEffect(() => {
-    console.log('User updated:', user);
-    console.log('Is authenticated:', isAuthenticated);
-    console.log('localStorage user:', localStorage.getItem('user'));
-  }, [user, isAuthenticated]);
+  const { user, logout, isAuthenticated } = useAuth(); // Usar el hook useAuth
+  const navigate = useNavigate(); // Para redireccionar después del logout
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -64,6 +60,7 @@ function Header() {
   const handleLogout = () => {
     logout();
     handleCloseUserMenu();
+    navigate('/Home'); // Redirigir a la página de inicio después del logout
   };
 
   return (
@@ -71,11 +68,12 @@ function Header() {
       <AppBar position="static" sx={{ zIndex: 1300 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters sx={{ zIndex: 1300 }}>
+            {/* Logo en pantallas grandes */}
             <Typography
               variant="h6"
               noWrap
               component={Link}
-              to="/Home"
+              to="/Home_L"
               sx={{
                 mr: 2,
                 display: { xs: 'none', md: 'flex' },
@@ -89,10 +87,11 @@ function Header() {
               <img src={logo} alt="logo" id="logo" />
             </Typography>
 
+            {/* Menú desplegable en pantallas pequeñas */}
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
               <IconButton
                 size="large"
-                aria-label="account of current user"
+                aria-label="abrir menú de navegación"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={handleOpenNavMenu}
@@ -129,11 +128,13 @@ function Header() {
                 ))}
               </Menu>
             </Box>
+
+            {/* Logo en pantallas pequeñas */}
             <Typography
               variant="h5"
               noWrap
               component={Link}
-              to="/Home"
+              to="/Home_L"
               sx={{
                 mr: 2,
                 display: { xs: 'flex', md: 'none' },
@@ -147,6 +148,8 @@ function Header() {
             >
               <img src={logo} alt="logo" id="logo" />
             </Typography>
+
+            {/* Botones de navegación en pantallas grandes */}
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end', marginRight: 2 }}>
               {pages.map((page) => (
                 <Button
@@ -161,52 +164,59 @@ function Header() {
               ))}
             </Box>
 
+            {/* Icono de usuario y menú de configuraciones */}
             <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
               {isAuthenticated && (
                 <>
                   <Typography variant="body1" sx={{ marginRight: 2, color: 'white' }}>
-                    {user.name || 'Usuario'}
+                    {user?.nombreUsuario || 'Usuario'}
                   </Typography>
                   <Tooltip title="Open settings">
                     <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                      <Avatar alt={user?.name || 'Usuario'} src={user?.avatarUrl} />
+                      <Avatar alt={user?.nombreUsuario || 'Usuario'} src={user?.avatarUrl} />
                     </IconButton>
                   </Tooltip>
                 </>
               )}
               {!isAuthenticated && (
                 <Button color="inherit" onClick={handleOpenUserMenu}>
-                  NULO
+                  Iniciar Sesión
                 </Button>
               )}
-                <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting.name} onClick={setting.name === 'Cerrar sesión' ? handleLogout : handleCloseUserMenu}>
-                  {setting.icon}
-                  <Typography textAlign="center" sx={{ ml: 1 }}>
-                    <Link to={setting.route} style={{ textDecoration: 'none', color: 'inherit' }}>
-                      {setting.name}
-                    </Link>
-                  </Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-
+              <Menu
+                sx={{ mt: '45px' }}
+                id="menu-appbar"
+                anchorEl={anchorElUser}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(anchorElUser)}
+                onClose={handleCloseUserMenu}
+              >
+                {settings.map((setting) => (
+                  <MenuItem
+                    key={setting.name}
+                    onClick={setting.name === 'Cerrar sesión' ? handleLogout : handleCloseUserMenu}
+                  >
+                    {setting.icon}
+                    <Typography textAlign="center" sx={{ ml: 1 }}>
+                      {setting.name !== 'Cerrar sesión' ? (
+                        <Link to={setting.route} style={{ textDecoration: 'none', color: 'inherit' }}>
+                          {setting.name}
+                        </Link>
+                      ) : (
+                        setting.name
+                      )}
+                    </Typography>
+                  </MenuItem>
+                ))}
+              </Menu>
             </Box>
           </Toolbar>
         </Container>
@@ -215,4 +225,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default Header_l;

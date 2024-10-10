@@ -2,6 +2,7 @@ import React from 'react';
 import Swal from 'sweetalert2'; 
 import { useNavigate } from 'react-router-dom'; 
 import Typewriter from 'typewriter-effect';
+import '../../scss/Sec1.scss'
 
 const Section = () => {
   const navigate = useNavigate();

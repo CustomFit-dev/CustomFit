@@ -1,4 +1,5 @@
 import * as React from 'react';
+import '../../scss/header.scss'; // Importa el archivo CSS
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -60,31 +61,25 @@ function Header() {
   return (
     <ThemeProvider theme={theme}>
       <header>
-        <AppBar position="static" sx={{ zIndex: 1300 }}>
+        <AppBar position="static" className="custom-appbar">
           <Container maxWidth="xl">
-            <Toolbar disableGutters sx={{ zIndex: 1300 }}>
+            <Toolbar disableGutters className="custom-toolbar">
+              {/* Logo en pantallas grandes */}
               <Typography
                 variant="h6"
                 noWrap
                 component={Link}
                 to="/Home"
-                sx={{
-                  mr: 2,
-                  display: { xs: 'none', md: 'flex' },
-                  fontFamily: 'monospace',
-                  fontWeight: 700,
-                  letterSpacing: '.3rem',
-                  color: 'inherit',
-                  textDecoration: 'none',
-                }}
+                className="logo-text-large"
               >
                 <img src={logo} alt="logo" id="logo" />
               </Typography>
 
-              <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+              {/* Menú desplegable en pantallas pequeñas */}
+              <Box className="menu-small">
                 <IconButton
                   size="large"
-                  aria-label="account of current user"
+                  aria-label="abrir menú de navegación"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   onClick={handleOpenNavMenu}
@@ -106,9 +101,7 @@ function Header() {
                   }}
                   open={Boolean(anchorElNav)}
                   onClose={handleCloseNavMenu}
-                  sx={{
-                    display: { xs: 'block', md: 'none' },
-                  }}
+                  className="menu-small"
                 >
                   {pages.map((page) => (
                     <MenuItem key={page.name} onClick={handleCloseNavMenu}>
@@ -121,45 +114,41 @@ function Header() {
                   ))}
                 </Menu>
               </Box>
+
+              {/* Logo en pantallas pequeñas */}
               <Typography
                 variant="h5"
                 noWrap
                 component={Link}
                 to="/Home"
-                sx={{
-                  mr: 2,
-                  display: { xs: 'flex', md: 'none' },
-                  flexGrow: 1,
-                  fontFamily: 'monospace',
-                  fontWeight: 700,
-                  letterSpacing: '.3rem',
-                  color: 'inherit',
-                  textDecoration: 'none',
-                }}
+                className="logo-text-small"
               >
                 <img src={logo} alt="logo" id="logo" />
               </Typography>
-              <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end', marginRight: 2 }}>
+
+              {/* Botones de navegación en pantallas grandes */}
+              <Box className="menu-buttons">
                 {pages.map((page) => (
                   <Button
                     key={page.name}
                     component={Link}
                     to={page.route}
-                    sx={{ my: 2, color: 'white', display: 'block' }}
+                    className="nav-button"
                   >
                     {page.name}
                   </Button>
                 ))}
               </Box>
 
-              <Box sx={{ flexGrow: 0 }}>
-                <Tooltip title="Open settings">
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Remy Sharp" />
+              {/* Icono de usuario y menú de configuraciones */}
+              <Box className="flex-grow-0">
+                <Tooltip title="Abrir configuraciones">
+                  <IconButton onClick={handleOpenUserMenu} className="avatar-button">
+                    <Avatar alt="Usuario" />
                   </IconButton>
                 </Tooltip>
                 <Menu
-                  sx={{ mt: '45px' }}
+                  className="menu-user"
                   id="menu-appbar"
                   anchorEl={anchorElUser}
                   anchorOrigin={{
@@ -175,7 +164,10 @@ function Header() {
                   onClose={handleCloseUserMenu}
                 >
                   {settings.map((setting) => (
-                    <MenuItem key={setting.name} onClick={() => { handleCloseUserMenu(); handleOpenForm(); }}>
+                    <MenuItem
+                      key={setting.name}
+                      onClick={() => { handleCloseUserMenu(); handleOpenForm(); }}
+                    >
                       <Typography textAlign="center">
                         <a href="#" style={{ textDecoration: 'none', color: 'black' }}>
                           {setting.name}
@@ -188,6 +180,8 @@ function Header() {
             </Toolbar>
           </Container>
         </AppBar>
+
+        {/* Overlay y Formulario */}
         {isFormVisible && (
           <div className="overlay">
             <div className="form-container">

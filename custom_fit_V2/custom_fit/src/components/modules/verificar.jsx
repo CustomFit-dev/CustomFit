@@ -1,141 +1,13 @@
+// src/components/Form.jsx
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from './authcontext'; // Asegúrate de la ruta correcta
 import Button from '@mui/material/Button';
 import axios from 'axios';
 import styled from 'styled-components';
 
-const Form = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [codigo, setCodigo] = useState(['', '', '', '', '', '']);
-  const [error, setError] = useState('');
-
-  const handleInputChange = (index, value) => {
-    const newCodigo = [...codigo];
-    newCodigo[index] = value.slice(0, 1);
-    setCodigo(newCodigo);
-
-    if (value && index < 5) {
-      document.getElementById(`input-${index + 1}`).focus();
-    }
-  };
-
-  const handleVerificarCodigo = async () => {
-    const codigoVerificacion = codigo.join('');
-
-    try {
-      const response = await axios.post('http://localhost:8000/api/login/', {
-        correo_electronico: location.state.correo,
-        codigo_verificacion: codigoVerificacion,
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.status === 200 && response.data.status === 'ok') {
-        localStorage.setItem('authToken', response.data.token);
-        localStorage.setItem('nombreUsuario', response.data.nombre_usuario);
-        localStorage.setItem('nombres', response.data.nombres);
-        localStorage.setItem('apellidos', response.data.apellidos);
-        localStorage.setItem('correoElectronico', response.data.correo_electronico);
-
-        alert(`Bienvenido ${response.data.nombre_usuario}`);
-        navigate('/dashboard');
-      } else {
-        throw new Error(response.data.message || 'Error de autenticación');
-      }
-    } catch (error) {
-      console.error('Error en la verificación:', error);
-      setError(error.message || 'Ocurrió un error durante la verificación. Por favor, inténtelo de nuevo.');
-    }
-  };
-
-  const handleReenviarCodigo = () => {
-    console.log('Reenviar código');
-  };
-
-  return (
-    <StyledWrapper>
-      <form className="form">
-        <span className="close">X</span>
-
-        <div className="info">
-          <div className='img'>
-            <img src={require('../../img/verifi.png')} alt="Verificación" />
-          </div>
-          <span className="title">Ingresa el código</span>
-          <p className="description">
-            Hemos enviado un código de verificación 
-            a tu Correo Electrónico.
-          </p>
-        </div>
-          
-        <div className="input-fields">
-          {codigo.map((value, index) => (
-            <input
-              key={index}
-              id={`input-${index}`}
-              type="tel"
-              maxLength={1}
-              value={value}
-              onChange={(e) => handleInputChange(index, e.target.value)}
-              onFocus={(e) => e.target.select()}
-            />
-          ))}
-        </div>
-
-        <p className="description">
-          ¿No recibiste el código?
-        </p>
-
-        <ReenviarLink href="#" onClick={handleReenviarCodigo}>
-          Reenviar Código
-        </ReenviarLink>
-
-        {error && <p className="error-message">{error}</p>}
-
-        <div className="action-btns">
-          <Button 
-            className='btn1' 
-            variant="contained" 
-            sx={{ 
-              backgroundColor: '#17BEBB', 
-              color: 'white', 
-              '&:hover': { backgroundColor: '#0f9c99' } 
-            }} 
-            onClick={handleVerificarCodigo}>
-            Verificar
-          </Button>
-          <Button 
-            variant="outlined" 
-            sx={{ 
-              borderColor: '#17BEBB', 
-              color: 'white', 
-              '&:hover': {  backgroundColor: '#0f9c99',borderColor: '#0f9c99' } 
-            }} 
-            onClick={() => setCodigo(['', '', '', '', '', ''])}>
-            Cancelar
-          </Button>
-        </div>
-
-      </form>
-    </StyledWrapper>
-  );
-};
-
-const ReenviarLink = styled.a`
-  color: #17BEBB !important; 
-  cursor: pointer;
-  text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-    color: #0f9c99; 
-  }
-`;
-
 const StyledWrapper = styled.div`
+  /* Tus estilos aquí */
   .img {
     width: 90%;
     height: auto;
@@ -174,7 +46,7 @@ const StyledWrapper = styled.div`
     background-color: var(--black);
     border-radius: 8px;
     position: relative;
-    box-shadow: 10px 10px 10px rgba(0, 0, 0, .1);
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1);
     margin: 0 auto;
   }
 
@@ -217,7 +89,7 @@ const StyledWrapper = styled.div`
 
   .input-fields input:focus {
     border: 2px solid #0f9c99;
-    box-shadow: inset 10px 10px 10px rgba(0, 0, 0, .15);
+    box-shadow: inset 10px 10px 10px rgba(0, 0, 0, 0.15);
     transform: scale(1.05);
     transition: 0.5s;
   }
@@ -241,7 +113,7 @@ const StyledWrapper = styled.div`
     border-radius: 5px;
     cursor: pointer;
     font-weight: 600;
-    transition: .5s ease;
+    transition: 0.5s ease;
   }
 
   .close:hover {
@@ -254,5 +126,150 @@ const StyledWrapper = styled.div`
     margin-top: 10px;
   }
 `;
+
+const ReenviarLink = styled.a`
+  color: #17BEBB !important; 
+  cursor: pointer;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: #0f9c99; 
+  }
+`;
+
+const Form = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { login } = useAuth(); // Obtener la función de login del contexto
+  const [codigo, setCodigo] = useState(['', '', '', '', '', '']);
+  const [error, setError] = useState('');
+
+  const handleInputChange = (index, value) => {
+    const newCodigo = [...codigo];
+    newCodigo[index] = value.slice(0, 1);
+    setCodigo(newCodigo);
+
+    if (value && index < 5) {
+      document.getElementById(`input-${index + 1}`).focus();
+    }
+  };
+
+  const handleVerificarCodigo = async (e) => {
+    e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
+    const codigoVerificacion = codigo.join('');
+
+    try {
+      const response = await axios.post('http://localhost:8000/api/login/', {
+        correo_electronico: location.state?.correo,
+        codigo_verificacion: codigoVerificacion,
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 200 && response.data.status === 'ok') {
+        // Extraer los datos del usuario desde la respuesta
+        const userData = {
+          nombreUsuario: response.data.nombre_usuario, // Asegúrate de que este campo exista en la respuesta del backend
+          nombres: response.data.nombres,
+          apellidos: response.data.apellidos,
+          correoElectronico: response.data.correo_electronico,
+          avatarUrl: response.data.avatar_url || '', // Asegúrate de que el backend envíe este campo si es necesario
+        };
+        const token = response.data.token;
+
+        // Usar la función login del contexto
+        login(userData, token);
+
+        alert(`Bienvenido ${response.data.nombre_usuario}`);
+        navigate('/Home_L');
+      } else {
+        throw new Error(response.data.message || 'Error de autenticación');
+      }
+    } catch (error) {
+      console.error('Error en la verificación:', error);
+      setError(
+        error.response?.data?.message ||
+          error.message ||
+          'Ocurrió un error durante la verificación. Por favor, inténtelo de nuevo.'
+      );
+    }
+  };
+
+  const handleReenviarCodigo = (e) => {
+    e.preventDefault(); // Prevenir el comportamiento por defecto del enlace
+    console.log('Reenviar código');
+    // Implementa la lógica para reenviar el código aquí
+  };
+
+  return (
+    <StyledWrapper>
+      <form className="form" onSubmit={handleVerificarCodigo}>
+        <span className="close" onClick={() => navigate(-1)}>X</span> {/* Agregar funcionalidad para cerrar el formulario */}
+
+        <div className="info">
+          <div className='img'>
+            <img src={require('../../img/verifi.png')} alt="Verificación" />
+          </div>
+          <span className="title">Ingresa el código</span>
+          <p className="description">
+            Hemos enviado un código de verificación a tu Correo Electrónico.
+          </p>
+        </div>
+          
+        <div className="input-fields">
+          {codigo.map((value, index) => (
+            <input
+              key={index}
+              id={`input-${index}`}
+              type="tel"
+              maxLength={1}
+              value={value}
+              onChange={(e) => handleInputChange(index, e.target.value)}
+              onFocus={(e) => e.target.select()}
+            />
+          ))}
+        </div>
+
+        <p className="description">
+          ¿No recibiste el código?
+        </p>
+
+        <ReenviarLink href="#" onClick={handleReenviarCodigo}>
+          Reenviar Código
+        </ReenviarLink>
+
+        {error && <p className="error-message">{error}</p>}
+
+        <div className="action-btns">
+          <Button 
+            className='btn1' 
+            variant="contained" 
+            sx={{ 
+              backgroundColor: '#17BEBB', 
+              color: 'white', 
+              '&:hover': { backgroundColor: '#0f9c99' } 
+            }} 
+            type="submit" // Cambiar a type="submit"
+          >
+            Verificar
+          </Button>
+          <Button 
+            variant="outlined" 
+            sx={{ 
+              borderColor: '#17BEBB', 
+              color: 'white', 
+              '&:hover': {  backgroundColor: '#0f9c99', borderColor: '#0f9c99' } 
+            }} 
+            onClick={() => setCodigo(['', '', '', '', '', ''])}>
+            Cancelar
+          </Button>
+        </div>
+      </form>
+    </StyledWrapper>
+  );
+};
 
 export default Form;

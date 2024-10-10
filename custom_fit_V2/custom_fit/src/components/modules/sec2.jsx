@@ -1,20 +1,20 @@
 import React, { useEffect } from 'react';
-import Cus from './mod_img/Customfit-sec2.png';
+import Cus from './mod_img/Csec2.png';
 import AOS from 'aos';
-import 'aos/dist/aos.css'; // Importa el CSS de AOS
+import 'aos/dist/aos.css';
 import CountUp from 'react-countup';
 import { useInView } from 'react-intersection-observer';
-
+import '../../scss/Sec2.scss'
 
 const Section2 = () => {
   useEffect(() => {
     AOS.init({
-      duration: 1000, // Duración de la animación
+      duration: 1000,
     });
   }, []);
   const { ref, inView } = useInView({
-    triggerOnce: true, // Solo ejecutar la animación una vez cuando el elemento entra en el viewport
-    threshold: 0.1, // Porcentaje de visibilidad requerido para considerar el elemento en vista
+    triggerOnce: true, //
+    threshold: 0.1, 
   });
   return (
     <div>
@@ -27,7 +27,7 @@ const Section2 = () => {
               <p data-aos="fade-up" className='tex'>En CustomFit, nos apasiona la idea de que la moda no solo sea una expresión de estilo, sino también una manifestación única de individualidad. Fundada con la visión de empoderar a cada persona para que se exprese sin límites, nuestra plataforma de personalización de ropa ofrece una experiencia sin igual en la creación de prendas únicas y significativas.</p>
             </div>
             <div className='col'>
-              <div className='image-container' data-aos="zoom-in-up">
+              <div id="sec2i" className='image-container' data-aos="zoom-in-up">
                 <img src={Cus} alt='Logo custom-fit' />
               </div>
             </div>

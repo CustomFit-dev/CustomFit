@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Logo from './mod_img/Customfit-sec2.png';
+import Logo from './mod_img/Csec2.png';
+
 
 const Foot = () => {
     return (

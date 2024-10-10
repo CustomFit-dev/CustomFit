@@ -1,0 +1,111 @@
+/* Header.css */
+
+/* Estilos para AppBar */
+.custom-appbar {
+    z-index: 1300;
+  }
+  
+  /* Estilos para Toolbar */
+  .custom-toolbar {
+    z-index: 1300;
+  }
+  
+  /* Tipografía para el logo en pantallas grandes */
+  .logo-text-large {
+    margin-right: 16px; /* mr: 2 equivale a 16px si theme.spacing(1) = 8px */
+    display: none;
+    font-family: monospace;
+    font-weight: 700;
+    letter-spacing: 0.3rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  @media (min-width: 960px) { /* Breakpoint 'md' de MUI */
+    .logo-text-large {
+      display: flex;
+    }
+  }
+  
+  /* Tipografía para el logo en pantallas pequeñas */
+  .logo-text-small {
+    margin-right: 16px;
+    display: flex;
+    flex-grow: 1;
+    font-family: monospace;
+    font-weight: 700;
+    letter-spacing: 0.3rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  @media (min-width: 960px) { /* Breakpoint 'md' de MUI */
+    .logo-text-small {
+      display: none;
+    }
+  }
+  
+  /* Caja que contiene los botones del menú en pantallas grandes */
+  .menu-buttons {
+    flex-grow: 1;
+    display: none;
+    justify-content: flex-end;
+    margin-right: 16px; /* marginRight: 2 equivale a 16px */
+  }
+  
+  @media (min-width: 960px) { /* Breakpoint 'md' de MUI */
+    .menu-buttons {
+      display: flex;
+    }
+  }
+  
+  /* Estilos para los botones de navegación */
+  .nav-button {
+    margin-top: 8px; /* my: 2 equivale a 16px en total, 8px arriba y abajo */
+    margin-bottom: 8px;
+    color: white;
+    display: block;
+  }
+  
+  /* Estilos para el IconButton del Avatar */
+  .avatar-button {
+    padding: 0;
+  }
+  
+  /* Menú desplegable en pantallas pequeñas */
+  .menu-small {
+    display: block;
+  }
+  
+  @media (min-width: 960px) { /* Breakpoint 'md' de MUI */
+    .menu-small {
+      display: none;
+    }
+  }
+  
+  /* Menú de usuario */
+  .menu-user {
+    margin-top: 45px;
+  }
+  
+  /* Contenedor de la Overlay y el Formulario */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1400; /* Por encima del AppBar */
+  }
+  
+  .form-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    /* Puedes agregar más estilos según tus necesidades */
+  }
+  

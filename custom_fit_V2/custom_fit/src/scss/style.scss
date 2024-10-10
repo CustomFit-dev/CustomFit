@@ -1,3 +1,6 @@
+@import "~bootstrap/scss/bootstrap";
+@import 'responsive';
+
 html {
   height: 100% !important;
 }
@@ -43,10 +46,12 @@ section {
   flex-wrap: wrap;
   margin: auto;
   height: 85vh;
+  margin-bottom: 3rem;
 }
 
 #sec2-f {
-  margin-bottom: 3rem;
+  padding: 2rem;
+  background-color: white;
 }
 
 a {
@@ -128,7 +133,6 @@ a {
     display: none;
   }
   .fondoInicio {
-  .fondoInicio {
     display: none;
   }
   .sec2 .image-container img{
@@ -150,6 +154,7 @@ a {
     justify-content: center;
     width: 66%;
   }
+}
 }
 
 
@@ -917,8 +922,6 @@ body .btn-outline-primary1 {
 }
 
 body .btn .btn-outline-primary:hover {
-
-body .btn .btn-outline-primary:hover {
   border: 2px solid #00a99d;
   color: white;
 }
@@ -1058,8 +1061,6 @@ body #c-1 {
 }
 
 body #c-2 {
-
-body #c-2 {
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -1096,14 +1097,10 @@ body .form-container {
 }
 
 #h1inicio h1 {
-
-#h1inicio h1 {
   margin-top: 5%;
   float: right;
   width: 60%;
 }
-
-#inputin {
 
 #inputin {
   margin-top: 5%;
@@ -1115,14 +1112,10 @@ body .form-container {
 }
 
 #bott {
-
-#bott {
   float: right;
   margin-top: 5%;
   margin-top: 5%;
 }
-
-#bott #bot {
 
 #bott #bot {
   display: flex;
@@ -1162,7 +1155,6 @@ body .form-row .fondoInicio {
   object-fit: contain;
 }
 
-.sec1_s {
 .sec1_s {
   padding-top: 6rem;
 }
@@ -1205,11 +1197,9 @@ body .form-row .fondoInicio {
 }
 
 .css-1vtrqgs-MuiPaper-root-MuiAppBar-root {
-.css-1vtrqgs-MuiPaper-root-MuiAppBar-root {
   position: fixed !important;
 }
 
-div:where(.swal2-container).swal2-center > .swal2-popup {
 div:where(.swal2-container).swal2-center > .swal2-popup {
   background-color: black !important;
 }
@@ -1218,7 +1208,6 @@ div:where(.swal2-container) h2:where(.swal2-title) {
   color: white !important;
 }
 
-div:where(.swal2-container) .swal2-html-container {
 div:where(.swal2-container) .swal2-html-container {
   color: white !important;
 }
@@ -1234,7 +1223,7 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm) {
   background-color: transparent !important;
 }
 
-div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel) {
+
 div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel) {
   border: solid white 1px !important;
   background-color: transparent !important;
@@ -1683,7 +1672,7 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hov
   width: 0%;
   opacity: 0;
   color: white;
-  font-size: 1.em;
+  font-size: 1em;
   font-weight: 600;
   transition-duration: .3s;
 }
