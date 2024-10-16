@@ -1,3 +1,38 @@
 #sec2i{
     display: flex;
 }
+
+.tex2{
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20PX;
+    
+}
+.sec2 .image-container {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 100%;
+  }
+  
+  
+.sec2 .image-container img {
+    width: 90%;
+    height: 90%;
+    object-fit: contain;
+  }
+  .sec2 {
+    text-align: left !important;
+    color: white;
+    background-attachment: fixed;
+    background-attachment: fixed;
+    
+  }
+.tex1{
+    color: #00a99d;
+    font-size: 70px;
+    font-weight: 40px;
+    font-weight: 600;
+    font-family: 'Open Sans', sans-serif;
+}  

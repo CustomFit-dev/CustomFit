@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Cus from './mod_img/Csec2.png';
+import Cus from '../../img/logosec2.png';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import CountUp from 'react-countup';
@@ -22,9 +22,9 @@ const Section2 = () => {
         <div className='container'>
           <div className='row'>
             <div className='col'>
-              <h2 data-aos="fade-up"><span className='highlight'>¿Quienes somos?</span></h2>
+              <h2 data-aos="fade-up"><span className='tex1'>¿Quienes somos?</span></h2>
               <br />
-              <p data-aos="fade-up" className='tex'>En CustomFit, nos apasiona la idea de que la moda no solo sea una expresión de estilo, sino también una manifestación única de individualidad. Fundada con la visión de empoderar a cada persona para que se exprese sin límites, nuestra plataforma de personalización de ropa ofrece una experiencia sin igual en la creación de prendas únicas y significativas.</p>
+              <p data-aos="fade-up" className='tex2'>En CustomFit, nos apasiona la idea de que la moda no solo sea una expresión de estilo, sino también una manifestación única de individualidad. Fundada con la visión de empoderar a cada persona para que se exprese sin límites, nuestra plataforma de personalización de ropa ofrece una experiencia sin igual en la creación de prendas únicas y significativas.</p>
             </div>
             <div className='col'>
               <div id="sec2i" className='image-container' data-aos="zoom-in-up">
