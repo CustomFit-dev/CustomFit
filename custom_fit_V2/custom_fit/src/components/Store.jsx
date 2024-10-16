@@ -10,6 +10,7 @@ const Store = () => {
       {/* <Sec2 /> */}
     </div>
   )
+  
 }
 
 export default Store
