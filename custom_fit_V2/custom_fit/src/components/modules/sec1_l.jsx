@@ -7,41 +7,15 @@ const Section = () => {
   const navigate = useNavigate();
 
   const handleDesignClick = () => {
-    Swal.fire({
-      title: 'Atención',
-      text: 'Por favor, inicie sesión para acceder a la función de diseño.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Iniciar sesión',
-      cancelButtonText: 'Cerrar',
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#aaa',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        navigate('/Iniciar');
-      }
-    });
+    // Dejar vacío para implementar más tarde
   };
 
   const handleStoreClick = () => {
-    Swal.fire({
-      title: 'Atención',
-      text: 'Por favor, inicie sesión para acceder a nuestra tienda.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Iniciar sesión',
-      cancelButtonText: 'Cerrar',
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#aaa',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        navigate('/Iniciar');
-      }
-    });
+    navigate('/store'); // Redirige a la ruta '/store'
   };
 
   return (
-    <div className="section-container" >
+    <div className="section-container">
       <div className="overlay-div trapezoid-container">
         <div className="trapezoid"></div>
       </div>
@@ -49,22 +23,20 @@ const Section = () => {
         <div className='container'> 
           <div className='row'>
             <div className='col'>
-        <span className='maquina'>
+              <span className='maquina'>
                 <Typewriter 
-                
                   onInit={(typewriter) => {
                     typewriter
-                    .typeString('Bienvenido a <br/><span style="color: #00a99d;">Custom Fit</span>')
+                      .typeString('Bienvenido a <br/><span style="color: #00a99d;">Custom Fit</span>')
                       .pauseFor(2000)
                       .deleteAll()
-                      
                       .typeString(
                         'Encuentra la<br/>Inspiracion y<br/><span style="color: #00a99d;">Personaliza</span> con<br/> Nosotros'
                       )
                       .start();
                   }}
                 />
-    </span>
+              </span>
               <div className='buttons'>
                 <button className='btn btn-outline-primary' data-aos="fade-right" onClick={handleDesignClick}>Diseñar ya</button>
                 <button className='btn btn-secondary' data-aos="fade-right" onClick={handleStoreClick}>Tienda</button>
