@@ -153,6 +153,7 @@ a {
     margin-left: 18% !important;
     justify-content: center;
     width: 66%;
+    
   }
 }
 }
@@ -877,14 +878,7 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hov
       z-index: 1; /* Asegura que la imagen seleccionada se superponga a las otras */
   }
 }
-.sec3 .sec3texto {
-  color: #00a99d;
-  font-family: "Charmonman", cursive;
-  font-weight: 400;
-  font-style: normal;
-  margin: 0px auto;
 
-}
 .sec3 .sec3texto h2{
   color: white;
   margin: 0px auto;

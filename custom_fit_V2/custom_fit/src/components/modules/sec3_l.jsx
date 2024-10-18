@@ -1,119 +1,126 @@
 import React from 'react';
 import '../../scss/sec3_l.scss';
-import styled from 'styled-components';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import StepConnector from '@mui/material/StepConnector';
+import { styled } from '@mui/material/styles';
 
-const Section3 = () => {
+import image1 from '../../img/paso1.png';
+import image2 from '../../img/paso2.png';
+import image3 from '../../img/paso3.png';
+
+// Estilo personalizado para el StepConnector para que las líneas sean blancas
+const CustomConnector = styled(StepConnector)({
+  '& .MuiStepConnector-line': {
+    borderColor: '#ffffff', // Color blanco para las líneas
+  },
+});
+
+// Componente personalizado de StepIcon para mostrar "1", "2" y "3"
+const CustomStepIcon = (props) => {
+  const { active, completed, icon } = props;
+
+  return (
+    <div
+      style={{
+        color: '#ffffff',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: active || completed ? '#ffffff33' : '#ffffff20',
+        borderRadius: '50%',
+        width: 40,  // Ajusta el tamaño del círculo
+        height: 40, // Ajusta el tamaño del círculo
+        fontSize: '1.2rem', // Tamaño del número
+      }}
+    >
+      {icon} {/* Muestra el número del paso */}
+    </div>
+  );
+};
+
+// Sección 3 que acepta textos personalizados
+const Section3 = ({ steps }) => {
     return (
-        <StyledWrapper>
-            <div className="large-card">
-                <div className="card-container">
-                    <div className="card">
-                        <div className="card-image" />
-                        <div className="category">Ver</div>
-                        <div className="heading">
-                            A heading that must span over two lines
-                            <div className="author">
-                                By <span className="name">Abi</span> 4 days ago
-                            </div>
-                        </div>
-                    </div>
-                    <div className="card">
-                        <div className="card-image" />
-                        <div className="category">Illustration</div>
-                        <div className="heading">
-                            A heading that must span over two lines
-                            <div className="author">
-                                By <span className="name">Abi</span> 4 days ago
-                            </div>
-                        </div>
-                    </div>
-                    <div className="card">
-                        <div className="card-image" />
-                        <div className="category">Illustration</div>
-                        <div className="heading">
-                            A heading that must span over two lines
-                            <div className="author">
-                                By <span className="name">Abi</span> 4 days ago
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </StyledWrapper>
+      <section className='sec3l' id='prod'>
+          <div data-aos="zoom-out" className="sec3texto1">
+              <h1>¿Cómo personalizar tus camisetas con CustomFit?</h1>
+              <p style={{ color: '#ffffff', fontSize: '0.9rem', marginTop: '8px' }}>
+                  Sigue los pasos a continuación para diseñar tus camisetas de forma sencilla y rápida.
+              </p>
+          </div>
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              alignItems: 'center',
+              '& > :not(style)': {
+                m: 6,
+                width: 400,
+                height: 300,
+                backgroundColor: 'transparent',
+                border: 'none',
+                boxShadow: 'none',
+                
+              },
+            }}
+          >
+            <Paper className="paper" data-aos="fade-right" elevation={0} style={{ backgroundImage: `url(${image1})` }} />
+            <Paper className="paper" data-aos="fade-up" style={{ backgroundImage: `url(${image2})` }} />
+            <Paper className="paper" data-aos="fade-left" elevation={3} style={{ backgroundImage: `url(${image3})` }} />
+          </Box>
+          <Box sx={{ width: '100%', marginTop: 4 }}>
+            <Stepper 
+              activeStep={1} 
+              alternativeLabel 
+              connector={<CustomConnector />}
+            >
+              {steps.map((step, index) => (
+                <Step data-aos="zoom-in-down" key={step.label}>
+                  <StepLabel 
+                    StepIconComponent={CustomStepIcon} 
+                    sx={{ 
+                      '& .MuiStepLabel-label': { color: '#ffffff' },
+                      '& .MuiStepLabel-labelContainer': {
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                      }
+                    }} // Color blanco para el texto
+                  >
+                    <h2 style={{ margin: 0, color: '#ffffff' }}>{step.label}</h2>
+                    <h3 style={{ fontSize: '0.8rem', color: '#ffffff99', marginTop: '4px', margin: 0 }}>
+                      {step.description}
+                    </h3>
+                  </StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          </Box>
+      </section>
     );
 };
 
-const StyledWrapper = styled.div`
-  .large-card {
-    width: 100%; /* Ancho completo para la tarjeta principal */
-    background: white;
-    padding: 1em;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
+// Ejemplo de cómo utilizar el componente con los textos actualizados
+const stepsData = [
+  {
+    label: 'Elige una camiseta',
+    description: 'Elige el modelo, tipo de manga, talla y color de la camiseta que quieras personalizar',
+  },
+  {
+    label: 'Sube tu diseño',
+    description: 'Sube tu diseño o crea uno con el Creador de diseños gratuito',
+  },
+  {
+    label: 'Recibe tu pedido',
+    description: '¡Todo listo! Haz tu pedido y nosotros nos encargamos del resto',
+  },
+];
 
-  .card-container {
-    display: flex; /* Flexbox para organizar las tarjetas */
-    flex-wrap: wrap; /* Permitir que las tarjetas se ajusten */
-    gap: 20px; /* Espacio entre las tarjetas */
-  }
-
-  .card {
-    width: 30%;
-    background: white;
-    
-    border-radius: 6px;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-  }
-
-  .card-image {
-    
-    width: 100%;
-    height: 200px;
-    border-radius: 6px 6px 0 0;
-
-  }
-
-  .card-image:hover {
-    transform: scale(0.98);
-  }
-
-  .category {
-    text-transform: uppercase;
-    font-size: 0.7em;
-    font-weight: 600;
-    color: rgb(63, 121, 230);
-    padding: 10px 7px 0;
-  }
-
-  .category:hover {
-    cursor: pointer;
-  }
-
-  .heading {
-    font-weight: 600;
-    color: rgb(88, 87, 87);
-    padding: 7px;
-  }
-
-  .heading:hover {
-    cursor: pointer;
-  }
-
-  .author {
-    color: gray;
-    font-weight: 400;
-    font-size: 11px;
-    padding-top: 20px;
-  }
-
-  .name {
-    font-weight: 600;
-  }
-
-  .name:hover {
-    cursor: pointer;
-  }
-`;
-
-export default Section3;
+export default function App() {
+  return <Section3 steps={stepsData} />;
+}

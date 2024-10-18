@@ -18,6 +18,7 @@ import Form from './Iniciar';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './Themes';
 
+
 const pages = [
   { name: 'Inicio', route: '/Home' },
   { name: 'Nosotros', route: '#sobre' },
