@@ -1,0 +1,41 @@
+.comment-section {
+    
+    color: white; /* Texto blanco */
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .comment {
+    margin-bottom: 20px;
+    border: 1px solid #444; /* Borde para los comentarios */
+    border-radius: 8px;
+    padding: 10px;
+    background-color: #333; /* Fondo más claro para comentarios */
+  }
+  
+  .reply {
+    margin-top: 10px; /* Espacio entre respuestas */
+    border-left: 2px solid #888; /* Borde para resaltar respuestas */
+    padding-left: 10px;
+  }
+  
+  .reply-form {
+    margin-top: 10px; /* Espacio para el formulario de respuesta */
+  }
+  
+  /* Estilos para el nombre del usuario */
+  .comment strong {
+    font-size: 1.5rem; /* Tamaño más grande para el nombre */
+  }
+  
+  /* Estilos para la fecha y hora */
+  .comment span {
+    font-size: 0.8rem; /* Tamaño más pequeño para la fecha */
+    color: #bbb; /* Color más claro para la fecha */
+  }
+  
+  /* Estilos para el comentario */
+  .comment p {
+    font-size: 0.9rem; /* Tamaño del comentario */
+  }
+  
