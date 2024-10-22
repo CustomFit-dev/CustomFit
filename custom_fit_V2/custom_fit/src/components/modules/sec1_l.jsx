@@ -15,6 +15,7 @@ const Section = () => {
   };
 
   return (
+    
     <div className="section-container">
       <div className="overlay-div trapezoid-container">
         <div className="trapezoid"></div>

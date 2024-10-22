@@ -12,7 +12,7 @@ const Home = () => {
         <Sec1 />
         <Sec2 />
         <Sec3 />
-        <Footer/>
+        <Footer />
       
     </div>
   )

@@ -84,7 +84,8 @@ const StyledWrapper = styled.div`
     font-size: 1.5rem;
     border-radius: 5px;
     border: 2px solid #17BEBB;
-    background-color: transparent;
+    background-color: transparent ;
+    color: white;
   }
 
   .input-fields input:focus {

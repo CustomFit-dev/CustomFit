@@ -21,6 +21,10 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import BuildIcon from '@mui/icons-material/Build';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import DesignServicesIcon from '@mui/icons-material/DesignServices';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import Divider from '@mui/material/Divider'; // Importar Divider
 
 const pages = [
   { name: 'Inicio', route: '/Home_L' },
@@ -30,8 +34,12 @@ const pages = [
 ];
 
 const settings = [
+ 
+  { name: 'Perfil', route: '/Profile', icon: <AccountCircleIcon /> }, // Solo una opción de "Perfil"
+  { name: 'Mis Pedidos', route: '#', icon: <LocalShippingIcon /> },
+  { name: 'Mis Diseños', route: '#', icon: <DesignServicesIcon /> },
   { name: 'Crud', route: '/Crud', icon: <BuildIcon /> },
-  { name: 'Perfil', route: '/Profile', icon: <AccountCircleIcon /> },
+  { name: 'Soporte', route: '#soporte', icon: <SupportAgentIcon /> },
   { name: 'Cerrar sesión', route: '#', icon: <ExitToAppIcon /> },
 ];
 
@@ -199,22 +207,24 @@ function Header_l() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem
-                    key={setting.name}
-                    onClick={setting.name === 'Cerrar sesión' ? handleLogout : handleCloseUserMenu}
-                  >
-                    {setting.icon}
-                    <Typography textAlign="center" sx={{ ml: 1 }}>
-                      {setting.name !== 'Cerrar sesión' ? (
-                        <Link to={setting.route} style={{ textDecoration: 'none', color: 'inherit' }}>
-                          {setting.name}
-                        </Link>
-                      ) : (
-                        setting.name
-                      )}
-                    </Typography>
-                  </MenuItem>
+                {settings.map((setting, index) => (
+                  <React.Fragment key={setting.name}>
+                    {index === 3 && <Divider />} {/* Línea de separación después de "Mis Pedidos" */}
+                    <MenuItem
+                      onClick={setting.name === 'Cerrar sesión' ? handleLogout : handleCloseUserMenu}
+                    >
+                      {setting.icon}
+                      <Typography textAlign="center" sx={{ ml: 1 }}>
+                        {setting.name !== 'Cerrar sesión' ? (
+                          <Link to={setting.route} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            {setting.name}
+                          </Link>
+                        ) : (
+                          setting.name
+                        )}
+                      </Typography>
+                    </MenuItem>
+                  </React.Fragment>
                 ))}
               </Menu>
             </Box>

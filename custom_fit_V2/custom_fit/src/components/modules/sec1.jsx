@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Swal from 'sweetalert2'; 
-import { useNavigate } from 'react-router-dom'; 
 import Typewriter from 'typewriter-effect';
-import '../../scss/Sec1.scss'
+import Form_I from './Iniciar'; // Asegúrate de que la ruta sea correcta
+import '../../scss/Sec1.scss';  
 
 const Section = () => {
-  const navigate = useNavigate();
+  const [showForm, setShowForm] = useState(false);
 
   const handleDesignClick = () => {
     Swal.fire({
@@ -19,7 +19,7 @@ const Section = () => {
       cancelButtonColor: '#aaa',
     }).then((result) => {
       if (result.isConfirmed) {
-        navigate('/Iniciar');
+        setShowForm(true); // Muestra el formulario
       }
     });
   };
@@ -36,36 +36,41 @@ const Section = () => {
       cancelButtonColor: '#aaa',
     }).then((result) => {
       if (result.isConfirmed) {
-        navigate('/Iniciar');
+        setShowForm(true); // Muestra el formulario
       }
     });
   };
 
+  const handleCloseForm = () => {
+    setShowForm(false); // Oculta el formulario de inicio de sesión
+  };
+
   return (
-    <div className="section-container" >
-      <div className="overlay-div trapezoid-container">
+    <div className="section-container">
+      {showForm && (
+        <div className="form-overlay">
+          <Form_I onClose={handleCloseForm} /> {/* Pasamos la función para cerrar el formulario */}
+        </div>
+      )}
+      <div className={`overlay-div trapezoid-container ${showForm ? 'blurred' : ''}`}>
         <div className="trapezoid"></div>
       </div>
-      <section className='sec1' id='inicio'>
+      <section className={`sec1 ${showForm ? 'blurred' : ''}`} id='inicio'>
         <div className='container'> 
           <div className='row'>
             <div className='col'>
-        <span className='maquina'>
+              <span className='maquina'>
                 <Typewriter 
-                
                   onInit={(typewriter) => {
                     typewriter
-                    .typeString('Bienvenido a <br/><span style="color: #00a99d;">Custom Fit</span>')
+                      .typeString('Bienvenido a <br/><span style="color: #00a99d;">Custom Fit</span>')
                       .pauseFor(2000)
                       .deleteAll()
-                      
-                      .typeString(
-                        'Encuentra la<br/>Inspiracion y<br/><span style="color: #00a99d;">Personaliza</span> con<br/> Nosotros'
-                      )
+                      .typeString('Encuentra la<br/>Inspiracion y<br/><span style="color: #00a99d;">Personaliza</span> con<br/> Nosotros')
                       .start();
                   }}
                 />
-    </span>
+              </span>
               <div className='buttons'>
                 <button className='btn btn-outline-primary' data-aos="fade-right" onClick={handleDesignClick}>Diseñar ya</button>
                 <button className='btn btn-secondary' data-aos="fade-right" onClick={handleStoreClick}>Tienda</button>
