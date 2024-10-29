@@ -9,6 +9,7 @@ import axios from 'axios';
 import '../../scss/iniciar.scss'; // Asegúrate de que la ruta del archivo SCSS esté correcta
 import Nav from '../modules/Nav';
 import { colors } from '@mui/material';
+import { red } from '@mui/material/colors';
 const theme = createTheme({
   palette: {
     primary: {
@@ -124,7 +125,11 @@ const Form_I = () => {
             />
           </div>
           <p>¿Problemas para iniciar sesión?</p>
-          <p style={{ color: '#00a99d' }}> Contáctanos</p>
+
+          <a href="">
+            <p className='wpp'>Contactanos</p>
+          </a>
+          
 
           <Button 
             variant="contained" 

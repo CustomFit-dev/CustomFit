@@ -34,7 +34,7 @@ const Navigation = () => {
         />
           <Link to="/Registro">
           <span
-          className={activeSection === 'registro' ? 'active' : ''}
+          className={activeSection === 'registro' ? '' : 'active1'}
           onClick={() => handleNavigate('registro')}
         >Registro</span>
           </Link>

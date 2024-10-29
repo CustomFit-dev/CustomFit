@@ -66,3 +66,19 @@ p{
 
 }
 
+.wpp{
+  color: #00a99d;
+}
+
+.wpp:hover{
+  color: #00FFFF;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.active:hover{
+  background-color: #00a99d;
+}
+
+.active1:hover{
+  background-color: #00a99d;
+}
