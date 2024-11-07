@@ -46,7 +46,7 @@ const CustomStepIcon = (props) => {
 const Section3 = ({ steps }) => {
     return (
       <section className='sec3l' id='prod'>
-          <div data-aos="zoom-out" className="sec3texto1">
+          <div  className="sec3texto1">
               <h1>¿Cómo personalizar tus camisetas con CustomFit?</h1>
               <p style={{ color: '#ffffff', fontSize: '0.9rem', marginTop: '8px' }}>
                   Sigue los pasos a continuación para diseñar tus camisetas de forma sencilla y rápida.
@@ -60,7 +60,7 @@ const Section3 = ({ steps }) => {
               alignItems: 'center',
               '& > :not(style)': {
                 m: 6,
-                width: 400,
+                width: 390,
                 height: 300,
                 backgroundColor: 'transparent',
                 border: 'none',
@@ -69,9 +69,9 @@ const Section3 = ({ steps }) => {
               },
             }}
           >
-            <Paper className="paper" data-aos="fade-right" elevation={0} style={{ backgroundImage: `url(${image1})` }} />
-            <Paper className="paper" data-aos="fade-up" style={{ backgroundImage: `url(${image2})` }} />
-            <Paper className="paper" data-aos="fade-left" elevation={3} style={{ backgroundImage: `url(${image3})` }} />
+            <Paper className="paper"  elevation={0} style={{ backgroundImage: `url(${image1})` }} />
+            <Paper className="paper"  style={{ backgroundImage: `url(${image2})` }} />
+            <Paper className="paper"  elevation={3} style={{ backgroundImage: `url(${image3})` }} />
           </Box>
           <Box sx={{ width: '100%', marginTop: 4 }}>
             <Stepper 
@@ -80,7 +80,7 @@ const Section3 = ({ steps }) => {
               connector={<CustomConnector />}
             >
               {steps.map((step, index) => (
-                <Step data-aos="zoom-in-down" key={step.label}>
+                <Step key={step.label}>
                   <StepLabel 
                     StepIconComponent={CustomStepIcon} 
                     sx={{ 

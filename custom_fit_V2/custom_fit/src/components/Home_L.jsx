@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import CircularIndeterminate from './modules/CircularIndeterminate'; // Asegúrate de que la ruta sea correcta
 import Header from './modules/header_l';
 import Sec1 from './modules/sec1_l';
-import Sec2 from './modules/sec2';
+import Sec2 from './modules/sec2_l';
 import Sec3 from './modules/sec3_l';
 import Footer from './modules/footer';
 import Sec4 from './modules/comen';

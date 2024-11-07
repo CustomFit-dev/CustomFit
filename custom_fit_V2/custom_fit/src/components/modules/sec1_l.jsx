@@ -1,5 +1,4 @@
 import React from 'react';
-import Swal from 'sweetalert2'; 
 import { useNavigate } from 'react-router-dom'; 
 import Typewriter from 'typewriter-effect';
 
@@ -39,8 +38,8 @@ const Section = () => {
                 />
               </span>
               <div className='buttons'>
-                <button className='btn btn-outline-primary' data-aos="fade-right" onClick={handleDesignClick}>Diseñar ya</button>
-                <button className='btn btn-secondary' data-aos="fade-right" onClick={handleStoreClick}>Tienda</button>
+                <button className='btn btn-outline-primary' onClick={handleDesignClick}>Diseñar ya</button>
+                <button className='btn btn-secondary' onClick={handleStoreClick}>Tienda</button>
               </div>
             </div>
           </div>

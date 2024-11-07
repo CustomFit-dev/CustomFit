@@ -1,257 +1,188 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useState, useRef, useEffect } from 'react';
+import '../../scss/sec2_l.scss';
+
 
 const Card = () => {
+  const [messages, setMessages] = useState([
+    {
+      text: `¡Hola👋! Soy el asistente virtual de CustomFit🤖. ¿En qué puedo ayudarte hoy?
+1. Registrarse como proveedor
+2. Registrarse como domiciliario
+3. Contactar con un administrador`, 
+      sender: "bot"
+    }
+  ]);
+  const [inputValue, setInputValue] = useState('');
+  const chatBodyRef = useRef(null);
+
+  const handleSendMessage = () => {
+    if (inputValue.trim()) {
+      // Agregar el mensaje del usuario
+      const newMessages = [
+        ...messages,
+        { text: inputValue, sender: "user" }
+      ];
+      setMessages(newMessages);
+      setInputValue(''); // Limpiar el campo de entrada
+
+      // Lógica para manejar la respuesta del bot según la opción seleccionada
+      const lastMessage = inputValue.trim().toLowerCase();
+
+      if (lastMessage === "1") {
+        setMessages([
+          ...newMessages,
+          { text: "👋 Bienvenido a nuestra plataforma, donde tendrás la oportunidad de llegar a más clientes y aumentar tus ventas al ofrecer camisetas personalizables 👕🎨. Como proveedor, serás responsable de publicar las camisetas en nuestra tienda para que los usuarios puedan diseñarlas a su gusto ✨. A través de nuestra plataforma, los clientes podrán elegir el tipo de camiseta, color, talla y otros detalles personalizados 🖌️, mientras que tú podrás asegurarte de que tus productos estén disponibles para la venta 🛒. Esta es una gran oportunidad para mostrar tus productos a una audiencia más amplia y ofrecer una experiencia única de personalización 🌟.",
+            
+            sender: "bot" }
+              
+        ]);
+      } else if (lastMessage === "2") {
+        setMessages([
+          ...newMessages,
+          { text: "Has elegido registrarte como domiciliario. Te redirigiré al formulario de registro...", sender: "bot" }
+        ]);
+      } else if (lastMessage === "3") {
+        setMessages([
+          ...newMessages,
+          { text: "Has elegido contactar con un administrador. Te pondremos en contacto lo antes posible...", sender: "bot" }
+        ]);
+      } else {
+        setMessages([
+          ...newMessages,
+          { text: "Por favor, elige una opción válida: 1, 2 o 3.", sender: "bot" }
+        ]);
+      }
+    }
+  };
+
+  useEffect(() => {
+    // Desplazar el contenedor de los mensajes hacia abajo cada vez que se actualice la lista
+    if (chatBodyRef.current) {
+      chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   return (
-    <StyledWrapper>
-      <div className="card">
-        <div className="border" />
-        <div className="content">
-          <div className="logo">
-            <div className="logo1">
-              <svg
-                viewBox="0 0 29.667 31.69"
-                xmlns="http://www.w3.org/2000/svg"
-                id="logo-main"
-              >
-                <path
-                  transform="translate(0 0)"
-                  d="M12.827,1.628A1.561,1.561,0,0,1,14.31,0h2.964a1.561,1.561,0,0,1,1.483,1.628v11.9a9.252,9.252,0,0,1-2.432,6.852q-2.432,2.409-6.963,2.409T2.4,20.452Q0,18.094,0,13.669V1.628A1.561,1.561,0,0,1,1.483,0h2.98A1.561,1.561,0,0,1,5.947,1.628V13.191a5.635,5.635,0,0,0,.85,3.451,3.153,3.153,0,0,0,2.632,1.094,3.032,3.032,0,0,0,2.582-1.076,5.836,5.836,0,0,0,.816-3.486Z"
-                  data-name="Path 6"
-                  id="Path_6"
-                />
-                <path
-                  transform="translate(-45.91 0)"
-                  d="M75.207,20.857a1.561,1.561,0,0,1-1.483,1.628h-2.98a1.561,1.561,0,0,1-1.483-1.628V1.628A1.561,1.561,0,0,1,70.743,0h2.98a1.561,1.561,0,0,1,1.483,1.628Z"
-                  data-name="Path 7"
-                  id="Path_7"
-                />
-                <path
-                  transform="translate(0 -51.963)"
-                  d="M0,80.018A1.561,1.561,0,0,1,1.483,78.39h26.7a1.561,1.561,0,0,1,1.483,1.628v2.006a1.561,1.561,0,0,1-1.483,1.628H1.483A1.561,1.561,0,0,1,0,82.025Z"
-                  data-name="Path 8"
-                  id="Path_8"
-                />
-              </svg>
+    <div className="container">
+      {/* Div izquierdo */}
+      <div className="left-box">
+        <div className="card max-w-md mx-auto bg-black dark:bg-zinc-800 shadow-md rounded-lg overflow-hidden">
+          <div className="header px-4 py-3 border-b dark:border-zinc-700">
+            <div className="flex justify-between items-center">
+              <h2 className="text-lg font-semibold text-zinc-800 text-white">Chatbot Assistant</h2>
+              <div className="status bg-green-500 text-white text-xs px-2 py-1 rounded-full">Online</div>
             </div>
-            <div className="logo2">
-              <svg
-                viewBox="0 0 101.014 23.535"
-                xmlns="http://www.w3.org/2000/svg"
-                id="logo-second"
-              >
-                <g transform="translate(-1029.734 -528.273)">
-                  <path
-                    transform="translate(931.023 527.979)"
-                    d="M109.133,14.214l3.248-11.706A1.8,1.8,0,0,1,114.114,1.2h2.229a1.789,1.789,0,0,1,1.7,2.358L111.884,21.71a1.8,1.8,0,0,1-1.7,1.216h-3a1.8,1.8,0,0,1-1.7-1.216L99.317,3.554a1.789,1.789,0,0,1,1.7-2.358h2.229a1.8,1.8,0,0,1,1.734,1.312l3.248,11.706a.468.468,0,0,0,.9,0Z"
-                    data-name="Path 1"
-                    id="Path_1"
-                  />
-                  <path
-                    transform="translate(888.72 528.773)"
-                    d="M173.783,22.535a10.77,10.77,0,0,1-7.831-2.933,10.387,10.387,0,0,1-3.021-7.813v-.562A13.067,13.067,0,0,1,164.2,5.372,9.315,9.315,0,0,1,167.81,1.4,10.176,10.176,0,0,1,173.136,0,9.105,9.105,0,0,1,180.2,2.812q2.576,2.812,2.577,7.973v.583a1.793,1.793,0,0,1-1.8,1.787H169.407a.466.466,0,0,0-.457.564,5.08,5.08,0,0,0,5.217,4.136A6.594,6.594,0,0,0,178.25,16.6a1.817,1.817,0,0,1,2.448.218l.557.62a1.771,1.771,0,0,1-.1,2.488,9.261,9.261,0,0,1-2.4,1.57,11.732,11.732,0,0,1-4.972,1.034ZM173.115,4.68A3.66,3.66,0,0,0,170.3,5.85,6.04,6.04,0,0,0,168.911,9.2h8.125V8.735a4.305,4.305,0,0,0-1.051-3,3.781,3.781,0,0,0-2.87-1.059Z"
-                    data-name="Path 2"
-                    id="Path_2"
-                  />
-                  <path
-                    transform="translate(842.947 528.771)"
-                    d="M244.851,3.928a1.852,1.852,0,0,1-1.95,1.76c-.1,0-.2,0-.3,0a7.53,7.53,0,0,0-2.234.3,3.275,3.275,0,0,0-2.348,3.1V20.347a1.844,1.844,0,0,1-1.9,1.787h-2.366a1.844,1.844,0,0,1-1.9-1.787V1.751A1.391,1.391,0,0,1,233.294.4h3.043a1.4,1.4,0,0,1,1.428,1.265l.035.533a.282.282,0,0,0,.5.138A5.617,5.617,0,0,1,242.988,0h.031a1.832,1.832,0,0,1,1.864,1.813l-.032,2.114Z"
-                    data-name="Path 3"
-                    id="Path_3"
-                  />
-                  <path
-                    transform="translate(814.555 528.773)"
-                    d="M287.2,16.127a1.869,1.869,0,0,0-1.061-1.677,12.11,12.11,0,0,0-3.406-1.095q-7.8-1.627-7.8-6.587a5.956,5.956,0,0,1,2.415-4.83A9.781,9.781,0,0,1,283.659,0a10.536,10.536,0,0,1,6.659,1.948,6.36,6.36,0,0,1,2.029,2.586,1.791,1.791,0,0,1-1.661,2.475h-2.291a1.754,1.754,0,0,1-1.624-1.137,2.7,2.7,0,0,0-.606-.922,3.435,3.435,0,0,0-2.526-.814,3.512,3.512,0,0,0-2.284.663,2.088,2.088,0,0,0-.808,1.687,1.786,1.786,0,0,0,.92,1.557,9.485,9.485,0,0,0,3.1,1.024,25.5,25.5,0,0,1,3.678.974q4.627,1.687,4.628,5.844a5.659,5.659,0,0,1-2.567,4.81,11.125,11.125,0,0,1-6.629,1.838,11.627,11.627,0,0,1-4.881-.974,8.173,8.173,0,0,1-3.345-2.671,6.843,6.843,0,0,1-.679-1.174,1.784,1.784,0,0,1,1.653-2.492h1.9a1.786,1.786,0,0,1,1.673,1.133,2.8,2.8,0,0,0,.925,1.237,4.587,4.587,0,0,0,2.87.824,4.251,4.251,0,0,0,2.536-.632,1.965,1.965,0,0,0,.859-1.657Z"
-                    data-name="Path 4"
-                    id="Path_4"
-                  />
-                  <path
-                    transform="translate(772.607 528.773)"
-                    d="M348.648,22.535a10.77,10.77,0,0,1-7.832-2.933,10.386,10.386,0,0,1-3.021-7.813v-.562a13.067,13.067,0,0,1,1.273-5.854A9.314,9.314,0,0,1,342.676,1.4,10.174,10.174,0,0,1,348,0a9.1,9.1,0,0,1,7.063,2.812q2.576,2.812,2.577,7.973v.583a1.793,1.793,0,0,1-1.8,1.787H344.272a.467.467,0,0,0-.457.564,5.081,5.081,0,0,0,5.217,4.136,6.594,6.594,0,0,0,4.083-1.251,1.817,1.817,0,0,1,2.448.218l.557.62a1.771,1.771,0,0,1-.1,2.488,9.26,9.26,0,0,1-2.4,1.57,11.731,11.731,0,0,1-4.972,1.034ZM347.981,4.68a3.659,3.659,0,0,0-2.819,1.17A6.035,6.035,0,0,0,343.777,9.2H351.9V8.735a4.307,4.307,0,0,0-1.051-3,3.781,3.781,0,0,0-2.87-1.059Z"
-                    data-name="Path 5"
-                    id="Path_5"
-                  />
-                </g>
-              </svg>
-            </div>
-            <span className="trail" />
           </div>
-          <span className="logo-bottom-text">uiverse.io</span>
+          <div className="chat-body flex-1 p-3 overflow-y-auto flex flex-col space-y-2" ref={chatBodyRef}>
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`chat-message ${message.sender === 'user' ? 'self-end bg-blue-500' : 'self-start bg-zinc-500'} text-white max-w-xs rounded-lg px-3 py-1.5 text-sm`}
+              >
+                {message.text.split("\n").map((textLine, i) => (
+                  <span key={i}>{textLine}<br /></span>
+                ))}
+              </div>
+            ))}
+          </div>
+          <div className="footer px-3 py-2 border-t dark:border-zinc-700">
+            <div className="flex gap-2">
+              <input
+                placeholder="Escribe tu mensaje..."
+                className="flex-1 p-2 border rounded-lg dark:bg-zinc-700 dark:text-white dark:border-zinc-600 text-sm"
+                id="chatInput"
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+              />
+              <button
+                className="send-button bg-blue-500 hover:bg-blue-700 text-white font-bold py-1.5 px-3 rounded-lg transition duration-300 ease-in-out text-sm"
+                id="sendButton"
+                onClick={handleSendMessage}
+              >
+                Enviar
+              </button>
+            </div>
+          </div>
         </div>
-        <span className="bottom-text">universe of ui</span>
       </div>
-    </StyledWrapper>
+
+      {/* Div derecho */}
+      <div className="right-box">
+        <h2 className="title">Registro y Reportes con el Chatbot</h2>
+        <p className="description">
+        🤖 Nuestro chatbot está diseñado para facilitar el registro de domiciliarios y proveedores en la plataforma. A través de él, los usuarios pueden registrar sus datos de manera rápida y sencilla 📋. Además, el chatbot permite enviar reportes 📑 y consultas directamente al administrador, asegurando una comunicación eficiente y fluida. ¡Una herramienta práctica para mantener todo en orden y optimizar tus tareas!
+        </p>
+        <div className="action-box">
+        <h2 className='title'>¡Nuestras Redes Sociales!</h2>
+        
+<button class="button">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    height="24"
+    width="24"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    class="w-6 h-6 text-gray-800 dark:text-white"
+  >
+    <path
+      clip-rule="evenodd"
+      d="M3 8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8Zm5-3a3 3 0 0 0-3 3v8a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3H8Zm7.597 2.214a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2h-.01a1 1 0 0 1-1-1ZM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm-5 3a5 5 0 1 1 10 0 5 5 0 0 1-10 0Z"
+      fill-rule="evenodd"
+      fill="currentColor"
+    ></path>
+  </svg>
+</button>
+<button class="button">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    height="24"
+    width="24"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    class="w-6 h-6 text-gray-800 dark:text-white"
+  >
+    <path
+      clip-rule="evenodd"
+      d="M12 4a8 8 0 0 0-6.895 12.06l.569.718-.697 2.359 2.32-.648.379.243A8 8 0 1 0 12 4ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10a9.96 9.96 0 0 1-5.016-1.347l-4.948 1.382 1.426-4.829-.006-.007-.033-.055A9.958 9.958 0 0 1 2 12Z"
+      fill-rule="evenodd"
+      fill="currentColor"
+    ></path>
+    <path
+      d="M16.735 13.492c-.038-.018-1.497-.736-1.756-.83a1.008 1.008 0 0 0-.34-.075c-.196 0-.362.098-.49.291-.146.217-.587.732-.723.886-.018.02-.042.045-.057.045-.013 0-.239-.093-.307-.123-1.564-.68-2.751-2.313-2.914-2.589-.023-.04-.024-.057-.024-.057.005-.021.058-.074.085-.101.08-.079.166-.182.249-.283l.117-.14c.121-.14.175-.25.237-.375l.033-.066a.68.68 0 0 0-.02-.64c-.034-.069-.65-1.555-.715-1.711-.158-.377-.366-.552-.655-.552-.027 0 0 0-.112.005-.137.005-.883.104-1.213.311-.35.22-.94.924-.94 2.16 0 1.112.705 2.162 1.008 2.561l.041.06c1.161 1.695 2.608 2.951 4.074 3.537 1.412.564 2.081.63 2.461.63.16 0 .288-.013.4-.024l.072-.007c.488-.043 1.56-.599 1.804-1.276.192-.534.243-1.117.115-1.329-.088-.144-.239-.216-.43-.308Z"
+      fill="currentColor"
+    ></path>
+  </svg>
+</button>
+
+
+
+<button class="button">
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    height="24"
+    width="24"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    class="w-6 h-6 text-gray-800 dark:text-white"
+  >
+    <path
+      clip-rule="evenodd"
+      d="M21.7 8.037a4.26 4.26 0 0 0-.789-1.964 2.84 2.84 0 0 0-1.984-.839c-2.767-.2-6.926-.2-6.926-.2s-4.157 0-6.928.2a2.836 2.836 0 0 0-1.983.839 4.225 4.225 0 0 0-.79 1.965 30.146 30.146 0 0 0-.2 3.206v1.5a30.12 30.12 0 0 0 .2 3.206c.094.712.364 1.39.784 1.972.604.536 1.38.837 2.187.848 1.583.151 6.731.2 6.731.2s4.161 0 6.928-.2a2.844 2.844 0 0 0 1.985-.84 4.27 4.27 0 0 0 .787-1.965 30.12 30.12 0 0 0 .2-3.206v-1.516a30.672 30.672 0 0 0-.202-3.206Zm-11.692 6.554v-5.62l5.4 2.819-5.4 2.801Z"
+      fill-rule="evenodd"
+    ></path>
+  </svg>
+</button>
+
+
+
+        </div>
+      </div>
+    </div>
   );
 };
-
-const StyledWrapper = styled.div`
-  .card {
-  width: 300px;
-  height: 200px;
-  background: #243137;
-  position: relative;
-  display: grid;
-  place-content: center;
-  border-radius: 10px;
-  overflow: hidden;
-  transition: all 0.5s ease-in-out;
-}
-
-#logo-main, #logo-second {
-  height: 100%;
-}
-
-#logo-main {
-  fill: #bd9f67;
-}
-
-#logo-second {
-  padding-bottom: 10px;
-  fill: none;
-  stroke: #bd9f67;
-  stroke-width: 1px;
-}
-
-.border {
-  position: absolute;
-  inset: 0px;
-  border: 2px solid #bd9f67;
-  opacity: 0;
-  transform: rotate(10deg);
-  transition: all 0.5s ease-in-out;
-}
-
-.bottom-text {
-  position: absolute;
-  left: 50%;
-  bottom: 13px;
-  transform: translateX(-50%);
-  font-size: 6px;
-  text-transform: uppercase;
-  padding: 0px 5px 0px 8px;
-  color: #bd9f67;
-  background: #243137;
-  opacity: 0;
-  letter-spacing: 7px;
-  transition: all 0.5s ease-in-out;
-}
-
-.content {
-  transition: all 0.5s ease-in-out;
-}
-
-.content .logo {
-  height: 35px;
-  position: relative;
-  width: 33px;
-  overflow: hidden;
-  transition: all 1s ease-in-out;
-}
-
-.content .logo .logo1 {
-  height: 33px;
-  position: absolute;
-  left: 0;
-}
-
-.content .logo .logo2 {
-  height: 33px;
-  position: absolute;
-  left: 33px;
-}
-
-.content .logo .trail {
-  position: absolute;
-  right: 0;
-  height: 100%;
-  width: 100%;
-  opacity: 0;
-}
-
-.content .logo-bottom-text {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  margin-top: 30px;
-  color: #bd9f67;
-  padding-left: 8px;
-  font-size: 11px;
-  opacity: 0;
-  letter-spacing: none;
-  transition: all 0.5s ease-in-out 0.5s;
-}
-
-.card:hover {
-  border-radius: 0;
-  transform: scale(1.1);
-}
-
-.card:hover .logo {
-  width: 134px;
-  animation: opacity 1s ease-in-out;
-}
-
-.card:hover .border {
-  inset: 15px;
-  opacity: 1;
-  transform: rotate(0);
-}
-
-.card:hover .bottom-text {
-  letter-spacing: 3px;
-  opacity: 1;
-  transform: translateX(-50%);
-}
-
-.card:hover .content .logo-bottom-text {
-  opacity: 1;
-  letter-spacing: 9.5px;
-}
-
-.card:hover .trail {
-  animation: trail 1s ease-in-out;
-}
-
-@keyframes opacity {
-  0% {
-    border-right: 1px solid transparent;
-  }
-
-  10% {
-    border-right: 1px solid #bd9f67;
-  }
-
-  80% {
-    border-right: 1px solid #bd9f67;
-  }
-
-  100% {
-    border-right: 1px solid transparent;
-  }
-}
-
-@keyframes trail {
-  0% {
-    background: linear-gradient(90deg, rgba(189, 159, 103, 0) 90%, rgb(189, 159, 103) 100%);
-    opacity: 0;
-  }
-
-  30% {
-    background: linear-gradient(90deg, rgba(189, 159, 103, 0) 70%, rgb(189, 159, 103) 100%);
-    opacity: 1;
-  }
-
-  70% {
-    background: linear-gradient(90deg, rgba(189, 159, 103, 0) 70%, rgb(189, 159, 103) 100%);
-    opacity: 1;
-  }
-
-  95% {
-    background: linear-gradient(90deg, rgba(189, 159, 103, 0) 90%, rgb(189, 159, 103) 100%);
-    opacity: 0;
-  }
-}
-`;
 
 export default Card;

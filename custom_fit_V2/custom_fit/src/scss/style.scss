@@ -1056,8 +1056,6 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hov
   display: flex;
   height: 40rem;
   gap: 10px;
-  
-
 }
 .main1 > div{
   flex: 1;
@@ -1074,6 +1072,7 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hov
 .main1 > div:hover{
   flex:5;
   background-size: auto 100%;
+  transition: 1.5s;
   
 }
 .redes{
