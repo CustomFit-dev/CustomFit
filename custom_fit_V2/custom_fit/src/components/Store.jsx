@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Header from './modules/header_l';
 import Section from './modules/carrosel';
+import Cajas from './modules/Storecontent';
 import CircularIndeterminate from './modules/CircularIndeterminate'; // Asegúrate de que la ruta sea correcta
 import '../scss/store.scss';
 
@@ -33,13 +34,13 @@ const Store = () => {
           <CircularIndeterminate />
         </div>
       ) : (
-        <div className='store-container'>
-        
-            <Section />
-          
-        </div>
+            <Section className='store-container'/>
       )}
+      
+        <Cajas/>
+      
     </>
+    
   );
 };
 

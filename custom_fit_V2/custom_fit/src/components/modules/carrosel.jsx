@@ -15,52 +15,31 @@ import img4 from '../../img/slider4.png';
 
 export default function Carso() {
   return (
-    <div className="carousel">
-      <Swiper
-        pagination={{
-          dynamicBullets: true,
-        }}
-        autoplay={{
-          delay: 6000,
-          disableOnInteraction: false,
-        }}
-        modules={[Pagination, Autoplay]}
-        className="mySwiper"
-       
-      >
-        <SwiperSlide>
-          <img 
-            src={img1} 
-            id="c-1" 
-            alt="Slide 1" 
-            
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img 
-            src={img2} 
-            id="c-2" 
-            alt="Slide 2" 
-            
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img 
-            src={img3} 
-            id="c-3" 
-            alt="Slide 3" 
-            
-          />
-        </SwiperSlide>
-        <SwiperSlide>
-          <img 
-            src={img4} 
-            id="c-4" 
-            alt="Slide 4" 
-            
-          />
-        </SwiperSlide>
-      </Swiper>
+    <div className='mainnn'>
+    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">x
+      <img src={img1} class="d-block w-100" alt="..."/>
     </div>
+    <div class="carousel-item">
+      <img src={img2} class="d-block w-100" alt="..."/>
+    </div>
+    <div class="carousel-item">
+      <img src={img3} class="d-block w-100" alt="..."/>
+    </div>
+    <div class="carousel-item">
+      <img src={img4} class="d-block w-100" alt="..."/>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+</div>
   );
 }
