@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import 'swiper/css/autoplay';
-
+import '../../scss/carrosel.scss';
 
 import { Pagination, Autoplay } from 'swiper/modules';
 
@@ -26,19 +26,39 @@ export default function Carso() {
         }}
         modules={[Pagination, Autoplay]}
         className="mySwiper"
-        style={{ width: '100%', height: '100%' }}
+       
       >
         <SwiperSlide>
-          <img src={img1} id="c-1" alt="Slide 1" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img 
+            src={img1} 
+            id="c-1" 
+            alt="Slide 1" 
+            
+          />
         </SwiperSlide>
         <SwiperSlide>
-          <img src={img2} id="c-2" alt="Slide 2" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img 
+            src={img2} 
+            id="c-2" 
+            alt="Slide 2" 
+            
+          />
         </SwiperSlide>
         <SwiperSlide>
-          <img src={img3} id="c-3" alt="Slide 3" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img 
+            src={img3} 
+            id="c-3" 
+            alt="Slide 3" 
+            
+          />
         </SwiperSlide>
         <SwiperSlide>
-          <img src={img4} id="c-4" alt="Slide 4" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img 
+            src={img4} 
+            id="c-4" 
+            alt="Slide 4" 
+            
+          />
         </SwiperSlide>
       </Swiper>
     </div>

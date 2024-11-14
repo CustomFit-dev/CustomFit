@@ -1,0 +1,46 @@
+.main{
+    background-color: red($color: #000000) !important;
+    width: 100%;
+    height: 100%;
+}
+.shoph1{
+    display: flex;
+    color: white;
+    background-color: blue;
+    width: 100%;
+    justify-content: center;
+}
+/* Estilos generales para .store-container */
+.store-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 60vh; /* Asegura que la tienda ocupe al menos el 60% de la pantalla */
+    background-color: #ff0000; /* Fondo rojo para el componente */
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  /* Media Queries para hacerlo responsive */
+  @media (max-width: 1024px) {
+    .store-container {
+      min-height: 50vh; /* Reduce la altura mínima en pantallas medianas */
+      padding: 15px; /* Ajusta el padding en pantallas medianas */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .store-container {
+      min-height: 40vh; /* Ajusta la altura mínima en pantallas pequeñas */
+      padding: 10px; /* Ajusta el padding en pantallas más pequeñas */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .store-container {
+      min-height: 30vh; /* Ajusta aún más la altura mínima en pantallas muy pequeñas */
+      padding: 5px; /* Reduce el padding en dispositivos muy pequeños */
+    }
+  }
+  

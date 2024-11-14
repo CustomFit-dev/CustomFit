@@ -1,0 +1,52 @@
+.carousel {
+  display: flex;
+  width: 100%;
+  max-width: 100rem;
+  margin: 0 auto;
+  padding: 1rem;
+  
+}
+
+.mySwiper {
+  width: 100%;
+  height: auto;
+  margin-top: 60px;
+}
+
+/* Ajusta el tamaño de las imágenes para que sean responsive */
+.mySwiper img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px; /* Opcional: redondea las esquinas de las imágenes */
+}
+
+/* Media queries para diferentes tamaños de pantalla */
+
+/* Pantallas grandes (escritorio) */
+@media (min-width: 1200px) {
+  .carousel {
+    max-width: 80rem;
+  }
+}
+
+/* Pantallas medianas (tabletas) */
+@media (max-width: 1199px) and (min-width: 768px) {
+  .carousel {
+    max-width: 90%;
+    padding: 1rem;
+  }
+}
+
+/* Dispositivos móviles (pantallas menores a 768px) */
+@media (max-width: 767px) {
+  .carousel {
+    max-width: 100%;
+    padding: 0.5rem;
+  }
+
+  /* Ajusta las imágenes para que se adapten mejor a pantallas pequeñas */
+  .mySwiper img {
+    border-radius: 4px;
+  }
+}

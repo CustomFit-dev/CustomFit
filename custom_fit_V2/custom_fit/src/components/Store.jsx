@@ -1,8 +1,9 @@
 // Store.js
 import React, { useEffect, useState } from 'react';
 import Header from './modules/header_l';
-import Section from './modules/sec1_s';
+import Section from './modules/carrosel';
 import CircularIndeterminate from './modules/CircularIndeterminate'; // Asegúrate de que la ruta sea correcta
+import '../scss/store.scss';
 
 const Store = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -17,17 +18,28 @@ const Store = () => {
   }, []);
 
   return (
-    <div>
-      <Header />
+    <>
+      <Header className='store-header' />
       {isLoading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div 
+          style={{
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            height: '100vh', 
+            flexDirection: 'column'
+          }}
+        >
           <CircularIndeterminate />
         </div>
       ) : (
-        <Section />
+        <div className='store-container'>
+        
+            <Section />
+          
+        </div>
       )}
-      {/* <Sec2 /> */}
-    </div>
+    </>
   );
 };
 

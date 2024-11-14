@@ -38,16 +38,6 @@ body::-webkit-scrollbar-thumb {
   border-radius: 0.5rem;
 }
 
-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-align: center;
-  flex-wrap: wrap;
-  margin: auto;
-  height: 85vh;
-  margin-bottom: 3rem;
-}
 
 #sec2-f {
   padding: 2rem;
@@ -683,20 +673,6 @@ body .form-row .fondoInicio {
 }
 
 
-.mySwiper {
-  width: 100%;
-  height: 30rem;
-}
-.mySwiper img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-.mySwiper img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
 
 .sec1_s {
   padding-top: 6rem;
