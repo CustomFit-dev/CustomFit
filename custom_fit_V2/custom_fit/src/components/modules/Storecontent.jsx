@@ -9,6 +9,8 @@ import camisa5 from '../../img/camisa5.jpg';
 import camisa6 from '../../img/camisa6.jpg';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
+
+
 const Shop = () => {
   return (
     <div className='container-fluid'>
