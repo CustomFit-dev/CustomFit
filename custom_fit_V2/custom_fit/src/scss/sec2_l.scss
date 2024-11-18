@@ -1,5 +1,5 @@
 /* Contenedor principal */
-.container {
+.container1 {
     display: flex;
     gap: 20px;
     flex-wrap: wrap;
@@ -96,19 +96,25 @@
 .right-box {
     flex: 1;
     min-width: 450px; /* Aumentar el min-width en un 50% */
-    background-color: #f7f7f7;
-    padding: 20px;
+    background-color: #e5e5f7;
+    opacity: 1;
+    background-image: radial-gradient(#30B0C7 1.25px, #e5e5f7 1.25px);
+    background-size: 25px 25px;    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .title {
-    font-size: 1.5rem;
+    width: auto;
+    
+    text-align: center;
+    font-size: 2.5rem;
     font-weight: bold;
     color: #333;
 }
 
 .description {
+    font-size: 20px;
     margin: 10px 0;
     color: #555;
 }
@@ -147,7 +153,13 @@
 }
 
 
-
+.botones{
+    width: 100%;
+    display: flex;
+    gap: 100px;
+    
+    justify-content: center;
+}
 .button {
     cursor: pointer;
     width: 50px;

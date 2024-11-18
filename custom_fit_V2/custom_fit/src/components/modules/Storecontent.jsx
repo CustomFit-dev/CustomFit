@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import '../../scss/store.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import camisa1 from '../../img/camisa1.jpg';
@@ -8,10 +8,14 @@ import camisa4 from '../../img/camisa4.webp';
 import camisa5 from '../../img/camisa5.jpg';
 import camisa6 from '../../img/camisa6.jpg';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Schopcar from '../shoproducto';
+import VerC from '../modules/verCamisa';
 
 
 
 const Shop = () => {
+  const [estadoModal1, cambiarEsadoModal1] = useState(false);
+  const [estadoModal2, cambiarEstadoModal2] = useState(false);
   return (
     <div className='container-fluid'>
       <div className="row">
@@ -27,9 +31,9 @@ const Shop = () => {
               <div className="image-container">
                 <img src={camisa1} className="card-img-top" alt="Camiseta Sencilla" style={{ width: '100%', height: '250px', objectFit: 'contain' }} />
                 <div className="hover-buttons">
-                  <button className="btn-11 btn-11">Ver Detalles</button>
-                  <button className="btn-22 btn-22">Ver Camisa</button>
-                  <button className="btn-33 btn-33">Comprar Ahora</button>
+                  <button className="btn-11 btn-11" onClick={() => cambiarEsadoModal1(!estadoModal1)}>Ver Detalles</button>
+                  <button className="btn-22 btn-22" onClick={() => cambiarEstadoModal2(!estadoModal2)} >Ver Camisa</button>
+                  <button className="btn-33 btn-33" >Comprar Ahora</button>
                 </div>
               </div>
               <div className="card-body">
@@ -177,6 +181,14 @@ const Shop = () => {
           </div>
         </div>
       </div>
+      <Schopcar
+        estado={estadoModal1}
+        cambiarEsado={cambiarEsadoModal1}
+      />
+      <VerC 
+      estado={estadoModal2} 
+      cambiarEstado={cambiarEstadoModal2}
+      />
     </div>
   );
 };

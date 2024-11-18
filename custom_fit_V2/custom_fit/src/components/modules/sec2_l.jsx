@@ -63,7 +63,7 @@ const Card = () => {
   }, [messages]);
 
   return (
-    <div className="container">
+    <div className="container1">
       {/* Div izquierdo */}
       <div className="left-box">
         <div className="card max-w-md mx-auto bg-black dark:bg-zinc-800 shadow-md rounded-lg overflow-hidden">
@@ -115,6 +115,7 @@ const Card = () => {
         </p>
         <div className="action-box">
         <h2 className='title'>¡Nuestras Redes Sociales!</h2>
+        <div className='botones'>
         
 <button class="button">
   <svg
@@ -176,7 +177,7 @@ const Card = () => {
     ></path>
   </svg>
 </button>
-
+</div>
 
 
         </div>

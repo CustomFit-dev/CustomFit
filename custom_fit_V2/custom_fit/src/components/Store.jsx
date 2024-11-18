@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import Header from './modules/header_l';
 import Section from './modules/carrosel';
-import Cajas from './shoproducto';
+import Cajas from './modules/Storecontent';
+import Footer from './modules/footer';
 import CircularIndeterminate from './modules/CircularIndeterminate'; // Asegúrate de que la ruta sea correcta
 import '../scss/store.scss';
 
@@ -38,6 +39,8 @@ const Store = () => {
       )}
       
         <Cajas/>
+        <Footer/>
+        
       
     </>
     

@@ -1,0 +1,71 @@
+.shirt-view-container {
+    display: flex;
+    flex-direction: column; /* Asegura que los elementos estén apilados verticalmente */
+    justify-content: center; /* Centra los elementos verticalmente */
+    align-items: center; /* Centra los elementos horizontalmente */
+    width: 30%; /* Ajusta el ancho según sea necesario */
+    margin: 20px;
+    background-color: #222;
+    border: 2px solid white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+    overflow: hidden; /* Para evitar que el contenido se desborde */
+    
+    /* Media Query para hacer el diseño más responsivo */
+    @media (max-width: 768px) {
+      width: 80%; /* Se ajusta el ancho a un 80% en pantallas más pequeñas */
+    }
+  }
+  .shirt-card {
+    text-align: center;
+  }
+  
+ /* Contenedor que centra la imagen */
+.shirt-view {
+    display: flex;            /* Activar flexbox */
+    justify-content: center;  /* Centrar horizontalmente */
+    align-items: center;      /* Centrar verticalmente */
+    position: relative;
+    width: 455px;             /* Tamaño fijo del contenedor */
+    height: 400px;
+    overflow: hidden;         /* Evitar desbordamiento */
+    background-color: #ffffff;
+    margin-bottom: 20px;
+    top: -22px;
+    border-radius: 10px;
+  }
+  
+  /* Imagen ajustada dentro del contenedor */
+  .shirt-image {
+    width: auto; 
+    max-width: 100%;             /* Mantén el ancho proporcional */
+    height: 100%;             /* Ocupa todo el alto del contenedor */
+    object-fit: contain;      /* Ajusta la imagen al contenedor sin recortes */
+    transition: transform 0.2s ease;
+  }
+  
+  
+  
+  .view-buttons button,
+  .zoom-controls button {
+    margin: 5px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #30b0c7;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .view-buttons button:hover,
+  .zoom-controls button:hover {
+    background-color: #00ffcc;
+  }
+  
+  .zoom-controls span {
+    margin: 0 10px;
+    color: white;
+  }
+  

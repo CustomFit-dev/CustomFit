@@ -1,0 +1,169 @@
+
+.card-container {
+    width: 500px;
+    background: #000000;
+    color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 0px auto;
+    margin-top: 70px;
+  }
+  p{
+    font-size: 13px;
+  }
+  .highlighted {
+    color: white;
+    font-weight: bold; /* Opcional, resalta un poco más */
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    color: white;
+  }
+  
+  .image-section {
+    position: relative;
+    background: #30B0C7;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .discount-tag {
+    position: absolute;
+    top: 0px;
+    right: 10px;
+    background: red;
+    color: white;
+    font-size: 25px;
+    font-weight: bold;
+    padding: 5px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+  
+  .shirt-image {
+    max-width: 50%;
+    height: auto;
+  }
+  
+  .horizontal-divider {
+    height: 2px;
+    background: #00ffcc;
+    margin: 0 auto;
+    width: 90%;
+  }
+  
+  .info-section {
+    padding: 5px;
+    
+    
+  }
+  
+  h2 {
+    margin-bottom: 10px;
+    font-size: 35px;
+    font-weight: bold;
+    width: 200px;
+  }
+  
+  .info-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 15px;
+  }
+  
+  .left-section,
+  .right-section {
+    flex: 1;
+  }
+  
+  .price-section {
+    margin-bottom: 10px;
+  }
+  
+  .old-price {
+    margin-left: 20px;
+    text-decoration: line-through red 2px;
+    color: #999;
+    font-size: 20px;
+  }
+  
+  .current-price {
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 10px;
+  }
+  
+  .rating-section {
+    font-size: 18px;
+    color: gold;
+  }
+  
+  .detail {
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: #30B0C7;
+    margin-left: 20px;
+    
+  }
+  
+  .vertical-divider {
+    width: 2px;
+    background: #00ffcc;
+    margin: 0 20px;
+  }
+  
+  .vertical-divider-below {
+    width: 2px;
+    height: 220px; /* Ajusta la altura según necesites */
+    background: #00ffcc;
+    margin: 1px auto; /* Centra la línea */
+    
+  }
+  
+  .buy-button {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    border: 2px solid #00ffcc !important;
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.10s;
+    
+  }
+  
+  .buy-button:hover {
+    background: #00ffcc;
+    color: black;
+    transition: 0.9s !important;
+  }
+  .descripc{
+    font-size: 15px;
+    text-align: left;
+  }
+  .salirx1 {
+    position: absolute;
+    float: left;
+      /* Ajusta la distancia desde la parte izquierda */
+    background-color: transparent; /* Fondo transparente */
+    color: black; /* Color del ícono */
+    border: none; /* Sin borde */
+    padding: 5px; /* Ajusta el espacio alrededor del ícono */
+    cursor: pointer; /* Cambia el cursor al pasar el ratón */
+    z-index: 10; /* Asegura que esté encima de otros elementos */
+  }
+ 
