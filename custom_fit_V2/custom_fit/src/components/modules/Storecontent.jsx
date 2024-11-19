@@ -37,9 +37,9 @@ const Shop = () => {
                 </div>
               </div>
               <div className="card-body">
-                <h5 className="card-title">Camiseta Sencilla</h5>
+                <h5 className="card-title">Camiseta Beige</h5>
                 <p className="card-text">
-                  Some quick example text to build on the card title and make up the bulk of the card's content.
+                camiseta relajada con un diseño minimalista que combina un paisaje de atardecer rojo detrás de una palmera negra, ideal para estilos casuales.
                 </p>
                 <div className='dotos'>
                   <button className="precio btn-primary">$30.000</button>
@@ -63,9 +63,9 @@ const Shop = () => {
                 </div>
               </div>
               <div className="card-body">
-                <h5 className="card-title">Camiseta Sencilla</h5>
+                <h5 className="card-title">Camiseta Rosa</h5>
                 <p className="card-text">
-                  Some quick example text to build on the card title and make up the bulk of the card's content.
+                Diseño sutil que presenta una ilustración en línea de palmeras y un horizonte, perfecta para un look fresco y ligero.
                 </p>
                 <div className='dotos'>
                   <button className="precio btn-primary">$30.000</button>
@@ -88,9 +88,9 @@ const Shop = () => {
                 </div>
               </div>
               <div className="card-body">
-                <h5 className="card-title">Camiseta Sencilla</h5>
+                <h5 className="card-title">Camiseta Negra</h5>
                 <p className="card-text">
-                  Some quick example text to build on the card title and make up the bulk of the card's content.
+                Diseño moderno y elegante, con una palmera destacada dentro de un marco geométrico blanco, para estilos urbanos.
                 </p>
                 <div className='dotos'>
                   <button className="precio btn-primary">$30.000</button>
@@ -116,9 +116,9 @@ const Shop = () => {
                 </div>
               </div>
               <div className="card-body">
-                <h5 className="card-title">Camiseta Sencilla</h5>
+                <h5 className="card-title">Camiseta Blanca</h5>
                 <p className="card-text">
-                  Some quick example text to build on the card title and make up the bulk of the card's content.
+                Presenta un estampado vibrante de palmeras y tonos cálidos, evocando un ambiente tropical. Perfecta para un día al aire libre.
                 </p>
                 <div className='dotos'>
                   <button className="precio btn-primary">$30.000</button>
@@ -141,9 +141,9 @@ const Shop = () => {
                 </div>
               </div>
               <div className="card-body">
-                <h5 className="card-title">Camiseta Sencilla</h5>
+                <h5 className="card-title">Camiseta Negra</h5>
                 <p className="card-text">
-                  Some quick example text to build on the card title and make up the bulk of the card's content.
+                Diseño discreto con texto impreso en el centro, dando un toque misterioso y casual.
                 </p>
                 <div className='dotos'>
                   <button className="precio btn-primary">$30.000</button>
@@ -166,9 +166,9 @@ const Shop = () => {
                 </div>
               </div>
               <div className="card-body">
-                <h5 className="card-title">Camiseta Sencilla</h5>
+                <h5 className="card-title">Camiseta Beige </h5>
                 <p className="card-text">
-                  Some quick example text to build on the card title and make up the bulk of the card's content.
+                Diseño sencillo y natural con una gran palmera negra centrada, ideal para un estilo relajado y minimalista.
                 </p>
                 <div className='dotos'>
                   <button className="precio btn-primary">$30.000</button>

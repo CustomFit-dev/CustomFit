@@ -18,7 +18,7 @@ export default function Carso() {
     <div className='mainnn'>
     <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-inner">
-    <div class="carousel-item active">x
+    <div class="carousel-item active">
       <img src={img1} class="d-block w-100" alt="..."/>
     </div>
     <div class="carousel-item">

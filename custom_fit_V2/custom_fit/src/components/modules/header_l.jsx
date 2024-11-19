@@ -28,13 +28,13 @@ import Divider from '@mui/material/Divider'; // Importar Divider
 
 const pages = [
   { name: 'Inicio', route: '/Home_L' },
-  { name: 'Comentarios', route: '#sobre' },
-  { name: 'Como funciona', route: '#prod' },
-  { name: 'Tienda', route: '/Store', icon: <ShoppingCartIcon /> },
+  { name: 'Chat Bot', route: '#sobre' },
+  { name: 'Comentarios', route: '#prod' },
+  { name: 'Tienda', route: '/Store'},
+  { name: '', route: '/Store', icon: <ShoppingCartIcon /> },
 ];
 
 const settings = [
- 
   { name: 'Perfil', route: '/Profile', icon: <AccountCircleIcon /> }, // Solo una opción de "Perfil"
   { name: 'Mis Pedidos', route: '#', icon: <LocalShippingIcon /> },
   { name: 'Mis Diseños', route: '#', icon: <DesignServicesIcon /> },

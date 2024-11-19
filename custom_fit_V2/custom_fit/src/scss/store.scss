@@ -6,6 +6,7 @@
     font-size: 40px;
   }
   .sub1{
+    font-size: 20px;
     color: #17BEBB;
   }
   
@@ -32,12 +33,17 @@
 }
 
 .precio {
-    background-color: gray;
-    color: white;
+    background-color: transparent;
+    border: 2px solid gray !important;
+    color: rgb(0, 0, 0);
     border: none;
-    padding: 10px 20px;
+    padding: 8px 20px;
     font-size: 16px;
     border-radius: 5px;
+}
+.precio:hover{
+  background-color: transparent;
+  color: black;
 }
 
 .carritosss {
@@ -55,76 +61,78 @@
 .logocar{
   margin: 0px auto !important;
 }
-/* Contenedor de la imagen */
-/* Contenedor de la imagen */
+.carritosss:hover{
+  border: 2px solid #17BEBB !important;
+  background-color: #17BEBB!important;
+  transition: 0.5s;
+  
+}
 .card {
   position: relative;
   overflow: hidden;  /* Para evitar que los botones sobresalgan de la tarjeta */
 }
 
-/* Estilo para el contenedor de botones al pasar el cursor */
+/* Configuración inicial del contenedor de botones */
 .hover-buttons {
   position: absolute;
   top: 20%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  display: none;
+  transform: translate(-50%, -50%) scale(0.10); /* Comienza con un leve escalado */
+  display: flex;
   flex-direction: column;
   gap: 10px;
   z-index: 1;
-  background-color: rgba(0, 0, 0, 0.784);  /* Fondo negro semitransparente */
+  background-color: rgba(0, 0, 0, 0.784);  
   padding: 100px;
   width: 100%;
-  border-radius: 5px;  /* Para bordes redondeados */
+  border-radius: 5px;
+  opacity: 0; /* Oculto inicialmente */
+  transition: opacity 0.3s ease, transform 0.8s ease; /* Transiciones suaves */
+  pointer-events: none; /* Evita interacciones cuando está oculto */
 }
 
-/* Mostrar los botones cuando el cursor esté sobre la imagen */
+/* Mostrar los botones al hacer hover sobre la imagen */
 .image-container:hover .hover-buttons {
-  display: flex;
+  opacity: 1; /* Totalmente visible */
+  transform: translate(-50%, -50%) scale(1); /* Escalado normal */
+  pointer-events: all; /* Habilita interacciones */
 }
 
 /* Estilo para los botones */
 .hover-buttons button {
-  cursor: pointer;  /* Cambia el cursor al pasar sobre los botones */
+  cursor: pointer;
   padding: 10px 20px;
   border: none;
-  background-color: #007bff;
   color: white;
   font-size: 14px;
   transition: background-color 0.3s ease;
-  border-radius: 5px;  /* Bordes redondeados para los botones */
+  border-radius: 5px;
 }
 
-/* Efecto de hover en los botones */
-.hover-buttons button:hover {
-  background-color: #0056b3;
+/* Colores y efectos de hover para los botones */
+.btn-11 {
+  background-color: #0056b3 !important;
+  color: white !important;
 }
-.btn-11{
-  background-color: yellow !important;
-  color: black !important;
-  
+
+.btn-11:hover {
+  background-color: #007bff !important;
 }
-.btn-11:hover{
-  background-color: transparent !important;
-  border: 1px solid yellow !important;
-  color: rgb(255, 255, 255) !important;
+
+.btn-22 {
+  background-color: #17BEBB !important;
+  color: white !important;
 }
-.btn-22{
-  background-color: green !important;
-  color: white;
-  
+
+.btn-22:hover {
+  background-color: #13a8a6 !important;
 }
-.btn-22:hover{
-  background-color: transparent!important;
-  border: 1PX solid green !important;
-  color: rgb(255, 255, 255);
+
+.btn-33 {
+  background-color: #f44336 !important;
+  color: white !important;
 }
-.btn-33{
-  background-color: orangered !important;
-  color: black !important;
-}
-.btn-33:hover{
-  background-color: transparent !important;
-  border: 1PX solid orangered !important;
-  color: rgb(255, 255, 255) !important;
+
+.btn-33:hover {
+  background-color: #d32f2f !important;
 }
