@@ -4,8 +4,10 @@ import Frontal from '../../img/camisa11.png';
 import Trasera from '../../img/trasera1.png';
 import Mangas from '../../img/logo1.png';
 import styled from 'styled-components';
+import IconButton1 from '@mui/material/IconButton';
+import CloseIcon1 from '@mui/icons-material/Close';
 
-const ShirtViewer = ({estado}) => {
+const ShirtViewer = ({estado, cambiarEstado}) => {
   const [view, setView] = useState('front');
   const [zoomLevel, setZoomLevel] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -52,6 +54,7 @@ const ShirtViewer = ({estado}) => {
     <>
     {estado &&
     <Overlay>
+    
     <div
       className="shirt-view-container"
       onMouseMove={handleMouseMove}
@@ -73,6 +76,7 @@ const ShirtViewer = ({estado}) => {
             transform: `scale(${zoomLevel}) translate(${position.x}px, ${position.y}px)`,
           }}
         />
+        
         <img
           src={Trasera}
           alt="Camisa Trasera"
@@ -90,7 +94,11 @@ const ShirtViewer = ({estado}) => {
           }}
         />
       </div>
-
+      <div className='salir' style={{ position: 'relative' }}>
+          <IconButton1 className="salirx1" onClick={() => cambiarEstado()}>
+          <CloseIcon1 />
+          </IconButton1>  
+      </div>
       <div className="view-buttons">
         <button onClick={() => showView('front')}>Frontal</button>
         <button onClick={() => showView('back')}>Trasera</button>

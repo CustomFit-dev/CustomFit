@@ -1,13 +1,11 @@
 import React from "react";
 import "../scss/shoproducto.scss";
 import img from '../img/camisa11.png';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import { useNavigate } from 'react-router-dom';
+import IconButton1 from '@mui/material/IconButton';
+import CloseIcon1 from '@mui/icons-material/Close';
 import styled from 'styled-components';
 
 const CamisetaCard = ({estado, cambiarEstado}) => {
-  const navigate = useNavigate();
   
   return (
     <>
@@ -19,9 +17,9 @@ const CamisetaCard = ({estado, cambiarEstado}) => {
       
         <div className="discount-tag">30%</div>
         <div style={{ position: 'relative' }}>
-  <IconButton className="salirx1" onClick={() => navigate('./Store.jsx')}>
-    <CloseIcon />
-  </IconButton>
+  <IconButton1 className="salirx1" onClick={() => cambiarEstado()}>
+    <CloseIcon1 />
+  </IconButton1>
 </div>
         <img
           src={img} // Cambia este link por la URL de tu imagen

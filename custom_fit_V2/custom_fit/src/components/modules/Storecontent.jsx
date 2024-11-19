@@ -183,7 +183,7 @@ const Shop = () => {
       </div>
       <Schopcar
         estado={estadoModal1}
-        cambiarEsado={cambiarEsadoModal1}
+        cambiarEstado={cambiarEsadoModal1}
       />
       <VerC 
       estado={estadoModal2} 

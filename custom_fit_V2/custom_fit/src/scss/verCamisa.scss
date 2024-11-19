@@ -3,7 +3,7 @@
     flex-direction: column; /* Asegura que los elementos estén apilados verticalmente */
     justify-content: center; /* Centra los elementos verticalmente */
     align-items: center; /* Centra los elementos horizontalmente */
-    width: 30%; /* Ajusta el ancho según sea necesario */
+    width: 60%; /* Ajusta el ancho según sea necesario */
     margin: 20px;
     background-color: #222;
     border: 2px solid white;
@@ -27,11 +27,11 @@
     justify-content: center;  /* Centrar horizontalmente */
     align-items: center;      /* Centrar verticalmente */
     position: relative;
-    width: 455px;             /* Tamaño fijo del contenedor */
+    width: 955px;             /* Tamaño fijo del contenedor */
     height: 400px;
     overflow: hidden;         /* Evitar desbordamiento */
     background-color: #ffffff;
-    margin-bottom: 20px;
+    margin-bottom: -20px;
     top: -22px;
     border-radius: 10px;
   }
@@ -68,4 +68,16 @@
     margin: 0 10px;
     color: white;
   }
-  
+  .salirx1 {
+    position: absolute;
+    background-color: transparent; /* Fondo transparente */
+    color: black; /* Color del ícono */
+    border: none; /* Sin borde */
+    padding: 5px; /* Ajusta el espacio alrededor del ícono */
+    cursor: pointer; /* Cambia el cursor al pasar el ratón */
+    z-index: 10; /* Asegura que esté encima de otros elementos */
+  }
+  .salir{
+    width: 100%;
+    
+  }
