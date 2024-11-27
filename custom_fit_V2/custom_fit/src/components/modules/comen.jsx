@@ -75,7 +75,7 @@ const CommentSection = () => {
   return (
     <div className="comment-section">
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <h1 style={{ color: '#00a99d' }}>Comentarios de nuestros clientes</h1>
+        <h1 style={{ color: '#00a99d',fontFamily: 'rubik', marginTop:'50px',}}>Comentarios de nuestros clientes</h1>
       </div>
 
       <form onSubmit={handleCommentSubmit}>
@@ -116,7 +116,7 @@ const CommentSection = () => {
         <Button type="submit" variant="contained" color="primary">Enviar</Button>
       </form>
       <hr style={{ border: '2px solid #00a99d', margin: '20px 0' }} />
-      <h2 style={{ color: 'white' }}>Total de Comentarios: {comments.length}</h2>
+      <h2 style={{ color: 'white',fontFamily: 'rubik' }}>Total de Comentarios: {comments.length}</h2>
       <hr style={{ border: '2px solid #00a99d', margin: '20px 0' }} />
 
       <div>

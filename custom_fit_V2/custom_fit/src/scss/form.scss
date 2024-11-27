@@ -1,3 +1,6 @@
++{
+  font-family: rubik;
+}
 body .form {
     position: fixed;
     width: 100%;
@@ -7,6 +10,7 @@ body .form {
   
   body .form h1 {
     color: white;
+    font-family: rubik;
   }
   
   body .form-row {
@@ -48,8 +52,9 @@ body .form {
     display: flex;
     text-align: center;
     justify-content: center;
-    font-family: "Great Vibes", cursive;
+    font-family: rubik;
     width: 45%;
+    
   }
   
   body .form-group {

@@ -1,13 +1,13 @@
 #sec2i{
     display: flex;
 }
-
 .tex2{
     color: white;
-    font-family: 'Open Sans', sans-serif;
+    font-family: rubik;
     font-size: 20PX;
     
 }
+
 .sec2 .image-container {
     display: flex !important;
     justify-content: center;
@@ -30,9 +30,20 @@
     
   }
 .tex1{
-    color: #00a99d;
-    font-size: 70px;
-    font-weight: 40px;
-    font-weight: 600;
-    font-family: 'Open Sans', sans-serif;
+  
+  font-family: rubik;
+  color: #00a99d;
+  font-size: 50px;
+    
 }  
+.highlight {
+  color: #00a99d;
+  font-family: "Dancing Script", cursive;
+  font-size: 70px !important;
+}
+.hi {
+  color: #00a99d;
+  font-family: rubik;
+  font-size: 25px !important;
+}
+

@@ -1,4 +1,7 @@
 
+*{
+  font-family: rubik;
+}
 .card-container {
     width: 500px;
     background: #000000;
@@ -12,6 +15,7 @@
   }
   p{
     font-size: 13px;
+    
   }
   .highlighted {
     color: white;

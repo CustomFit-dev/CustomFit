@@ -8,11 +8,12 @@
     display: flex;
     justify-content: center; 
     align-items: center; 
+    
 }
 
 .sec3texto1 {
     color: #00a99d;
-    font-family: "Charmonman", cursive;
+    font-family: rubik;
     font-weight: 400;
     font-style: normal;
     margin: 0px auto;
@@ -21,8 +22,7 @@
 .sec3l {
     color: white;
     height: auto;
-    
-    
+    font-family: rubik;
 }
 
 .step-item {
@@ -57,6 +57,7 @@
     border-radius: 50%;
     font-weight: 600;
     color: white;
+    
   }
   
   .active .step {

@@ -48,7 +48,7 @@ const Section3 = ({ steps }) => {
       <section className='sec3l' id='prod'>
           <div  className="sec3texto1">
               <h1>¿Cómo personalizar tus camisetas con CustomFit?</h1>
-              <p style={{ color: '#ffffff', fontSize: '0.9rem', marginTop: '8px' }}>
+              <p style={{ color: '#ffffff', fontSize: '0.9rem', marginTop: '8px',fontFamily: 'rubik' }}>
                   Sigue los pasos a continuación para diseñar tus camisetas de forma sencilla y rápida.
               </p>
           </div>
@@ -89,6 +89,7 @@ const Section3 = ({ steps }) => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
+                        fontFamily: 'rubik',
                       }
                     }} // Color blanco para el texto
                   >

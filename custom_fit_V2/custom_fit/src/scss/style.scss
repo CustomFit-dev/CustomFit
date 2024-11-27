@@ -5,7 +5,9 @@ html {
   height: 100% !important;
 }
 
-
+*{
+  font-family: rubik;
+}
 @media (max-width: 560px) {
   html {
     width: 80vh;
@@ -21,7 +23,6 @@ body {
   grid-template-rows: repeat(1, 2fr);
   height: 100% !important;
 }
-
 
 body::-webkit-scrollbar {
   width: 0.5rem;
@@ -49,33 +50,7 @@ a {
   text-decoration: none;
 }
 
-.highlight {
-  color: #00a99d;
-  font-family: "Dancing Script", cursive;
-  font-size: 70px !important;
-}
-.hi {
-  color: #00a99d;
-  font-family: "Dancing Script", cursive;
-  font-size: 25px !important;
-}
-.tex{
-  font-family: "Dancing Script", cursive;
-  font-size: 20px !important;
-  line-height: 30px;
-  font-family: "Dancing Script", cursive;
-  font-size: 70px !important;
-}
-.hi {
-  color: #00a99d;
-  font-family: "Dancing Script", cursive;
-  font-size: 25px !important;
-}
-.tex{
-  font-family: "Dancing Script", cursive;
-  font-size: 20px !important;
-  line-height: 30px;
-}
+
 
 @media (max-width: 1000px) {
   header .image-container {
@@ -312,6 +287,7 @@ body .form {
 
 body .form h1 {
   color: white;
+  font-family: rubik;
 }
 
 
@@ -356,8 +332,7 @@ body .form-row h1 {
   display: flex;
   text-align: center;
   justify-content: center;
-  font-family: "Great Vibes", cursive;
-  font-family: "Great Vibes", cursive;
+  font-family: rubik;
   width: 45%;
 }
 
@@ -563,6 +538,7 @@ body .form-container {
   margin-top: 5%;
   float: right;
   width: 60%;
+  font-family: rubik;
 }
 
 #inputin {
@@ -1112,3 +1088,15 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hov
   font-weight: 600;
 }
 
+.tex{
+  font-family: "Dancing Script", cursive;
+  font-size: 20px !important;
+  line-height: 30px;
+}
+.tex{
+  font-family: "Dancing Script", cursive;
+  font-size: 20px !important;
+  line-height: 30px;
+  font-family: "Dancing Script", cursive;
+  font-size: 70px !important;
+}

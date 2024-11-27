@@ -21,7 +21,8 @@ const Section2 = () => {
       <section className='sec2' id='sobre'>
         <div className='container'>
           <div className='row'>
-            <div className='col'>
+            <div className=' col'>
+            
               <h2 data-aos="fade-right"><span className='tex1'>¿Quienes somos?</span></h2>
               <br />
               <p data-aos="fade-left" className='tex2'>En CustomFit, nos apasiona la idea de que la moda no solo sea una expresión de estilo, sino también una manifestación única de individualidad. Fundada con la visión de empoderar a cada persona para que se exprese sin límites, nuestra plataforma de personalización de ropa ofrece una experiencia sin igual en la creación de prendas únicas y significativas.</p>
