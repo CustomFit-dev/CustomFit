@@ -1,0 +1,65 @@
+/* Estilos para las tarjetas (botones) */
+.domitext {
+    color: white;
+    margin: 0px auto;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.card-button {
+    width: 100%;
+    margin: 5px;
+    text-align: center;
+    border: none;
+    padding: 20px;
+    background-color: #d9d9d97f; /* Color similar a btn-light de Bootstrap */
+    cursor: pointer;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+    min-height: 300px; /* Altura mínima para todas las tarjetas */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Para distribuir contenido dentro de la tarjeta */
+    align-items: center; /* Alinea el contenido horizontalmente */
+    box-sizing: border-box; /* Para que el padding no afecte el tamaño */
+    margin-bottom: 20px;
+}
+
+.card-button:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05); /* Efecto de sobresalir en las tarjetas */
+    border: 3px solid white
+}
+
+.card-button:focus {
+    outline: none;
+}
+
+.card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distribuye el contenido dentro de la tarjeta */
+    align-items: center;
+    height: 100%;
+    box-sizing: border-box; /* Para que el padding no desborde el tamaño */
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.card-text {
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.card-img {
+    width: 100%; /* Asegura que la imagen ocupe todo el ancho del contenedor */
+    height: 200px; /* Establece una altura fija para las imágenes */
+    object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
+    border-radius: 8px;
+    margin-bottom: 10px;
+}

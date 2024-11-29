@@ -1,0 +1,58 @@
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #2d2d2d;
+}
+
+.form-card {
+    background-color: #1a1a1a;
+    color: white;
+    border-radius: 10px;
+    width: 400px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.stat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stat-item .MuiTypography-body1 {
+    font-size: 16px;
+    color: #fff;
+}
+
+.MuiLinearProgress-root {
+    background-color: #3e3e3e;
+    border-radius: 5px;
+}
+
+.MuiLinearProgress-bar {
+    background-color: #17BEBB;
+}
+.salirx1 {
+    position: absolute;
+    float: left;
+      /* Ajusta la distancia desde la parte izquierda */
+    background-color: transparent; /* Fondo transparente */
+    color: black; /* Color del ícono */
+    border: none; /* Sin borde */
+    padding: 5px; /* Ajusta el espacio alrededor del ícono */
+    cursor: pointer; /* Cambia el cursor al pasar el ratón */
+    z-index: 10; /* Asegura que esté encima de otros elementos */
+}

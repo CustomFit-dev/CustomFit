@@ -1,0 +1,93 @@
+    .form-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #2d2d2d;
+        
+    }
+    
+    .form-card {
+        background-color: #1a1a1a;
+        color: #fff;
+        border-radius: 10px;
+        width: 600px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .form-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+    
+    .avatar {
+        border-radius: 50%;
+        overflow: hidden;
+    }
+    
+    .avatar-img {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 20px;
+    }
+    
+    .form-header h4 {
+        margin-top: 10px;
+        font-size: 20px;
+        padding: 10px;
+        background-color: #17bebb8a;
+        border-radius: 5px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-group label {
+        font-size: 14px;
+    }
+    
+    .form-group input {
+        font-size: 16px;
+    }
+    
+    .form-footer11 {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        gap: 100px;
+    }
+    
+    .close-btn {
+        font-size: 24px;
+        background: transparent;
+        border: none;
+        color: #fff;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
+.form-group{
+    border-bottom: solid 2px #17BEBB!important;
+    color: white !important;
+
+}
+.form-group label { 
+    color: white;
+}
+.salirx1 {
+    position: absolute;
+    float: left;
+      /* Ajusta la distancia desde la parte izquierda */
+    background-color: transparent; /* Fondo transparente */
+    color: rgb(255, 255, 255) !important; /* Color del ícono */
+    border: none; /* Sin borde */
+    padding: 5px; /* Ajusta el espacio alrededor del ícono */
+    cursor: pointer; /* Cambia el cursor al pasar el ratón */
+    z-index: 10; /* Asegura que esté encima de otros elementos */
+}

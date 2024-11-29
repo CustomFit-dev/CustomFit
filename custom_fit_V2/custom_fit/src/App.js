@@ -8,6 +8,7 @@ import Home_l from './components/Home_L';
 import Profile from './components/modules/profile';
 import axiosP from './components/modules/axiosp';
 import Verificar from './components/modules/verificar';
+import Domi from './components/domi';
 
 function App() {
   const { sendUserData } = axiosP();
@@ -24,6 +25,7 @@ function App() {
           <Route path="/Home_L" element={<Home_l />} />
           <Route path="/Profile" element={<Profile />} />
           <Route path="*" element={<Navigate to="/Home" />} />
+          <Route path="/Domi" element={<Domi />} />
         </Routes>
     </div>
   );

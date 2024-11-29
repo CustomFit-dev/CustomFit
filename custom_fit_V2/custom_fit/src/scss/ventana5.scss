@@ -1,0 +1,80 @@
+/* ventana5.scss */
+.order-status {
+    background-color: transparent;
+    color: white;
+    padding: 20px;
+}
+
+.custom-card {
+    background-color: #222 !important;
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-image {
+    width: 100% !important; 
+    max-width: 250px !important;  // Imagen más pequeña
+    margin: 0 auto 20px !important;  // Centrar la imagen
+    display: block !important;
+}
+
+.arrow-container {
+    position: absolute;
+    top: 50%;
+    right: -35px;  // Ajuste de la flecha a la derecha de la imagen
+    transform: translateY(-50%);
+}
+
+.arrow-icon {
+    font-size: 30px;  // Tamaño de la flecha
+    color: #fff;
+}
+
+.status-buttons {
+    margin-bottom: 15px;
+}
+
+.status-btn {
+    width: 250px !important;
+    margin: 10px !important;
+}
+
+.location-buttons {
+    margin-bottom: 20px;
+}
+
+.action-btn {
+    width: 250px;
+    margin: 10px;
+}
+
+.invoice-btn {
+    margin-top: -10px;
+}
+
+.invoice-btn .action-btn {
+    width: 530px !important;
+    background-color: #555;
+}
+.arrow-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.arrow-icon {
+    font-size: 24px;
+    color: #fff;
+    cursor: pointer;
+}
+
+.arrow-icon:hover {
+    color: #ddd;
+}
