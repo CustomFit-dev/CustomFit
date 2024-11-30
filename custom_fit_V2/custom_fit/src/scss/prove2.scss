@@ -1,0 +1,150 @@
+/* Promail ajustado para pantalla completa */
+.promail {
+    background-color: #1111 !important;
+    height: 80vh; /* La altura ahora ocupa toda la ventana */
+    display: flex; /* Usamos flexbox para alinear las columnas */
+    justify-content: space-between; /* Espacio entre las columnas */
+    padding: 0;
+    flex-wrap: wrap; /* Permite que los elementos se ajusten en dispositivos pequeños */
+}   
+
+/* Estilos de la columna izquierda */
+.prove1 {
+    display: flex;
+    flex: 1; /* La columna izquierda ocupa el 50% del espacio */
+    padding: 20px;
+    justify-content: center; /* Centrar contenido horizontalmente */
+    align-items: center; /* Centrar contenido verticalmente */
+}
+
+/* Imagen del proveedor */
+.prove1 img {
+    margin-bottom: 30px !important;
+    max-width: 100%; /* Asegura que la imagen sea responsive */
+    height: auto; /* Mantiene la relación de aspecto */
+}
+
+/* Estilos para la columna derecha */
+.form-col {
+    flex: 1; /* La columna derecha ocupa el 50% del espacio */
+    padding: 20px;
+    border-radius: 8px;
+    box-sizing: border-box; /* Para que padding no afecte el tamaño */
+}
+
+h2 {
+    text-align: center;
+    color: #000000;
+    margin-top: 20px;
+}
+
+h5 {
+    color: #17BEBB !important;
+}
+
+/* Formularios */
+.form-groupprove {
+    margin-bottom: 20px;
+    border-bottom: 2px solid #17BEBB;
+    width: 80%;
+    margin: 30px auto;
+}
+
+/* Estilo de los campos de texto */
+.form-groupprove label {
+    color: #ffffff;
+}
+
+.text-center {
+    color: white;
+    width: 100%;
+    float: left;
+}
+
+p {
+    font-size: 20px;
+}
+
+/* Botones */
+.botspro {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px;
+    width: 40%;
+    margin: 0px auto;
+    margin-top: 20px;
+}
+
+.boton-aceptar {
+    background-color: #4CAF50; /* Verde */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.boton-aceptar:hover {
+    background-color: #45a049; /* Verde oscuro */
+}
+
+.boton-cancelar {
+    background-color: #f44336; /* Rojo */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.boton-cancelar:hover {
+    background-color: #e53935; /* Rojo oscuro */
+}
+
+/* Columnas de 50% cada una */
+@media (max-width: 768px) {
+    .promail {
+        flex-direction: column; /* En pantallas pequeñas, se apilan verticalmente */
+        height: auto; /* Deja que la altura sea automática */
+    }
+
+    .prove1,
+    .form-col {
+        flex: 1 1 100%; /* Las columnas ocupan el 100% del ancho */
+        padding: 10px; /* Reducir padding en pantallas pequeñas */
+    }
+
+    .form-col {
+        margin-top: 20px; /* Espaciado adicional entre las columnas */
+    }
+
+    .form-groupprove {
+        width: 100%; /* Asegura que los formularios ocupen el 100% del ancho */
+    }
+
+    .botspro {
+        width: 100%; /* Botones ocupan todo el ancho disponible */
+        margin-top: 10px; /* Reducir margen superior en pantallas pequeñas */
+    }
+
+    .datosss {
+        width: 80%; /* Hacer que la caja de datos ocupe más espacio en pantallas pequeñas */
+        margin-top: 20px; /* Separar la caja de datos de otras secciones */
+    }
+}
+
+/* Estilos generales */
+.datosss {
+    border-radius: 10px;
+    width: 40%;
+    text-align: center;
+    margin: 0px auto;
+    background-color: #17bebba9;
+    padding: 10px;
+    color: white;
+}

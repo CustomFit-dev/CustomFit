@@ -1,9 +1,11 @@
 // Home.js
 import React, { useEffect, useState } from 'react';
 import CircularIndeterminate from './modules/CircularIndeterminate'; // Asegúrate de que la ruta sea correcta
-import Domi0 from './domiciliario/domi0';
-import Domi1 from './domiciliario/domi1';
-import Footer from './modules/footer';
+import Prove1 from './proveedor/prove1';
+import Prove2 from './proveedor/prove2';
+import Prove3 from './proveedor/prove3';
+
+
 
 
 
@@ -26,12 +28,14 @@ const Home = () => {
         </div>
         ) : (
         <>
+        <div className="contenedor-proveedores">
         
-        <Domi0 />
-        <Domi1 />
-        <Footer />
-        
-        
+  <Prove1 />
+  <Prove2 />
+  <Prove3 />
+  
+</div>
+
         </>
         )}
     </div>

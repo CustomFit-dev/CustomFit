@@ -12,6 +12,7 @@ import Ventana2 from './ventana2';
 import Ventana3 from './ventana3';
 import Ventana4 from './Ventana4';
 import Ventana5 from './ventana5';
+import Ventana6 from './ventana6';
 
 
 const Domin = () => {  // Cambié el nombre del componente a "Domin"
@@ -20,6 +21,7 @@ const Domin = () => {  // Cambié el nombre del componente a "Domin"
     const [estadoModal3, cambiarEsadoModal3] = useState(false);
     const [estadoModal4, cambiarEsadoModal4] = useState(false);
     const [estadoModal5, cambiarEsadoModal5] = useState(false);
+    const [estadoModal6, cambiarEsadoModal6] = useState(false);
     return (
         <>
         <div className="container mt-4">
@@ -73,7 +75,7 @@ const Domin = () => {  // Cambié el nombre del componente a "Domin"
                     </button>
                 </div>
                 <div className="col-md-4">
-                    <button className="card-button">
+                    <button className="card-button " onClick={() => cambiarEsadoModal6(!estadoModal6)}>
                         <div className="card-body">
                             <img src={Dimg6} alt="Card 6" className="card-img" />
                             <h5 className="card-title mt-3">Configuraciones</h5>
@@ -101,6 +103,10 @@ const Domin = () => {  // Cambié el nombre del componente a "Domin"
             <Ventana5
                 estado={estadoModal5}
                 cambiarEstado={cambiarEsadoModal5}
+            />
+             <Ventana6
+                estado={estadoModal6}
+                cambiarEstado={cambiarEsadoModal6}
             />
         </div>
         </>
