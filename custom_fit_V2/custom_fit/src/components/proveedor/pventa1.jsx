@@ -79,6 +79,7 @@ const NuevoProducto = ({estado, cambiarEstado}) => {
                     <TextField
                     sx={{
                         borderBottom:'2px solid #17BEBB',
+                        color:'white',
                     }
                     }
                         id="nombreProducto"
@@ -129,6 +130,7 @@ const NuevoProducto = ({estado, cambiarEstado}) => {
                     <TextField
                         sx={{
                             borderBottom:'2px solid #17BEBB',
+                            color:'white',
                         }
                         }
                         id="color"
@@ -149,6 +151,7 @@ const NuevoProducto = ({estado, cambiarEstado}) => {
                 <TextField
                     sx={{
                             borderBottom:'2px solid #17BEBB',
+                            color:'white',
                         }
                         }
                         id="cantidad"
@@ -168,6 +171,7 @@ const NuevoProducto = ({estado, cambiarEstado}) => {
                     <TextField
                         sx={{
                             borderBottom:'2px solid #17BEBB',
+                            color:'white',
                         }
                         }
                         id="talla"
@@ -188,6 +192,7 @@ const NuevoProducto = ({estado, cambiarEstado}) => {
                 <TextField
                     sx={{
                             borderBottom:'2px solid #17BEBB',
+                            color:'white',
                         }
                         }
                         id="Descripcion"
@@ -206,6 +211,7 @@ const NuevoProducto = ({estado, cambiarEstado}) => {
                 <TextField
                     sx={{
                             borderBottom:'2px solid #17BEBB',
+                            color:'white',
                         }
                         }
                         id="tela"

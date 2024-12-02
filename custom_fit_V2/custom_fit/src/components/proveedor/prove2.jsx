@@ -25,7 +25,7 @@ const SupplierForm = () => {
 
     return (
         <>
-        <h1 className="text-center">
+        <h1 className="text-center22">
                 ¡Bienvenido como <span style={{ color: '#17BEBB' }}>Proveedor</span> a CustomFit!
             </h1>
         
