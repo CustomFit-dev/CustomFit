@@ -40,7 +40,7 @@ function OrderStatus({estado, cambiarEstado}) {
                 
                     <div className="card custom-card">
                     
-                        <div className="image-container">
+                        <div className="image-containerdomi">
                         <IconButton1 className="salirx1" onClick={() => cambiarEstado()}>
                                 <CloseIcon1 />
                             </IconButton1>

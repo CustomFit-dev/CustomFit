@@ -43,12 +43,12 @@ const SupplierForm = () => {
                     />
                     <div className="text-center">
                         <h5>Mis estadísticas</h5>
-                        <p><strong>Productos:</strong> {productosVendidos}</p>
-                        <p><strong>Productos vendidos:</strong> {productosVendidos}</p>
-                        <p><strong>Productos agotados:</strong> {productosVendidos}</p>
-                        <p><strong>Valor total de ventas:</strong> {valorTotalVentas}</p>
+                        <p className="estas"><strong>Productos:</strong> {productosVendidos}</p>
+                        <p className="estas"><strong>Productos vendidos:</strong> {productosVendidos}</p>
+                        <p className="estas"><strong>Productos agotados:</strong> {productosVendidos}</p>
+                        <p> className="estas"<strong>Valor total de ventas:</strong> {valorTotalVentas}</p>
                         
-                        <p><strong>Devoluciones de pedidos:</strong> {devolucionesPedidos}</p>
+                        <p className="estas"><strong>Devoluciones de pedidos:</strong> {devolucionesPedidos}</p>
                     </div>
                 </Col>
 
