@@ -62,6 +62,11 @@ const SupplierForm = () => {
                             
                                 <div className="form-groupprove">
                                     <TextField
+                                    sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                         id="nombres"
                                         label="Nombres"
                                         variant="standard"
@@ -73,6 +78,11 @@ const SupplierForm = () => {
                                 </div>
                                 <div className="form-groupprove">
                                     <TextField
+                                    sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                         id="apellidos"
                                         label="Apellidos"
                                         variant="standard"
@@ -84,6 +94,11 @@ const SupplierForm = () => {
                                 </div>
                                 <div className="form-groupprove">
                                     <TextField
+                                    sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                         id="direccion"
                                         label="Dirección"
                                         variant="standard"
@@ -95,6 +110,11 @@ const SupplierForm = () => {
                                 </div>
                                 <div className="form-groupprove">
                                     <TextField
+                                    sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                         id="telefono"
                                         label="Teléfono"
                                         variant="standard"
@@ -110,6 +130,11 @@ const SupplierForm = () => {
                             <Col md={6}>
                                 <div className="form-groupprove">
                                     <TextField
+                                    sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                         id="email"
                                         label="Email"
                                         variant="standard"
@@ -121,6 +146,11 @@ const SupplierForm = () => {
                                 </div>
                                 <div className="form-groupprove">
                                     <TextField
+                                    sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                         id="empresa"
                                         label="Empresa"
                                         variant="standard"
@@ -132,8 +162,13 @@ const SupplierForm = () => {
                                 </div>
                                 <div className="form-groupprove">
                                     <TextField
-                                        id="ruc"
-                                        label="RUC"
+                                    sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
+                                        id="Telefono Fijo"
+                                        label="Telefono Fijo"
                                         variant="standard"
                                         color="primary"
                                         value={ruc}
@@ -143,8 +178,13 @@ const SupplierForm = () => {
                                 </div>
                                 <div className="form-groupprove">
                                     <TextField
-                                        id="cc"
-                                        label="CC"
+                                    sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
+                                        id="Numero de Identificacion"
+                                        label="Numero de Identificacion"
                                         variant="standard"
                                         color="primary"
                                         value={cc}

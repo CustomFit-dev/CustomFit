@@ -17,7 +17,7 @@
         <>
         {estado &&
             <Overlay>
-        <div className="form-container" style={{backgroundColor:'transparent',}}>
+        <div className="form-containerDomi2" style={{backgroundColor:'transparent',}}>
         <div className="form-card">
             {/* Título */}
             <IconButton1 className="salirx1" onClick={() => cambiarEstado()}>

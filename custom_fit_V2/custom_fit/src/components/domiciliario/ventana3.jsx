@@ -17,7 +17,7 @@ const VehiculoFormulario = ({estado, cambiarEstado}) => {
         <>
         {estado &&
             <Overlay>
-        <div className="form-container" style={{backgroundColor:'transparent',}}>
+        <div className="form-containerDomi3" style={{backgroundColor:'transparent',}}>
             <div className="form-card">
                 {/* Cerrar */}
                 <IconButton1 className="salirx1" onClick={() => cambiarEstado()}>
@@ -42,6 +42,11 @@ const VehiculoFormulario = ({estado, cambiarEstado}) => {
                         <div className="col-md-6">
                             <div className="form-group col-md-6" id='input1'>
                                 <TextField
+                                sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                     label="Nombre"
                                     variant="standard"
                                     color="primary"
@@ -53,6 +58,11 @@ const VehiculoFormulario = ({estado, cambiarEstado}) => {
                             
                             <div className="form-group col-md-6" id='input3'>
                                 <TextField
+                                sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                     label="Matrícula"
                                     variant="standard"
                                     color="primary"
@@ -63,6 +73,11 @@ const VehiculoFormulario = ({estado, cambiarEstado}) => {
                             </div>
                             <div className="form-group col-md-6" id='input4'>
                                 <TextField
+                                sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                     label="Color"
                                     variant="standard"
                                     color="primary"
@@ -77,6 +92,11 @@ const VehiculoFormulario = ({estado, cambiarEstado}) => {
                         <div className="col-md-6">
                             <div className="form-group col-md-6" id='input5'>
                                 <TextField
+                                sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                     label="Modelo"
                                     variant="standard"
                                     color="primary"
@@ -87,6 +107,11 @@ const VehiculoFormulario = ({estado, cambiarEstado}) => {
                             </div>
                             <div className="form-group col-md-6" id='input6'>
                                 <TextField
+                                sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                     label="Marca"
                                     variant="standard"
                                     color="primary"
@@ -97,6 +122,11 @@ const VehiculoFormulario = ({estado, cambiarEstado}) => {
                             </div>
                             <div className="form-group col-md-6" id='input7'>
                                 <TextField
+                                sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                     label="Tipo"
                                     variant="standard"
                                     color="primary"

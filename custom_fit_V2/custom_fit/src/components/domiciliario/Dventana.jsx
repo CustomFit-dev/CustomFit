@@ -60,7 +60,7 @@ const Form = ({estado, cambiarEstado}) => {
         <>
             {estado &&
                 <Overlay>
-                    <div className="form-container" style={{ backgroundColor: 'transparent' }}>
+                    <div className="form-containerDomi" style={{ backgroundColor: 'transparent' }}>
                         <div className="form-card">
                             <IconButton1 className="salirx1" onClick={() => cambiarEstado()}>
                                 <CloseIcon1 />
@@ -78,6 +78,11 @@ const Form = ({estado, cambiarEstado}) => {
                                     <div className="col-md-6">
                                         <div className="form-group">
                                             <TextField
+                                            sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                                 id="nombres"
                                                 label="Nombres"
                                                 variant="standard"
@@ -93,6 +98,11 @@ const Form = ({estado, cambiarEstado}) => {
                                     <div className="col-md-6">
                                         <div className="form-group">
                                             <TextField
+                                                sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                                 id="apellidos"
                                                 label="Apellidos"
                                                 variant="standard"
@@ -109,6 +119,11 @@ const Form = ({estado, cambiarEstado}) => {
                                     <div className="col-md-6">
                                         <div className="form-group">
                                             <TextField
+                                            sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                                 id="phone"
                                                 label="Teléfono"
                                                 variant="standard"
@@ -125,6 +140,11 @@ const Form = ({estado, cambiarEstado}) => {
                                     <div className="col-md-6">
                                         <div className="form-group">
                                             <TextField
+                                            sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                                 id="email"
                                                 label="Email"
                                                 variant="standard"
@@ -141,6 +161,11 @@ const Form = ({estado, cambiarEstado}) => {
                                     <div className="col-md-6">
                                         <div className="form-group">
                                             <TextField
+                                            sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                                 id="address"
                                                 label="Dirección"
                                                 variant="standard"
@@ -157,6 +182,11 @@ const Form = ({estado, cambiarEstado}) => {
                                     <div className="col-md-6">
                                         <div className="form-group">
                                             <TextField
+                                            sx={
+                                                {
+                                                    borderBottom:'2px solid #00FFFF',
+                                                }
+                                            }
                                                 id="cc"
                                                 label="Número de identificación"
                                                 variant="standard"

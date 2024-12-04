@@ -50,7 +50,7 @@ const PedidosDisponibles = ({ estado, cambiarEstado }) => {
         <>
         { estado &&
             <Overlay>
-        <div className="pedidos-container">
+        <div className="pedidos-containerDomi4">
             <aside className="info-panel">
             <IconButton1 className="salirx1" onClick={() => cambiarEstado()}>
                                 <CloseIcon1 />
