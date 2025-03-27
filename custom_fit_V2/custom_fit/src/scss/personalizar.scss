@@ -1,0 +1,41 @@
+.titulo-container {
+    text-align: center;
+    padding: 20px;
+    max-width: 90%;
+    margin: 0 auto;
+  }
+  
+  .titl1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #17BEBB;
+  }
+  
+  .titl2 {
+    font-size: 1.2rem;
+    color: #17BEBB;
+   width: 100%;
+  }
+  
+  /* Hacerlo más pequeño en pantallas pequeñas */
+  @media (max-width: 768px) {
+    .titl1 {
+      font-size: 2rem;
+    }
+    
+    .titl2 {
+      font-size: 1.2rem;
+    }
+  }
+  
+  /* Más ajustes para móviles muy pequeños */
+  @media (max-width: 480px) {
+    .titl1 {
+      font-size: 1.8rem;
+    }
+  
+    .titl2 {
+      font-size: 1rem;
+    }
+  }
+  
