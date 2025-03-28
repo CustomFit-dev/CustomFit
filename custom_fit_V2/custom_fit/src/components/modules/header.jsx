@@ -15,9 +15,9 @@ import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom';
 import logo from './mod_img/Logo-prin-f.png';
 import Form from './Iniciar'; 
+import RegisterForm from './Registrar'; 
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './Themes';
-
 
 const pages = [
   { name: 'Inicio', route: '/Home' },
@@ -26,14 +26,15 @@ const pages = [
 ];
 
 const settings = [
-  { name: 'Iniciar sesión', route: '#' },
-  { name: '', route: '#' }
+  { name: 'Iniciar sesión', route: '#', type: 'login' },
+  { name: 'Registrate', route: '#', type: 'register' }
 ];
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [isFormVisible, setFormVisible] = React.useState(false);
+  const [formType, setFormType] = React.useState('login');
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -51,7 +52,8 @@ function Header() {
     setAnchorElUser(null);
   };
 
-  const handleOpenForm = () => {
+  const handleOpenForm = (type) => {
+    setFormType(type);
     setFormVisible(true);
   };
 
@@ -65,115 +67,45 @@ function Header() {
         <AppBar position="static" className="custom-appbar">
           <Container maxWidth="xl">
             <Toolbar disableGutters className="custom-toolbar">
-              {/* Logo en pantallas grandes */}
-              <Typography
-                variant="h6"
-                noWrap
-                component={Link}
-                to="/Home"
-                className="logo-text-large"
-              >
+              <Typography variant="h6" noWrap component={Link} to="/Home" className="logo-text-large">
                 <img src={logo} alt="logo" id="logo" />
               </Typography>
 
-              {/* Menú desplegable en pantallas pequeñas */}
               <Box className="menu-small">
-                <IconButton
-                  size="large"
-                  aria-label="abrir menú de navegación"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleOpenNavMenu}
-                  color="inherit"
-                >
+                <IconButton size="large" onClick={handleOpenNavMenu} color="inherit">
                   <MenuIcon />
                 </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorElNav}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'left',
-                  }}
-                  open={Boolean(anchorElNav)}
-                  onClose={handleCloseNavMenu}
-                  className="menu-small"
-                >
+                <Menu anchorEl={anchorElNav} open={Boolean(anchorElNav)} onClose={handleCloseNavMenu}>
                   {pages.map((page) => (
                     <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                       <Typography textAlign="center">
-                        <Link to={page.route} style={{ textDecoration: 'none', color: 'inherit' }}>
-                          {page.name}
-                        </Link>
+                        <Link to={page.route} style={{ textDecoration: 'none', color: 'inherit' }}>{page.name}</Link>
                       </Typography>
                     </MenuItem>
                   ))}
                 </Menu>
               </Box>
 
-              {/* Logo en pantallas pequeñas */}
-              <Typography
-                variant="h5"
-                noWrap
-                component={Link}
-                to="/Home"
-                className="logo-text-small"
-              >
+              <Typography variant="h5" noWrap component={Link} to="/Home" className="logo-text-small">
                 <img src={logo} alt="logo" id="logo" />
               </Typography>
 
-              {/* Botones de navegación en pantallas grandes */}
               <Box className="menu-buttons">
                 {pages.map((page) => (
-                  <Button
-                    key={page.name}
-                    component={Link}
-                    to={page.route}
-                    className="nav-button"
-                  >
-                    {page.name}
-                  </Button>
+                  <Button key={page.name} component={Link} to={page.route} className="nav-button">{page.name}</Button>
                 ))}
               </Box>
 
-              {/* Icono de usuario y menú de configuraciones */}
               <Box className="flex-grow-0">
                 <Tooltip title="Abrir configuraciones">
                   <IconButton onClick={handleOpenUserMenu} className="avatar-button">
                     <Avatar alt="Usuario" />
                   </IconButton>
                 </Tooltip>
-                <Menu
-                  className="menu-user"
-                  id="menu-appbar"
-                  anchorEl={anchorElUser}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorElUser)}
-                  onClose={handleCloseUserMenu}
-                >
+                <Menu anchorEl={anchorElUser} open={Boolean(anchorElUser)} onClose={handleCloseUserMenu}>
                   {settings.map((setting) => (
-                    <MenuItem
-                      key={setting.name}
-                      onClick={() => { handleCloseUserMenu(); handleOpenForm(); }}
-                    >
-                      <Typography textAlign="center">
-                        <a href="#" style={{ textDecoration: 'none', color: 'black' }}>
-                          {setting.name}
-                        </a>
-                      </Typography>
+                    <MenuItem key={setting.name} onClick={() => { handleCloseUserMenu(); handleOpenForm(setting.type); }}>
+                      <Typography textAlign="center">{setting.name}</Typography>
                     </MenuItem>
                   ))}
                 </Menu>
@@ -182,11 +114,10 @@ function Header() {
           </Container>
         </AppBar>
 
-        {/* Overlay y Formulario */}
         {isFormVisible && (
           <div className="overlay">
             <div className="form-container">
-              <Form onClose={handleCloseForm} />
+              {formType === 'login' ? <Form onClose={handleCloseForm} /> : <RegisterForm onClose={handleCloseForm} />}
             </div>
           </div>
         )}
