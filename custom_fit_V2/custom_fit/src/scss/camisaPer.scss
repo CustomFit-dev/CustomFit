@@ -1,0 +1,62 @@
+.contela {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los botones se distribuyan en varias filas */
+    gap: 10px; /* Espaciado entre botones */
+    justify-content: center; /* Centra los botones horizontalmente */
+    width: 100%;
+}
+
+.btnTela {
+    flex: 1 1 calc(25% - 0px); /* Ajusta el ancho para que quepan 4 por fila */
+    height: 50px;
+    min-width: 10px; /* Evita que los botones sean demasiado pequeños */
+    color: #333;
+    background-color: #ffffff;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.titleCam{
+    font-size: 40px;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.btnCustom {
+    width: 20%; /* Ajusta el tamaño para que 3 botones quepan en la fila */
+    height: 50px;
+    min-width: 100px;
+    color: #ffffff;
+    background-color: transparent;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+button:hover {
+    color: #17BEBB; /* Cambia el color del texto al pasar el mouse */
+    border: 2px solid #17BEBB; /* Cambia el borde al pasar el mouse */
+}
+
+.ContaSubur {
+    display: flex;
+    flex-direction: row; /* Asegura que estén en una fila */
+    justify-content: space-between; /* Distribuye uniformemente */
+    gap: 3px;
+    flex-wrap: wrap; /* Permite que los botones bajen solo si es necesario */
+    width: 100%;
+}
