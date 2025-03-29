@@ -41,6 +41,7 @@ const TShirtCustomizer = () => {
   
   // Design area reference
   const designAreaRef = useRef(null);
+  const tshirtRef = useRef(null);
 
   // Image upload state
   const fileInputRef = useRef(null);
@@ -349,191 +350,205 @@ const TShirtCustomizer = () => {
 
         {/* T-Shirt Display Area - Middle */}
         <div className="col-md-6">
-          <div className="position-relative" style={{ height: '700px' }}>
-            {/* T-shirt image */}
-            <img 
-              src={colorImages[tshirtColor] || CamisetaBase} 
-              alt="Camiseta Base" 
-              className="position-absolute top-50 start-50 translate-middle" 
+          <div className="position-relative" style={{ height: '700px', width: '100%' }}>
+            {/* Container with relative positioning for the t-shirt */}
+            <div 
+              className="tshirt-container position-relative" 
               style={{ 
-                objectFit: 'contain', 
-                maxWidth: '80%', 
-                maxHeight: '80%',
-                zIndex: 1
-              }} 
-            />
-            
-            {/* Red dashed border area - Design area */}
-            <div
-              ref={designAreaRef}
-              className="position-absolute border border-2 border-danger border-dashed"
-              style={{
-                width: '60%',
-                height: '50%',
-                top: '40%',  
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                zIndex: 2
+                height: '100%', 
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center'
               }}
             >
-              {/* Text Elements */}
-              {textElements.map((el) => (
-                <div 
-                  key={el.id}
-                  className={`position-absolute ${activeElement && activeElement.id === el.id ? 'border border-primary' : ''}`}
-                  style={{
-                    left: `${el.x}px`,
-                    top: `${el.y}px`,
-                    fontFamily: el.font,
-                    fontSize: `${el.size}px`,
-                    color: el.color,
-                    zIndex: 3,
-                    cursor: isDragging ? 'grabbing' : 'grab'
-                  }}
-                >
-                  <div
-                    onMouseDown={(e) => handleMouseDown(e, 'text', el, 'move')}
-                  >
-                    {el.text}
-                  </div>
-                  
-                  {/* Controls */}
-                  <div className="d-flex position-absolute top-0 end-0 transform translate-middle-y" style={{ marginTop: '-20px' }}>
-                    {/* Move button */}
-                    <button 
-                      className="btn btn-sm btn-light border p-1 me-1"
-                      onMouseDown={(e) => handleMouseDown(e, 'text', el, 'move')}
-                      title="Mover"
-                    >
-                      <Move size={16} />
-                    </button>
-                    
-                    {/* Resize button */}
-                    <button 
-                      className="btn btn-sm btn-light border p-1 me-1"
-                      onMouseDown={(e) => handleMouseDown(e, 'text', el, 'resize')}
-                      title="Cambiar tamaño"
-                    >
-                      <Maximize size={16} />
-                    </button>
-                    
-                    {/* Delete button */}
-                    <button 
-                      onClick={() => removeTextElement(el.id)}
-                      className="btn btn-sm btn-danger p-1"
-                      title="Eliminar"
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-
-              {/* Image Elements */}
-              {imageElements.map((el) => (
-                <div 
-                  key={el.id}
-                  className={`position-absolute ${activeElement && activeElement.id === el.id ? 'border border-primary' : ''}`}
-                  style={{
-                    left: `${el.x}px`,
-                    top: `${el.y}px`,
-                    zIndex: 3,
-                    cursor: isDragging ? 'grabbing' : 'grab'
-                  }}
-                >
-                  <img 
-                    id={`img-${el.id}`}
-                    src={el.src} 
-                    alt="Custom" 
-                    style={{ 
-                      width: el.width ? `${el.width}px` : '100px', 
-                      height: el.height ? `${el.height}px` : 'auto' 
+              {/* T-shirt image - Made larger and positioned independently */}
+              <img 
+                ref={tshirtRef}
+                src={colorImages[tshirtColor] || CamisetaBase} 
+                alt="Camiseta Base" 
+                className="position-relative" 
+                style={{ 
+                  width: '100%',   /* Increased size */
+                  maxWidth: '100%',   /* Increased size */
+                  maxHeight: '9100%',  /* Increased size */
+                  zIndex: 1
+                }} 
+              />
+              
+              {/* Design area with absolute positioning relative to the t-shirt container */}
+              <div
+                ref={designAreaRef}
+                className="position-absolute border border-2 border-danger border-dashed"
+                style={{
+                  width: '55%',      /* Adjusted size */
+                  height: '70%',     /* Adjusted size */
+                  top: '55%',        /* Positioned in the middle of the shirt */
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  zIndex: 2,
+                  overflow: 'hidden'
+                }}
+              >
+                {/* Text Elements */}
+                {textElements.map((el) => (
+                  <div 
+                    key={el.id}
+                    className={`position-absolute ${activeElement && activeElement.id === el.id ? 'border border-primary' : ''}`}
+                    style={{
+                      left: `${el.x}px`,
+                      top: `${el.y}px`,
+                      fontFamily: el.font,
+                      fontSize: `${el.size}px`,
+                      color: el.color,
+                      zIndex: 3,
+                      cursor: isDragging ? 'grabbing' : 'grab'
                     }}
-                    onMouseDown={(e) => handleMouseDown(e, 'image', el, 'move')}
-                  />
-                  
-                  {/* Controls */}
-                  <div className="d-flex position-absolute top-0 end-0 transform translate-middle-y" style={{ marginTop: '-20px' }}>
-                    {/* Move button */}
-                    <button 
-                      className="btn btn-sm btn-light border p-1 me-1"
-                      onMouseDown={(e) => handleMouseDown(e, 'image', el, 'move')}
-                      title="Mover"
-                    >
-                      <Move size={16} />
-                    </button>
-                    
-                    {/* Resize button */}
-                    <button 
-                      className="btn btn-sm btn-light border p-1 me-1"
-                      onMouseDown={(e) => handleMouseDown(e, 'image', el, 'resize')}
-                      title="Cambiar tamaño"
-                    >
-                      <Maximize size={16} />
-                    </button>
-                    
-                    {/* Delete button */}
-                    <button 
-                      onClick={() => removeImageElement(el.id)}
-                      className="btn btn-sm btn-danger p-1"
-                      title="Eliminar"
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-
-              {/* Emoji Elements */}
-              {emojiElements.map((el) => (
-                <div 
-                  key={el.id}
-                  className={`position-absolute ${activeElement && activeElement.id === el.id ? 'border border-primary' : ''}`}
-                  style={{
-                    left: `${el.x}px`,
-                    top: `${el.y}px`,
-                    fontSize: `${el.size}px`,
-                    zIndex: 3,
-                    cursor: isDragging ? 'grabbing' : 'grab'
-                  }}
-                >
-                  <div
-                    onMouseDown={(e) => handleMouseDown(e, 'emoji', el, 'move')}
                   >
-                    {el.emoji}
+                    <div
+                      onMouseDown={(e) => handleMouseDown(e, 'text', el, 'move')}
+                    >
+                      {el.text}
+                    </div>
+                    
+                    {/* Controls */}
+                    <div className="d-flex position-absolute top-0 end-0 transform translate-middle-y" style={{ marginTop: '-20px' }}>
+                      {/* Move button */}
+                      <button 
+                        className="btn btn-sm btn-light border p-1 me-1"
+                        onMouseDown={(e) => handleMouseDown(e, 'text', el, 'move')}
+                        title="Mover"
+                      >
+                        <Move size={16} />
+                      </button>
+                      
+                      {/* Resize button */}
+                      <button 
+                        className="btn btn-sm btn-light border p-1 me-1"
+                        onMouseDown={(e) => handleMouseDown(e, 'text', el, 'resize')}
+                        title="Cambiar tamaño"
+                      >
+                        <Maximize size={16} />
+                      </button>
+                      
+                      {/* Delete button */}
+                      <button 
+                        onClick={() => removeTextElement(el.id)}
+                        className="btn btn-sm btn-danger p-1"
+                        title="Eliminar"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
                   </div>
-                  
-                  {/* Controls */}
-                  <div className="d-flex position-absolute top-0 end-0 transform translate-middle-y" style={{ marginTop: '-20px' }}>
-                    {/* Move button */}
-                    <button 
-                      className="btn btn-sm btn-light border p-1 me-1"
+                ))}
+
+                {/* Image Elements */}
+                {imageElements.map((el) => (
+                  <div 
+                    key={el.id}
+                    className={`position-absolute ${activeElement && activeElement.id === el.id ? 'border border-primary' : ''}`}
+                    style={{
+                      left: `${el.x}px`,
+                      top: `${el.y}px`,
+                      zIndex: 3,
+                      cursor: isDragging ? 'grabbing' : 'grab'
+                    }}
+                  >
+                    <img 
+                      id={`img-${el.id}`}
+                      src={el.src} 
+                      alt="Custom" 
+                      style={{ 
+                        width: el.width ? `${el.width}px` : '100px', 
+                        height: el.height ? `${el.height}px` : 'auto' 
+                      }}
+                      onMouseDown={(e) => handleMouseDown(e, 'image', el, 'move')}
+                    />
+                    
+                    {/* Controls */}
+                    <div className="d-flex position-absolute top-0 end-0 transform translate-middle-y" style={{ marginTop: '-20px' }}>
+                      {/* Move button */}
+                      <button 
+                        className="btn btn-sm btn-light border p-1 me-1"
+                        onMouseDown={(e) => handleMouseDown(e, 'image', el, 'move')}
+                        title="Mover"
+                      >
+                        <Move size={16} />
+                      </button>
+                      
+                      {/* Resize button */}
+                      <button 
+                        className="btn btn-sm btn-light border p-1 me-1"
+                        onMouseDown={(e) => handleMouseDown(e, 'image', el, 'resize')}
+                        title="Cambiar tamaño"
+                      >
+                        <Maximize size={16} />
+                      </button>
+                      
+                      {/* Delete button */}
+                      <button 
+                        onClick={() => removeImageElement(el.id)}
+                        className="btn btn-sm btn-danger p-1"
+                        title="Eliminar"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Emoji Elements */}
+                {emojiElements.map((el) => (
+                  <div 
+                    key={el.id}
+                    className={`position-absolute ${activeElement && activeElement.id === el.id ? 'border border-primary' : ''}`}
+                    style={{
+                      left: `${el.x}px`,
+                      top: `${el.y}px`,
+                      fontSize: `${el.size}px`,
+                      zIndex: 3,
+                      cursor: isDragging ? 'grabbing' : 'grab'
+                    }}
+                  >
+                    <div
                       onMouseDown={(e) => handleMouseDown(e, 'emoji', el, 'move')}
-                      title="Mover"
                     >
-                      <Move size={16} />
-                    </button>
+                      {el.emoji}
+                    </div>
                     
-                    {/* Resize button */}
-                    <button 
-                      className="btn btn-sm btn-light border p-1 me-1"
-                      onMouseDown={(e) => handleMouseDown(e, 'emoji', el, 'resize')}
-                      title="Cambiar tamaño"
-                    >
-                      <Maximize size={16} />
-                    </button>
-                    
-                    {/* Delete button */}
-                    <button 
-                      onClick={() => removeEmojiElement(el.id)}
-                      className="btn btn-sm btn-danger p-1"
-                      title="Eliminar"
-                    >
-                      <X size={16} />
-                    </button>
+                    {/* Controls */}
+                    <div className="d-flex position-absolute top-0 end-0 transform translate-middle-y" style={{ marginTop: '-20px' }}>
+                      {/* Move button */}
+                      <button 
+                        className="btn btn-sm btn-light border p-1 me-1"
+                        onMouseDown={(e) => handleMouseDown(e, 'emoji', el, 'move')}
+                        title="Mover"
+                      >
+                        <Move size={16} />
+                      </button>
+                      
+                      {/* Resize button */}
+                      <button 
+                        className="btn btn-sm btn-light border p-1 me-1"
+                        onMouseDown={(e) => handleMouseDown(e, 'emoji', el, 'resize')}
+                        title="Cambiar tamaño"
+                      >
+                        <Maximize size={16} />
+                      </button>
+                      
+                      {/* Delete button */}
+                      <button 
+                        onClick={() => removeEmojiElement(el.id)}
+                        className="btn btn-sm btn-danger p-1"
+                        title="Eliminar"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -652,13 +667,6 @@ const TShirtCustomizer = () => {
               <div className="modal-footer">
                 <button 
                   type="button" 
-                  className="btn btn-secondary" 
-                  onClick={() => setShowTextModal(false)}
-                >
-                  Cancelar
-                </button>
-                <button 
-                  type="button" 
                   className="btn btn-primary"
                   onClick={handleAddText}
                 >
@@ -695,13 +703,6 @@ const TShirtCustomizer = () => {
               <div className="modal-footer">
                 <button 
                   type="button" 
-                  className="btn btn-secondary" 
-                  onClick={() => setShowImageModal(false)}
-                >
-                  Cancelar
-                </button>
-                <button 
-                  type="button" 
                   className="btn btn-primary"
                   onClick={() => fileInputRef.current.click()}
                 >
@@ -730,13 +731,6 @@ const TShirtCustomizer = () => {
                 <EmojiPicker onSelect={handleAddEmoji} />
               </div>
               <div className="modal-footer">
-                <button 
-                  type="button" 
-                  className="btn btn-secondary" 
-                  onClick={() => setShowEmojiModal(false)}
-                >
-                  Cancelar
-                </button>
               </div>
             </div>
           </div>
@@ -756,6 +750,13 @@ const TShirtCustomizer = () => {
           background-color: white;
           border: 1px solid blue;
           border-radius: 50%;
+        }
+
+        /* Additional styles to make sure the t-shirt container occupies full available space */
+        .tshirt-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
       `}</style>
     </div>

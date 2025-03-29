@@ -60,3 +60,17 @@ button:hover {
     flex-wrap: wrap; /* Permite que los botones bajen solo si es necesario */
     width: 100%;
 }
+.modal-dialog {
+    color: #333;
+    width: 300px; /* Ajusta según necesites */
+    height: 200px; /* Ajusta según necesites */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 25%;
+    transform: translate(-50%, -50%);
+}
+.form-control{
+    color: #333 !important;
+}
