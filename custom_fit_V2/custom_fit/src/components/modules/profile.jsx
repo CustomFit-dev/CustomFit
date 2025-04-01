@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import '../../scss/dashboard.scss';
-import { User, Edit, UserCheck, Trash2, ShoppingBag, Shield, Package, MessageCircle, CreditCard, LogOut } from 'lucide-react';
+import { User, Edit, UserCheck, Trash2, ShoppingBag, Shield, Package, MessageCircle, CreditCard, LogOut, Menu } from 'lucide-react';
 
-// Importar los componentes de cada módulo
-import EditProfile from './dashboard/control-actividad';
+// Import component modules
 import PersonalData from './dashboard/datos-personales';
 import DeleteAccount from './dashboard/historial-compras';
 import PurchaseHistory from './dashboard/historial-compras';
@@ -14,10 +13,10 @@ import Payments from './dashboard/historial-compras';
 import Logout from './dashboard/seguridad';
 
 const App = () => {
-  const [activeMenu, setActiveMenu] = useState('Editar perfil');
-  
+  const [activeMenu, setActiveMenu] = useState('Datos Personales');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const menuItems = [
-    { id: 'edit-profile', name: 'Editar perfil', icon: <Edit size={20} />, component: <EditProfile /> },
     { id: 'personal-data', name: 'Datos Personales', icon: <UserCheck size={20} />, component: <PersonalData /> },
     { id: 'delete-account', name: 'Eliminar cuenta', icon: <Trash2 size={20} />, component: <DeleteAccount /> },
     { id: 'purchase-history', name: 'Historial de compras', icon: <ShoppingBag size={20} />, component: <PurchaseHistory /> },
@@ -27,13 +26,17 @@ const App = () => {
     { id: 'payments', name: 'Pagos', icon: <CreditCard size={20} />, component: <Payments /> },
     { id: 'logout', name: 'Salir', icon: <LogOut size={20} />, component: <Logout /> }
   ];
-  
-  // Encontrar el componente activo basado en el menú seleccionado
+
+  // Find active component based on selected menu
   const activeComponent = menuItems.find(item => item.name === activeMenu)?.component;
+
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
 
   return (
     <div className="app-container">
-      <div className="sidebar">
+      <div className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="logo-container">
           <h1 className="logo">Custom<span>Fit</span></h1>
         </div>
@@ -42,7 +45,12 @@ const App = () => {
             <div
               key={item.id}
               className={`menu-item ${activeMenu === item.name ? 'active' : ''}`}
-              onClick={() => setActiveMenu(item.name)}
+              onClick={() => {
+                setActiveMenu(item.name);
+                if (window.innerWidth < 768) {
+                  setSidebarOpen(false);
+                }
+              }}
             >
               <div className="menu-icon">{item.icon}</div>
               <div className="menu-text">{item.name}</div>
@@ -52,6 +60,9 @@ const App = () => {
       </div>
       <div className="main-content">
         <div className="header">
+          <button className="menu-toggle" onClick={toggleSidebar}>
+            <Menu size={24} />
+          </button>
           <h2>Panel de Usuario</h2>
           <div className="user-avatar">
             <User size={24} />

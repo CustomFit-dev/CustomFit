@@ -2,7 +2,7 @@
 :root {
   --bg-dark: #1a1a1a;
   --bg-darker: #121212;
-  --accent-green: #80ffbb;
+  --accent-green: #17BEBB;
   --text-white: #ffffff;
   --text-light: #cccccc;
   --border-color: #333333;
@@ -24,6 +24,7 @@ body {
 .app-container {
   display: flex;
   height: 100vh;
+  position: relative;
 }
 
 /* Sidebar */
@@ -33,6 +34,8 @@ body {
   height: 100%;
   padding: 20px 0;
   border-right: 1px solid var(--border-color);
+  transition: transform 0.3s ease;
+  z-index: 1000;
 }
 
 .logo-container {
@@ -67,7 +70,7 @@ body {
 }
 
 .menu-item:hover {
-  background-color: rgba(128, 255, 187, 0.05);
+  background-color: rgba(23, 190, 187, 0.05);
   color: var(--accent-green);
 }
 
@@ -79,6 +82,8 @@ body {
 
 .menu-icon {
   margin-right: 14px;
+  display: flex;
+  align-items: center;
 }
 
 .menu-text {
@@ -93,12 +98,27 @@ body {
 }
 
 .header {
+  color: var(--text-white);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding-bottom: 20px;
   border-bottom: 1px solid var(--border-color);
   margin-bottom: 30px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-white);
+  cursor: pointer;
+  margin-right: 15px;
 }
 
 .user-avatar {
@@ -134,4 +154,56 @@ body {
   border: 1px dashed var(--border-color);
   border-radius: 6px;
   padding: 20px;
+  text-align: center;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: -260px;
+    transform: translateX(0);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+  
+  .sidebar.open {
+    transform: translateX(260px);
+  }
+  
+  .menu-toggle {
+    display: flex;
+  }
+  
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .main-content {
+    padding: 15px;
+  }
+  
+  .header h2 {
+    font-size: 18px;
+  }
+  
+  .content-area {
+    padding: 15px;
+  }
+  
+  .content-placeholder {
+    min-height: 300px;
+  }
+  
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+  }
 }
