@@ -2,13 +2,19 @@ import React, { useState, useRef, useEffect } from 'react';
 import { X, Type, Image, Smile, Move, Maximize } from 'lucide-react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../scss/personalizar.scss'
-import CamisetaBase from "../../img/camisassinfo/cam5.png";
-import CamisetaRoja from "../../img/camisassinfo/cam3.png";
-import CamisetaAzul from "../../img/camisassinfo/cam11.png";
-import CamisetaVerde from "../../img/camisassinfo/cam7.png";
-import CamisetaBlanca from "../../img/camisassinfo/cam12.png";
-import CamisetaNegra from "../../img/camisassinfo/cam2.png";
-import CamisetaAmarilla from "../../img/camisassinfo/cam4.png";
+import CamisetaBase from "../../img/camisassinfo/camisablanca.png";
+import CamisetaRoja from "../../img/camisassinfo/CamisaRoja.png";
+import CamisetaAzul from "../../img/camisassinfo/CamisaAzu.png";
+import CamisetaVerde from "../../img/camisassinfo/CamisaVerde.png";
+import CamisetaBlanca from "../../img/camisassinfo/camisablanca.png";
+import CamisetaNegra from "../../img/camisassinfo/CamisaNegra.png";
+import CamisetaAmarilla from "../../img/camisassinfo/camisaamarillo.png";
+import CamisetaGris from "../../img/camisassinfo//camisagris.png";
+import CamisetaCafe from "../../img/camisassinfo/camisacafe.png";
+import CamisetaLila from "../../img/camisassinfo/camisalila.png";
+import CamisetaBeige from "../../img/camisassinfo/camisabeige.png";
+import CamisetaTurquesa from "../../img/camisassinfo/camisaTurquesa.png";
+import CamisetaFucsia from "../../img/camisassinfo/camisaFucsia.png";
 import '../../scss/camisaPer.scss';
 
 const TShirtCustomizer = () => {
@@ -54,6 +60,15 @@ const TShirtCustomizer = () => {
     "bg-white": CamisetaBlanca,
     "bg-dark": CamisetaNegra,
     "bg-warning": CamisetaAmarilla,
+    "bg-secondary": CamisetaGris,
+    "bg-brown": CamisetaCafe,
+    "bg-lila": CamisetaLila,
+    "bg-beige": CamisetaBeige,
+    "bg-turquoise": CamisetaTurquesa,
+    "bg-fuchsia": CamisetaFucsia,
+
+
+
   };
   
   // Size options
@@ -370,8 +385,8 @@ const TShirtCustomizer = () => {
                 className="position-relative" 
                 style={{ 
                   width: '100%',   /* Increased size */
-                  maxWidth: '100%',   /* Increased size */
-                  maxHeight: '9100%',  /* Increased size */
+                  maxWidth: '120%',   /* Increased size */
+                  maxHeight: '140%',  /* Increased size */
                   zIndex: 1
                 }} 
               />
