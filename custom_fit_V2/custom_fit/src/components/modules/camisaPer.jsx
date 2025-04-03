@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, Type, Image, Smile, Move, Maximize } from 'lucide-react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import CustomGaleria from './ventanaCustom';
 import '../../scss/personalizar.scss'
+import Custom from '@mui/icons-material/DashboardCustomize';
 import CamisetaBase from "../../img/camisassinfo/camisablanca.png";
 import CamisetaRoja from "../../img/camisassinfo/CamisaRoja.png";
 import CamisetaAzul from "../../img/camisassinfo/CamisaAzu.png";
@@ -30,6 +32,7 @@ const TShirtCustomizer = () => {
   const [showTextModal, setShowTextModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [showEmojiModal, setShowEmojiModal] = useState(false);
+  const [showCustomModal, setShowCustomModal] = useState(false);
 
   // Text modal state
   const [newText, setNewText] = useState('');
@@ -69,6 +72,18 @@ const TShirtCustomizer = () => {
 
 
 
+  };
+  const handleSelectCustomDesign = (imageSrc) => {
+    // Crear un nuevo elemento de imagen con la imagen seleccionada
+    setImageElements([...imageElements, {
+      id: Date.now(),
+      src: imageSrc,
+      x: 50,
+      y: 50,
+      width: 100,
+      height: 100
+    }]);
+    setShowCustomModal(false);
   };
   
   // Size options
@@ -303,7 +318,7 @@ const TShirtCustomizer = () => {
   };
 
   return (
-    <div className="container-fluid p-4">
+    <div className="container-fluid p-4" id='Contapersonalizar'>
       <div className="titulo-container">
         <h1 className="titl1">¡Crea la camiseta perfecta en tan solo 10 minutos!</h1>
         <h2 className="titl2">Selecciona el modelo, sube tu diseño y haz tu pedido</h2>
@@ -322,12 +337,13 @@ const TShirtCustomizer = () => {
             <div className="contela">
               {fabricOptions.slice(0, 8).map((fabricType) => (
                 <button
-                  key={fabricType}
-                  className={`btnTela ${fabric === fabricType ? "btn-primary" : "btn-outline-secondary"}`}
-                  onClick={() => setFabric(fabricType)}
-                >
-                  {fabricType}
-                </button>
+                key={fabricType}
+                className={`btnTela ${fabric === fabricType ? "btn-primary" : "btn-outline-secondary"}`}
+                onClick={() => setFabric(fabricType)}
+                style={fabric === fabricType ? { backgroundColor: '#17BEBB', border: 'none'} : {}}
+              >
+                {fabricType}
+              </button>
               ))}
             </div>
           </div>
@@ -341,6 +357,7 @@ const TShirtCustomizer = () => {
                   key={sizeOption}
                   className={`btn ${size === sizeOption ? "btn-primary" : "btn-outline-secondary"}`}
                   onClick={() => setSize(sizeOption)}
+                  style={size === sizeOption ? { backgroundColor: '#17BEBB', border: 'none' } : {}}
                 >
                   {sizeOption}
                 </button>
@@ -353,6 +370,9 @@ const TShirtCustomizer = () => {
           <div className="ContaSubur d-flex gap-3">
             <button className="btnCustom d-flex align-items-center" onClick={() => setShowTextModal(true)}>
               <Type size={20} className="me-2" />
+            </button>
+            <button className="btnCustom d-flex align-items-center" onClick={() => setShowCustomModal(true)}>
+              <Custom size={20} className="me-2" />
             </button>
             <button className="btnCustom d-flex align-items-center" onClick={() => setShowImageModal(true)}>
               <Image size={20} className="me-2" />
@@ -692,6 +712,13 @@ const TShirtCustomizer = () => {
           </div>
         </div>
       )}
+
+      {showCustomModal && (
+  <CustomGaleria 
+    onSelectImage={handleSelectCustomDesign}
+    onClose={() => setShowCustomModal(false)}
+  />
+)}
 
       {/* Image Modal */}
       {showImageModal && (

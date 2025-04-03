@@ -82,6 +82,8 @@
   },
   "devDependencies": {
     "customize-cra": "^1.0.0",
+    "eslint": "^8.57.1",
+    "eslint-config-react-app": "^7.0.1",
     "react-app-rewired": "^2.2.1"
   }
 }

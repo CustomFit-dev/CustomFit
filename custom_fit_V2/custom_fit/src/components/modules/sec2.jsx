@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Cus from '../../img/logoCustomFit.png';
+import Cus from '../../img/logocustomfit.png';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import CountUp from 'react-countup';
