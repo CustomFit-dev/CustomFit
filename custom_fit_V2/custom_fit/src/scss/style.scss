@@ -118,7 +118,6 @@ a {
 }
 }
 
-
 @media (max-width: 500px) {
   .form-row {
     width: 100% !important;
@@ -243,25 +242,22 @@ body #sec2-f {
   background-attachment: fixed;
 }
 
-
-
 body footer {
   position: static;
   background-color: #000000 !important;
   color: white;
 }
 
-
 body footer .image-container {
   display: flex !important;
-  justify-content: start;
-  align-items: start;
+  justify-content: center;
   position: relative;
+  max-width: 100%;
 }
 
 
 body footer .image-container img {
-  max-width: 30%;
+  max-width: 50%;
   object-fit: contain;
 }
 
@@ -360,22 +356,19 @@ body .btn-outline-primary1 {
 }
 
 body .btn .btn-outline-primary:hover {
-  border: 2px solid #00a99d;
   color: white;
 }
 
 
 body :focus {
   outline: 0;
-  border: 2PX solid #2260ff;
+  border: none !important;
   color: white;
 }
 
 
 body .btn-outline-primaryX {
   color: white;
-  
-  
 }
 
 .mydict {
@@ -486,13 +479,6 @@ body .carousel-container .rightArrow {
   border-radius: 5px;
 }
 
-
-body .carousel-container .leftArrow:hover,
-body .carousel-container .rightArrow:hover {
-  background-color: #0056b3;
-}
-
-
 body #c-1 {
   background-size: cover;
   background-repeat: no-repeat;
@@ -585,11 +571,9 @@ body .form-row .fondoInicio {
 
 .MuiPaginationItem-root {
   color: white !important;
-  background-color: blue;
 }
 
 .MuiPaginationItem-root.Mui-selected {
-  background-color: red;
   color: white !important;
 }
 
@@ -643,18 +627,18 @@ div:where(.swal2-icon).swal2-warning {
 }
 
 div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm) {
-  border: solid white 1px !important;
   background-color: transparent !important;
+  border: 1px solid white !important;
 }
 
 
 div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel) {
-  border: solid white 1px !important;
+  border: 1px solid white!important;
   background-color: transparent !important;
 }
 
 div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm):hover {
-  background-color: #00a99d !important;
+  background-color:#00a99d  !important;
   color: white !important;
 }
 
@@ -741,6 +725,20 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hov
   
       max-width: 700px;
   }
+
+  body footer .image-container {
+    display: flex !important;
+    justify-content: center;
+    position: relative;
+    max-width: 100%;
+  }
+  
+  
+  body footer .image-container img {
+    max-width: 100%;
+    object-fit: contain;
+  }
+  
 }
 
 @media screen and (max-width: 480px) {
@@ -758,6 +756,21 @@ div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel):hov
       
       z-index: 1; /* Asegura que la imagen seleccionada se superponga a las otras */
   }
+
+  body footer .image-container {
+    display: flex !important;
+    justify-content: center;
+    position: relative;
+    max-width: 100%;
+  }
+  
+  
+  body footer .image-container img {
+    max-width: 70%;
+    object-fit: contain;
+  }  
+
+
 }
 
 
