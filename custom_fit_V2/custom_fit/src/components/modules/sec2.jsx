@@ -5,7 +5,7 @@ import 'aos/dist/aos.css';
 import CountUp from 'react-countup';
 import { useInView } from 'react-intersection-observer';
 import '../../scss/Sec2.scss';
-import { Tabs, Tab, Box, colors } from '@mui/material';
+import { Tabs, Tab, Box, } from '@mui/material';
 
 const Section2 = () => {
   useEffect(() => {
@@ -21,13 +21,14 @@ const Section2 = () => {
 
   return (
     <div>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ borderBottom: 10, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange} aria-label="customfit info tabs">
           <Tab label="¿Quiénes somos?" sx={{ color: 'white' }} />
           <Tab label="Nuestra Misión" sx={{ color: 'white' }} />
           <Tab label="Nuestros Valores" sx={{ color: 'white' }} />
         </Tabs>
       </Box>
+
       <div className='sec2' id='sobre'>
         <div className='container'>
           <div className='row'>

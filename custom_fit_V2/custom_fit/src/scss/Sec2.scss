@@ -1,7 +1,7 @@
 #sec2i {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: flex-end;
 }
 
 .tex2 {
@@ -24,12 +24,10 @@
   align-items: center;
   position: relative;
   height: 100%;
-  
-
 }
 
 .sec2 .image-container img {
-  width: 80%;
+  width: 70%;
   height: auto;
   object-fit: contain;
 }
@@ -61,7 +59,7 @@ h2{
 }
 
 #sec2-f {
-  background-color: #222;
+  background-color: #ff0000;
   padding: 20px 0;
 }
 
@@ -93,6 +91,11 @@ h2{
   font-weight: 500;
 }
 
-.Mui-selected {
-  color: #00a99d !important;
+.css-heg063-MuiTabs-flexContainer {
+  display: flex;
+  justify-content: space-around;
+}
+
+button:hover{
+  border: none!important;
 }

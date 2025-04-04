@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Logo from '../../img/logosec2.png';
+import Logo from '../../img/logocustomfit.png';
 
 
 const Foot = () => {
@@ -12,7 +12,6 @@ const Foot = () => {
                         <div className='image-container'>
                             <img src={Logo} alt='Footer Logo' />
                         </div>
-                        <p>Disparando tu creatividad!<br />Custom-fit</p>
                     </div>
                     <div className="col">
                         <h5 className="text-white mb-3">Páginas</h5>
