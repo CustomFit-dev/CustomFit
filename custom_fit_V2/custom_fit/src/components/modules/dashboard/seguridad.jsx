@@ -44,7 +44,7 @@ import {
 } from '@mui/icons-material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-// Tema personalizado con colores turquesa similares a la imagen original
+// Tema personalizado con colores turquesa
 const theme = createTheme({
   palette: {
     primary: {
