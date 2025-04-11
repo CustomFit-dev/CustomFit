@@ -1,74 +1,8 @@
 import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../../scss/iniciar.scss'; // Asegúrate de que la ruta del archivo SCSS esté correcta
+import '../../scss/iniciar.scss';
 import Nav from '../modules/Nav';
-import { colors } from '@mui/material';
-import { red } from '@mui/material/colors';
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#00a99d',
-    },
-    text: {
-      primary: '#00a99d',
-    },
-  },
-  components: {
-        MuiTextField: {
-    styleOverrides: {
-        root: {
-            
-          margin: '10px auto', /* Esto centrará el TextField horizontalmente */
-            '& .MuiInputBase-root': {
-                color: '#ffffff',
-                width: '400px',
-                
-            },
-            '& .MuiInputLabel-root': {
-                color: '#ffffff',
-            },
-            '& .MuiInput-underline:before': {
-                borderBottomColor: '#00a99d',
-            },
-            '& .MuiInput-underline:hover:before': {
-                borderBottomColor: '#00a99d',
-            },
-            '& .MuiInput-underline:after': {
-                borderBottomColor: '#00a99d',
-            },
-        },
-    },
-},
-
-       MuiButton: {
-    styleOverrides: {
-        root: {
-            margin: '10px auto', /* Esto centrará el botón horizontalmente */
-            padding: '10px 20px',
-            backgroundColor: 'transparent',
-            border: '1px solid #00a99d',
-            color: '#ffffff',
-            display: 'block',
-            marginTop: '40px',
-        },
-    },
-},
-
-        MuiIconButton: {
-            styleOverrides: {
-                root: {
-                    color: '#ffffff',
-                },
-            },
-        },
-    },
-});
 
 const Form_I = () => {
   const [correoElectronico, setCorreoElectronico] = useState('');
@@ -77,6 +11,11 @@ const Form_I = () => {
   const navigate = useNavigate();
 
   const handleEnviarCodigo = async () => {
+    if (!correoElectronico) {
+      setError('Por favor ingresa tu correo electrónico');
+      return;
+    }
+    
     try {
       setLoading(true);
       const response = await axios.post('http://localhost:8000/api/enviar_codigo/', {
@@ -98,50 +37,58 @@ const Form_I = () => {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <form>
-        <div className="form-row1 glow1">
-      <div className='btnx'>
-          <IconButton className="salirx1" onClick={() => navigate('/login')}>
-            <CloseIcon />
-          </IconButton>
-          <Nav /> 
+    <div className="login-container">
+      <div className="login-card">
+        <div className="close-button">
+          <button onClick={() => navigate('/login')}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        
+        <div className="login-content">
+          <div className="login-header">
+            <h1>Iniciar sesión</h1>
+            <div className="accent-line"></div>
           </div>
-          <h1>Iniciar sesion</h1>
-          <p>Déjanos tu correo y te enviaremos 
-          un código para que puedas continuar.</p>
-          <div className="form-group1">
-            <TextField
-              id="correo-electronico"
-              label="Correo Electrónico"
-              type="email"
-              variant="standard"
-              color="primary"
-              value={correoElectronico}
-              onChange={(e) => setCorreoElectronico(e.target.value)}
-              error={!!error}
-              helperText={error || ''}
-              className="text-field1"
-            />
-          </div>
-          <p>¿Problemas para iniciar sesión?</p>
-
-          <a href="">
-            <p className='wpp'>Contactanos</p>
-          </a>
           
-
-          <Button 
-            variant="contained" 
+          <p className="login-description">Déjanos tu correo y te enviaremos un código para que puedas continuar.</p>
+          
+          <div className="form-group">
+            <div className="input-container">
+              <input
+                type="email"
+                id="correo-electronico"
+                value={correoElectronico}
+                onChange={(e) => setCorreoElectronico(e.target.value)}
+                className={error ? "error" : ""}
+                required
+              />
+              <label htmlFor="correo-electronico">Correo Electrónico</label>
+              <div className="input-line"></div>
+            </div>
+            {error && <p className="error-message">{error}</p>}
+          </div>
+          
+          <p className="help-text">¿Problemas para iniciar sesión?</p>
+          <a href="#" className="contact-link">Contáctanos</a>
+          
+          <button 
+            className={`submit-button ${loading ? 'loading' : ''}`}
             onClick={handleEnviarCodigo}
             disabled={loading}
-            className="submit-button1"
           >
-            Enviar Código
-          </Button>
+            {loading ? (
+              <div className="spinner"></div>
+            ) : (
+              'Enviar Código'
+            )}
+          </button>
         </div>
-      </form>
-    </ThemeProvider>
+      </div>
+    </div>
   );
 };
 

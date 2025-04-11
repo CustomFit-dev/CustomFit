@@ -1,17 +1,9 @@
 import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGoogle } from '@fortawesome/free-brands-svg-icons';
-import { faFacebook } from '@fortawesome/free-brands-svg-icons';
-import { faGithub } from '@fortawesome/free-brands-svg-icons';
+import { faGoogle, faFacebook, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faMicrosoft } from '@fortawesome/free-brands-svg-icons';
-import '../../scss/form.scss'
-
+import '../../scss/form.scss';
 import {
     validateApe,
     validatecel,
@@ -19,66 +11,7 @@ import {
     validateNom,
     validatenom_u,
     validateEmailconf
-
 } from './validation';
-import Nav from '../modules/Nav';
-
-const theme = createTheme({
-    palette: {
-        primary: {
-            main: '#00a99d',
-        },
-        text: {
-            primary: '#00a99d',
-        },
-    },
-    components: {
-        MuiTextField: {
-            styleOverrides: {
-                root: {
-                    margin: '10px',
-                    '& .MuiInputBase-root': {
-                        color: '#ffffff',
-                    },
-                    '& .MuiInputLabel-root': {
-                        color: '#ffffff',
-                    },
-                    '& .MuiInput-underline:before': {
-                        borderBottomColor: '#00a99d',
-                    },
-                    '& .MuiInput-underline:hover:before': {
-                        borderBottomColor: '#00a99d',
-                    },
-                    '& .MuiInput-underline:after': {
-                        borderBottomColor: '#00a99d',
-                    },
-                },
-            },
-        },
-        MuiButton: {
-            styleOverrides: {
-                root: {
-                    margin: '10px',
-                    padding: '10px 20px',
-                    backgroundColor: 'transparent',
-                    border: '1px solid #00a99d',
-                    color: '#ffffff',
-                    display: 'block',
-                    marginLeft: '150px',
-                    marginRight: 'auto',
-                    marginTop: '40px',
-                },
-            },
-        },
-        MuiIconButton: {
-            styleOverrides: {
-                root: {
-                    color: '#ffffff',
-                },
-            },
-        },
-    },
-});
 
 const Form_R = () => {
     const [nombres, setNombres] = useState('');
@@ -101,8 +34,7 @@ const Form_R = () => {
             confCorreoElectronico: validateEmailconf(confCorreoElectronico, correoElectronico),
         }
         setErrors(errores);
-        return Object.values(errores).every(error =>!error);
-
+        return Object.values(errores).every(error => !error);
     }
 
     const handleSubmit = async (e) => {
@@ -114,9 +46,6 @@ const Form_R = () => {
         }
         setLoading(true);
     
-        // Genera el `user_id` si es necesario, por ejemplo, podrías asignarlo desde el frontend si ya lo tienes disponible.
-        // O si es algo que el backend lo asignará automáticamente (como en muchos sistemas), lo puedes omitir aquí.
-    
         const formData = {
             nombres,
             apellidos,
@@ -124,8 +53,8 @@ const Form_R = () => {
             celular,
             correo_electronico: correoElectronico,
             conf_correo_electronico: confCorreoElectronico,
-            rol: 1,  // Enviar solo el valor numérico para `rol`
-            user_id: 123, // Aquí deberías incluir el `user_id` si ya lo tienes, o el backend lo asignará automáticamente
+            rol: 1,
+            user_id: 123,
         };
     
         try {
@@ -146,7 +75,7 @@ const Form_R = () => {
                 const errorData = await response.json();
                 console.error('Error en el registro:', errorData);
                 if (errorData.errors) {
-                    setErrors(errorData.errors);  // Mostrar los errores del backend
+                    setErrors(errorData.errors);
                 }
                 alert('Error al enviar los datos. Por favor, inténtalo de nuevo.');
             }
@@ -159,137 +88,155 @@ const Form_R = () => {
     };
     
     return (
-        <ThemeProvider theme={theme}>
-                <form onSubmit={handleSubmit}>
-                    <div className="form-row glow">
-                        <IconButton className="salirx" onClick={() => navigate('/login')}>
-                            <CloseIcon />
-                        </IconButton>
-                        <Nav /> 
-                        <h1>Registrate</h1>
-                        <div className='form-con'>
-                        <div className="fondo"></div>
-                            <div className="form-group col-md-6" id='input1'>
-                                <TextField
-                                    id="Nombres"
-                                    label="Nombres"
-                                    variant="standard"
-                                    color="primary"
+        <div className="register-container">
+            <div className="register-card">
+                <div className="close-button">
+                    <button onClick={() => navigate('/login')}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+                
+                <div className="register-content">
+                    <div className="register-header">
+                        <h1>Regístrate</h1>
+                        <div className="accent-line"></div>
+                    </div>
+                    
+                    <form onSubmit={handleSubmit} className="register-form">
+                        <div className="form-grid">
+                            <div className="input-container">
+                                <input
+                                    type="text"
+                                    id="nombres"
                                     value={nombres}
-                                    error={!!errors.nombres}
-                                    helperText={errors.nombres}
                                     onChange={(e) => setNombres(e.target.value)}
+                                    className={errors.nombres ? "error" : ""}
+                                    required
                                 />
-                                <TextField
-                                    id="Apellidos"
-                                    label="Apellidos"
-                                    variant="standard"
-                                    color="primary"
-                                    value={apellidos}
-                                    error={!!errors.apellidos}
-                                    helperText={errors.apellidos}
-                                    onChange={(e) => setApellidos(e.target.value)}
-                                />
+                                <label htmlFor="nombres">Nombres</label>
+                                <div className="input-line"></div>
+                                {errors.nombres && <p className="error-message">{errors.nombres}</p>}
                             </div>
-                            <div className="form-group col-md-6" id='input2'>
-                                <TextField
+                            
+                            <div className="input-container">
+                                <input
+                                    type="text"
+                                    id="apellidos"
+                                    value={apellidos}
+                                    onChange={(e) => setApellidos(e.target.value)}
+                                    className={errors.apellidos ? "error" : ""}
+                                    required
+                                />
+                                <label htmlFor="apellidos">Apellidos</label>
+                                <div className="input-line"></div>
+                                {errors.apellidos && <p className="error-message">{errors.apellidos}</p>}
+                            </div>
+                            
+                            <div className="input-container">
+                                <input
+                                    type="text"
                                     id="nombre-usuario"
-                                    label="Nombre De Usuario"
-                                    variant="standard"
-                                    color="primary"
-                                    error={!!errors.nombreUsuario}
-                                    helperText={errors.nombreUsuario}
                                     value={nombreUsuario}
                                     onChange={(e) => setNombreUsuario(e.target.value)}
+                                    className={errors.nombreUsuario ? "error" : ""}
+                                    required
                                 />
-                                <TextField
-                                    id="Celular"
-                                    label="Celular"
-                                    variant="standard"
-                                    color="primary"
+                                <label htmlFor="nombre-usuario">Nombre de Usuario</label>
+                                <div className="input-line"></div>
+                                {errors.nombreUsuario && <p className="error-message">{errors.nombreUsuario}</p>}
+                            </div>
+                            
+                            <div className="input-container">
+                                <input
+                                    type="number"
+                                    id="celular"
                                     value={celular}
-                                    type='number'
-                                    error={!!errors.celular}
-                                    helperText={errors.celular}
                                     onChange={(e) => setCelular(e.target.value)}
+                                    className={errors.celular ? "error" : ""}
+                                    required
                                 />
+                                <label htmlFor="celular">Celular</label>
+                                <div className="input-line"></div>
+                                {errors.celular && <p className="error-message">{errors.celular}</p>}
                             </div>
-                            <div className="form-group col-md-6" id='input1'>
-                                <TextField
+                            
+                            <div className="input-container">
+                                <input
+                                    type="email"
                                     id="correo-electronico"
-                                    label="Correo Electronico"
-                                    type="email"
-                                    variant="standard"
-                                    color="primary"
                                     value={correoElectronico}
-                                    error={!!errors.correoElectronico}
-                                    helperText={errors.correoElectronico}
                                     onChange={(e) => setCorreoElectronico(e.target.value)}
+                                    className={errors.correoElectronico ? "error" : ""}
+                                    required
                                 />
-                                <TextField
-                                    id="Con-correoelectronico"
-                                    label="Confirmar email"
-                                    variant="standard"
+                                <label htmlFor="correo-electronico">Correo Electrónico</label>
+                                <div className="input-line"></div>
+                                {errors.correoElectronico && <p className="error-message">{errors.correoElectronico}</p>}
+                            </div>
+                            
+                            <div className="input-container">
+                                <input
                                     type="email"
-                                    color="primary"
+                                    id="conf-correo-electronico"
                                     value={confCorreoElectronico}
-                                    error={!!errors.confCorreoElectronico}
-                                    helperText={errors.confCorreoElectronico || ''}
                                     onChange={(e) => setConfCorreoElectronico(e.target.value)}
+                                    className={errors.confCorreoElectronico ? "error" : ""}
+                                    required
                                 />
-                                
+                                <label htmlFor="conf-correo-electronico">Confirmar Email</label>
+                                <div className="input-line"></div>
+                                {errors.confCorreoElectronico && <p className="error-message">{errors.confCorreoElectronico}</p>}
                             </div>
-                            <div className='redes'>
-                            <div class="separator">
-                                <div></div>
-                                <span> O inicia sesión con </span>
-                                <div></div>
-                                </div>
-                                
-                                <div className='bntredes'>
-                                <button type='button' className='Google1'> 
-                                <div class="sign">
-
-                                <FontAwesomeIcon icon={faGoogle} size="lg" style={{color: "#ffffff",}} />
-                                <div class="text">Google</div>
-                                </div>
-                                </button>
-
-                                <button type='button' className='Fecebook'>
-                                <div class="sign">
-                                <FontAwesomeIcon icon={faFacebook} size="lg" style={{color: "#ffffff",}}/>
-                                <div class="text1">Facebook</div>
-                                </div>
-                                
-                                </button>
-                                <button type='button' className='Github'>
-                                <div class="sign">
-                                <FontAwesomeIcon icon={faGithub} size="lg" />
-                                <div class="text2">GitHub</div>
-                                </div>
-
-                                </button>
-                                <button type='button' className='Microsoft'>
-                                <div class="sign">
-                                <FontAwesomeIcon icon={faMicrosoft} size="lg" />
-                                <div class="text3">Microsoft</div>
-                                </div>
-
-                                </button>
-                                    </div>
-                                    
-                            </div>
-                            <Button 
-                                type='submit' 
-                                variant="contained"
-                                disabled={loading}
-                            >
-                                Registrar
-                            </Button>
                         </div>
-                    </div>
-                </form>
-        </ThemeProvider>
+                        
+                        <div className="social-login">
+                            <div className="separator">
+                                <div className="line"></div>
+                                <span>O inicia sesión con</span>
+                                <div className="line"></div>
+                            </div>
+                            
+                            <div className="social-buttons">
+                                <button type="button" className="social-button google">
+                                    <FontAwesomeIcon icon={faGoogle} />
+                                    <span>Google</span>
+                                </button>
+                                
+                                <button type="button" className="social-button facebook">
+                                    <FontAwesomeIcon icon={faFacebook} />
+                                    <span>Facebook</span>
+                                </button>
+                                
+                                <button type="button" className="social-button github">
+                                    <FontAwesomeIcon icon={faGithub} />
+                                    <span>GitHub</span>
+                                </button>
+                                
+                                <button type="button" className="social-button microsoft">
+                                    <FontAwesomeIcon icon={faMicrosoft} />
+                                    <span>Microsoft</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <button 
+                            type="submit" 
+                            className={`submit-button ${loading ? 'loading' : ''}`}
+                            disabled={loading}
+                        >
+                            {loading ? (
+                                <div className="spinner"></div>
+                            ) : (
+                                'Registrar'
+                            )}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     );
 };
 
