@@ -195,7 +195,7 @@ const CommentSection = () => {
             key={index}
             variant="outlined"
             onClick={() => handlePageChange(index + 1)}
-            style={{ color: 'white', margin: '0 5px', backgroundColor: currentPage === index + 1 ? '#00a99d' : 'transparent', color: currentPage === index + 1 ? 'white' : 'black' }}
+            style={{ margin: '0 5px', backgroundColor: currentPage === index + 1 ? '#00a99d' : 'transparent', color: currentPage === index + 1 ? 'white' : 'black' }}
           >
             {index + 1}
           </Button>

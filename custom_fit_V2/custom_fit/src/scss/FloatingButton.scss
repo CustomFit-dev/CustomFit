@@ -1,0 +1,77 @@
+    .fab-container {
+        position: fixed !important;
+        bottom: 20px;
+        right: 20px;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        z-index: 1000;
+    }
+    
+    .fab-options {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        margin-bottom: 10px !important;
+        animation: slideUp 0.3s ease forwards !important;
+    }
+    
+    /* Más separación entre botones */
+    .fab-option {
+        height: 50px !important; /* altura fija */
+        width: 50px !important; /* ancho fijo */
+        margin: 5px auto !important; /* <-- antes 5px, ahora 10px */
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        justify-items: center !important;
+        
+    }
+    
+    /* Mejor centrado de los íconos */
+    .fab-option svg {
+        font-size: 24px; /* tamaño más uniforme */
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        justify-items: center !important;
+        margin: 0px auto !important;
+    }
+    
+    /* Botón principal */
+    .fab-button {
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 0px auto !important;
+        background-color: #17BEBB !important; /* Azul del botón principal */
+        
+    }
+    .fab-button svg {
+        font-size: 28px; /* Aumenta el tamaño para que se vea más proporcional */
+        display: flex;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 0px auto !important;
+    }
+    
+    /* Animación suave de aparición */
+    @keyframes slideUp {
+        from {
+        transform: translateY(30px); /* más distancia al iniciar */
+        opacity: 0;
+        }
+        to {
+        transform: translateY(0);
+        opacity: 1;
+        }
+    }
+    
+    /* Responsive */
+    @media (max-width: 500px) {
+        .fab-container {
+        bottom: 15px;
+        right: 15px;
+        }
+    }
+    
