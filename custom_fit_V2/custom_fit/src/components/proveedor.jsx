@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import CircularIndeterminate from './modules/CircularIndeterminate'; // Asegúrate de que la ruta sea correcta
 import Prove1 from './proveedor/prove1';
 import Prove2 from './proveedor/prove2';
-import Prove3 from './proveedor/prove3';
+import Prove4 from './proveedor/prove4';
 
 
 
@@ -32,7 +32,7 @@ const Home = () => {
         
   <Prove1 />
   <Prove2 />
-  <Prove3 />
+  <Prove4 />
   
 </div>
 
