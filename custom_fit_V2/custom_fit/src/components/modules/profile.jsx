@@ -4,12 +4,10 @@ import { User, Edit, UserCheck, Trash2, ShoppingBag, Shield, Package, MessageCir
 
 // Import component modules
 import PersonalData from './dashboard/datos-personales';
-import DeleteAccount from './dashboard/historial-compras';
 import PurchaseHistory from './dashboard/historial-compras';
-import Security from './dashboard/seguridad';
 import MyOrders from './dashboard/mis-pedidos';
-import Contact from './dashboard/historial-compras';
-import Payments from './dashboard/historial-compras';
+import Contact from './dashboard/contacto';
+import Payments from './dashboard/pagos';
 import Logout from './dashboard/seguridad';
 
 const App = () => {
@@ -18,9 +16,8 @@ const App = () => {
 
   const menuItems = [
     { id: 'personal-data', name: 'Datos Personales', icon: <UserCheck size={20} />, component: <PersonalData /> },
-    { id: 'delete-account', name: 'Eliminar cuenta', icon: <Trash2 size={20} />, component: <DeleteAccount /> },
+   
     { id: 'purchase-history', name: 'Historial de compras', icon: <ShoppingBag size={20} />, component: <PurchaseHistory /> },
-    { id: 'security', name: 'Seguridad', icon: <Shield size={20} />, component: <Security /> },
     { id: 'my-orders', name: 'Mis pedidos', icon: <Package size={20} />, component: <MyOrders /> },
     { id: 'contact', name: 'Contacto', icon: <MessageCircle size={20} />, component: <Contact /> },
     { id: 'payments', name: 'Pagos', icon: <CreditCard size={20} />, component: <Payments /> },
