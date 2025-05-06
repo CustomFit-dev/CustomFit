@@ -1,48 +1,275 @@
-*{
-  font-family: rubik;
+/* Estilos generales */
+* {
+  font-family: 'Rubik', sans-serif;
+  box-sizing: border-box;
 }
-.comment-section {
-  font-family: rubik;
-    color: white; /* Texto blanco */
-    padding: 20px;
-    border-radius: 8px;
+
+body {
+  background-color: #171a23;
+  color: white;
+}
+
+.review-section {
+  color: white;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+/* Estilos para el encabezado */
+.title-gradient {
+  color: #00a99d;
+  margin-top: 50px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+  background: linear-gradient(135deg, #00a99d 0%, #00e6d2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 15px rgba(0, 169, 157, 0.5);
+  position: relative;
+}
+
+.title-gradient::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 25%;
+  width: 50%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #00a99d, transparent);
+  border-radius: 2px;
+}
+
+/* Estilos para tarjetas de reseñas */
+.review-card {
+  background-color: #262a33 !important;
+  color: white !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+  border-radius: 16px !important;
+  height: 100%;
+  position: relative;
+  overflow: hidden !important;
+  border: 1px solid rgba(0, 169, 157, 0.2);
+}
+
+.review-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #00a99d, transparent);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.review-card:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 10px 25px rgba(0, 169, 157, 0.2) !important;
+}
+
+.review-message {
+  min-height: 80px;
+  word-wrap: break-word;
+  margin-top: 16px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.user-name {
+  color: #00e6d2;
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+.review-date {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.75rem;
+}
+
+/* Estilos para el sistema de calificación */
+.MuiRating-iconFilled {
+  color: #00a99d !important;
+}
+
+.star-icon {
+  color: #00e6d2;
+  filter: drop-shadow(0 0 2px rgba(0, 169, 157, 0.3));
+}
+
+.star-icon-empty {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.rating-display {
+  background-color: rgba(0, 169, 157, 0.1);
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 169, 157, 0.3);
+}
+
+/* Divider personalizado */
+.divider-glow {
+  margin: 16px 0 !important;
+  background: linear-gradient(90deg, transparent, rgba(0, 169, 157, 0.5), transparent) !important;
+  height: 1px !important;
+  border: none !important;
+}
+
+/* Formulario de reseñas */
+.glass-card {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.form-title {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 24px !important;
+}
+
+.form-title::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #00a99d, transparent);
+}
+
+.custom-input {
+  color: white !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 8px !important;
+}
+
+.custom-input-label {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.custom-input:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #00a99d !important;
+}
+
+.custom-input.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #00e6d2 !important;
+  border-width: 2px !important;
+  box-shadow: 0 0 10px rgba(0, 169, 157, 0.3) !important;
+}
+
+/* Botones */
+.neon-button {
+  background: linear-gradient(135deg, #00a99d 0%, #00c7bb 100%) !important;
+  color: white !important;
+  font-weight: 500 !important;
+  text-transform: none !important;
+  padding: 8px 16px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 169, 157, 0.3) !important;
+  transition: all 0.3s ease !important;
+  border: none !important;
+  letter-spacing: 0.5px !important;
+}
+
+.neon-button:hover {
+  background: linear-gradient(135deg, #00c7bb 0%, #00e6d2 100%) !important;
+  box-shadow: 0 6px 16px rgba(0, 169, 157, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+.submit-button {
+  background: linear-gradient(135deg, #00a99d 0%, #00c7bb 100%) !important;
+  padding: 10px 20px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.5px !important;
+  text-transform: none !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 12px rgba(0, 169, 157, 0.3) !important;
+}
+
+.submit-button:hover {
+  background: linear-gradient(135deg, #00c7bb 0%, #00e6d2 100%) !important;
+  box-shadow: 0 6px 16px rgba(0, 169, 157, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Paginación */
+.custom-pagination {
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.custom-pagination .MuiPaginationItem-root {
+  color: white;
+  border: 1px solid rgba(0, 169, 157, 0.3);
+  background-color: rgba(0, 169, 157, 0.1);
+}
+
+.custom-pagination .MuiPaginationItem-root.Mui-selected {
+  background-color: #00a99d;
+  color: white;
+  box-shadow: 0 0 10px rgba(0, 169, 157, 0.5);
+}
+
+/* Estado sin reseñas */
+.no-reviews {
+  background-color: rgba(0, 169, 157, 0.05);
+  padding: 40px;
+  border-radius: 16px;
+  border: 1px dashed rgba(0, 169, 157, 0.3);
+}
+
+/* Estilos responsive */
+@media (max-width: 600px) {
+  .review-section {
+    padding: 12px;
   }
   
-  .comment {
-    font-family: rubik;
-    margin-bottom: 20px;
-    border: 1px solid #444; /* Borde para los comentarios */
-    border-radius: 8px;
-    padding: 10px;
-    background-color: #333; /* Fondo más claro para comentarios *
-    /
-    
+  .review-card {
+    margin-bottom: 16px;
   }
   
-  .reply {
-    margin-top: 10px; /* Espacio entre respuestas */
-    border-left: 2px solid #888; /* Borde para resaltar respuestas */
-    padding-left: 10px;
-    font-family: rubik;
+  .title-gradient {
+    font-size: 2rem;
   }
   
-  .reply-form {
-    margin-top: 10px; /* Espacio para el formulario de respuesta */
+  .title-gradient::after {
+    left: 20%;
+    width: 60%;
   }
-  
-  /* Estilos para el nombre del usuario */
-  .comment strong {
-    font-size: 1.5rem; /* Tamaño más grande para el nombre */
-  }
-  
-  /* Estilos para la fecha y hora */
-  .comment span {
-    font-size: 0.8rem; /* Tamaño más pequeño para la fecha */
-    color: #bbb; /* Color más claro para la fecha */
-  }
-  
-  /* Estilos para el comentario */
-  .comment p {
-    font-size: 0.9rem; /* Tamaño del comentario */
-  }
-  
+}
+
+/* Efectos futuristas adicionales */
+.rating-container {
+  position: relative;
+  padding: 8px 12px;
+  background-color: rgba(0, 169, 157, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 169, 157, 0.2);
+}
+
+/* Efecto de luz para los avatares */
+.MuiAvatar-root {
+  box-shadow: 0 0 15px rgba(0, 169, 157, 0.3) !important;
+  background-image: linear-gradient(135deg, #00a99d 0%, #00e6d2 100%) !important;
+}
+
+/* Animaciones sutiles */
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 169, 157, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(0, 169, 157, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 169, 157, 0); }
+}
+
+.review-card:hover .MuiAvatar-root {
+  animation: pulse 2s infinite;
+}
+
+/* Efecto de scroll suave */
+html {
+  scroll-behavior: smooth;
+}

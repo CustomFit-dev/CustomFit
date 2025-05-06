@@ -1,208 +1,264 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button } from '@mui/material';
-import '../../scss/comen.scss'; // Asegúrate de importar el CSS
+import { 
+  TextField, 
+  Button, 
+  Grid, 
+  Card, 
+  CardContent, 
+  Typography, 
+  Divider, 
+  Box, 
+  Container, 
+  Rating, 
+  Avatar, 
+  Pagination,
+  IconButton,
+  Tooltip,
+  Fade
+} from '@mui/material';
+import PersonIcon from '@mui/icons-material/Person';
+import StarIcon from '@mui/icons-material/Star';
+import AddCommentIcon from '@mui/icons-material/AddComment';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import '../../scss/comen.scss'; // Importar el archivo SCSS para estilos personalizados
 
-const CommentSection = () => {
-  const [comments, setComments] = useState([]);
-  const [commentText, setCommentText] = useState('');
-  const [replyText, setReplyText] = useState('');
-  const [replyUserName, setReplyUserName] = useState('');
-  const [replyIndex, setReplyIndex] = useState(null);
+const ReviewSection = () => {
+  const [reviews, setReviews] = useState([]);
+  const [reviewText, setReviewText] = useState('');
   const [userName, setUserName] = useState('');
+  const [rating, setRating] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
-  const commentsPerPage = 5;
+  const [showForm, setShowForm] = useState(false);
+  const reviewsPerPage = 6;
 
-  // Cargar los comentarios desde Local Storage cuando se inicia el componente
+  // Cargar las reseñas desde Local Storage cuando se inicia el componente
   useEffect(() => {
-    const storedComments = JSON.parse(localStorage.getItem('comments')) || [];
-    setComments(storedComments);
+    const storedReviews = JSON.parse(localStorage.getItem('reviews')) || [];
+    setReviews(storedReviews);
   }, []);
 
-  // Guardar comentarios en Local Storage cada vez que se actualizan
+  // Guardar reseñas en Local Storage cada vez que se actualizan
   useEffect(() => {
-    localStorage.setItem('comments', JSON.stringify(comments));
-  }, [comments]);
+    localStorage.setItem('reviews', JSON.stringify(reviews));
+  }, [reviews]);
 
-  const handleCommentSubmit = (e) => {
+  const handleReviewSubmit = (e) => {
     e.preventDefault();
-    if (commentText.trim() && userName.trim()) {
-      const newComment = {
+    if (reviewText.trim() && userName.trim()) {
+      const newReview = {
         userId: userName,
-        text: commentText,
-        timestamp: new Date().toISOString(),
-        replies: []
-      };
-      const updatedComments = [...comments, newComment]; // Actualizamos el estado
-      setComments(updatedComments); // Guardamos en el estado
-      setCommentText('');
-      setUserName('');
-    }
-  };
-
-  const handleReplySubmit = (e, index) => {
-    e.preventDefault();
-    if (replyText.trim() && replyUserName.trim()) {
-      const updatedComments = [...comments];
-      const newReply = {
-        userId: replyUserName,
-        text: replyText,
+        text: reviewText,
+        rating: rating,
         timestamp: new Date().toISOString()
       };
-      updatedComments[index].replies.push(newReply);
-      setComments(updatedComments); // Actualizamos el estado
-      setReplyText('');
-      setReplyUserName('');
-      setReplyIndex(null);
+      const updatedReviews = [...reviews, newReview];
+      setReviews(updatedReviews);
+      setReviewText('');
+      setUserName('');
+      setRating(5);
+      setShowForm(false);
     }
   };
 
-  const handleReplyClose = () => {
-    setReplyIndex(null); // Cierra la respuesta
-  };
-
-  // Calcular los comentarios que se deben mostrar en la página actual
-  const indexOfLastComment = currentPage * commentsPerPage;
-  const indexOfFirstComment = indexOfLastComment - commentsPerPage;
-  const currentComments = comments.slice(indexOfFirstComment, indexOfLastComment);
+  // Calcular las reseñas que se deben mostrar en la página actual
+  const indexOfLastReview = currentPage * reviewsPerPage;
+  const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
+  const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
 
   // Cambiar de página
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
   };
 
-  const totalPages = Math.ceil(comments.length / commentsPerPage);
+  const totalPages = Math.ceil(reviews.length / reviewsPerPage);
+
+  // Función para generar color basado en el nombre de usuario
+  const generateUserColor = (username) => {
+    const colors = ['#00a99d', '#00d4c3', '#008b7f', '#00e6d2', '#006b63'];
+    let hash = 0;
+    for (let i = 0; i < username.length; i++) {
+      hash = username.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
+  };
+
+  // Función para obtener iniciales del nombre de usuario
+  const getUserInitials = (name) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+  };
+
+  // Función para formatear fecha
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
 
   return (
-    <div className="comment-section">
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <h1 style={{ color: '#00a99d',fontFamily: 'rubik', marginTop:'50px',}}>Comentarios de nuestros clientes</h1>
-      </div>
-
-      <form onSubmit={handleCommentSubmit}>
-        <TextField
-          id="user-name"
-          label="Ingresa tu nombre"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={userName}
-          onChange={(e) => setUserName(e.target.value)}
-          required
-          InputProps={{
-            style: { color: 'white' },
-          }}
-          InputLabelProps={{
-            style: { color: 'white' },
-          }}
-        />
-        <TextField
-          id="comment-text"
-          label="Escribe un comentario"
-          variant="outlined"
-          multiline
-          rows={4}
-          fullWidth
-          margin="normal"
-          value={commentText}
-          onChange={(e) => setCommentText(e.target.value)}
-          required
-          InputProps={{
-            style: { color: 'white' },
-          }}
-          InputLabelProps={{
-            style: { color: 'white' },
-          }}
-        />
-        <Button type="submit" variant="contained" color="primary">Enviar</Button>
-      </form>
-      <hr style={{ border: '2px solid #00a99d', margin: '20px 0' }} />
-      <h2 style={{ color: 'white',fontFamily: 'rubik' }}>Total de Comentarios: {comments.length}</h2>
-      <hr style={{ border: '2px solid #00a99d', margin: '20px 0' }} />
-
-      <div>
-        {currentComments.map((comment, index) => (
-          <div key={index} className="comment">
-            <p>
-              <strong style={{ fontSize: '1.9rem', color: '#00a99d' }}>{comment.userId}</strong>
-              <span style={{ fontSize: '0.7rem', marginLeft: '10px', margin: '8px' }}>• {new Date(comment.timestamp).toLocaleString()}</span>
-            </p>
-            <p style={{ fontSize: '0.9rem' }}>{comment.text}</p>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Button variant="outlined" onClick={() => setReplyIndex(index)}>Responder</Button>
-              {replyIndex === index && (
-                <Button variant="outlined" onClick={handleReplyClose} style={{ marginLeft: '8px' }}>X</Button>
-              )}
-            </div>
-            {replyIndex === index && (
-              <form className="reply-form" onSubmit={(e) => handleReplySubmit(e, index)}>
-                <TextField
-                  id={`reply-user-name-${index}`}
-                  label="Ingresa tu nombre"
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                  value={replyUserName}
-                  onChange={(e) => setReplyUserName(e.target.value)}
-                  required
-                  InputProps={{
-                    style: { color: 'white' },
-                  }}
-                  InputLabelProps={{
-                    style: { color: 'white' },
-                  }}
-                />
-                <TextField
-                  id={`reply-text-${index}`}
-                  label="Escribe una respuesta"
-                  variant="outlined"
-                  multiline
-                  rows={2}
-                  fullWidth
-                  margin="normal"
-                  value={replyText}
-                  onChange={(e) => setReplyText(e.target.value)}
-                  required
-                  InputProps={{
-                    style: { color: 'white' },
-                  }}
-                  InputLabelProps={{
-                    style: { color: 'white' },
-                  }}
-                />
-                <Button type="submit" variant="contained" color="primary">Enviar Respuesta</Button>
-              </form>
-            )}
-            <div style={{ paddingLeft: '20px' }}>
-              {comment.replies.map((reply, replyIndex) => (
-                <div key={replyIndex} className="reply">
-                  <p style={{ fontSize: '1rem' }}>
-                    <strong>{reply.userId}</strong>
-                    <span style={{ fontSize: '0.8rem', marginLeft: '8px', marginRight: '8px' }}>•</span>
-                    {new Date(reply.timestamp).toLocaleString()}
-                  </p>
-                  <p style={{ fontSize: '0.8rem' }}>{reply.text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Controles de paginación */}
-      <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <Button
-            key={index}
-            variant="outlined"
-            onClick={() => handlePageChange(index + 1)}
-            style={{ margin: '0 5px', backgroundColor: currentPage === index + 1 ? '#00a99d' : 'transparent', color: currentPage === index + 1 ? 'white' : 'black' }}
+    <Container maxWidth="lg" className="review-section">
+      <Box className="reviews-header">
+        <Typography variant="h3" component="h1" align="center" className="title-gradient">
+          Opiniones de nuestros clientes
+        </Typography>
+        
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={3} mt={4}>
+          <Typography variant="h6" component="h3">
+            {reviews.length} {reviews.length === 1 ? 'reseña' : 'reseñas'} publicadas
+          </Typography>
+          
+          <Button 
+            variant="contained" 
+            color="primary" 
+            startIcon={<AddCommentIcon />}
+            onClick={() => setShowForm(!showForm)}
+            className="neon-button"
           >
-            {index + 1}
+            {showForm ? 'Ocultar formulario' : 'Escribir reseña'}
           </Button>
-        ))}
-      </div>
-    </div>
+        </Box>
+      </Box>
+
+      <Fade in={showForm}>
+        <Card sx={{ mb: 5, backgroundColor: '#262a33', color: 'white', borderRadius: '16px', overflow: 'visible', display: showForm ? 'block' : 'none' }} className="glass-card">
+          <CardContent sx={{ p: 3 }}>
+            <Typography variant="h5" component="h2" gutterBottom color="primary" className="form-title">
+              Comparte tu experiencia
+            </Typography>
+            <form onSubmit={handleReviewSubmit}>
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label="Tu nombre"
+                    variant="outlined"
+                    fullWidth
+                    value={userName}
+                    onChange={(e) => setUserName(e.target.value)}
+                    required
+                    InputProps={{ className: "custom-input" }}
+                    InputLabelProps={{ className: "custom-input-label" }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <Box display="flex" alignItems="center" className="rating-container">
+                    <Typography component="legend" sx={{ mr: 2 }}>Calificación:</Typography>
+                    <Rating
+                      name="rating"
+                      value={rating}
+                      onChange={(e, newValue) => setRating(newValue)}
+                      size="large"
+                      icon={<StarIcon fontSize="inherit" className="star-icon" />}
+                      emptyIcon={<StarIcon fontSize="inherit" className="star-icon-empty" />}
+                    />
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    label="Tu opinión"
+                    variant="outlined"
+                    multiline
+                    rows={4}
+                    fullWidth
+                    value={reviewText}
+                    onChange={(e) => setReviewText(e.target.value)}
+                    required
+                    InputProps={{ className: "custom-input" }}
+                    InputLabelProps={{ className: "custom-input-label" }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button 
+                    type="submit" 
+                    variant="contained" 
+                    color="primary"
+                    className="submit-button"
+                  >
+                    Publicar reseña
+                  </Button>
+                </Grid>
+              </Grid>
+            </form>
+          </CardContent>
+        </Card>
+      </Fade>
+
+      {reviews.length === 0 ? (
+        <Box textAlign="center" py={5} className="no-reviews">
+          <VisibilityIcon sx={{ fontSize: 60, opacity: 0.5, mb: 2 }} />
+          <Typography variant="h5" gutterBottom>
+            Todavía no hay reseñas
+          </Typography>
+          <Typography variant="body1" color="textSecondary" mb={3}>
+            ¡Sé el primero en compartir tu opinión!
+          </Typography>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            onClick={() => setShowForm(true)}
+            className="neon-button"
+          >
+            Escribir una reseña
+          </Button>
+        </Box>
+      ) : (
+        <>
+          <Grid container spacing={3}>
+            {currentReviews.map((review, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <Card className="review-card" elevation={3}>
+                  <CardContent>
+                    <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
+                      <Box display="flex" alignItems="center">
+                        <Avatar 
+                          sx={{ 
+                            bgcolor: generateUserColor(review.userId),
+                            width: 50, 
+                            height: 50,
+                            fontSize: '1.2rem',
+                            fontWeight: 'bold'
+                          }}
+                        >
+                          {getUserInitials(review.userId)}
+                        </Avatar>
+                        <Box ml={2}>
+                          <Typography variant="h6" component="div" className="user-name">
+                            {review.userId}
+                          </Typography>
+                          <Typography variant="caption" className="review-date">
+                            {formatDate(review.timestamp)}
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Box className="rating-display">
+                        <Rating value={review.rating} readOnly precision={0.5} size="small" />
+                      </Box>
+                    </Box>
+                    
+                    <Divider className="divider-glow" />
+                    
+                    <Typography variant="body1" component="p" className="review-message">
+                      {review.text}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+
+          {totalPages > 1 && (
+            <Box display="flex" justifyContent="center" mt={4}>
+              <Pagination
+                count={totalPages}
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+                size="large"
+                className="custom-pagination"
+              />
+            </Box>
+          )}
+        </>
+      )}
+    </Container>
   );
 };
 
-export default CommentSection;
+export default ReviewSection;
