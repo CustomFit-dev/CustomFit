@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../../scss/iniciar.scss';
-import Nav from '../modules/Nav';
+import '../../scss/iniciar.scss'; // Assuming you'll integrate the new CSS here
 
 const Form_I = () => {
   const [correoElectronico, setCorreoElectronico] = useState('');
@@ -38,6 +37,13 @@ const Form_I = () => {
 
   return (
     <div className="login-container">
+      {/* Background particles */}
+      <div className="bg-particles">
+        <div className="particle particle-1"></div>
+        <div className="particle particle-2"></div>
+        <div className="particle particle-3"></div>
+      </div>
+      
       <div className="login-card">
         <div className="close-button">
           <button onClick={() => navigate('/login')}>

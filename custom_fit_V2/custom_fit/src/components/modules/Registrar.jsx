@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGoogle, faFacebook, faGithub } from '@fortawesome/free-brands-svg-icons';
 import { faMicrosoft } from '@fortawesome/free-brands-svg-icons';
-import '../../scss/form.scss';
+import '../../scss/form.scss'; // Assuming you'll integrate the new CSS here
 import {
     validateApe,
     validatecel,
@@ -89,6 +89,13 @@ const Form_R = () => {
     
     return (
         <div className="register-container">
+            {/* Background particles */}
+            <div className="bg-particles">
+                <div className="particle particle-1"></div>
+                <div className="particle particle-2"></div>
+                <div className="particle particle-3"></div>
+            </div>
+            
             <div className="register-card">
                 <div className="close-button">
                     <button onClick={() => navigate('/login')}>
