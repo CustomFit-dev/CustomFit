@@ -7,7 +7,7 @@ import Sec2 from './modules/sec2_l';
 import Sec3 from './modules/sec3_l';
 import Footer from './modules/footer';
 import Sec4 from './modules/comen';
-import Floating from './modules/FloatingButton';
+import Floating from './modules/FloatingButton_l';
 
 
 const Home = () => {

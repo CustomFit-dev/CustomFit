@@ -55,21 +55,25 @@ const ChatbotModal = ({ open, handleClose }) => {
               '_blank'
             );
             resetChat();
-            handleClose();
+            handleClose(); // Opcional: cierra el modal
           }, 1500);
           break;
         case '2':
           botReply =
-            'Gracias por tu interés. Por favor llena el formulario en https://camishub.com/proveedores.';
+            'Gracias por tu interés. Por favor llena el formulario en https://camishub.com/proveedores para iniciar el proceso.';
           break;
         case '3':
+          botReply =
+            '¿Qué tipo de diseño te interesa?\n1. Subir mi propio diseño\n2. Usar plantillas\n3. Ver ejemplos';
+          nextContext = 'design-options';
+          break;
         case '4':
-          botReply = 'Perfecto. Sin embargo, primero necesitas iniciar sesión para continuar. Redirigiéndote al login...';
+          botReply = 'Redirigiéndote al catálogo...';
           setTimeout(() => {
-            navigate('/iniciar');
+            navigate('/Store'); // Redirige directamente al catálogo
             resetChat();
-            handleClose();
-          }, 2500);
+            handleClose(); // Opcional
+          }, 1500);
           break;
         default:
           botReply = 'No entendí esa opción. Por favor responde con un número del 1 al 4.';
@@ -79,7 +83,7 @@ const ChatbotModal = ({ open, handleClose }) => {
         case '1':
           botReply = '¡Perfecto! Redirigiéndote al diseñador para subir tu diseño...';
           setTimeout(() => {
-            navigate('/Personalizar');
+            navigate('/Personalizar'); // Redirige directamente a la página de personalizar
             resetChat();
             handleClose();
           }, 1500);
@@ -87,7 +91,7 @@ const ChatbotModal = ({ open, handleClose }) => {
         case '2':
           botReply = 'Mostrando plantillas disponibles...';
           setTimeout(() => {
-            navigate('/Personalizar?plantillas=true');
+            navigate('/Personalizar?plantillas=true'); // Redirige con el parámetro de plantillas
             resetChat();
             handleClose();
           }, 1500);
@@ -95,7 +99,7 @@ const ChatbotModal = ({ open, handleClose }) => {
         case '3':
           botReply = 'Mostrando ejemplos de camisetas...';
           setTimeout(() => {
-            navigate('/ejemplos');
+            navigate('/ejemplos'); // Redirige directamente a la página de ejemplos
             resetChat();
             handleClose();
           }, 1500);

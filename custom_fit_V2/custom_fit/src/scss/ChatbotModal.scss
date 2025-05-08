@@ -1,68 +1,157 @@
-    .chatbot-box {
-        position: absolute !important;
-        bottom: 80px !important;
-        right: 20px !important;
-        width: 300px !important;
-        height: 400px !important;
-        background: white !important;
-        color: black !important;
-        border-radius: 10px !important;
-        box-shadow: 0px 4px 20px rgba(0,0,0,0.2) !important;
-        display: flex !important;
-        flex-direction: column !important;
-        overflow: hidden !important; 
+.chatbot-box {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    width: 380px;
+    height: 500px;
+    background-color: #1e1e2f;
+    color: #f0f0f0;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.75);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+    animation: fadeInUp 0.4s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
     }
-    
-    .chatbot-header {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        background-color: #007bff ; /* Azul del botón principal */
-        color: white !important;
-        padding: 10px !important;
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
-    
-    .chatbot-title {
-        margin: 0;
+  }
+  
+  .chatbot-header {
+    background-color: #2c2c3e;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid #3c3c55;
+  }
+  
+  .chatbot-title {
+    font-weight: bold;
+    color: #00e1ff;
+    font-size: 1.1rem;
+  }
+  
+  .close-button {
+    color: #bbb;
+    transition: color 0.2s ease;
+    &:hover {
+      color: #ff4d4d;
     }
-    
-    .close-button {
-        color: rgb(0, 0, 0);
-        margin: 0px auto !important;
+  }
+  
+  .chatbot-body {
+    padding: 18px;
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    background-color: #1e1e2f;
+    scrollbar-width: thin;
+    scrollbar-color: #444 #1e1e2f;
+  }
+  
+  .chatbot-body::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .chatbot-body::-webkit-scrollbar-track {
+    background: #1e1e2f;
+  }
+  
+  .chatbot-body::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 6px;
+    &:hover {
+      background-color: #888;
     }
-    
-    .chatbot-body {
-        flex: 1;
-        padding: 10px;
-        overflow-y: auto;
-        color: black !important;
+  }
+  
+  .bot-message,
+  .user-message {
+    padding: 12px 16px;
+    border-radius: 16px;
+    max-width: 80%;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
     }
-    
-    .chatbot-footer {
-        display: flex;
-        padding: 10px;
-        background: white;
-        border-top: 1px solid #ddd;
-        color: black !important;
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
-    
-    .chatbot-input {
-        flex: 1;
-        margin-right: 5px;
-        color: black !important;
+  }
+  
+  .bot-message {
+    background-color: #2f2f4f;
+    align-self: flex-start;
+    color: #e0e0e0;
+  }
+  
+  .user-message {
+    background-color: #0077c2;
+    align-self: flex-end;
+    color: #fff;
+  }
+  
+  .chatbot-footer {
+    display: flex;
+    gap: 10px;
+    padding: 14px 18px;
+    background-color: #2c2c3e;
+    border-top: 1px solid #3c3c55;
+  }
+  
+  .chatbot-input {
+    flex: 1;
+  
+    input {
+      color: #f0f0f0;
+      background-color: #2a2a40;
+      padding: 10px;
+      border-radius: 8px;
+      transition: border-color 0.2s;
     }
-    
-    .send-button {
-        min-width: 70px;
+  
+    fieldset {
+      border-color: #444 !important;
     }
-    
-    /* Responsive para móviles */
-    @media (max-width: 500px) {
-        .chatbot-box {
-        width: 90%;
-        height: 400px;
-        right: 5%;
-        bottom: 80px;
-        }
+  
+    &:hover fieldset {
+      border-color: #00e1ff !important;
     }
-    
+  }
+  
+  .send-button {
+    background-color: #00bcd4;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  
+    &:hover {
+      background-color: #0097a7;
+      transform: scale(1.05);
+    }
+  
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+  
