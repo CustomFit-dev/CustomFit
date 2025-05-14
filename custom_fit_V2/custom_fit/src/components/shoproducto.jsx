@@ -85,5 +85,5 @@ const Overlay = styled.div`
     display: flex;
     justify-content: center; /* Centra los elementos horizontalmente */
     align-items: center; /* Centra los elementos verticalmente */
-    z-index: 999; /* Asegura que esté encima de otros elementos */
+    z-index: 9999; /* Asegura que esté encima de otros elementos */
 `;

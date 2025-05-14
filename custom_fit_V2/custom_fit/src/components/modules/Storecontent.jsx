@@ -11,11 +11,127 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Schopcar from '../shoproducto';
 import VerC from '../modules/verCamisa';
 
-
-
 const Shop = () => {
-  const [estadoModal1, cambiarEsadoModal1] = useState(false);
-  const [estadoModal2, cambiarEstadoModal2] = useState(false);
+  const [modalData, setModalData] = useState({
+    detallesVisible: false,
+    verCamisaVisible: false,
+    productoSeleccionado: null
+  });
+  
+  // Datos de productos
+  const productos = [
+    {
+      id: 1,
+      imagen: camisa1,
+      titulo: "Camiseta Beige",
+      descripcion: "Camiseta relajada con un diseño minimalista que combina un paisaje de atardecer rojo detrás de una palmera negra, ideal para estilos casuales.",
+      precio: 30000
+    },
+    {
+      id: 2,
+      imagen: camisa2,
+      titulo: "Camiseta Rosa",
+      descripcion: "Diseño sutil que presenta una ilustración en línea de palmeras y un horizonte, perfecta para un look fresco y ligero.",
+      precio: 30000
+    },
+    {
+      id: 3,
+      imagen: camisa3,
+      titulo: "Camiseta Negra",
+      descripcion: "Diseño moderno y elegante, con una palmera destacada dentro de un marco geométrico blanco, para estilos urbanos.",
+      precio: 30000
+    },
+    {
+      id: 4,
+      imagen: camisa5,
+      titulo: "Camiseta Blanca",
+      descripcion: "Presenta un estampado vibrante de palmeras y tonos cálidos, evocando un ambiente tropical. Perfecta para un día al aire libre.",
+      precio: 30000
+    },
+    {
+      id: 5,
+      imagen: camisa4,
+      titulo: "Camiseta Negra",
+      descripcion: "Diseño discreto con texto impreso en el centro, dando un toque misterioso y casual.",
+      precio: 30000
+    },
+    {
+      id: 6,
+      imagen: camisa6,
+      titulo: "Camiseta Beige",
+      descripcion: "Diseño sencillo y natural con una gran palmera negra centrada, ideal para un estilo relajado y minimalista.",
+      precio: 30000
+    }
+  ];
+
+  // Manejadores de modales
+  const abrirModalDetalles = (producto) => {
+    setModalData({
+      detallesVisible: true,
+      verCamisaVisible: false,
+      productoSeleccionado: producto
+    });
+  };
+
+  const abrirModalVerCamisa = (producto) => {
+    setModalData({
+      detallesVisible: false,
+      verCamisaVisible: true,
+      productoSeleccionado: producto
+    });
+  };
+
+  const cerrarModales = () => {
+    setModalData({
+      detallesVisible: false,
+      verCamisaVisible: false,
+      productoSeleccionado: null
+    });
+  };
+
+  // Función para renderizar tarjetas de producto
+  const renderizarProducto = (producto) => {
+    return (
+      <div className="col-12 col-sm-6 col-md-4 mb-4" key={producto.id}>
+        <div className="card" style={{ width: '100%' }}>
+          <div className="image-container">
+            <img 
+              src={producto.imagen} 
+              className="card-img-top" 
+              alt={producto.titulo} 
+              style={{ width: '100%', height: '250px', objectFit: 'contain' }} 
+            />
+            <div className="hover-buttons">
+              <button 
+                className="btn-11 btn-11" 
+                onClick={() => abrirModalDetalles(producto)}
+              >
+                Ver Detalles
+              </button>
+              <button 
+                className="btn-22 btn-22" 
+                onClick={() => abrirModalVerCamisa(producto)}
+              >
+                Ver Camisa
+              </button>
+              <button className="btn-33 btn-33">Comprar Ahora</button>
+            </div>
+          </div>
+          <div className="card-body">
+            <h5 className="card-title">{producto.titulo}</h5>
+            <p className="card-text">{producto.descripcion}</p>
+            <div className='dotos'>
+              <button className="precio btn-primary">${producto.precio.toLocaleString()}</button>
+              <button className='carritosss'>
+                <ShoppingCartIcon className='logocar'/>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className='container-fluid'>
       <div className="row">
@@ -24,170 +140,28 @@ const Shop = () => {
           <p className="sub1">Explora Nuestra Amplia Gama de Productos y Encuentra lo que Necesitas</p>
         </div>
 
-        {/* Contenedor de las tarjetas */}
+        {/* Primera fila de productos */}
         <div className="row cajasss">
-          <div className="col-12 col-sm-6 col-md-4 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <div className="image-container">
-                <img src={camisa1} className="card-img-top" alt="Camiseta Sencilla" style={{ width: '100%', height: '250px', objectFit: 'contain' }} />
-                <div className="hover-buttons">
-                  <button className="btn-11 btn-11" onClick={() => cambiarEsadoModal1(!estadoModal1)}>Ver Detalles</button>
-                  <button className="btn-22 btn-22" onClick={() => cambiarEstadoModal2(!estadoModal2)} >Ver Camisa</button>
-                  <button className="btn-33 btn-33" >Comprar Ahora</button>
-                </div>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">Camiseta Beige</h5>
-                <p className="card-text">
-                camiseta relajada con un diseño minimalista que combina un paisaje de atardecer rojo detrás de una palmera negra, ideal para estilos casuales.
-                </p>
-                <div className='dotos'>
-                  <button className="precio btn-primary">$30.000</button>
-                  <button className='carritosss'>
-                    <ShoppingCartIcon className='logocar'/>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Tarjetas adicionales */}
-          <div className="col-12 col-sm-6 col-md-4 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <div className="image-container">
-                <img src={camisa2} className="card-img-top" alt="..." style={{ width: '100%', height: '250px', objectFit: 'contain' }} />
-                <div className="hover-buttons">
-                <button className="btn-11 btn-11">Ver Detalles</button>
-                  <button className="btn-22 btn-22">Ver Camisa</button>
-                  <button className="btn-33 btn-33">Comprar Ahora</button>
-                </div>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">Camiseta Rosa</h5>
-                <p className="card-text">
-                Diseño sutil que presenta una ilustración en línea de palmeras y un horizonte, perfecta para un look fresco y ligero.
-                </p>
-                <div className='dotos'>
-                  <button className="precio btn-primary">$30.000</button>
-                  <button className='carritosss'>
-                    <ShoppingCartIcon className='logocar'/>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-12 col-sm-6 col-md-4 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <div className="image-container">
-                <img src={camisa3} className="card-img-top" alt="..." style={{ width: '100%', height: '250px', objectFit: 'contain' }} />
-                <div className="hover-buttons">
-                <button className="btn-11 btn-11">Ver Detalles</button>
-                  <button className="btn-22 btn-22">Ver Camisa</button>
-                  <button className="btn-33 btn-33">Comprar Ahora</button>
-                </div>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">Camiseta Negra</h5>
-                <p className="card-text">
-                Diseño moderno y elegante, con una palmera destacada dentro de un marco geométrico blanco, para estilos urbanos.
-                </p>
-                <div className='dotos'>
-                  <button className="precio btn-primary">$30.000</button>
-                  <button className='carritosss'>
-                    <ShoppingCartIcon className='logocar'/>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          {productos.slice(0, 3).map(renderizarProducto)}
         </div>
 
-        {/* Otro conjunto de tarjetas */}
+        {/* Segunda fila de productos */}
         <div className="row cajasss">
-          <div className="col-12 col-sm-6 col-md-4 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <div className="image-container">
-                <img src={camisa5} className="card-img-top" alt="..." style={{ width: '100%', height: '250px', objectFit: 'contain' }} />
-                <div className="hover-buttons">
-                <button className="btn-11 btn-11">Ver Detalles</button>
-                  <button className="btn-22 btn-22">Ver Camisa</button>
-                  <button className="btn-33 btn-33">Comprar Ahora</button>
-                </div>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">Camiseta Blanca</h5>
-                <p className="card-text">
-                Presenta un estampado vibrante de palmeras y tonos cálidos, evocando un ambiente tropical. Perfecta para un día al aire libre.
-                </p>
-                <div className='dotos'>
-                  <button className="precio btn-primary">$30.000</button>
-                  <button className='carritosss'>
-                    <ShoppingCartIcon className='logocar'/>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-12 col-sm-6 col-md-4 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <div className="image-container">
-                <img src={camisa4} className="card-img-top" alt="..." style={{ width: '100%', height: '250px', objectFit: 'contain' }} />
-                <div className="hover-buttons">
-                <button className="btn-11 btn-11">Ver Detalles</button>
-                  <button className="btn-22 btn-22">Ver Camisa</button>
-                  <button className="btn-33 btn-33">Comprar Ahora</button>
-                </div>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">Camiseta Negra</h5>
-                <p className="card-text">
-                Diseño discreto con texto impreso en el centro, dando un toque misterioso y casual.
-                </p>
-                <div className='dotos'>
-                  <button className="precio btn-primary">$30.000</button>
-                  <button className='carritosss'>
-                    <ShoppingCartIcon className='logocar'/>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="col-12 col-sm-6 col-md-4 mb-4">
-            <div className="card" style={{ width: '100%' }}>
-              <div className="image-container">
-                <img src={camisa6} className="card-img-top" alt="..." style={{ width: '100%', height: '250px', objectFit: 'contain' }} />
-                <div className="hover-buttons">
-                <button className="btn-11 btn-11">Ver Detalles</button>
-                  <button className="btn-22 btn-22">Ver Camisa</button>
-                  <button className="btn-33 btn-33">Comprar Ahora</button>
-                </div>
-              </div>
-              <div className="card-body">
-                <h5 className="card-title">Camiseta Beige </h5>
-                <p className="card-text">
-                Diseño sencillo y natural con una gran palmera negra centrada, ideal para un estilo relajado y minimalista.
-                </p>
-                <div className='dotos'>
-                  <button className="precio btn-primary">$30.000</button>
-                  <button className='carritosss'>
-                    <ShoppingCartIcon className='logocar'/>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          {productos.slice(3, 6).map(renderizarProducto)}
         </div>
       </div>
+
+      {/* Modales */}
       <Schopcar
-        estado={estadoModal1}
-        cambiarEstado={cambiarEsadoModal1}
+        estado={modalData.detallesVisible}
+        cambiarEstado={cerrarModales}
+        producto={modalData.productoSeleccionado}
       />
+      
       <VerC 
-      estado={estadoModal2} 
-      cambiarEstado={cambiarEstadoModal2}
+        estado={modalData.verCamisaVisible}
+        cambiarEstado={cerrarModales}
+        producto={modalData.productoSeleccionado}
       />
     </div>
   );
