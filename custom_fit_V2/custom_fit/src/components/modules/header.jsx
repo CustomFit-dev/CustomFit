@@ -18,6 +18,7 @@ import Form from './Iniciar';
 import RegisterForm from './Registrar'; 
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './Themes';
+import ReactDOM from 'react-dom';
 
 const pages = [
   { name: 'Inicio', route: '/Home' },
@@ -114,12 +115,13 @@ function Header() {
           </Container>
         </AppBar>
 
-        {isFormVisible && (
+                {isFormVisible && ReactDOM.createPortal(
           <div className="overlay">
             <div className="form-container">
               {formType === 'login' ? <Form onClose={handleCloseForm} /> : <RegisterForm onClose={handleCloseForm} />}
             </div>
-          </div>
+          </div>,
+          document.body
         )}
       </header>
     </ThemeProvider>

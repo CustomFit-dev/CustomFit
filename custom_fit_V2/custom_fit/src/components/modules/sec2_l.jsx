@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import '../../scss/sec2_l.scss';
+import Video from '../../img/video/video.mp4';
 
 const VideoPlayer = () => {
   const videoRef = useRef(null);
@@ -22,10 +23,17 @@ const VideoPlayer = () => {
     if (videoRef.current) {
       if (isPlaying) {
         videoRef.current.pause();
+        setIsPlaying(false);
       } else {
-        videoRef.current.play();
+        videoRef.current
+          .play()
+          .then(() => {
+            setIsPlaying(true);
+          })
+          .catch((err) => {
+            console.error("Error al intentar reproducir el video", err);
+          });
       }
-      setIsPlaying(!isPlaying);
     }
   };
 
@@ -116,7 +124,7 @@ const VideoPlayer = () => {
         className="main-video"
         poster="/api/placeholder/1280/720"
       >
-        <source src="tutorial-personalizar-camiseta.mp4" type="video/mp4" />
+        <source src={Video} type="video/mp4" />
         Tu navegador no soporta la reproducción de videos.
       </video>
       

@@ -1,4 +1,3 @@
-// src/components/Form.jsx
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from './authcontext'; // Asegúrate de la ruta correcta
@@ -7,25 +6,6 @@ import axios from 'axios';
 import styled from 'styled-components';
 
 const StyledWrapper = styled.div`
-  /* Tus estilos aquí */
-  .img {
-    width: 90%;
-    height: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
-    margin-bottom: 10px;
-    margin-left: 40px;
-  }
-
-  .img img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
-  }
-
   .form {
     --black: #000000;
     --ch-black: #141414;
@@ -84,7 +64,7 @@ const StyledWrapper = styled.div`
     font-size: 1.5rem;
     border-radius: 5px;
     border: 2px solid #17BEBB;
-    background-color: transparent ;
+    background-color: transparent;
     color: white;
   }
 
@@ -211,9 +191,6 @@ const Form = () => {
         <span className="close" onClick={() => navigate(-1)}>X</span> {/* Agregar funcionalidad para cerrar el formulario */}
 
         <div className="info">
-          <div className='img'>
-            <img src={require('../../img/verifi.png')} alt="Verificación" />
-          </div>
           <span className="title">Ingresa el código</span>
           <p className="description">
             Hemos enviado un código de verificación a tu Correo Electrónico.
