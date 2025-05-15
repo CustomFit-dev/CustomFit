@@ -1,0 +1,459 @@
+    /* CrudStyles.css - Estilos mejorados para el CRUD de Usuarios */
+
+    /* Variables de colores y fuentes */
+    :root {
+    --primary-color: #3f51b5;
+    --primary-dark: #303f9f;
+    --primary-light: #c5cae9;
+    --accent-color: #ff4081;
+    --error-color: #f44336;
+    --success-color: #4caf50;
+    --text-primary: #212121;
+    --text-secondary: #757575;
+    --divider-color: #e0e0e0;
+    --background-color: #f5f7fa;
+    --card-color: #000000;
+    --transition-speed: 0.3s;
+    --border-radius: 12px;
+    --box-shadow: 0 8px 24px rgba(149, 157, 165, 0.2);
+    }
+
+    /* Estilo global de la página */
+    .crud-page {
+    background-color: var(--background-color);
+    min-height: 100vh;
+    padding: 32px;
+    box-sizing: border-box;
+    font-family: 'Roboto', 'Segoe UI', sans-serif;
+    }
+
+    /* Contenedor principal */
+    .crud-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0;
+    background-color: transparent;
+    }
+
+    /* Cabecera de la página */
+    .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--divider-color);
+    }
+
+    .page-title {
+    font-size: 2.5rem !important;
+    font-weight: 700 !important;
+    color: var(--text-primary);
+    margin: 0;
+    background: linear-gradient(120deg, var(--primary-color), var(--primary-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    }
+
+    .back-button {
+    transition: all var(--transition-speed);
+    border-radius: 50px;
+    padding: 8px 24px;
+    text-transform: none;
+    font-weight: 500;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .back-button:hover {
+    transform: translateX(-4px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Contenedor de la tabla */
+    .table-container {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    padding: 24px;
+    margin-bottom: 32px;
+    background-color: var(--card-color);
+    box-shadow: var(--box-shadow);
+    transition: all var(--transition-speed);
+    }
+
+    .table-container:hover {
+    box-shadow: 0 12px 28px rgba(149, 157, 165, 0.3);
+    }
+
+    /* Barra de herramientas */
+    .table-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+    }
+
+    .search-field {
+    flex-grow: 1;
+    max-width: 450px;
+    }
+
+    .search-field div {
+    border-radius: 50px;
+    overflow: hidden;
+    background-color: #f1f3f9;
+    transition: all var(--transition-speed);
+    }
+
+    .search-field div:hover, 
+    .search-field div:focus-within {
+    background-color: #e8eaf6;
+    box-shadow: 0 3px 8px rgba(63, 81, 181, 0.1);
+    }
+
+    .search-field input {
+    padding: 14px 16px;
+    }
+
+    .actions-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    }
+
+    .add-button {
+    border-radius: 50px;
+    padding: 8px 24px;
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+    box-shadow: 0 4px 10px rgba(63, 81, 181, 0.3);
+    text-transform: none;
+    font-weight: 500;
+    transition: all var(--transition-speed);
+    }
+
+    .add-button:hover {
+    box-shadow: 0 6px 14px rgba(63, 81, 181, 0.4);
+    transform: translateY(-2px);
+    }
+
+    /* Tabla de datos */
+    .data-table {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-bottom: 24px;
+    border: 1px solid var(--divider-color);
+    }
+
+    .header-row {
+    background-color: #f5f7ff;
+    }
+
+    .header-cell {
+    font-weight: 600 !important;
+    color: var(--primary-dark) !important;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 16px !important;
+    white-space: nowrap;
+    border-bottom: 2px solid var(--primary-light) !important;
+    }
+
+    .data-row {
+    transition: background-color var(--transition-speed);
+    }
+
+    .data-row:hover {
+    background-color: #f5f7ff !important;
+    }
+
+    .even-row {
+    background-color: #ffffff;
+    }
+
+    .odd-row {
+    background-color: #fafbff;
+    }
+
+    .data-cell {
+    padding: 16px !important;
+    border-bottom: 1px solid var(--divider-color) !important;
+    }
+
+    /* Botones de acciones */
+    .edit-button, .delete-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    transition: all var(--transition-speed);
+    }
+
+    .edit-button {
+    background-color: #e8f0fe;
+    color: var(--primary-color) !important;
+    }
+
+    .edit-button:hover {
+    background-color: #c5cae9;
+    transform: scale(1.1);
+    }
+
+    .delete-button {
+    background-color: #feebee;
+    color: var(--error-color) !important;
+    }
+
+    .delete-button:hover {
+    background-color: #ffcdd2;
+    transform: scale(1.1);
+    }
+
+    /* Paginación */
+    .mobile-pagination {
+    display: flex;
+    justify-content: center;
+    padding: 16px 0;
+    }
+
+    /* Botón flotante para agregar en móviles */
+    .floating-add-button {
+    position: fixed !important;
+    bottom: 32px;
+    right: 32px;
+    width: 64px !important;
+    height: 64px !important;
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-dark)) !important;
+    box-shadow: 0 6px 16px rgba(63, 81, 181, 0.4) !important;
+    transition: all var(--transition-speed) !important;
+    }
+
+    .floating-add-button:hover {
+    transform: scale(1.1) rotate(90deg);
+    box-shadow: 0 8px 20px rgba(63, 81, 181, 0.5) !important;
+    }
+
+    /* Diálogos */
+    .dialog-container .MuiPaper-root {
+    border-radius: 20px;
+    overflow: hidden;
+    }
+
+    .dialog-header {
+    background-color: #f5f7ff;
+    padding: 16px 24px !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    }
+
+    .dialog-header h6 {
+    font-weight: 600;
+    color: var(--primary-dark);
+    }
+
+    .dialog-close-button {
+    position: absolute;
+    right: 16px;
+    top: 8px;
+    color: var(--text-secondary);
+    }
+
+    .dialog-content {
+    padding: 24px 24px 8px !important;
+    }
+
+    .form-field {
+    margin-bottom: 16px !important;
+    }
+
+    .form-field label {
+    font-weight: 500;
+    }
+
+    .form-field input, .form-field .MuiOutlinedInput-root {
+    border-radius: 8px;
+    }
+
+    .dialog-actions {
+    padding: 16px 24px 24px !important;
+    justify-content: flex-end;
+    gap: 16px;
+    }
+
+    .cancel-button {
+    border-radius: 8px;
+    text-transform: none;
+    font-weight: 500;
+    padding: 6px 20px;
+    }
+
+    .save-button {
+    border-radius: 8px;
+    text-transform: none;
+    font-weight: 500;
+    padding: 6px 24px;
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-dark));
+    box-shadow: 0 3px 8px rgba(63, 81, 181, 0.3);
+    transition: all var(--transition-speed);
+    }
+
+    .save-button:hover {
+    box-shadow: 0 5px 12px rgba(63, 81, 181, 0.4);
+    transform: translateY(-2px);
+    }
+
+    /* Diálogo de eliminación */
+    .delete-dialog .MuiPaper-root {
+    border-radius: 20px;
+    overflow: hidden;
+    }
+
+    .delete-dialog-header {
+    background-color: #feebee;
+    color: var(--error-color);
+    font-weight: 600;
+    padding: 16px 24px !important;
+    }
+
+    .delete-dialog-content {
+    padding: 24px !important;
+    }
+
+    .delete-dialog-actions {
+    padding: 16px 24px 24px !important;
+    justify-content: flex-end;
+    gap: 16px;
+    }
+
+    .delete-confirm-button {
+    border-radius: 8px;
+    background-color: var(--error-color);
+    text-transform: none;
+    font-weight: 500;
+    padding: 6px 24px;
+    box-shadow: 0 3px 8px rgba(244, 67, 54, 0.3);
+    transition: all var(--transition-speed);
+    }
+
+    .delete-confirm-button:hover {
+    background-color: #d32f2f;
+    box-shadow: 0 5px 12px rgba(244, 67, 54, 0.4);
+    }
+
+    /* Notificaciones */
+    .notification-snackbar {
+    margin-bottom: 16px;
+    }
+
+    .notification-alert {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Efectos adicionales */
+    .MuiPaginationItem-root {
+    border-radius: 8px !important;
+    transition: all var(--transition-speed);
+    }
+
+    .MuiPaginationItem-root.Mui-selected {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    box-shadow: 0 2px 8px rgba(63, 81, 181, 0.3);
+    }
+
+    .MuiPaginationItem-root:hover {
+    background-color: var(--primary-light) !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+    .crud-page {
+        padding: 16px;
+    }
+    
+    .page-title {
+        font-size: 2rem !important;
+    }
+    
+    .table-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-field {
+        max-width: none;
+    }
+    
+    .actions-container {
+        justify-content: center;
+    }
+    
+    .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    
+    .back-button {
+        align-self: flex-start;
+    }
+    }
+
+    @media (max-width: 600px) {
+    .crud-page {
+        padding: 12px;
+    }
+    
+    .table-container {
+        padding: 16px;
+        border-radius: var(--border-radius);
+    }
+    
+    .page-title {
+        font-size: 1.75rem !important;
+    }
+    
+    .header-cell, .data-cell {
+        padding: 12px 8px !important;
+    }
+    }
+
+    /* Animaciones */
+    @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+    }
+
+    .crud-container {
+    animation: fadeIn 0.5s ease-out;
+    }
+
+    /* Estilos para las celdas con estados */
+    .status-active {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #388e3c;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-weight: 500;
+    display: inline-block;
+    }
+
+    .status-inactive {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #d32f2f;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-weight: 500;
+    display: inline-block;
+    }
+
+    .status-pending {
+    background-color: rgba(255, 152, 0, 0.1);
+    color: #f57c00;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-weight: 500;
+    display: inline-block;
+    }

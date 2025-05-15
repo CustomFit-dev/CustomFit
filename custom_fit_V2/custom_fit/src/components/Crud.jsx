@@ -17,9 +17,30 @@ import {
   TableRow,
   Typography,
   IconButton,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Grid,
+  Paper,
+  useMediaQuery,
+  Tooltip,
+  Fab,
+  Alert,
+  Snackbar
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete'; 
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import SaveIcon from '@mui/icons-material/Save';
 import { useNavigate } from 'react-router-dom';
 import { fetchData } from './modules/Datos';
 import { MRT_Localization_ES } from 'material-react-table/locales/es';
@@ -27,9 +48,30 @@ import { ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import { flexRender } from '@tanstack/react-table';
 import theme from './modules/Themes';
+import '../scss/admin/crud.scss';
 
 const Crud = () => {
   const [userProfiles, setUserProfiles] = useState([]);
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [userToEdit, setUserToEdit] = useState(null);
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [formData, setFormData] = useState({
+    nombres: '',
+    apellidos: '',
+    correo_electronico: '',
+    nombre_usuario: '',
+    rol: ''
+  });
+  const [roles, setRoles] = useState([]);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'success'
+  });
+  
+  const isMobile = useMediaQuery('(max-width:600px)');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,6 +79,10 @@ const Crud = () => {
       const data = await fetchData();
       console.log(data);
       setUserProfiles(data);
+      
+      // Extraer roles únicos para el selector
+      const uniqueRoles = [...new Set(data.map(user => user.rol?.nombrerol))].filter(Boolean);
+      setRoles(uniqueRoles.map(rol => ({ id: rol, nombre: rol })));
     };
 
     fetchUserProfiles();
@@ -61,71 +107,222 @@ const Crud = () => {
     return cookieValue;
   }
 
-const handleDeleteUser = async (iduser) => {
-  try {
-    const response = await axios.delete(`http://localhost:8000/api/delete-user/${iduser}/`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
+  const handleOpenAddModal = () => {
+    setFormData({
+      nombres: '',
+      apellidos: '',
+      correo_electronico: '',
+      nombre_usuario: '',
+      rol: ''
     });
+    setOpenAddModal(true);
+  };
 
-    if (response.status === 204) {
-      // User deleted successfully
-      setUserProfiles((prevProfiles) =>
-        prevProfiles.filter((profile) => profile.id !== iduser)
-      );
-    } else {
-      throw new Error(`Unexpected response status: ${response.status}`);
+  const handleCloseAddModal = () => {
+    setOpenAddModal(false);
+  };
+
+  const handleOpenEditModal = (user) => {
+    setUserToEdit(user);
+    setFormData({
+      nombres: user.nombres,
+      apellidos: user.apellidos,
+      correo_electronico: user.correo_electronico,
+      nombre_usuario: user.nombre_usuario,
+      rol: user.rol?.nombrerol || ''
+    });
+    setOpenEditModal(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setOpenEditModal(false);
+    setUserToEdit(null);
+  };
+
+  const handleOpenDeleteDialog = (user) => {
+    setUserToDelete(user);
+    setOpenDeleteDialog(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
+    setUserToDelete(null);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
+
+  const handleAddUser = async () => {
+    try {
+      const response = await axios.post('http://localhost:8000/api/create-user/', formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 201) {
+        // Actualizar la lista de usuarios
+        const updatedUsers = await fetchData();
+        setUserProfiles(updatedUsers);
+        setOpenAddModal(false);
+        setSnackbar({
+          open: true,
+          message: 'Usuario agregado correctamente',
+          severity: 'success'
+        });
+      }
+    } catch (error) {
+      console.error('Error al agregar usuario:', error.response?.data || error.message);
+      setSnackbar({
+        open: true,
+        message: 'Error al agregar usuario',
+        severity: 'error'
+      });
     }
-  } catch (error) {
-    console.error('Error al borrar el usuario:', error.response?.data || error.message);
-  }
-};
+  };
 
+  const handleEditUser = async () => {
+    if (!userToEdit) return;
+    
+    try {
+      const response = await axios.put(`http://localhost:8000/api/update-user/${userToEdit.id}/`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 200) {
+        // Actualizar la lista de usuarios
+        const updatedUsers = await fetchData();
+        setUserProfiles(updatedUsers);
+        handleCloseEditModal();
+        setSnackbar({
+          open: true,
+          message: 'Usuario actualizado correctamente',
+          severity: 'success'
+        });
+      }
+    } catch (error) {
+      console.error('Error al actualizar usuario:', error.response?.data || error.message);
+      setSnackbar({
+        open: true,
+        message: 'Error al actualizar usuario',
+        severity: 'error'
+      });
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    if (!userToDelete) return;
+    
+    try {
+      const response = await axios.delete(`http://localhost:8000/api/delete-user/${userToDelete.id}/`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.status === 204) {
+        // Usuario eliminado correctamente
+        setUserProfiles((prevProfiles) =>
+          prevProfiles.filter((profile) => profile.id !== userToDelete.id)
+        );
+        handleCloseDeleteDialog();
+        setSnackbar({
+          open: true,
+          message: 'Usuario eliminado correctamente',
+          severity: 'success'
+        });
+      } else {
+        throw new Error(`Respuesta inesperada: ${response.status}`);
+      }
+    } catch (error) {
+      console.error('Error al borrar el usuario:', error.response?.data || error.message);
+      setSnackbar({
+        open: true,
+        message: 'Error al eliminar usuario',
+        severity: 'error'
+      });
+    }
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({
+      ...snackbar,
+      open: false
+    });
+  };
 
   const columns = [
-    { accessorKey: 'nombres', header: 'Nombres' },
-    { accessorKey: 'apellidos', header: 'Apellidos' },
-    { accessorKey: 'correo_electronico', header: 'Correo' },
+    { 
+      accessorKey: 'nombres', 
+      header: 'Nombres',
+      size: 150
+    },
+    { 
+      accessorKey: 'apellidos', 
+      header: 'Apellidos',
+      size: 150
+    },
+    { 
+      accessorKey: 'correo_electronico', 
+      header: 'Correo',
+      size: 200
+    },
     {
       accessorKey: 'nombre_usuario',
       header: 'Nombre de usuario',
+      size: 150
+    },
+    { 
+      accessorKey: 'rol.nombrerol', 
+      header: 'Rol',
+      size: 100
+    },
+    {
+      id: 'acciones',
+      header: 'Acciones',
+      size: 150,
       Cell: ({ row }) => (
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Typography variant="body2">{row.original.nombre_usuario}</Typography>
-          <IconButton
-            color="error"
-            onClick={() => handleDeleteUser(row.original.id)}
-            size="small"
-          >
-            <DeleteIcon />
-          </IconButton>
+        <Box sx={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+          <Tooltip title="Editar usuario">
+            <IconButton
+              color="primary"
+              onClick={() => handleOpenEditModal(row.original)}
+              size="small"
+            >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Eliminar usuario">
+            <IconButton
+              color="error"
+              onClick={() => handleOpenDeleteDialog(row.original)}
+              size="small"
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
         </Box>
       ),
     },
-    { accessorKey: 'rol.nombrerol', header: 'Rol' },
   ];
 
   const table = useMaterialReactTable({
     columns,
     data: userProfiles,
     enableRowSelection: true,
-    renderRowActions: ({ row }) => (
-      <Box sx={{ display: 'flex', gap: '8px' }}>
-        <IconButton
-          color="error"
-          onClick={() => handleDeleteUser(row.original.id)}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </Box>
-    ),
     initialState: {
       pagination: { pageSize: 5, pageIndex: 0 },
       showGlobalFilter: true,
     },
     muiPaginationProps: {
-      rowsPerPageOptions: [2, 5, 10],
+      rowsPerPageOptions: [5, 10, 20],
       variant: 'outlined',
     },
     paginationDisplayMode: 'pages',
@@ -136,83 +333,439 @@ const handleDeleteUser = async (iduser) => {
         rowsPerPage: 'Filas por página',
       },
     },
-    MuiPaginationItem: {
-      styleOverrides: {
-        root: {
-          color: 'white',
-          backgroundColor: 'blue',
-          '&.Mui-selected': {
-            backgroundColor: 'red',
-            color: 'white',
-          },
-        },
+    muiTableBodyRowProps: {
+      hover: true,
+    },
+    muiTablePaperProps: {
+      elevation: 3,
+      sx: {
+        borderRadius: '10px',
+        overflow: 'hidden',
       },
     },
+    enableColumnResizing: true,
+    layoutMode: 'grid',
+    enableColumnFilters: true
   });
 
   return (
     <ThemeProvider theme={theme}>
-      <section className='sec1c'>
-        <IconButton onClick={Return}>
-          <CloseIcon />
-        </IconButton>
-        <div className='container'>
-          <div className='row'>
-            <div className='col'>
-              <Stack sx={{ m: '2rem 0' }}>
-                <Typography variant="h4">Usuarios</Typography>
-                <Box
+      <Paper elevation={0} sx={{ minHeight: '100vh', background: 'transparent' }}>
+        <section className='crud-container'>
+          <Paper elevation={3} sx={{  p: 2, borderRadius: '10px', background: 'black', width: '100%' }}>
+            <Box 
+            sx={{ display: 'flex', 
+                  flexDirection: isMobile ? 'column' : 'row', 
+                  justifyContent: 'space-between', alignItems: isMobile ? 
+                  'flex-start' : 'center', 
+                  mb: 2, 
+                  gap: 2,
+                  }}>
+              <MRT_GlobalFilterTextField 
+                table={table} 
+                sx={{ 
+                  width: isMobile ? '100%' : '300px',
+                  '& .MuiInputBase-root': {
+                    borderRadius: '8px',
+                  }
+                }}
+              />
+              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', }}>
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={handleOpenAddModal}
                   sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
+                    borderRadius: '8px',
+                    boxShadow: 2,
+                    background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
                   }}
                 >
-                  <MRT_GlobalFilterTextField table={table} />
-                  <MRT_TablePagination table={table} />
-                </Box>
-                <TableContainer>
-                  <Table>
-                    <TableHead>
-                      {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                          {headerGroup.headers.map((header) => (
-                            <TableCell align="center" variant="head" key={header.id}>
-                              {header.isPlaceholder
-                                ? null
-                                : flexRender(
-                                    header.column.columnDef.Header ??
-                                      header.column.columnDef.header,
-                                    header.getContext(),
-                                  )}
-                            </TableCell>
-                          ))}
-                        </TableRow>
+                  Agregar Usuario
+                </Button>
+                {!isMobile && <MRT_TablePagination table={table} />}
+              </Box>
+            </Box>
+            
+            <TableContainer sx={{ overflowX: 'auto', borderRadius: '8px' , background: 'black' }}>
+              <Table>
+                <TableHead>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id} sx={{ background: 'black' }}>
+                      {headerGroup.headers.map((header) => (
+                        <TableCell 
+                          align="center" 
+                          variant="head" 
+                          key={header.id}
+                          sx={{ 
+                            fontWeight: 'bold',
+                            whiteSpace: 'nowrap',
+                            color: '#00a99d'
+                          }}
+                        >
+                          {header.isPlaceholder
+                            ? null
+                            : flexRender(
+                                header.column.columnDef.Header ??
+                                  header.column.columnDef.header,
+                                header.getContext(),
+                              )}
+                        </TableCell>
                       ))}
-                    </TableHead>
-                    <TableBody>
-                      {table.getRowModel().rows.map((row, rowIndex) => (
-                        <TableRow key={row.id} selected={row.getIsSelected()}>
-                          {row.getVisibleCells().map((cell, _columnIndex) => (
-                            <TableCell align="center" variant="body" key={cell.id}>
-                              <MRT_TableBodyCellValue
-                                cell={cell}
-                                table={table}
-                                staticRowIndex={rowIndex}
-                              />
-                            </TableCell>
-                          ))}
-                        </TableRow>
+                    </TableRow>
+                  ))}
+                </TableHead>
+                <TableBody>
+                  {table.getRowModel().rows.map((row, rowIndex) => (
+                    <TableRow 
+                      key={row.id} 
+                      selected={row.getIsSelected()}
+                      sx={{
+                        '&:nth-of-type(odd)': {
+                          backgroundColor: 'black',
+                        },
+                        '&:hover': {
+                          backgroundColor: '#00a99d',
+                        },
+                        transition: 'background-color 0.2s',
+                      }}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell 
+                          align="center" 
+                          variant="body" 
+                          key={cell.id}
+                          sx={{ 
+                            padding: isMobile ? '8px 4px' : '16px 8px',
+                            whiteSpace: 'normal',
+                            wordBreak: 'break-word'
+                          }}
+                        >
+                          <MRT_TableBodyCellValue
+                            cell={cell}
+                            table={table}
+                            staticRowIndex={rowIndex}
+                          />
+                        </TableCell>
                       ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-                <MRT_ToolbarAlertBanner stackAlertBanner table={table} />
-              </Stack>
-            </div>
-          </div>
-        </div>
-      </section>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            
+            {isMobile && (
+              <Box sx={{ mt: 2 }}>
+                <MRT_TablePagination table={table} />
+              </Box>
+            )}
+            
+            <MRT_ToolbarAlertBanner stackAlertBanner table={table} />
+          </Paper>
+          
+          {/* Botón flotante para agregar en móviles */}
+          {isMobile && (
+            <Fab 
+              color="primary" 
+              aria-label="add" 
+              onClick={handleOpenAddModal}
+              sx={{ 
+                position: 'fixed', 
+                bottom: 20, 
+                right: 20,
+                background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+              }}
+            >
+              <AddIcon />
+            </Fab>
+          )}
+          
+          {/* Modal para agregar usuario */}
+          <Dialog open={openAddModal} onClose={handleCloseAddModal} maxWidth="md" fullWidth>
+            <DialogTitle sx={{ bgcolor: '#1976d2', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="h6">Agregar Nuevo Usuario</Typography>
+              <IconButton onClick={handleCloseAddModal} sx={{ color: 'white' }}>
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent sx={{ mt: 2 }}>
+              <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    name="nombres"
+                    label="Nombres"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    value={formData.nombres}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    margin="dense"
+                    name="apellidos"
+                    label="Apellidos"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    value={formData.apellidos}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    margin="dense"
+                    name="correo_electronico"
+                    label="Correo Electrónico"
+                    type="email"
+                    fullWidth
+                    variant="outlined"
+                    value={formData.correo_electronico}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    margin="dense"
+                    name="nombre_usuario"
+                    label="Nombre de Usuario"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    value={formData.nombre_usuario}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth margin="dense" variant="outlined">
+                    <InputLabel id="rol-label">Rol</InputLabel>
+                    <Select
+                      labelId="rol-label"
+                      name="rol"
+                      value={formData.rol}
+                      onChange={handleInputChange}
+                      label="Rol"
+                      required
+                    >
+                      {roles.map((rol) => (
+                        <MenuItem key={rol.id} value={rol.nombre}>
+                          {rol.nombre}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    margin="dense"
+                    name="password"
+                    label="Contraseña"
+                    type="password"
+                    fullWidth
+                    variant="outlined"
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Grid>
+              </Grid>
+            </DialogContent>
+            <DialogActions sx={{ p: 2 }}>
+              <Button 
+                onClick={handleCloseAddModal} 
+                color="inherit"
+                variant="outlined"
+                startIcon={<CloseIcon />}
+              >
+                Cancelar
+              </Button>
+              <Button 
+                onClick={handleAddUser} 
+                variant="contained"
+                color="primary"
+                startIcon={<SaveIcon />}
+              >
+                Guardar
+              </Button>
+            </DialogActions>
+          </Dialog>
+          
+          {/* Modal para editar usuario */}
+          <Dialog open={openEditModal} onClose={handleCloseEditModal} maxWidth="md" fullWidth>
+            <DialogTitle sx={{ bgcolor: '#1976d2', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="h6">Editar Usuario</Typography>
+              <IconButton onClick={handleCloseEditModal} sx={{ color: 'white' }}>
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent sx={{ mt: 2 }}>
+              <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    name="nombres"
+                    label="Nombres"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    value={formData.nombres}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    margin="dense"
+                    name="apellidos"
+                    label="Apellidos"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    value={formData.apellidos}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    margin="dense"
+                    name="correo_electronico"
+                    label="Correo Electrónico"
+                    type="email"
+                    fullWidth
+                    variant="outlined"
+                    value={formData.correo_electronico}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <TextField
+                    margin="dense"
+                    name="nombre_usuario"
+                    label="Nombre de Usuario"
+                    type="text"
+                    fullWidth
+                    variant="outlined"
+                    value={formData.nombre_usuario}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth margin="dense" variant="outlined">
+                    <InputLabel id="rol-edit-label">Rol</InputLabel>
+                    <Select
+                      labelId="rol-edit-label"
+                      name="rol"
+                      value={formData.rol}
+                      onChange={handleInputChange}
+                      label="Rol"
+                      required
+                    >
+                      {roles.map((rol) => (
+                        <MenuItem key={rol.id} value={rol.nombre}>
+                          {rol.nombre}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+            </DialogContent>
+            <DialogActions sx={{ p: 2 }}>
+              <Button 
+                onClick={handleCloseEditModal} 
+                color="inherit"
+                variant="outlined"
+                startIcon={<CloseIcon />}
+              >
+                Cancelar
+              </Button>
+              <Button 
+                onClick={handleEditUser} 
+                variant="contained"
+                color="primary"
+                startIcon={<SaveIcon />}
+              >
+                Actualizar
+              </Button>
+            </DialogActions>
+          </Dialog>
+          
+          {/* Dialog de confirmación para eliminar */}
+          <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+            <DialogTitle sx={{ fontWeight: 'bold' }}>
+              Confirmar eliminación
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                ¿Estás seguro de que deseas eliminar al usuario <strong>{userToDelete?.nombre_usuario}</strong>? Esta acción no se puede deshacer.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions sx={{ p: 2 }}>
+              <Button 
+                onClick={handleCloseDeleteDialog} 
+                color="inherit"
+                variant="outlined"
+              >
+                Cancelar
+              </Button>
+              <Button 
+                onClick={handleDeleteUser} 
+                variant="contained" 
+                color="error"
+                startIcon={<DeleteIcon />}
+              >
+                Eliminar
+              </Button>
+            </DialogActions>
+          </Dialog>
+          
+          {/* Snackbar para notificaciones */}
+          <Snackbar
+            open={snackbar.open}
+            autoHideDuration={4000}
+            onClose={handleCloseSnackbar}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          >
+            <Alert 
+              onClose={handleCloseSnackbar} 
+              severity={snackbar.severity} 
+              variant="filled"
+              sx={{ width: '100%' }}
+            >
+              {snackbar.message}
+            </Alert>
+          </Snackbar>
+        </section>
+      </Paper>
+      
+      {/* Estilos CSS adicionales */}
+      <style jsx global>{`
+        .crud-container {
+          max-width: 1280px;
+          margin: 0 auto;
+        }
+        
+        @media (max-width: 600px) {
+          .MuiTableCell-root {
+            padding: 8px 4px;
+            font-size: 0.75rem;
+          }
+          
+          .MuiTypography-h4 {
+            font-size: 1.5rem;
+          }
+        }
+      `}</style>
     </ThemeProvider>
   );
 };
