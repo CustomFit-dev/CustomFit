@@ -1,126 +1,164 @@
-
-
-  
-  .h111{
-    color: #17BEBB;
-    font-size: 40px;
-    font-family: rubik;
-  }
-  .sub1{
-    font-size: 20px;
-    color: #17BEBB;
-    font-family: rubik;
-  }
-  
-  .card-img-top {
-    width: 100%;
-    height: 200px; /* Ajusta la altura deseada */
-    object-fit: contain; /* Evita el recorte de la imagen */
-    object-position: center; /* Centra la imagen en el contenedor */
-    background-color: #f5f5f5; /* Opcional: color de fondo para áreas sin cubrir */
-    
-  }
-  .card-title{
-    font-size: 30px;
-    text-align: center;
-    font-family: rubik;
-  }
-  .card-text{
-    color: black;
-    font-family: rubik;
-  }
-  .dotos {
-    display: flex;
-    justify-content: space-between; /* Coloca los elementos en cada extremo */
-    align-items: center;
-    padding: 0 10px; /* Ajusta el espacio alrededor del contenedor */
+/* Estilos generales mejorados */
+.h111 {
+  color: #17BEBB;
+  font-size: 42px;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 600;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  position: relative;
+  transition: transform 0.3s ease;
 }
 
-.precio {
-    background-color: transparent;
-    border: 2px solid gray !important;
-    color: rgb(0, 0, 0);
-    border: none;
-    padding: 8px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-}
-.precio:hover{
-  background-color: transparent;
-  color: black;
+.h111::after {
+  content: '';
+  position: absolute;
+  width: 60px;
+  height: 3px;
+  background-color: #17BEBB;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
-.carritosss {
-    background-color: #000000;
-    border-radius: 50%;
-    width: 40px; /* Tamaño del botón */
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    cursor: pointer;
+.sub1 {
+  font-size: 20px;
+  color: #17BEBB;
+  font-family: 'Rubik', sans-serif;
+  margin-bottom: 40px;
+  opacity: 0.9;
 }
 
-.logocar{
-  margin: 0px auto !important;
+/* Animación para la sección de tarjetas */
+.cajasss {
+  animation: fadeInUp 0.8s ease-out forwards;
 }
-.carritosss:hover{
-  border: 2px solid #17BEBB !important;
-  background-color: #17BEBB!important;
-  transition: 0.5s;
-  
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
+/* Tarjetas de productos mejoradas */
 .card {
   position: relative;
-  overflow: hidden;  /* Para evitar que los botones sobresalgan de la tarjeta */
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin-bottom: 20px;
 }
 
-/* Configuración inicial del contenedor de botones */
+.card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 24px rgba(23, 190, 187, 0.15);
+}
+
+.image-container {
+  position: relative;
+  overflow: hidden;
+  background-color: #f9f9f9;
+}
+
+.card-img-top {
+  width: 100%;
+  height: 250px;
+  object-fit: contain;
+  object-position: center;
+  transition: transform 0.5s ease;
+}
+
+.card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+/* Botones de hover mejorados */
 .hover-buttons {
   position: absolute;
-  top: 20%;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.10); /* Comienza con un leve escalado */
+  transform: translate(-50%, -50%) scale(0);
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  z-index: 1;
-  background-color: rgba(0, 0, 0, 0.784);  
-  padding: 100px;
-  width: 100%;
-  border-radius: 5px;
-  opacity: 0; /* Oculto inicialmente */
-  transition: opacity 0.3s ease, transform 0.8s ease; /* Transiciones suaves */
-  pointer-events: none; /* Evita interacciones cuando está oculto */
+  gap: 12px;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.75);
+  padding: 25px;
+  width: 80%;
+  border-radius: 8px;
+  opacity: 0;
+  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
 }
 
-/* Mostrar los botones al hacer hover sobre la imagen */
 .image-container:hover .hover-buttons {
-  opacity: 1; /* Totalmente visible */
-  transform: translate(-50%, -50%) scale(1); /* Escalado normal */
-  pointer-events: all; /* Habilita interacciones */
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: all;
 }
 
-/* Estilo para los botones */
+/* Overlay para efecto de oscurecimiento */
+.image-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color 0.4s ease;
+}
+
+.image-container:hover::after {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Botones mejorados */
 .hover-buttons button {
   cursor: pointer;
-  padding: 10px 20px;
+  padding: 12px 20px;
   border: none;
   color: white;
   font-size: 14px;
-  transition: background-color 0.3s ease;
-  border-radius: 5px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-radius: 6px;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Colores y efectos de hover para los botones */
+.hover-buttons button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  transition: all 0.4s ease;
+}
+
+.hover-buttons button:hover::before {
+  left: 100%;
+}
+
 .btn-11 {
   background-color: #0056b3 !important;
   color: white !important;
 }
 
 .btn-11:hover {
-  background-color: #007bff !important;
+  background-color: #0069d9 !important;
+  transform: translateY(-2px);
 }
 
 .btn-22 {
@@ -129,7 +167,8 @@
 }
 
 .btn-22:hover {
-  background-color: #13a8a6 !important;
+  background-color: #15aaa8 !important;
+  transform: translateY(-2px);
 }
 
 .btn-33 {
@@ -138,5 +177,173 @@
 }
 
 .btn-33:hover {
-  background-color: #d32f2f !important;
+  background-color: #ef5350 !important;
+  transform: translateY(-2px);
+}
+
+/* Información del producto */
+.card-body {
+  padding: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.card:hover .card-body {
+  background-color: #f9f9f9;
+}
+
+.card-title {
+  font-size: 24px;
+  text-align: center;
+  font-family: 'Rubik', sans-serif;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #333;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.card:hover .card-title {
+  color: #17BEBB;
+}
+
+.card-title::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: #17BEBB;
+  transform: translateX(-50%);
+  transition: width 0.4s ease;
+}
+
+.card:hover .card-title::after {
+  width: 60px;
+}
+
+.card-text {
+  color: #555;
+  font-family: 'Rubik', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  height: 80px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+/* Precios y botón de carrito */
+.dotos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+  margin-top: 15px;
+}
+
+.precio {
+  background-color: transparent;
+  border: 2px solid #17BEBB !important;
+  color: #333;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.precio:hover {
+  background-color: #17BEBB;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.carritosss {
+  background-color: #000000;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+}
+
+.carritosss::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, #17BEBB, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.carritosss:hover {
+  transform: scale(1.15);
+  background-color: #17BEBB !important;
+  box-shadow: 0 0 15px rgba(23, 190, 187, 0.5);
+}
+
+.carritosss:hover::before {
+  opacity: 0.3;
+}
+
+.logocar {
+  margin: 0 auto !important;
+  color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.carritosss:hover .logocar {
+  transform: scale(1.1);
+  animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Animaciones adicionales para mejorar la experiencia de usuario */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+.card:nth-child(5) { animation-delay: 0.5s; }
+.card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 768px) {
+  .h111 {
+    font-size: 32px;
+  }
+  
+  .sub1 {
+    font-size: 18px;
+  }
+  
+  .card-title {
+    font-size: 20px;
+  }
+  
+  .hover-buttons {
+    width: 90%;
+    padding: 15px;
+  }
+  
+  .hover-buttons button {
+    padding: 10px 15px;
+    font-size: 12px;
+  }
 }
