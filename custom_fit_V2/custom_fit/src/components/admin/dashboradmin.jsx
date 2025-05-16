@@ -4,20 +4,21 @@
 
     // Import component modules
     import PersonalData from '../Crud';
-    import PurchaseHistory from '../modules/dashboard/historial-compras';
+    import PurchaseHistory from './estadisticas';
     import MyOrders from '../modules/dashboard/mis-pedidos';
     import Contact from '../modules/dashboard/contacto';
     import Payments from '../modules/dashboard/pagos';
     import Logout from '../modules/dashboard/contacto';
 
     const App = () => {
-    const [activeMenu, setActiveMenu] = useState('Datos Personales');
+    const [activeMenu, setActiveMenu] = useState('Estadisticas');
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const menuItems = [
-        { id: 'personal-data', name: 'Datos Personales', icon: <UserCheck size={20} />, component: <PersonalData /> },
+        { id: 'purchase-history', name: 'Estadisticas', icon: <ShoppingBag size={20} />, component: <PurchaseHistory /> },
+        { id: 'personal-data', name: 'Usuarios', icon: <UserCheck size={20} />, component: <PersonalData /> },
     
-        { id: 'purchase-history', name: 'Historial de compras', icon: <ShoppingBag size={20} />, component: <PurchaseHistory /> },
+        
         { id: 'my-orders', name: 'Mis pedidos', icon: <Package size={20} />, component: <MyOrders /> },
         { id: 'contact', name: 'Contacto', icon: <MessageCircle size={20} />, component: <Contact /> },
         { id: 'payments', name: 'Pagos', icon: <CreditCard size={20} />, component: <Payments /> },

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import CircularIndeterminate from './modules/CircularIndeterminate'; // Asegúrate de que la ruta sea correcta
 import Header from './admin/dashboradmin';
 
+
     const Home = () => {
     
     const [isLoading, setIsLoading] = useState(true);

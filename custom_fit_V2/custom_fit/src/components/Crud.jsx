@@ -49,6 +49,7 @@ import axios from 'axios';
 import { flexRender } from '@tanstack/react-table';
 import theme from './modules/Themes';
 import '../scss/admin/crud.scss';
+import { color } from '@mui/system';
 
 const Crud = () => {
   const [userProfiles, setUserProfiles] = useState([]);
@@ -481,120 +482,120 @@ const Crud = () => {
           )}
           
           {/* Modal para agregar usuario */}
-          <Dialog open={openAddModal} onClose={handleCloseAddModal} maxWidth="md" fullWidth>
-            <DialogTitle sx={{ bgcolor: '#1976d2', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="h6">Agregar Nuevo Usuario</Typography>
-              <IconButton onClick={handleCloseAddModal} sx={{ color: 'white' }}>
-                <CloseIcon />
-              </IconButton>
-            </DialogTitle>
-            <DialogContent sx={{ mt: 2 }}>
-              <Grid container spacing={2} sx={{ mt: 1 }}>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    name="nombres"
-                    label="Nombres"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    value={formData.nombres}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    margin="dense"
-                    name="apellidos"
-                    label="Apellidos"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    value={formData.apellidos}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    margin="dense"
-                    name="correo_electronico"
-                    label="Correo Electrónico"
-                    type="email"
-                    fullWidth
-                    variant="outlined"
-                    value={formData.correo_electronico}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    margin="dense"
-                    name="nombre_usuario"
-                    label="Nombre de Usuario"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    value={formData.nombre_usuario}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControl fullWidth margin="dense" variant="outlined">
-                    <InputLabel id="rol-label">Rol</InputLabel>
-                    <Select
-                      labelId="rol-label"
-                      name="rol"
-                      value={formData.rol}
-                      onChange={handleInputChange}
-                      label="Rol"
-                      required
-                    >
-                      {roles.map((rol) => (
-                        <MenuItem key={rol.id} value={rol.nombre}>
-                          {rol.nombre}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    margin="dense"
-                    name="password"
-                    label="Contraseña"
-                    type="password"
-                    fullWidth
-                    variant="outlined"
-                    onChange={handleInputChange}
-                    required
-                  />
-                </Grid>
-              </Grid>
-            </DialogContent>
-            <DialogActions sx={{ p: 2 }}>
-              <Button 
-                onClick={handleCloseAddModal} 
-                color="inherit"
-                variant="outlined"
-                startIcon={<CloseIcon />}
-              >
-                Cancelar
-              </Button>
-              <Button 
-                onClick={handleAddUser} 
-                variant="contained"
-                color="primary"
-                startIcon={<SaveIcon />}
-              >
-                Guardar
-              </Button>
-            </DialogActions>
-          </Dialog>
+         <Dialog open={openAddModal} onClose={handleCloseAddModal} maxWidth="md" fullWidth>
+  <DialogTitle
+    sx={{
+      bgcolor: '#1976d2',
+      color: 'white',
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    }}
+  >
+    <Typography variant="h6">Agregar Nuevo Usuario</Typography>
+    <IconButton onClick={handleCloseAddModal} sx={{ color: 'white' }}>
+      <CloseIcon />
+    </IconButton>
+  </DialogTitle>
+
+  <DialogContent sx={{ mt: 2 }}>
+    <Grid container spacing={2} sx={{ mt: 1 }}>
+      {[
+        { name: 'nombres', label: 'Nombres', type: 'text', md: 6 },
+        { name: 'apellidos', label: 'Apellidos', type: 'text', md: 6 },
+        { name: 'correo_electronico', label: 'Correo Electrónico', type: 'email', md: 6 },
+        { name: 'nombre_usuario', label: 'Nombre de Usuario', type: 'text', md: 6 },
+        { name: 'confirmar_correo', label: 'Confirmar Email', type: 'text', md: 6 },
+      ].map(({ name, label, type, md }) => (
+        <Grid item xs={12} md={md} key={name}>
+          <TextField
+            margin="dense"
+            name={name}
+            label={label}
+            type={type}
+            fullWidth
+            variant="outlined"
+            value={formData[name]}
+            onChange={handleInputChange}
+            required
+            className="text-field"
+            sx={{
+                borderBottom: '2px solid #000000 !important',
+                width: '75%',
+                '& .MuiInputBase-input': {
+                  color: 'black', // texto negro
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#1976d2', // borde azul normal
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#1565c0', // borde azul oscuro al pasar el mouse
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#0d47a1', // borde azul aún más oscuro al enfocar
+                  },
+                },
+              }}
+          />
+        </Grid>
+      ))}
+
+      <Grid item xs={12}>
+        <FormControl fullWidth margin="dense" variant="outlined" required
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderBottom: '2px solid #000000 !important'
+              },
+              '&:hover fieldset': {
+                borderColor: '#1565c0',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#0d47a1',
+              },
+            },
+          }}
+        >
+          <InputLabel id="rol-label">Rol</InputLabel>
+          <Select
+            labelId="rol-label"
+            name="rol"
+            value={formData.rol}
+            onChange={handleInputChange}
+            label="Rol"
+            sx={{ color: 'black', borderBottom: '2px solid #000000 !important' }}
+          >
+            {roles.map((rol) => (
+              <MenuItem key={rol.id} value={rol.nombre}>
+                {rol.nombre}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Grid>
+    </Grid>
+  </DialogContent>
+
+  <DialogActions sx={{ p: 2 }}>
+    <Button
+      onClick={handleCloseAddModal}
+      color="inherit"
+      variant="outlined"
+      startIcon={<CloseIcon sx={{ color: 'black' }} />}
+    >
+      Cancelar
+    </Button>
+    <Button
+      onClick={handleAddUser}
+      variant="contained"
+      color="primary"
+      startIcon={<SaveIcon />}
+    >
+      Guardar
+    </Button>
+  </DialogActions>
+</Dialog>
           
           {/* Modal para editar usuario */}
           <Dialog open={openEditModal} onClose={handleCloseEditModal} maxWidth="md" fullWidth>
@@ -618,6 +619,24 @@ const Crud = () => {
                     value={formData.nombres}
                     onChange={handleInputChange}
                     required
+                    sx={{
+                      borderBottom: '2px solid #000000 !important',
+                      width: '75%',
+                      '& .MuiInputBase-input': {
+                        color: 'black', // texto negro
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: '#1976d2', // borde azul normal
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#1565c0', // borde azul oscuro al pasar el mouse
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#0d47a1', // borde azul aún más oscuro al enfocar
+                        },
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -631,6 +650,24 @@ const Crud = () => {
                     value={formData.apellidos}
                     onChange={handleInputChange}
                     required
+                    sx={{
+                      borderBottom: '2px solid #000000 !important',
+                      width: '75%',
+                      '& .MuiInputBase-input': {
+                        color: 'black', // texto negro
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: '#1976d2', // borde azul normal
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#1565c0', // borde azul oscuro al pasar el mouse
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#0d47a1', // borde azul aún más oscuro al enfocar
+                        },
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -644,6 +681,24 @@ const Crud = () => {
                     value={formData.correo_electronico}
                     onChange={handleInputChange}
                     required
+                    sx={{
+                      borderBottom: '2px solid #000000 !important',
+                      width: '75%',
+                      '& .MuiInputBase-input': {
+                        color: 'black', // texto negro
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: '#1976d2', // borde azul normal
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#1565c0', // borde azul oscuro al pasar el mouse
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#0d47a1', // borde azul aún más oscuro al enfocar
+                        },
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12} md={6}>
@@ -657,6 +712,24 @@ const Crud = () => {
                     value={formData.nombre_usuario}
                     onChange={handleInputChange}
                     required
+                    sx={{
+                      borderBottom: '2px solid #000000 !important',
+                      width: '75%',
+                      '& .MuiInputBase-input': {
+                        color: 'black', // texto negro
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: '#1976d2', // borde azul normal
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#1565c0', // borde azul oscuro al pasar el mouse
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#0d47a1', // borde azul aún más oscuro al enfocar
+                        },
+                      },
+                    }}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -669,6 +742,24 @@ const Crud = () => {
                       onChange={handleInputChange}
                       label="Rol"
                       required
+                      sx={{
+                      borderBottom: '2px solid #000000 !important',
+                      width: '75%',
+                      '& .MuiInputBase-input': {
+                        color: 'black', // texto negro
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: '#1976d2', // borde azul normal
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#1565c0', // borde azul oscuro al pasar el mouse
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#0d47a1', // borde azul aún más oscuro al enfocar
+                        },
+                      },
+                    }}
                     >
                       {roles.map((rol) => (
                         <MenuItem key={rol.id} value={rol.nombre}>
@@ -685,7 +776,7 @@ const Crud = () => {
                 onClick={handleCloseEditModal} 
                 color="inherit"
                 variant="outlined"
-                startIcon={<CloseIcon />}
+                startIcon={<CloseIcon sx={{ color: 'black' }} />}
               >
                 Cancelar
               </Button>
