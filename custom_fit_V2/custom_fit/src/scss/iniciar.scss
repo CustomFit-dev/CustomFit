@@ -1,4 +1,3 @@
-/* Modern Login Form Styling - Enhanced Version */
 * {
   font-family: 'Rubik', sans-serif;
   margin: 0;
@@ -206,12 +205,13 @@
   margin-bottom: 30px;
 }
 
-.input-container {
+.input-container-i {
   position: relative;
   margin-bottom: 5px;
+  width: 487px !important;
 }
 
-.input-container input {
+.input-container-i input {
   width: 100%;
   padding: 15px 5px;
   background: transparent;
@@ -222,8 +222,8 @@
   z-index: 1;
 }
 
-.input-container input:focus ~ label,
-.input-container input:valid ~ label {
+.input-container-i input:focus ~ label,
+.input-container-i input:valid ~ label {
   top: -20px;
   left: 0;
   font-size: 12px;
@@ -231,21 +231,51 @@
   font-weight: 500;
 }
 
-.input-container input:focus ~ .input-line,
-.input-container input:valid ~ .input-line {
+.input-container-i input.not-empty ~ label {
+  top: -20px;
+  left: 0;
+  font-size: 12px;
+  color: #00a99d;
+  font-weight: 500;
+}
+
+.input-container-i input.not-empty ~ .input-line {
   width: 100%;
   height: 2px;
   background: linear-gradient(90deg, #00a99d, #00ffff);
   box-shadow: 0 0 5px rgba(0, 169, 157, 0.5);
 }
 
-.input-container input.error ~ .input-line {
+/* Forzar estilo transparente incluso con autofill (especialmente en Chrome) */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  box-shadow: 0 0 0 1000px transparent inset !important;
+  -webkit-text-fill-color: #ffffff !important; /* Color del texto */
+  background-color: transparent !important;
+  caret-color: #ffffff; /* Opcional: color del cursor */
+  transition: background-color 9999s ease-in-out 0s !important;
+}
+
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  background-color: transparent !important;
+}
+
+.input-container-i input:focus ~ .input-line,
+.input-container-i input:valid ~ .input-line {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #00a99d, #00ffff);
+  box-shadow: 0 0 5px rgba(0, 169, 157, 0.5);
+}
+
+.input-container-i input.error ~ .input-line {
   background: linear-gradient(90deg, #ff6b6b, #ff9a9a);
   box-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
   width: 100%;
 }
 
-.input-container label {
+.input-container-i label {
   position: absolute;
   top: 15px;
   left: 5px;
@@ -266,11 +296,12 @@
 }
 
 .error-message {
-  color: #ff6b6b;
-  font-size: 0.85rem;
-  margin-top: 8px;
-  text-align: left;
-  font-weight: 500;
+    color: #ff6b6b;
+    font-size: 0.7rem;
+    margin-top: 3px;
+    text-align: left;
+    position: absolute;
+    font-weight: 500;
 }
 
 .help-text {

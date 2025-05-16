@@ -113,17 +113,18 @@ const Form_I = ({ onClose }) => {
               <p className="login-description">Déjanos tu correo y te enviaremos un código para que puedas continuar.</p>
 
               <div className="form-group">
-                <div className="input-container">
+                <div className="input-container-i">
                   <input
                     type="email"
                     id="correo-electronico"
                     value={correoElectronico}
                     onChange={(e) => setCorreoElectronico(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    className={error ? "error" : ""}
+                    className={`${error ? 'error' : ''} ${correoElectronico.trim() ? 'not-empty' : ''}`}
                     required
                     autoComplete="email"
                   />
+
                   <label htmlFor="correo-electronico">Correo Electrónico</label>
                   <div className="input-line"></div>
                 </div>
@@ -131,7 +132,7 @@ const Form_I = ({ onClose }) => {
               </div>
 
               <p className="help-text">¿Problemas para iniciar sesión?</p>
-              <a href="#" className="contact-link">Contáctanos</a>
+              <a href="Home" className="contact-link">Contáctanos</a>
 
               <button
                 className={`submit-button ${loading ? 'loading' : ''}`}

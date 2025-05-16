@@ -10,11 +10,11 @@ const ChatbotModal = ({ open, handleClose }) => {
     {
       sender: 'bot',
       text:
-        'Hola, ¿en qué puedo ayudarte?\n' +
-        '1. Quiero contactarlos\n' +
-        '2. Quiero ser proveedor\n' +
-        '3. Quiero diseñar una camiseta\n' +
-        '4. Ver catálogo',
+        'Hola,¿en qué puedo ayudarte?\n' +
+        '1.Quiero contactarlos\n' +
+        '2.Quiero ser proveedor\n' +
+        '3.Quiero diseñar una camiseta\n' +
+        '4.Ver catálogo',
     },
   ]);
   const [context, setContext] = useState('main');
@@ -26,11 +26,11 @@ const ChatbotModal = ({ open, handleClose }) => {
       {
         sender: 'bot',
         text:
-          'Hola, ¿en qué puedo ayudarte?\n' +
-          '1. Quiero contactarlos\n' +
-          '2. Quiero ser proveedor\n' +
-          '3. Quiero diseñar una camiseta\n' +
-          '4. Ver catálogo',
+          'Hola,¿en qué puedo ayudarte?\n' +
+          '1.Quiero contactarlos\n' +
+          '2.Quiero ser proveedor\n' +
+          '3.Quiero diseñar una camiseta\n' +
+          '4.Ver catálogo',
       },
     ]);
     setContext('main');
@@ -147,7 +147,7 @@ const ChatbotModal = ({ open, handleClose }) => {
               if (e.key === 'Enter') handleSend();
             }}
           />
-          <Button variant="contained" color="primary" className="send-button" onClick={handleSend}>
+          <Button variant="contained" className="send-button" onClick={handleSend}>
             Enviar
           </Button>
         </div>
