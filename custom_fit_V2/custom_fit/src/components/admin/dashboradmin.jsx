@@ -1,28 +1,25 @@
     import React, { useState } from 'react';
     import '../../scss/dashboard.scss';
-    import { User, Edit, UserCheck, Trash2, ShoppingBag, Shield, Package, MessageCircle, CreditCard, LogOut, Menu } from 'lucide-react';
+    import { User, Edit, UserSearch, ShoppingCart , ChartNoAxesCombined, Shield, Package, NotepadTextDashed, CreditCard, LogOut, Menu } from 'lucide-react';
 
     // Import component modules
     import PersonalData from '../Crud';
     import PurchaseHistory from './estadisticas';
     import MyOrders from '../modules/dashboard/mis-pedidos';
     import Contact from '../modules/dashboard/contacto';
-    import Payments from '../modules/dashboard/pagos';
-    import Logout from '../modules/dashboard/contacto';
+    import Shop from '../modules/dashboard/mis-pedidos';
+    
 
     const App = () => {
     const [activeMenu, setActiveMenu] = useState('Estadisticas');
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const menuItems = [
-        { id: 'purchase-history', name: 'Estadisticas', icon: <ShoppingBag size={20} />, component: <PurchaseHistory /> },
-        { id: 'personal-data', name: 'Usuarios', icon: <UserCheck size={20} />, component: <PersonalData /> },
-    
-        
-        { id: 'my-orders', name: 'Mis pedidos', icon: <Package size={20} />, component: <MyOrders /> },
-        { id: 'contact', name: 'Contacto', icon: <MessageCircle size={20} />, component: <Contact /> },
-        { id: 'payments', name: 'Pagos', icon: <CreditCard size={20} />, component: <Payments /> },
-        { id: 'logout', name: 'Salir', icon: <LogOut size={20} />, component: <Logout /> }
+        { id: 'purchase-history', name: 'Estadisticas', icon: <ChartNoAxesCombined size={20} />, component: <PurchaseHistory /> },
+        { id: 'personal-data', name: 'Usuarios', icon: <UserSearch size={20} />, component: <PersonalData /> },
+        { id: 'my-orders', name: 'Pedidos', icon: <Package size={20} />, component: <MyOrders /> },
+        { id: 'contact', name: 'Facturas', icon: <NotepadTextDashed  size={20} />, component: <Contact /> },
+        { id: 'shop', name: 'Productos Shop', icon: <ShoppingCart   size={20} />, component: <Contact /> },
     ];
 
     // Find active component based on selected menu

@@ -482,10 +482,10 @@ const Crud = () => {
           )}
           
           {/* Modal para agregar usuario */}
-         <Dialog open={openAddModal} onClose={handleCloseAddModal} maxWidth="md" fullWidth>
+        <Dialog open={openAddModal} onClose={handleCloseAddModal} maxWidth="md" fullWidth>
   <DialogTitle
     sx={{
-      bgcolor: '#1976d2',
+      bgcolor: '#17bebb',
       color: 'white',
       display: 'flex',
       justifyContent: 'space-between',
@@ -498,7 +498,7 @@ const Crud = () => {
     </IconButton>
   </DialogTitle>
 
-  <DialogContent sx={{ mt: 2 }}>
+  <DialogContent sx={{ mt: 2, bgcolor: 'black' }}>
     <Grid container spacing={2} sx={{ mt: 1 }}>
       {[
         { name: 'nombres', label: 'Nombres', type: 'text', md: 6 },
@@ -518,25 +518,22 @@ const Crud = () => {
             value={formData[name]}
             onChange={handleInputChange}
             required
-            className="text-field"
             sx={{
-                borderBottom: '2px solid #000000 !important',
-                width: '75%',
-                '& .MuiInputBase-input': {
-                  color: 'black', // texto negro
+              width: '100%',
+              input: { color: 'white' },
+              label: { color: '#17bebb' },
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#17bebb',
                 },
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': {
-                    borderColor: '#1976d2', // borde azul normal
-                  },
-                  '&:hover fieldset': {
-                    borderColor: '#1565c0', // borde azul oscuro al pasar el mouse
-                  },
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#0d47a1', // borde azul aún más oscuro al enfocar
-                  },
+                '&:hover fieldset': {
+                  borderColor: '#17e6c9',
                 },
-              }}
+                '&.Mui-focused fieldset': {
+                  borderColor: '#0fa59d',
+                },
+              },
+            }}
           />
         </Grid>
       ))}
@@ -544,15 +541,16 @@ const Crud = () => {
       <Grid item xs={12}>
         <FormControl fullWidth margin="dense" variant="outlined" required
           sx={{
+            '& .MuiInputLabel-root': { color: '#17bebb' },
             '& .MuiOutlinedInput-root': {
               '& fieldset': {
-                borderBottom: '2px solid #000000 !important'
+                borderColor: '#17bebb',
               },
               '&:hover fieldset': {
-                borderColor: '#1565c0',
+                borderColor: '#17e6c9',
               },
               '&.Mui-focused fieldset': {
-                borderColor: '#0d47a1',
+                borderColor: '#0fa59d',
               },
             },
           }}
@@ -564,7 +562,12 @@ const Crud = () => {
             value={formData.rol}
             onChange={handleInputChange}
             label="Rol"
-            sx={{ color: 'black', borderBottom: '2px solid #000000 !important' }}
+            sx={{
+              color: 'white',
+              '& .MuiSelect-icon': {
+                color: '#17bebb',
+              },
+            }}
           >
             {roles.map((rol) => (
               <MenuItem key={rol.id} value={rol.nombre}>
@@ -577,248 +580,222 @@ const Crud = () => {
     </Grid>
   </DialogContent>
 
-  <DialogActions sx={{ p: 2 }}>
+  <DialogActions sx={{ p: 2, bgcolor: 'black' }}>
     <Button
       onClick={handleCloseAddModal}
-      color="inherit"
       variant="outlined"
-      startIcon={<CloseIcon sx={{ color: 'black' }} />}
+      startIcon={<CloseIcon />}
+      sx={{
+        color: 'white',
+        borderColor: '#17bebb',
+        '&:hover': {
+          borderColor: '#17e6c9',
+          backgroundColor: 'rgba(23, 190, 187, 0.1)',
+        }
+      }}
     >
       Cancelar
     </Button>
     <Button
       onClick={handleAddUser}
       variant="contained"
-      color="primary"
       startIcon={<SaveIcon />}
+      sx={{
+        bgcolor: '#17bebb',
+        color: 'black',
+        '&:hover': {
+          bgcolor: '#17e6c9',
+        }
+      }}
     >
       Guardar
     </Button>
   </DialogActions>
 </Dialog>
+
           
           {/* Modal para editar usuario */}
           <Dialog open={openEditModal} onClose={handleCloseEditModal} maxWidth="md" fullWidth>
-            <DialogTitle sx={{ bgcolor: '#1976d2', color: 'white', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="h6">Editar Usuario</Typography>
-              <IconButton onClick={handleCloseEditModal} sx={{ color: 'white' }}>
-                <CloseIcon />
-              </IconButton>
-            </DialogTitle>
-            <DialogContent sx={{ mt: 2 }}>
-              <Grid container spacing={2} sx={{ mt: 1 }}>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    name="nombres"
-                    label="Nombres"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    value={formData.nombres}
-                    onChange={handleInputChange}
-                    required
-                    sx={{
-                      borderBottom: '2px solid #000000 !important',
-                      width: '75%',
-                      '& .MuiInputBase-input': {
-                        color: 'black', // texto negro
-                      },
-                      '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                          borderColor: '#1976d2', // borde azul normal
-                        },
-                        '&:hover fieldset': {
-                          borderColor: '#1565c0', // borde azul oscuro al pasar el mouse
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#0d47a1', // borde azul aún más oscuro al enfocar
-                        },
-                      },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    margin="dense"
-                    name="apellidos"
-                    label="Apellidos"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    value={formData.apellidos}
-                    onChange={handleInputChange}
-                    required
-                    sx={{
-                      borderBottom: '2px solid #000000 !important',
-                      width: '75%',
-                      '& .MuiInputBase-input': {
-                        color: 'black', // texto negro
-                      },
-                      '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                          borderColor: '#1976d2', // borde azul normal
-                        },
-                        '&:hover fieldset': {
-                          borderColor: '#1565c0', // borde azul oscuro al pasar el mouse
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#0d47a1', // borde azul aún más oscuro al enfocar
-                        },
-                      },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    margin="dense"
-                    name="correo_electronico"
-                    label="Correo Electrónico"
-                    type="email"
-                    fullWidth
-                    variant="outlined"
-                    value={formData.correo_electronico}
-                    onChange={handleInputChange}
-                    required
-                    sx={{
-                      borderBottom: '2px solid #000000 !important',
-                      width: '75%',
-                      '& .MuiInputBase-input': {
-                        color: 'black', // texto negro
-                      },
-                      '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                          borderColor: '#1976d2', // borde azul normal
-                        },
-                        '&:hover fieldset': {
-                          borderColor: '#1565c0', // borde azul oscuro al pasar el mouse
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#0d47a1', // borde azul aún más oscuro al enfocar
-                        },
-                      },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    margin="dense"
-                    name="nombre_usuario"
-                    label="Nombre de Usuario"
-                    type="text"
-                    fullWidth
-                    variant="outlined"
-                    value={formData.nombre_usuario}
-                    onChange={handleInputChange}
-                    required
-                    sx={{
-                      borderBottom: '2px solid #000000 !important',
-                      width: '75%',
-                      '& .MuiInputBase-input': {
-                        color: 'black', // texto negro
-                      },
-                      '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                          borderColor: '#1976d2', // borde azul normal
-                        },
-                        '&:hover fieldset': {
-                          borderColor: '#1565c0', // borde azul oscuro al pasar el mouse
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#0d47a1', // borde azul aún más oscuro al enfocar
-                        },
-                      },
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControl fullWidth margin="dense" variant="outlined">
-                    <InputLabel id="rol-edit-label">Rol</InputLabel>
-                    <Select
-                      labelId="rol-edit-label"
-                      name="rol"
-                      value={formData.rol}
-                      onChange={handleInputChange}
-                      label="Rol"
-                      required
-                      sx={{
-                      borderBottom: '2px solid #000000 !important',
-                      width: '75%',
-                      '& .MuiInputBase-input': {
-                        color: 'black', // texto negro
-                      },
-                      '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                          borderColor: '#1976d2', // borde azul normal
-                        },
-                        '&:hover fieldset': {
-                          borderColor: '#1565c0', // borde azul oscuro al pasar el mouse
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#0d47a1', // borde azul aún más oscuro al enfocar
-                        },
-                      },
-                    }}
-                    >
-                      {roles.map((rol) => (
-                        <MenuItem key={rol.id} value={rol.nombre}>
-                          {rol.nombre}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-            </DialogContent>
-            <DialogActions sx={{ p: 2 }}>
-              <Button 
-                onClick={handleCloseEditModal} 
-                color="inherit"
-                variant="outlined"
-                startIcon={<CloseIcon sx={{ color: 'black' }} />}
-              >
-                Cancelar
-              </Button>
-              <Button 
-                onClick={handleEditUser} 
-                variant="contained"
-                color="primary"
-                startIcon={<SaveIcon />}
-              >
-                Actualizar
-              </Button>
-            </DialogActions>
-          </Dialog>
+  <DialogTitle sx={{
+    bgcolor: '#17bebb',
+    color: 'white',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  }}>
+    <Typography variant="h6">Editar Usuario</Typography>
+    <IconButton onClick={handleCloseEditModal} sx={{ color: 'white' }}>
+      <CloseIcon />
+    </IconButton>
+  </DialogTitle>
+
+  <DialogContent sx={{ bgcolor: 'black', mt: 2 }}>
+    <Grid container spacing={2} sx={{ mt: 1 }}>
+      {[
+        { name: 'nombres', label: 'Nombres', type: 'text' },
+        { name: 'apellidos', label: 'Apellidos', type: 'text' },
+        { name: 'correo_electronico', label: 'Correo Electrónico', type: 'email' },
+        { name: 'nombre_usuario', label: 'Nombre de Usuario', type: 'text' },
+      ].map((field, idx) => (
+        <Grid item xs={12} md={6} key={idx}>
+          <TextField
+            margin="dense"
+            name={field.name}
+            label={field.label}
+            type={field.type}
+            fullWidth
+            variant="outlined"
+            value={formData[field.name]}
+            onChange={handleInputChange}
+            required
+            sx={{
+              width: '100%',
+              input: { color: 'white' },
+              label: { color: '#17bebb' },
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: '#17bebb',
+                },
+                '&:hover fieldset': {
+                  borderColor: '#17e6c9',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: '#0fa59d',
+                },
+              },
+            }}
+          />
+        </Grid>
+      ))}
+
+      <Grid item xs={12}>
+        <FormControl fullWidth margin="dense" variant="outlined"
+          sx={{
+            width: '100%',
+            '& .MuiInputLabel-root': { color: '#17bebb' },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#17bebb',
+              },
+              '&:hover fieldset': {
+                borderColor: '#17e6c9',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#0fa59d',
+              },
+              '& input': { color: 'white' },
+              '& .MuiSelect-icon': { color: '#17bebb' },
+            },
+          }}
+        >
+          <InputLabel id="rol-edit-label">Rol</InputLabel>
+          <Select
+            labelId="rol-edit-label"
+            name="rol"
+            value={formData.rol}
+            onChange={handleInputChange}
+            label="Rol"
+            required
+            sx={{
+              color: 'white',
+            }}
+          >
+            {roles.map((rol) => (
+              <MenuItem key={rol.id} value={rol.nombre}>
+                {rol.nombre}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Grid>
+    </Grid>
+  </DialogContent>
+
+  <DialogActions sx={{ p: 2, bgcolor: 'black' }}>
+    <Button
+      onClick={handleCloseEditModal}
+      variant="outlined"
+      startIcon={<CloseIcon />}
+      sx={{
+        color: 'white',
+        borderColor: '#17bebb',
+        '&:hover': {
+          borderColor: '#17e6c9',
+          backgroundColor: 'rgba(23, 190, 187, 0.1)',
+        }
+      }}
+    >
+      Cancelar
+    </Button>
+    <Button
+      onClick={handleEditUser}
+      variant="contained"
+      startIcon={<SaveIcon />}
+      sx={{
+        bgcolor: '#17bebb',
+        color: 'black',
+        '&:hover': {
+          bgcolor: '#17e6c9',
+        }
+      }}
+    >
+      Actualizar
+    </Button>
+  </DialogActions>
+</Dialog>
+
           
           {/* Dialog de confirmación para eliminar */}
-          <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-            <DialogTitle sx={{ fontWeight: 'bold' }}>
-              Confirmar eliminación
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                ¿Estás seguro de que deseas eliminar al usuario <strong>{userToDelete?.nombre_usuario}</strong>? Esta acción no se puede deshacer.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions sx={{ p: 2 }}>
-              <Button 
-                onClick={handleCloseDeleteDialog} 
-                color="inherit"
-                variant="outlined"
-              >
-                Cancelar
-              </Button>
-              <Button 
-                onClick={handleDeleteUser} 
-                variant="contained" 
-                color="error"
-                startIcon={<DeleteIcon />}
-              >
-                Eliminar
-              </Button>
-            </DialogActions>
-          </Dialog>
+       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+  <DialogTitle
+    sx={{
+      fontWeight: 'bold',
+      bgcolor: '#17bebb',
+      color: 'white',
+    }}
+  >
+    Confirmar eliminación
+  </DialogTitle>
+
+  <DialogContent sx={{ bgcolor: 'black' }}>
+    <DialogContentText sx={{ color: 'white' }}>
+      ¿Estás seguro de que deseas eliminar al usuario{' '}
+      <strong style={{ color: '#17bebb' }}>{userToDelete?.nombre_usuario}</strong>? Esta acción no se puede deshacer.
+    </DialogContentText>
+  </DialogContent>
+
+  <DialogActions sx={{ p: 2, bgcolor: 'black' }}>
+    <Button
+      onClick={handleCloseDeleteDialog}
+      variant="outlined"
+      sx={{
+        color: 'white',
+        borderColor: '#17bebb',
+        '&:hover': {
+          borderColor: '#17e6c9',
+          backgroundColor: 'rgba(23, 190, 187, 0.1)',
+        }
+      }}
+    >
+      Cancelar
+    </Button>
+    <Button
+      onClick={handleDeleteUser}
+      variant="contained"
+      color="error"
+      startIcon={<DeleteIcon />}
+      sx={{
+        color: 'white',
+        '&:hover': {
+          bgcolor: '#c62828',
+        }
+      }}
+    >
+      Eliminar
+    </Button>
+  </DialogActions>
+</Dialog>
+
           
           {/* Snackbar para notificaciones */}
           <Snackbar
