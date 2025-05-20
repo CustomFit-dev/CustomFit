@@ -283,7 +283,9 @@ const Crud = () => {
     { 
       accessorKey: 'rol.nombrerol', 
       header: 'Rol',
-      size: 100
+      size: 100,
+      Cell: ({ cell }) => cell.getValue() || 'No asignado',
+      
     },
     {
       id: 'acciones',

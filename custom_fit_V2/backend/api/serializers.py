@@ -4,9 +4,17 @@ from .models import UserProfile, Project, Rol
 from rest_framework import serializers
 from .models import UserProfile, Project, Rol
 
+class RolSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rol
+        fields = '__all__'
+
+
 class UserProfileSerializer(serializers.ModelSerializer):
     # Hacemos 'user' solo lectura para evitar que se envíe desde el frontend
     user = serializers.PrimaryKeyRelatedField(read_only=True)
+    rol = RolSerializer(read_only=True)  # Muestra el objeto completo
+    
     
     class Meta:
         model = UserProfile
