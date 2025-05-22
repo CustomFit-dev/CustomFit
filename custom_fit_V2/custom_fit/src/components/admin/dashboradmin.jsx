@@ -64,7 +64,6 @@
             </div>
             </div>
             <div className="content-area">
-            <h3>{activeMenu}</h3>
             <div className="content-module">
                 {activeComponent}
             </div>

@@ -63,7 +63,9 @@ const Crud = () => {
     apellidos: '',
     correo_electronico: '',
     nombre_usuario: '',
-    rol: ''
+    celular: '',
+    rol: '',
+    
   });
   const [roles, setRoles] = useState([]);
   const [snackbar, setSnackbar] = useState({
@@ -114,6 +116,7 @@ const Crud = () => {
       apellidos: '',
       correo_electronico: '',
       nombre_usuario: '',
+      celular: '',
       rol: ''
     });
     setOpenAddModal(true);
@@ -130,7 +133,9 @@ const Crud = () => {
       apellidos: user.apellidos,
       correo_electronico: user.correo_electronico,
       nombre_usuario: user.nombre_usuario,
-      rol: user.rol?.nombrerol || ''
+      rol: user.rol?.nombrerol || '',
+      celular: user.celular || '',
+
     });
     setOpenEditModal(true);
   };
@@ -270,6 +275,11 @@ const Crud = () => {
       header: 'Apellidos',
       size: 150
     },
+    {
+      accessorKey: 'celular',
+      header: 'Celular',
+      size: 140,
+    },
     { 
       accessorKey: 'correo_electronico', 
       header: 'Correo',
@@ -354,8 +364,10 @@ const Crud = () => {
   return (
     <ThemeProvider theme={theme}>
       <Paper elevation={0} sx={{ minHeight: '100vh', background: 'transparent' }}>
+        <h5 class="text-center text-white my-4">Gestión de Usuarios</h5>
         <section className='crud-container'>
           <Paper elevation={3} sx={{  p: 2, borderRadius: '10px', background: 'black', width: '100%' }}>
+            
             <Box 
             sx={{ display: 'flex', 
                   flexDirection: isMobile ? 'column' : 'row', 
@@ -508,6 +520,7 @@ const Crud = () => {
         { name: 'correo_electronico', label: 'Correo Electrónico', type: 'email', md: 6 },
         { name: 'nombre_usuario', label: 'Nombre de Usuario', type: 'text', md: 6 },
         { name: 'confirmar_correo', label: 'Confirmar Email', type: 'text', md: 6 },
+        { name: 'celular', label: 'Número de Celular', type: 'tel', md: 6 },
       ].map(({ name, label, type, md }) => (
         <Grid item xs={12} md={md} key={name}>
           <TextField
@@ -638,6 +651,7 @@ const Crud = () => {
         { name: 'apellidos', label: 'Apellidos', type: 'text' },
         { name: 'correo_electronico', label: 'Correo Electrónico', type: 'email' },
         { name: 'nombre_usuario', label: 'Nombre de Usuario', type: 'text' },
+        { name: 'celular', label: 'Número de Celular', type: 'tel' }
       ].map((field, idx) => (
         <Grid item xs={12} md={6} key={idx}>
           <TextField
