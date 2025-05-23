@@ -24,17 +24,23 @@ const Home = () => {
 
   return (
     <div>
-      <Header />
       {isLoading ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
           <CircularIndeterminate />
         </div>
       ) : (
         <>
+        <Header />
+        <div id='home'>
           <Sec1 />
+          </div>
           <Sec2 />
+          <div id="video">
           <Sec3 />
+          </div>
+          <div id="comentarios">
           <Sec4 />
+          </div>
           <Floating />
           <Footer />
         </>

@@ -36,40 +36,61 @@ class UserViewSet(viewsets.ModelViewSet):
 @api_view(['POST'])
 def register_user(request):
     """Registrar un nuevo usuario."""
-    serializer = UserProfileSerializer(data=request.data)
     try:
-        if serializer.is_valid(raise_exception=True):
-            # Creación del usuario con el modelo User
-            user_data = {
-                'username': request.data.get('nombre_usuario'),
-                'email': request.data.get('correo_electronico'),
-                'password': request.data.get('password'),  # Asumiendo que también envías una contraseña
-            }
-            user = User.objects.create_user(**user_data)
+        # Obtener los datos del request
+        data = request.data
+        
+        # Validar que los campos requeridos estén presentes
+        required_fields = ['nombre_usuario', 'correo_electronico', 'password', 'nombres', 'apellidos']
+        for field in required_fields:
+            if not data.get(field):
+                return Response({
+                    'error': f'El campo {field} es requerido'
+                }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Verificar si el usuario ya existe
+        if User.objects.filter(username=data.get('nombre_usuario')).exists():
+            return Response({
+                'error': 'El nombre de usuario ya existe'
+            }, status=status.HTTP_400_BAD_REQUEST)
             
-            # Creación del perfil de usuario sin necesidad de enviar `user_id` desde el frontend
-            profile_data = {
-                'user': user,  # El `user` es asignado automáticamente por el backend
-                'nombres': request.data.get('nombres'),
-                'apellidos': request.data.get('apellidos'),
-                'nombre_usuario': user.username,
-                'celular': request.data.get('celular'),
-                'correo_electronico': user.email,
-                'conf_correo_electronico': user.email,
-                'rol_id': request.data.get('rol', 2),  # Rol se pasa, puede ser 1 por default o lo que necesites
-            }
-
-            # Guardamos el UserProfile asociado
-            UserProfile.objects.create(**profile_data)
-
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if User.objects.filter(email=data.get('correo_electronico')).exists():
+            return Response({
+                'error': 'El correo electrónico ya está registrado'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Crear el usuario de Django
+        user = User.objects.create_user(
+            username=data.get('nombre_usuario'),
+            email=data.get('correo_electronico'),
+            password=data.get('password')
+        )
+        
+        # Crear el perfil de usuario
+        user_profile = UserProfile.objects.create(
+            user=user,
+            nombres=data.get('nombres'),
+            apellidos=data.get('apellidos'),
+            nombre_usuario=user.username,
+            celular=data.get('celular', ''),  # Campo opcional
+            correo_electronico=user.email,
+            conf_correo_electronico=user.email,
+            rol_id=data.get('rol', 1)  # Rol por defecto si no se proporciona
+        )
+        
+        # Serializar la respuesta
+        serializer = UserProfileSerializer(user_profile)
+        
+        return Response({
+            'message': 'Usuario registrado correctamente',
+            'user': serializer.data
+        }, status=status.HTTP_201_CREATED)
     
-    except ValidationError as e:
-        return Response(e.detail, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         logger.error(f"Error during user registration: {str(e)}")
-        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
+        return Response({
+            'error': f'Error interno del servidor: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 def generar_codigo():
     """Generar un código de verificación aleatorio de 6 dígitos."""
     return str(random.randint(100000, 999999))
@@ -159,17 +180,13 @@ def logout_view(request):
 
 @api_view(['DELETE'])
 def delete_user(request, pk):
-    """Eliminar un perfil de usuario."""
     try:
         user_profile = UserProfile.objects.get(pk=pk)
-        user_profile.user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
     except UserProfile.DoesNotExist:
-        return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
-    except Exception as e:
-        logger.error(f"Error during user deletion: {str(e)}")
-        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
 
+    user_profile.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
 # Add views for Project model
 @api_view(['GET', 'POST'])
 def project_list(request):
@@ -237,3 +254,18 @@ def rol_detail(request, pk):
     elif request.method == 'DELETE':
         rol.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['PUT'])
+def update_user(request, pk):
+    try:
+        user_profile = UserProfile.objects.get(pk=pk)
+    except UserProfile.DoesNotExist:
+        return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = UserProfileSerializer(user_profile, data=request.data, partial=True)  # partial=True permite actualizar parcialmente
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

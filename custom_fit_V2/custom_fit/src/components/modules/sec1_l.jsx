@@ -6,7 +6,7 @@ const Section = () => {
   const navigate = useNavigate();
 
   const handleDesignClick = () => {
-    // Dejar vacío para implementar más tarde
+    navigate('/Personalizar')
   };
 
   const handleStoreClick = () => {
@@ -15,7 +15,7 @@ const Section = () => {
 
   return (
     
-    <div className="section-container">
+    <div id="home" className="section-container">
       <div className="overlay-div trapezoid-container">
         <div className="trapezoid"></div>
       </div>

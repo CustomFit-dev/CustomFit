@@ -94,7 +94,7 @@ const ReviewSection = () => {
   };
 
   return (
-    <Container maxWidth="lg" className="review-section">
+    <Container id="comentarios" maxWidth="lg" className="review-section">
       <Box className="reviews-header">
         <Typography variant="h3" component="h1" align="center" className="title-gradient">
           Opiniones de nuestros clientes

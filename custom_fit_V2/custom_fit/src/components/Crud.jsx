@@ -165,7 +165,7 @@ const Crud = () => {
 
   const handleAddUser = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/create-user/', formData, {
+      const response = await axios.post('http://localhost:8000/api/register', formData, {
         headers: {
           'Content-Type': 'application/json',
         },

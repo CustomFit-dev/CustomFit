@@ -24,18 +24,19 @@ import BuildIcon from '@mui/icons-material/Build';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import Divider from '@mui/material/Divider'; // Importar Divider
+import Divider from '@mui/material/Divider';
 
 const pages = [
-  { name: 'Inicio', route: '/Home_L' },
-  { name: 'Chat Bot', route: '#sobre' },
-  { name: 'Comentarios', route: '#prod' },
-  { name: 'Tienda', route: '/Store'},
-  { name: '', route: '/Store', icon: <ShoppingCartIcon /> },
+  { name: 'Inicio', route: '/Home_L#home' },
+  { name: '¿Como personalizar?', route: '/Home_L#video' },
+  { name: 'Comentarios', route: '/Home_L#comentarios' },
+  { name: 'Personalizar', route: '/personalizar' },
+  { name: 'Tienda', route: '/Store' },
+  { name: '', route: '#', icon: <ShoppingCartIcon /> },
 ];
 
 const settings = [
-  { name: 'Perfil', route: '/Profile', icon: <AccountCircleIcon /> }, // Solo una opción de "Perfil"
+  { name: 'Perfil', route: '/Profile', icon: <AccountCircleIcon /> },
   { name: 'Mis Pedidos', route: '#', icon: <LocalShippingIcon /> },
   { name: 'Mis Diseños', route: '#', icon: <DesignServicesIcon /> },
   { name: 'Crud', route: '/Crud', icon: <BuildIcon /> },
@@ -46,8 +47,8 @@ const settings = [
 function Header_l() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const { user, logout, isAuthenticated } = useAuth(); // Usar el hook useAuth
-  const navigate = useNavigate(); // Para redireccionar después del logout
+  const { user, logout, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -68,7 +69,26 @@ function Header_l() {
   const handleLogout = () => {
     logout();
     handleCloseUserMenu();
-    navigate('/Home'); // Redirigir a la página de inicio después del logout
+    navigate('/Home');
+  };
+
+  // Función genérica para hacer scroll suave a un id en /Home_L
+  const handleScrollToId = (id) => {
+    if (window.location.pathname !== '/Home_L') {
+      navigate('/Home_L');
+      setTimeout(() => {
+        const elem = document.getElementById(id);
+        if (elem) {
+          elem.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const elem = document.getElementById(id);
+      if (elem) {
+        elem.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    handleCloseNavMenu();
   };
 
   return (
@@ -126,11 +146,21 @@ function Header_l() {
                 }}
               >
                 {pages.map((page) => (
-                  <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">
-                      <Link to={page.route} style={{ textDecoration: 'none', color: 'inherit' }}>
-                        {page.name}
-                      </Link>
+                  <MenuItem
+                    key={page.name}
+                    onClick={() => {
+                      if (page.name === 'Comentarios') {
+                        handleScrollToId('comentarios');
+                      } else if (page.name === '¿Como personalizar?') {
+                        handleScrollToId('video');
+                      } else {
+                        handleCloseNavMenu();
+                        if (page.route) navigate(page.route);
+                      }
+                    }}
+                  >
+                    <Typography textAlign="center" sx={{ width: '100%' }}>
+                      {page.name}
                     </Typography>
                   </MenuItem>
                 ))}
@@ -158,18 +188,62 @@ function Header_l() {
             </Typography>
 
             {/* Botones de navegación en pantallas grandes */}
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'flex-end', marginRight: 2 }}>
-              {pages.map((page) => (
-                <Button
-                  key={page.name}
-                  component={Link}
-                  to={page.route}
-                  sx={{ my: 2, color: 'white', display: 'flex', alignItems: 'center' }}
-                >
-                  {page.icon}
-                  <Typography sx={{ ml: 1 }}>{page.name}</Typography>
-                </Button>
-              ))}
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: { xs: 'none', md: 'flex' },
+                justifyContent: 'flex-end',
+                marginRight: 2,
+              }}
+            >
+              {pages.map((page) => {
+                if (page.name === 'Comentarios') {
+                  return (
+                    <Button
+                      key={page.name}
+                      onClick={() => handleScrollToId('comentarios')}
+                      sx={{
+                        my: 2,
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {page.icon}
+                      <Typography sx={{ ml: 1 }}>{page.name}</Typography>
+                    </Button>
+                  );
+                } else if (page.name === '¿Como personalizar?') {
+                  return (
+                    <Button
+                      key={page.name}
+                      onClick={() => handleScrollToId('video')}
+                      sx={{
+                        my: 2,
+                        color: 'white',
+                        display: 'flex',
+                        alignItems: 'center',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {page.icon}
+                      <Typography sx={{ ml: 1 }}>{page.name}</Typography>
+                    </Button>
+                  );
+                }
+                return (
+                  <Button
+                    key={page.name}
+                    component={Link}
+                    to={page.route}
+                    sx={{ my: 2, color: 'white', display: 'flex', alignItems: 'center' }}
+                  >
+                    {page.icon}
+                    <Typography sx={{ ml: 1 }}>{page.name}</Typography>
+                  </Button>
+                );
+              })}
             </Box>
 
             {/* Icono de usuario y menú de configuraciones */}
@@ -209,10 +283,8 @@ function Header_l() {
               >
                 {settings.map((setting, index) => (
                   <React.Fragment key={setting.name}>
-                    {index === 3 && <Divider />} {/* Línea de separación después de "Mis Pedidos" */}
-                    <MenuItem
-                      onClick={setting.name === 'Cerrar sesión' ? handleLogout : handleCloseUserMenu}
-                    >
+                    {index === 3 && <Divider />}
+                    <MenuItem onClick={setting.name === 'Cerrar sesión' ? handleLogout : handleCloseUserMenu}>
                       {setting.icon}
                       <Typography textAlign="center" sx={{ ml: 1 }}>
                         {setting.name !== 'Cerrar sesión' ? (

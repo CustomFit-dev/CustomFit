@@ -108,7 +108,7 @@ const VideoPlayer = () => {
   }, [isPlaying]);
 
   return (
-    <div className="video-player-container">
+    <div id="video" className="video-player-container">
       <div className="video-overlay" onClick={togglePlay}>
         {!isPlaying && (
           <div className="play-icon">
