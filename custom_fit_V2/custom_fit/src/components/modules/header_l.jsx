@@ -25,17 +25,15 @@ import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import DesignServicesIcon from '@mui/icons-material/DesignServices';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import Divider from '@mui/material/Divider';
-import HomeIcon from '@mui/icons-material/Home';
-import StorefrontIcon from '@mui/icons-material/Storefront';
-
 
 const pages = [
-  { name: 'Inicio', route: '/Home_L#home', icon: <HomeIcon /> },
-  { name: 'Personalizar', route: '/personalizar', icon: <DesignServicesIcon /> },
-  { name: 'Tienda', route: '/Store', icon: <StorefrontIcon /> },
-  { name: '', route: '#', icon: <ShoppingCartIcon /> }, // Solo el ícono del carrito
+  { name: 'Inicio', route: '/Home_L#home' },
+  { name: '¿Como personalizar?', route: '/Home_L#video' },
+  { name: 'Comentarios', route: '/Home_L#comentarios' },
+  { name: 'Personalizar', route: '/personalizar' },
+  { name: 'Tienda', route: '/Store' },
+  { name: '', route: '#', icon: <ShoppingCartIcon /> },
 ];
-
 
 const settings = [
   { name: 'Perfil', route: '/Profile', icon: <AccountCircleIcon /> },
@@ -262,28 +260,11 @@ function Header_l() {
                   </Tooltip>
                 </>
               )}
-              
-              {isAuthenticated ? (
-                <>
-                  <Typography variant="body1" sx={{ marginRight: 2, color: 'white' }}>
-                    {user?.nombreUsuario || 'Usuario'}
-                  </Typography>
-                  <Tooltip title="Menú de usuario">
-                    <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                      <Avatar alt={user?.nombreUsuario} src={user?.avatarUrl} />
-                    </IconButton>
-                  </Tooltip>
-                </>
-              ) : (
-                <Button
-                  color="inherit"
-                  onClick={handleOpenUserMenu}
-                  startIcon={<AccountCircleIcon />}
-                >
+              {!isAuthenticated && (
+                <Button color="inherit" onClick={handleOpenUserMenu}>
                   Iniciar Sesión
                 </Button>
               )}
-
               <Menu
                 sx={{ mt: '45px' }}
                 id="menu-appbar"

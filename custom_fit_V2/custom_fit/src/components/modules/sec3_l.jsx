@@ -24,7 +24,19 @@ const CustomStepIcon = (props) => {
   const { active, completed, icon } = props;
 
   return (
-    <div className='sece31'>
+    <div
+      style={{
+        color: '#ffffff',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: active || completed ? '#ffffff33' : '#ffffff20',
+        borderRadius: '50%',
+        width: 40,  // Ajusta el tamaño del círculo
+        height: 40, // Ajusta el tamaño del círculo
+        fontSize: '1.2rem', // Tamaño del número
+      }}
+    >
       {icon} {/* Muestra el número del paso */}
     </div>
   );

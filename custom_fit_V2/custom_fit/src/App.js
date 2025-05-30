@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import 'bootstrap-icons/font/bootstrap-icons.css';
 import Home from './components/Home';
 import Store from './components/Store';
 import Form_r from './components/modules/Registrar';
