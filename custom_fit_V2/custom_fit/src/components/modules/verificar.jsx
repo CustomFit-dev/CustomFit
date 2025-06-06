@@ -101,26 +101,44 @@ const Form = ({ correo, onClose, onSuccess }) => {
         if (!responseData.token) {
           throw new Error('Respuesta incompleta del servidor: falta token');
         }
-        
-        const userData = {
-          nombreUsuario: responseData.nombre_usuario || '',
-          nombres: responseData.nombres || '',
-          apellidos: responseData.apellidos || '',
-          correoElectronico: responseData.correo_electronico || correo,
-          avatarUrl: responseData.avatar_url || '',
-        };
+        // Función para mapear rol numérico a string
+const mapRolNumericoAString = (rolNumerico) => {
+  const rolesMap = {
+    1: 'usuario',
+    2: 'administrador', 
+    3: 'proveedor'
+  };
+  return rolesMap[rolNumerico] || 'usuario'; // Default a 'usuario' si no encuentra el rol
+};
 
-        // Store the auth data
-        login(userData, responseData.token);
-        
-        alert(`Bienvenido ${responseData.nombre_usuario || 'Usuario'}`);
-        
-        // Usar el callback de éxito si está disponible
-        if (typeof onSuccess === 'function') {
-          onSuccess(userData);
-        } else {
-          navigate('/Home_L');
-        }
+// En tu código, después de recibir la respuesta del servidor:
+const userData = {
+  nombreUsuario: responseData.nombre_usuario || '',
+  nombres: responseData.nombres || '',
+  apellidos: responseData.apellidos || '',
+  correoElectronico: responseData.correo_electronico || correo,
+  avatarUrl: responseData.avatar_url || '',
+  rol: mapRolNumericoAString(responseData.rol), // Convertir número a string
+};
+
+// Ahora el switch funcionará correctamente
+console.log('Redirigiendo según rol:', userData.rol);
+switch (userData.rol) {
+  case 'usuario':
+    navigate('/Home_L');
+    break;
+  case 'proveedor':
+    navigate('/Prove');
+    break;
+  case 'domiciliario':
+    navigate('/home_domiciliario');
+    break;
+  case 'administrador':
+    navigate('/Admin');
+    break;
+  default:
+    console.warn('Rol no reconocido para navegación:', userData.rol);
+}
       } else {
         throw new Error(responseData.message || 'Error de autenticación');
       }

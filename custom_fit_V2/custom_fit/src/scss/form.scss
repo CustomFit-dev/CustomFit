@@ -801,3 +801,24 @@ body.modal-open {
 .modal-overlay:focus .register-card {
   outline: 2px solid #00a99d;
 }
+.input-container {
+  position: relative;
+  margin-bottom: 1.5rem; /* espacio entre inputs */
+}
+
+input.error {
+  border-color: #e74c3c; /* borde rojo si hay error */
+}
+
+.error-message-container {
+  margin-top: 0.3rem;
+  min-height: 1.2rem; /* reserva espacio para evitar salto visual */
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+

@@ -12,12 +12,16 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth.models import User
 import logging
+import string
+from django.core.mail import send_mail
 
 logger = logging.getLogger(__name__)
+    
 
 def home(request):
     """Vista de inicio."""
     return HttpResponse("Principal")
+
 
 class UserViewSet(viewsets.ModelViewSet):
     """Vista para gestionar el perfil del usuario."""
@@ -35,6 +39,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
 @api_view(['POST'])
 def register_user(request):
+
+    
     """Registrar un nuevo usuario."""
     try:
         # Obtener los datos del request
@@ -63,9 +69,9 @@ def register_user(request):
         user = User.objects.create_user(
             username=data.get('nombre_usuario'),
             email=data.get('correo_electronico'),
-            password=data.get('password')
+            password=data['password']
         )
-        
+        codigo = generar_codigo()
         # Crear el perfil de usuario
         user_profile = UserProfile.objects.create(
             user=user,
@@ -75,7 +81,8 @@ def register_user(request):
             celular=data.get('celular', ''),  # Campo opcional
             correo_electronico=user.email,
             conf_correo_electronico=user.email,
-            rol_id=data.get('rol', 1)  # Rol por defecto si no se proporciona
+            rol_id=data.get('rol', 1),  # Rol por defecto si no se proporcio
+             codigo_verificacion=codigo
         )
         
         # Serializar la respuesta
@@ -95,6 +102,7 @@ def generar_codigo():
     """Generar un código de verificación aleatorio de 6 dígitos."""
     return str(random.randint(100000, 999999))
 
+    
 @api_view(['POST'])
 def enviar_codigo_view(request):
     """Enviar un código de verificación al correo electrónico del usuario."""
@@ -142,7 +150,8 @@ def login_view(request):
                 'nombres': user_profile.nombres,
                 'apellidos': user_profile.apellidos,
                 'correo_electronico': user_profile.correo_electronico,
-                'token': token.key
+                'token': token.key,
+                'rol': user_profile.rol.id  # <-- asegúrate de enviar el rol
             }, status=status.HTTP_200_OK)
         else:
             return Response({'status': 'error', 'message': 'Código incorrecto'}, status=status.HTTP_401_UNAUTHORIZED)

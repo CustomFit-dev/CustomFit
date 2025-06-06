@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGoogle, faFacebook, faGithub } from '@fortawesome/free-brands-svg-icons';
-import { faMicrosoft } from '@fortawesome/free-brands-svg-icons';
-import '../../scss/form.scss'; // Assuming you'll integrate the new CSS here
+import { faGoogle, faFacebook, faGithub, faMicrosoft } from '@fortawesome/free-brands-svg-icons';
+import '../../scss/form.scss'; // Asumiendo que integras los estilos aquí
 import {
     validateApe,
     validatecel,
@@ -32,20 +32,25 @@ const Form_R = () => {
             celular: validatecel(celular),
             correoElectronico: validateEmail(correoElectronico),
             confCorreoElectronico: validateEmailconf(confCorreoElectronico, correoElectronico),
-        }
+        };
         setErrors(errores);
         return Object.values(errores).every(error => !error);
-    }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         if (!validateForm()) {
-            alert('Por favor, revisa los campos del formulario.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Formulario inválido',
+                text: 'Por favor, revisa los campos del formulario.',
+                confirmButtonColor: '#3085d6'
+            });
             return;
         }
         setLoading(true);
-    
+
         const formData = {
             nombres,
             apellidos,
@@ -55,8 +60,9 @@ const Form_R = () => {
             conf_correo_electronico: confCorreoElectronico,
             rol: 1,
             user_id: 123,
+            password: "temporal123"
         };
-    
+
         try {
             const response = await fetch('http://localhost:8000/api/register/', {
                 method: 'POST',
@@ -65,11 +71,16 @@ const Form_R = () => {
                 },
                 body: JSON.stringify(formData),
             });
-    
+
             if (response.ok) {
                 const data = await response.json();
                 console.log('Registro exitoso:', data);
-                alert('Datos enviados. Por favor, confirma que todo está correcto.');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Registro exitoso',
+                    text: 'Datos enviados. Por favor, confirma que todo está correcto.',
+                    confirmButtonColor: '#3085d6'
+                });
                 navigate('/Iniciar');
             } else {
                 const errorData = await response.json();
@@ -77,43 +88,55 @@ const Form_R = () => {
                 if (errorData.errors) {
                     setErrors(errorData.errors);
                 }
-                alert('Error al enviar los datos. Por favor, inténtalo de nuevo.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al enviar los datos. Por favor, inténtalo de nuevo.',
+                    confirmButtonColor: '#d33'
+                });
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Error en la conexión. Por favor, verifica tu conexión a internet y vuelve a intentarlo.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error de conexión',
+                text: 'Por favor, verifica tu conexión a internet y vuelve a intentarlo.',
+                confirmButtonColor: '#d33'
+            });
         } finally {
             setLoading(false);
         }
     };
-    
+
     return (
         <div className="register-container">
-            {/* Background particles */}
             <div className="bg-particles">
                 <div className="particle particle-1"></div>
                 <div className="particle particle-2"></div>
                 <div className="particle particle-3"></div>
             </div>
-            
+
             <div className="register-card">
                 <div className="close-button">
                     <button onClick={() => navigate('/login')}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" 
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" 
+                            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <line x1="18" y1="6" x2="6" y2="18"></line>
                             <line x1="6" y1="6" x2="18" y2="18"></line>
                         </svg>
                     </button>
                 </div>
-                
+
                 <div className="register-content">
                     <div className="register-header">
                         <h1>Regístrate</h1>
                         <div className="accent-line"></div>
                     </div>
-                    
+
                     <form onSubmit={handleSubmit} className="register-form">
                         <div className="form-grid">
+
                             <div className="input-container">
                                 <input
                                     type="text"
@@ -125,9 +148,13 @@ const Form_R = () => {
                                 />
                                 <label htmlFor="nombres">Nombres</label>
                                 <div className="input-line"></div>
-                                {errors.nombres && <p className="error-message">{errors.nombres}</p>}
+                                {errors.nombres && (
+                                    <div className="error-message-container">
+                                        <p className="error-message">{errors.nombres}</p>
+                                    </div>
+                                )}
                             </div>
-                            
+
                             <div className="input-container">
                                 <input
                                     type="text"
@@ -139,9 +166,13 @@ const Form_R = () => {
                                 />
                                 <label htmlFor="apellidos">Apellidos</label>
                                 <div className="input-line"></div>
-                                {errors.apellidos && <p className="error-message">{errors.apellidos}</p>}
+                                {errors.apellidos && (
+                                    <div className="error-message-container">
+                                        <p className="error-message">{errors.apellidos}</p>
+                                    </div>
+                                )}
                             </div>
-                            
+
                             <div className="input-container">
                                 <input
                                     type="text"
@@ -153,9 +184,13 @@ const Form_R = () => {
                                 />
                                 <label htmlFor="nombre-usuario">Nombre de Usuario</label>
                                 <div className="input-line"></div>
-                                {errors.nombreUsuario && <p className="error-message">{errors.nombreUsuario}</p>}
+                                {errors.nombreUsuario && (
+                                    <div className="error-message-container">
+                                        <p className="error-message">{errors.nombreUsuario}</p>
+                                    </div>
+                                )}
                             </div>
-                            
+
                             <div className="input-container">
                                 <input
                                     type="number"
@@ -167,9 +202,13 @@ const Form_R = () => {
                                 />
                                 <label htmlFor="celular">Celular</label>
                                 <div className="input-line"></div>
-                                {errors.celular && <p className="error-message">{errors.celular}</p>}
+                                {errors.celular && (
+                                    <div className="error-message-container">
+                                        <p className="error-message">{errors.celular}</p>
+                                    </div>
+                                )}
                             </div>
-                            
+
                             <div className="input-container">
                                 <input
                                     type="email"
@@ -181,9 +220,13 @@ const Form_R = () => {
                                 />
                                 <label htmlFor="correo-electronico">Correo Electrónico</label>
                                 <div className="input-line"></div>
-                                {errors.correoElectronico && <p className="error-message">{errors.correoElectronico}</p>}
+                                {errors.correoElectronico && (
+                                    <div className="error-message-container">
+                                        <p className="error-message">{errors.correoElectronico}</p>
+                                    </div>
+                                )}
                             </div>
-                            
+
                             <div className="input-container">
                                 <input
                                     type="email"
@@ -195,42 +238,46 @@ const Form_R = () => {
                                 />
                                 <label htmlFor="conf-correo-electronico">Confirmar Email</label>
                                 <div className="input-line"></div>
-                                {errors.confCorreoElectronico && <p className="error-message">{errors.confCorreoElectronico}</p>}
+                                {errors.confCorreoElectronico && (
+                                    <div className="error-message-container">
+                                        <p className="error-message">{errors.confCorreoElectronico}</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
-                        
+
                         <div className="social-login">
                             <div className="separator">
                                 <div className="line"></div>
                                 <span>O inicia sesión con</span>
                                 <div className="line"></div>
                             </div>
-                            
+
                             <div className="social-buttons">
                                 <button type="button" className="social-button google">
                                     <FontAwesomeIcon icon={faGoogle} />
                                     <span>Google</span>
                                 </button>
-                                
+
                                 <button type="button" className="social-button facebook">
                                     <FontAwesomeIcon icon={faFacebook} />
                                     <span>Facebook</span>
                                 </button>
-                                
+
                                 <button type="button" className="social-button github">
                                     <FontAwesomeIcon icon={faGithub} />
                                     <span>GitHub</span>
                                 </button>
-                                
+
                                 <button type="button" className="social-button microsoft">
                                     <FontAwesomeIcon icon={faMicrosoft} />
                                     <span>Microsoft</span>
                                 </button>
                             </div>
                         </div>
-                        
-                        <button 
-                            type="submit" 
+
+                        <button
+                            type="submit"
                             className={`submit-button ${loading ? 'loading' : ''}`}
                             disabled={loading}
                         >

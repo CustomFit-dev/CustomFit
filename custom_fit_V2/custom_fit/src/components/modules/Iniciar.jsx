@@ -76,12 +76,23 @@ const Form_I = ({ onClose }) => {
   };
 
   // Redirigir después de verificación exitosa
-  const handleSuccessfulVerification = (userData) => {
-    // Esta función se llamará desde el componente de verificación
-    // cuando la verificación sea exitosa
-    setShowVerifyModal(false);
-    navigate('/Home_L');
-  };
+const handleSuccessfulVerification = (userData) => {
+  setShowVerifyModal(false);
+
+  const roleId = userData.rol_id || (userData.rol && userData.rol.id);
+
+switch(roleId) {
+  case 1:
+    navigate('/Home_L'); // Cliente
+    break;
+  case 2:
+    navigate('/Admin');
+    break;
+  case 3:
+    navigate('/Prove');
+    break;
+}
+};
 
   return (
     <>
