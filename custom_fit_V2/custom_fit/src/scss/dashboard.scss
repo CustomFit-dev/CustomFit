@@ -225,3 +225,25 @@ body {
     height: 36px;
   }
 }
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #f0f0f0; // color de fondo opcional
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 1rem;
+  color: #333;
+}
+
+.user-info svg {
+  color: #4f46e5; // color del ícono (puedes personalizar)
+}
+
+.user-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px; // ajusta según el espacio disponible
+}

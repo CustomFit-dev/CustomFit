@@ -1,5 +1,4 @@
-// PersonalDataForm.js
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import '../../../scss/DatosPersonales.scss';
 
 import {
@@ -13,6 +12,7 @@ import {
   Divider,
 } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useAuth } from '../authcontext';
 
 const theme = createTheme({
   palette: {
@@ -25,28 +25,45 @@ const theme = createTheme({
 });
 
 function PersonalDataForm() {
-  const [formData, setFormData] = useState({
-    nombre: 'KEVIN',
-    apellido: 'PATIÑO',
-    usuario: 'KEVIN3126',
-    correo: 'Kevin31234daniel@gmail.com',
-    nombre2: 'DANIEL',
-    apellido2: 'GOMEZ',
-    direccion: 'Calle 36C #12b-11',
-  });
+  const { user } = useAuth();
 
+  const nombre = (user?.nombres || '').split(' ')[0];
+  const apellido = (user?.apellidos || '').split(' ')[0];
+
+  const initialData = {
+    nombre: nombre || '',
+    apellido: apellido || '',
+    usuario: user?.nombreUsuario || '',
+    correo: user?.correoElectronico || '',
+    celular: user?.celular || '',
+    direccion: '',
+  };
+
+  const [formData, setFormData] = useState(initialData);
+  const [formDataOriginal, setFormDataOriginal] = useState(initialData);
   const [profileImage, setProfileImage] = useState(null);
   const fileInputRef = useRef(null);
 
+  useEffect(() => {
+    setFormData(initialData);
+    setFormDataOriginal(initialData);
+  }, [user]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({ ...prevState, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Datos enviados:', formData);
+    console.log('Datos guardados:', formData);
     console.log('Imagen subida:', profileImage);
+    setFormDataOriginal(formData);
+  };
+
+  const handleCancel = () => {
+    setFormData(formDataOriginal);
+    setProfileImage(null);
   };
 
   const handleAvatarClick = () => {
@@ -57,12 +74,14 @@ function PersonalDataForm() {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImage(reader.result); // Guardamos la imagen en base64
-      };
+      reader.onloadend = () => setProfileImage(reader.result);
       reader.readAsDataURL(file);
     }
   };
+
+  if (!user) {
+    return <Typography color="text.secondary">Cargando datos del usuario...</Typography>;
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -79,7 +98,6 @@ function PersonalDataForm() {
           }}
         >
           <Grid container spacing={4} alignItems="center">
-            {/* Avatar + Correo */}
             <Grid
               item
               xs={12}
@@ -109,11 +127,7 @@ function PersonalDataForm() {
                 style={{ display: 'none' }}
                 onChange={handleImageChange}
               />
-              <Typography
-                variant="subtitle1"
-                color="text.secondary"
-                align="center"
-              >
+              <Typography variant="subtitle1" color="text.secondary" align="center">
                 {formData.correo}
               </Typography>
               <Typography variant="caption" color="primary" sx={{ mt: 1 }}>
@@ -121,7 +135,6 @@ function PersonalDataForm() {
               </Typography>
             </Grid>
 
-            {/* Divider vertical */}
             <Divider
               orientation="vertical"
               flexItem
@@ -132,7 +145,6 @@ function PersonalDataForm() {
               }}
             />
 
-            {/* Formulario */}
             <Grid item xs={12} md={8}>
               <Typography
                 variant="h5"
@@ -143,9 +155,9 @@ function PersonalDataForm() {
               <form onSubmit={handleSubmit}>
                 <Grid container spacing={3}>
                   {[
-                    ['nombre', 'nombre2'],
-                    ['apellido', 'apellido2'],
-                    ['usuario', 'direccion'],
+                    ['nombre', 'apellido'],
+                    ['usuario', 'correo'],
+                    ['celular', 'direccion'],
                   ].map((pair) =>
                     pair.map((field) => (
                       <Grid item xs={12} sm={6} key={field}>
@@ -167,7 +179,7 @@ function PersonalDataForm() {
                       </Grid>
                     ))
                   )}
-                  {/* Botones */}
+
                   <Grid item xs={12} sm={6}>
                     <Button
                       type="submit"
@@ -179,7 +191,10 @@ function PersonalDataForm() {
                         bgcolor: '#17BEBB',
                         fontSize: '1rem',
                         py: 1.3,
-                        '&:hover': { bgcolor: 'transparent',borderColor: '#00a0b8', },
+                        '&:hover': {
+                          bgcolor: 'transparent',
+                          borderColor: '#00a0b8',
+                        },
                       }}
                     >
                       Guardar
@@ -187,6 +202,7 @@ function PersonalDataForm() {
                   </Grid>
                   <Grid item xs={12} sm={6}>
                     <Button
+                      onClick={handleCancel}
                       variant="outlined"
                       fullWidth
                       sx={{

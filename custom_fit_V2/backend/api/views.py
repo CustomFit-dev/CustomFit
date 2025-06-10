@@ -150,6 +150,7 @@ def login_view(request):
                 'nombres': user_profile.nombres,
                 'apellidos': user_profile.apellidos,
                 'correo_electronico': user_profile.correo_electronico,
+                'celular': user_profile.celular,
                 'token': token.key,
                 'rol': user_profile.rol.id  # <-- asegúrate de enviar el rol
             }, status=status.HTTP_200_OK)

@@ -118,9 +118,10 @@ const userData = {
   apellidos: responseData.apellidos || '',
   correoElectronico: responseData.correo_electronico || correo,
   avatarUrl: responseData.avatar_url || '',
+  celular: responseData.celular || '',
   rol: mapRolNumericoAString(responseData.rol), // Convertir número a string
 };
-
+login(userData, responseData.token);
 // Ahora el switch funcionará correctamente
 console.log('Redirigiendo según rol:', userData.rol);
 switch (userData.rol) {
