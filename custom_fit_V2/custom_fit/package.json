@@ -27,6 +27,7 @@
     "bootstrap": "^5.3.3",
     "dayjs": "^1.11.12",
     "firebase": "^10.13.0",
+    "html2canvas": "^1.4.1",
     "jquery": "^3.7.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.484.0",

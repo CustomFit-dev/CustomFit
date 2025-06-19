@@ -18,6 +18,9 @@ import CamisetaBeige from "../../img/camisassinfo/camisabeige.png";
 import CamisetaTurquesa from "../../img/camisassinfo/camisaTurquesa.png";
 import CamisetaFucsia from "../../img/camisassinfo/camisaFucsia.png";
 import '../../scss/camisaPer.scss';
+import html2canvas from "html2canvas";
+import Swal from "sweetalert2";
+
 
 const TShirtCustomizer = () => {
   // State management
@@ -73,6 +76,42 @@ const TShirtCustomizer = () => {
 
 
   };
+  
+  const handleBuy = async () => {
+  if (!tshirtRef.current) return;
+
+  const canvas = await html2canvas(tshirtRef.current, {
+    backgroundColor: null,
+    scale: 2,
+    useCORS: true,
+  });
+
+  const imgData = canvas.toDataURL("image/png");
+
+  const link = document.createElement("a");
+  link.download = "camiseta.png";
+  link.href = imgData;
+  link.click();
+
+  Swal.fire({
+    title: "¡Camiseta lista para comprar!",
+    html: `
+      <p><strong>Talla:</strong> ${size}</p>
+      <p><strong>Tela:</strong> ${fabric || 'No seleccionada'}</p>
+      <p><strong>Color:</strong> ${tshirtColor}</p>
+      <p><strong>Elementos:</strong> ${textElements.length + imageElements.length + emojiElements.length}</p>
+      <img src="${imgData}" alt="Diseño" style="width:100%;border:1px solid #ccc;border-radius:10px;margin-top:10px"/>
+    `,
+    width: '600px',
+    confirmButtonText: 'Perfecto',
+    customClass: {
+      popup: 'rounded-xl'
+    }
+  });
+};
+
+
+
   const handleSelectCustomDesign = (imageSrc) => {
     // Crear un nuevo elemento de imagen con la imagen seleccionada
     setImageElements([...imageElements, {
@@ -385,7 +424,7 @@ const TShirtCustomizer = () => {
 
         {/* T-Shirt Display Area - Middle */}
         <div className="col-md-6">
-          <div className="position-relative" style={{ height: '700px', width: '100%' }}>
+          <div className="position-relative" style={{ height: '700px', width: '100%' }} ref={tshirtRef}>
             {/* Container with relative positioning for the t-shirt */}
             <div 
               className="tshirt-container position-relative" 
@@ -422,7 +461,7 @@ const TShirtCustomizer = () => {
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
                   zIndex: 2,
-                  overflow: 'hidden'
+                  overflow: 'visible',
                 }}
               >
                 {/* Text Elements */}
@@ -634,7 +673,7 @@ const TShirtCustomizer = () => {
 
           {/* Action Buttons */}
           <div className="d-grid gap-3">
-            <button className="btn btn-success btn-lg fw-bold">
+            <button className="btn btn-success btn-lg fw-bold" onClick={handleBuy}>
               Comprar
             </button>
             <button className="btn btn-primary btn-lg fw-bold">

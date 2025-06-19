@@ -4,6 +4,8 @@ import Typewriter from 'typewriter-effect';
 import Form_I from './Iniciar'; // Asegúrate de que la ruta sea correcta
 import '../../scss/Sec1.scss';  
 
+
+
 const Section = () => {
   const [showForm, setShowForm] = useState(false);
 

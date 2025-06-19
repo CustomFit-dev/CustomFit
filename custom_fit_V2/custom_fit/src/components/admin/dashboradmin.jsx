@@ -8,6 +8,7 @@
     import MyOrders from '../modules/dashboard/mis-pedidos';
     import Contact from '../modules/dashboard/contacto';
     import Shop from '../modules/dashboard/mis-pedidos';
+    import Productos from '../Crud';
     
 
     const App = () => {
@@ -17,6 +18,7 @@
     const menuItems = [
         { id: 'purchase-history', name: 'Estadisticas', icon: <ChartNoAxesCombined size={20} />, component: <PurchaseHistory /> },
         { id: 'personal-data', name: 'Usuarios', icon: <UserSearch size={20} />, component: <PersonalData /> },
+        { id: 'productos-data', name: 'Productos', icon: <UserSearch size={20} />, component: <Productos /> },
         { id: 'my-orders', name: 'Pedidos', icon: <Package size={20} />, component: <MyOrders /> },
         { id: 'contact', name: 'Facturas', icon: <NotepadTextDashed  size={20} />, component: <Contact /> },
         { id: 'shop', name: 'Productos Shop', icon: <ShoppingCart   size={20} />, component: <Contact /> },
