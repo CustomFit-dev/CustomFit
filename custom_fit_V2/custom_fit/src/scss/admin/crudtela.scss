@@ -1,0 +1,77 @@
+.crud-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.MuiPaper-root {
+  background-color: black !important;
+  color: white;
+}
+
+.MuiTableCell-head {
+  background-color: black !important;
+  color: #00a99d !important;
+  font-weight: bold;
+}
+
+
+.MuiTableRow-root:hover {
+  background-color: #00a99d !important;
+  color: black;
+}
+
+.MuiTablePagination-root,
+.MuiToolbar-root {
+  color: white !important;
+}
+
+.MuiInputBase-root {
+  border-radius: 8px !important;
+  color: white !important;
+}
+
+.MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
+  border-color: #17bebb !important;
+}
+
+.MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+  border-color: #17e6c9 !important;
+}
+
+.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: #0fa59d !important;
+}
+
+.MuiSelect-icon {
+  color: #17bebb !important;
+}
+
+.MuiInputLabel-root {
+  color: #17bebb !important;
+}
+
+.MuiDialogTitle-root {
+  background-color: #17bebb;
+  color: white;
+}
+
+.MuiDialogContent-root {
+  background-color: black;
+}
+
+.MuiDialogActions-root {
+  background-color: black;
+}
+
+.MuiButton-containedPrimary {
+  background: linear-gradient(45deg, #2196F3 30%, #21CBF3 90%) !important;
+}
+
+.fab-add {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(45deg, #2196F3 30%, #21CBF3 90%) !important;
+  color: white;
+}

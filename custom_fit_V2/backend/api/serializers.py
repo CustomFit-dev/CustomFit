@@ -3,6 +3,7 @@ from .models import UserProfile, Project, Rol
 
 from rest_framework import serializers
 from .models import UserProfile, Project, Rol
+from .models import Tela, Talla, Estampado, Color, Producto
 
 class RolSerializer(serializers.ModelSerializer):
     class Meta:
@@ -55,3 +56,29 @@ class RolSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rol
         fields = ['id', 'nombrerol', 'descripcion']
+
+class TelaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tela
+        fields = '__all__'
+
+class TallaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Talla
+        fields = '__all__'
+
+class EstampadoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Estampado
+        fields = '__all__'
+
+class ColorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Color
+        fields = '__all__'
+
+
+class ProductoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Producto
+        fields = '__all__'

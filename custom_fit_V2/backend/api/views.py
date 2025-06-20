@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.exceptions import ValidationError
 from django.core.mail import send_mail
 from .serializers import UserProfileSerializer, ProjectSerializer, RolSerializer
-from .models import UserProfile, Project, Rol
+from .models import UserProfile, Project, Rol, Tela, Talla, Estampado, Color, Producto
 import random
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 import logging
 import string
 from django.core.mail import send_mail
+from .serializers import TelaSerializer, TallaSerializer, EstampadoSerializer, ColorSerializer, ProductoSerializer
 
 logger = logging.getLogger(__name__)
     
@@ -279,3 +280,211 @@ def update_user(request, pk):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# telas
+@api_view(['GET', 'POST'])
+def tela_list(request):
+    if request.method == 'GET':
+        telas = Tela.objects.all()
+        serializer = TelaSerializer(telas, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = TelaSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def tela_detail(request, pk):
+    try:
+        tela = Tela.objects.get(pk=pk)
+    except Tela.DoesNotExist:
+        return Response({'error': 'Tela no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = TelaSerializer(tela)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = TelaSerializer(tela, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        tela.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+@api_view(['GET'])
+def talla_list(request):
+    tallas = Talla.objects.all()
+    serializer = TallaSerializer(tallas, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def talla_detail(request, pk):
+    try:
+        talla = Talla.objects.get(pk=pk)
+    except Talla.DoesNotExist:
+        return Response({'error': 'Talla no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+
+    serializer = TallaSerializer(talla)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+def talla_create(request):
+    serializer = TallaSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+    
+@api_view(['PUT', 'DELETE'])
+def talla_update_delete(request, pk):
+    try:
+        talla = Talla.objects.get(pk=pk)
+    except Talla.DoesNotExist:
+        return Response({"error": "Talla no encontrada"}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = TallaSerializer(talla, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        talla.delete()
+        return Response({"mensaje": "Talla eliminada"}, status=status.HTTP_204_NO_CONTENT)
+
+
+
+@api_view(['GET'])
+def estampado_list(request):
+    estampados = Estampado.objects.all()
+    serializer = EstampadoSerializer(estampados, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def estampado_detail(request, pk):
+    try:
+        estampado = Estampado.objects.get(pk=pk)
+        serializer = EstampadoSerializer(estampado)
+        return Response(serializer.data)
+    except Estampado.DoesNotExist:
+        return Response({'error': 'Estampado no encontrado'}, status=404)
+
+@api_view(['POST'])
+def estampado_create(request):
+    serializer = EstampadoSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT', 'DELETE'])
+def estampado_update_delete(request, pk):
+    try:
+        estampado = Estampado.objects.get(pk=pk)
+    except Estampado.DoesNotExist:
+        return Response({'error': 'Estampado no encontrado'}, status=404)
+
+    if request.method == 'PUT':
+        serializer = EstampadoSerializer(estampado, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        estampado.delete()
+        return Response(status=204)
+
+
+
+@api_view(['GET'])
+def color_list(request):
+    colores = Color.objects.all()
+    serializer = ColorSerializer(colores, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def color_detail(request, pk):
+    try:
+        color = Color.objects.get(pk=pk)
+        serializer = ColorSerializer(color)
+        return Response(serializer.data)
+    except Color.DoesNotExist:
+        return Response({'error': 'Color no encontrado'}, status=404)
+
+@api_view(['POST'])
+def color_create(request):
+    serializer = ColorSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT', 'DELETE'])
+def color_update_delete(request, pk):
+    try:
+        color = Color.objects.get(pk=pk)
+    except Color.DoesNotExist:
+        return Response({'error': 'Color no encontrado'}, status=404)
+
+    if request.method == 'PUT':
+        serializer = ColorSerializer(color, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        color.delete()
+        return Response(status=204)
+
+
+@api_view(['GET'])
+def producto_list(request):
+    productos = Producto.objects.all()
+    serializer = ProductoSerializer(productos, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def producto_detail(request, pk):
+    try:
+        producto = Producto.objects.get(pk=pk)
+        serializer = ProductoSerializer(producto)
+        return Response(serializer.data)
+    except Producto.DoesNotExist:
+        return Response({'error': 'Producto no encontrado'}, status=404)
+
+@api_view(['POST'])
+def producto_create(request):
+    serializer = ProductoSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=201)
+    return Response(serializer.errors, status=400)
+
+@api_view(['PUT', 'DELETE'])
+def producto_update_delete(request, pk):
+    try:
+        producto = Producto.objects.get(pk=pk)
+    except Producto.DoesNotExist:
+        return Response({'error': 'Producto no encontrado'}, status=404)
+
+    if request.method == 'PUT':
+        serializer = ProductoSerializer(producto, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        producto.delete()
+        return Response(status=204)

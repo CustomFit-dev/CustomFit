@@ -46,3 +46,74 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
+
+class Tela(models.Model):
+    idTela = models.BigAutoField(primary_key=True)
+    NombreTela = models.CharField(max_length=45)
+    TipoTela = models.CharField(max_length=45)
+    PrecioTela = models.BigIntegerField()
+    fecha_agregado = models.DateField()
+    Disponibilidad = models.CharField(max_length=45)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'tela' 
+        managed = False 
+
+
+class Talla(models.Model):
+    idTallas = models.BigAutoField(primary_key=True)
+    Talla = models.CharField(max_length=3)
+    Disponibilidad = models.CharField(max_length=45)
+    genero = models.CharField(max_length=45)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'tallas'
+
+
+class Estampado(models.Model):
+    idEstampado = models.BigAutoField(primary_key=True)
+    NombreEstampado = models.CharField(max_length=45)
+    TipoEstampado = models.CharField(max_length=45)
+    PrecioEstampado = models.BigIntegerField()
+    ImgEstampado = models.CharField(max_length=100)
+    ColorEstampado = models.CharField(max_length=45)
+    fecha_agregado = models.DateField()
+    Disponibilidad = models.CharField(max_length=45)
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        db_table = 'estampado'  # nombre exacto de tu tabla
+        managed = False  
+
+
+class Color(models.Model):
+    IdColor = models.BigAutoField(primary_key=True)
+    NombreColor = models.CharField(max_length=45)
+    disponibilidad = models.CharField(max_length=2)
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        db_table = 'color'  # nombre exacto en tu base de datos
+        managed = False 
+
+class Producto(models.Model):
+    idProductos = models.BigAutoField(primary_key=True)
+    NombreProductos = models.CharField(max_length=45)
+    imgProducto = models.CharField(max_length=100)
+    TipoProductos = models.CharField(max_length=45)
+    PrecioProducto = models.BigIntegerField()
+    Descripcion = models.CharField(max_length=255)
+    
+    Color_IdColor = models.ForeignKey('Color', on_delete=models.DO_NOTHING, db_column='Color_IdColor')
+    Tela_idTela = models.ForeignKey('Tela', on_delete=models.DO_NOTHING, db_column='Tela_idTela')
+    Tallas_idTallas = models.ForeignKey('Talla', on_delete=models.DO_NOTHING, db_column='Tallas_idTallas')
+    
+    fecha_creacion = models.DateField()
+    fecha_actualizacion = models.DateField()
+    updated_at = models.DateTimeField()
+
+    class Meta:
+        db_table = 'productos'
+        managed = False
