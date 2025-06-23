@@ -59,8 +59,12 @@ const ChatbotModal = ({ open, handleClose }) => {
           }, 1500);
           break;
         case '2':
-          botReply =
-            'Gracias por tu interés. Por favor llena el formulario en https://camishub.com/proveedores.';
+          botReply = '¡Gracias por tu interés. Por favor llena el formulario...';
+          setTimeout(() => {
+            navigate('/proveedorForm');
+            resetChat();
+            handleClose();
+          }, 1500);
           break;
         case '3':
         case '4':

@@ -12,6 +12,7 @@ import Domi from './components/domi';
 import Proveedor from './components/proveedor';
 import Personalizar from './components/Personalizar';
 import Admin from './components/admin';
+import ProveedorForm from './components/ProveedorForm'
 
 function App() {
   const { sendUserData } = axiosP();
@@ -32,6 +33,7 @@ function App() {
           <Route path="/Prove" element={<Proveedor />} />
           <Route path="/Personalizar" element={<Personalizar />} />
           <Route path="/Admin" element={<Admin />} />
+          <Route path="/proveedorForm" element={<ProveedorForm />} />
         </Routes>
     </div>
   );
