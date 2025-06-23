@@ -1,257 +1,285 @@
-import React, { useEffect, useState } from 'react';
-import {
-  MRT_GlobalFilterTextField,
-  MRT_TableBodyCellValue,
-  MRT_TablePagination,
-  MRT_ToolbarAlertBanner,
-  useMaterialReactTable,
-} from 'material-react-table';
-import {
-  Box,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  IconButton,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Grid,
-  Paper,
-  useMediaQuery,
-  Tooltip,
-  Fab,
-  Alert,
-  Snackbar
-} from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
-import SaveIcon from '@mui/icons-material/Save';
-import { useNavigate } from 'react-router-dom';
-import { fetchData } from './modules/Datos';
-import { MRT_Localization_ES } from 'material-react-table/locales/es';
-import { ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
-import { flexRender } from '@tanstack/react-table';
-import theme from './modules/Themes';
-import '../scss/admin/crud.scss';
-import { color } from '@mui/system';
+  import React, { useEffect, useState } from 'react';
+  import {
+    MRT_GlobalFilterTextField,
+    MRT_TableBodyCellValue,
+    MRT_TablePagination,
+    MRT_ToolbarAlertBanner,
+    useMaterialReactTable,
+  } from 'material-react-table';
+  import {
+    Box,
+    Stack,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Typography,
+    IconButton,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
+    TextField,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
+    Grid,
+    Paper,
+    useMediaQuery,
+    Tooltip,
+    Fab,
+    Alert,
+    Snackbar,
+    Chip,
+    Switch,
+    FormControlLabel
+  } from '@mui/material';
+  import DeleteIcon from '@mui/icons-material/Delete';
+  import EditIcon from '@mui/icons-material/Edit';
+  import AddIcon from '@mui/icons-material/Add';
+  import CloseIcon from '@mui/icons-material/Close';
+  import SaveIcon from '@mui/icons-material/Save';
+  import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+  import CategoryIcon from '@mui/icons-material/Category';
+  import { useNavigate } from 'react-router-dom';
+  import { MRT_Localization_ES } from 'material-react-table/locales/es';
+  import { ThemeProvider } from '@mui/material/styles';
+  import axios from 'axios';
+  import { flexRender } from '@tanstack/react-table';
+  import theme from './modules/Themes';
+  import '../scss/admin/crud.scss';
 
-const Crud = () => {
-  const [userProfiles, setUserProfiles] = useState([]);
-  const [openAddModal, setOpenAddModal] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [userToEdit, setUserToEdit] = useState(null);
-  const [userToDelete, setUserToDelete] = useState(null);
-  const [formData, setFormData] = useState({
-    nombres: '',
-    apellidos: '',
-    correo_electronico: '',
-    nombre_usuario: '',
-    celular: '',
-    rol: '',
+  const ProductsCrud = () => {
+    const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [openAddModal, setOpenAddModal] = useState(false);
+    const [openEditModal, setOpenEditModal] = useState(false);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [productToEdit, setProductToEdit] = useState(null);
+    const [productToDelete, setProductToDelete] = useState(null);
+    const [formData, setFormData] = useState({
+      nombre: '',
+      descripcion: '',
+      precio: '',
+      categoria: '',
+      stock: '',
+      imagen_url: '',
+      activo: true,
+      codigo_producto: '',
+      marca: '',
+      peso: '',
+      dimensiones: ''
+    });
+    const [snackbar, setSnackbar] = useState({
+      open: false,
+      message: '',
+      severity: 'success'
+    });
     
-  });
-  const [roles, setRoles] = useState([]);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success'
-  });
-  
-  const isMobile = useMediaQuery('(max-width:600px)');
-  const navigate = useNavigate();
+    const isMobile = useMediaQuery('(max-width:600px)');
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchUserProfiles = async () => {
-      const data = await fetchData();
-      console.log(data);
-      setUserProfiles(data);
-      
-      // Extraer roles únicos para el selector
-      const uniqueRoles = [...new Set(data.map(user => user.rol?.nombrerol))].filter(Boolean);
-      setRoles(uniqueRoles.map(rol => ({ id: rol, nombre: rol })));
+    // API URLs
+    const API_BASE_URL = 'http://localhost:8000/api';
+
+    useEffect(() => {
+      fetchProducts();
+      fetchCategories();
+    }, []);
+
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/products/`);
+        setProducts(response.data);
+      } catch (error) {
+        console.error('Error al obtener productos:', error);
+        setSnackbar({
+          open: true,
+          message: 'Error al cargar los productos',
+          severity: 'error'
+        });
+      }
     };
 
-    fetchUserProfiles();
-  }, []);
-
-  const Return = () => {
-    navigate('/Home');
-  };
-
-  function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-      const cookies = document.cookie.split(';');
-      for (let i = 0; i < cookies.length; i++) {
-        const cookie = cookies[i].trim();
-        if (cookie.substring(0, name.length + 1) === name + '=') {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-        }
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${API_BASE_URL}/categories/`);
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error al obtener categorías:', error);
+        setSnackbar({
+          open: true,
+          message: 'Error al cargar las categorías',
+          severity: 'error'
+        });
       }
+    };
+
+    const Return = () => {
+      navigate('/Home');
+    };
+
+    const handleOpenAddModal = () => {
+      setFormData({
+        nombre: '',
+        descripcion: '',
+        precio: '',
+        categoria: '',
+        stock: '',
+        imagen_url: '',
+        activo: true,
+        codigo_producto: '',
+        marca: '',
+        peso: '',
+        dimensiones: ''
+      });
+      setOpenAddModal(true);
+    };
+
+    const handleCloseAddModal = () => {
+      setOpenAddModal(false);
+    };
+
+    const handleOpenEditModal = (product) => {
+      setProductToEdit(product);
+      setFormData({
+        nombre: product.nombre || '',
+        descripcion: product.descripcion || '',
+        precio: product.precio || '',
+        categoria: product.categoria?.nombre || product.categoria || '',
+        stock: product.stock || '',
+        imagen_url: product.imagen_url || '',
+        activo: product.activo !== undefined ? product.activo : true,
+        codigo_producto: product.codigo_producto || '',
+        marca: product.marca || '',
+        peso: product.peso || '',
+        dimensiones: product.dimensiones || ''
+      });
+      setOpenEditModal(true);
+    };
+
+    const handleCloseEditModal = () => {
+      setOpenEditModal(false);
+      setProductToEdit(null);
+    };
+
+    const handleOpenDeleteDialog = (product) => {
+      setProductToDelete(product);
+      setOpenDeleteDialog(true);
+    };
+
+    const handleCloseDeleteDialog = () => {
+      setOpenDeleteDialog(false);
+      setProductToDelete(null);
+    };
+
+    const handleInputChange = (e) => {
+      const { name, value, type, checked } = e.target;
+      setFormData({
+        ...formData,
+        [name]: type === 'checkbox' ? checked : value
+      });
+    };
+
+  const handleAddProduct = async () => {
+    // Validaciones básicas
+    if (!formData.nombre || !formData.precio || !formData.categoria) {
+      setSnackbar({
+        open: true,
+        message: 'Por favor completa los campos obligatorios',
+        severity: 'error'
+      });
+      return;
     }
-    return cookieValue;
-  }
 
-  const handleOpenAddModal = () => {
-    setFormData({
-      nombres: '',
-      apellidos: '',
-      correo_electronico: '',
-      nombre_usuario: '',
-      celular: '',
-      rol: ''
-    });
-    setOpenAddModal(true);
-  };
-
-  const handleCloseAddModal = () => {
-    setOpenAddModal(false);
-  };
-
-  const handleOpenEditModal = (user) => {
-    setUserToEdit(user);
-    setFormData({
-      nombres: user.nombres,
-      apellidos: user.apellidos,
-      correo_electronico: user.correo_electronico,
-      nombre_usuario: user.nombre_usuario,
-      rol: user.rol?.nombrerol || '',
-      celular: user.celular || '',
-
-    });
-    setOpenEditModal(true);
-  };
-
-  const handleCloseEditModal = () => {
-    setOpenEditModal(false);
-    setUserToEdit(null);
-  };
-
-  const handleOpenDeleteDialog = (user) => {
-    setUserToDelete(user);
-    setOpenDeleteDialog(true);
-  };
-
-  const handleCloseDeleteDialog = () => {
-    setOpenDeleteDialog(false);
-    setUserToDelete(null);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
-
-  const handleAddUser = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/register', formData, {
+      const response = await axios.post(`${API_BASE_URL}/products/`, formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
       if (response.status === 201) {
-        // Actualizar la lista de usuarios
-        const updatedUsers = await fetchData();
-        setUserProfiles(updatedUsers);
+        await fetchProducts();
         setOpenAddModal(false);
         setSnackbar({
           open: true,
-          message: 'Usuario agregado correctamente',
+          message: 'Producto agregado correctamente',
           severity: 'success'
         });
       }
     } catch (error) {
-      console.error('Error al agregar usuario:', error.response?.data || error.message);
+      console.error('Error al agregar producto:', error.response?.data || error.message);
       setSnackbar({
         open: true,
-        message: 'Error al agregar usuario',
+        message: error.response?.data?.message || 'Error al agregar producto',
         severity: 'error'
       });
     }
   };
 
-  const handleEditUser = async () => {
-    if (!userToEdit) return;
+  const handleEditProduct = async () => {
+    if (!productToEdit) return;
     
     try {
-      const response = await axios.put(`http://localhost:8000/api/update-user/${userToEdit.id}/`, formData, {
+      const response = await axios.put(`${API_BASE_URL}/products/${productToEdit.id}/`, formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
       if (response.status === 200) {
-        // Actualizar la lista de usuarios
-        const updatedUsers = await fetchData();
-        setUserProfiles(updatedUsers);
+        await fetchProducts();
         handleCloseEditModal();
         setSnackbar({
           open: true,
-          message: 'Usuario actualizado correctamente',
+          message: 'Producto actualizado correctamente',
           severity: 'success'
         });
       }
     } catch (error) {
-      console.error('Error al actualizar usuario:', error.response?.data || error.message);
+      console.error('Error al actualizar producto:', error.response?.data || error.message);
       setSnackbar({
         open: true,
-        message: 'Error al actualizar usuario',
+        message: error.response?.data?.message || 'Error al actualizar producto',
         severity: 'error'
       });
     }
   };
 
-  const handleDeleteUser = async () => {
-    if (!userToDelete) return;
+  const handleDeleteProduct = async () => {
+    if (!productToDelete) return;
     
     try {
-      const response = await axios.delete(`http://localhost:8000/api/delete-user/${userToDelete.id}/`, {
+      const response = await axios.delete(`${API_BASE_URL}/products/${productToDelete.id}/`, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
       if (response.status === 204) {
-        // Usuario eliminado correctamente
-        setUserProfiles((prevProfiles) =>
-          prevProfiles.filter((profile) => profile.id !== userToDelete.id)
+        setProducts((prevProducts) =>
+          prevProducts.filter((product) => product.id !== productToDelete.id)
         );
         handleCloseDeleteDialog();
         setSnackbar({
           open: true,
-          message: 'Usuario eliminado correctamente',
+          message: 'Producto eliminado correctamente',
           severity: 'success'
         });
       } else {
         throw new Error(`Respuesta inesperada: ${response.status}`);
       }
     } catch (error) {
-      console.error('Error al borrar el usuario:', error.response?.data || error.message);
+      console.error('Error al borrar el producto:', error.response?.data || error.message);
       setSnackbar({
         open: true,
-        message: 'Error al eliminar usuario',
+        message: error.response?.data?.message || 'Error al eliminar producto',
         severity: 'error'
       });
     }
@@ -264,38 +292,88 @@ const Crud = () => {
     });
   };
 
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP'
+    }).format(price);
+  };
+
   const columns = [
     { 
-      accessorKey: 'nombres', 
-      header: 'Nombres',
-      size: 150
+      accessorKey: 'id', 
+      header: 'ID',
+      size: 80
     },
     { 
-      accessorKey: 'apellidos', 
-      header: 'Apellidos',
-      size: 150
-    },
-    {
-      accessorKey: 'celular',
-      header: 'Celular',
-      size: 140,
+      accessorKey: 'codigo_producto', 
+      header: 'Código',
+      size: 120
     },
     { 
-      accessorKey: 'correo_electronico', 
-      header: 'Correo',
+      accessorKey: 'nombre', 
+      header: 'Producto',
       size: 200
     },
+    { 
+      accessorKey: 'categoria.nombre', 
+      header: 'Categoría',
+      size: 120,
+      Cell: ({ cell }) => (
+        <Chip 
+          label={cell.getValue() || 'Sin categoría'} 
+          size="small" 
+          icon={<CategoryIcon />}
+          sx={{ 
+            backgroundColor: '#17bebb',
+            color: 'white'
+          }}
+        />
+      ),
+    },
     {
-      accessorKey: 'nombre_usuario',
-      header: 'Nombre de usuario',
-      size: 150
+      accessorKey: 'precio',
+      header: 'Precio',
+      size: 120,
+      Cell: ({ cell }) => (
+        <Typography variant="body2" sx={{ fontWeight: 'bold', color: '#4caf50' }}>
+          {formatPrice(cell.getValue())}
+        </Typography>
+      ),
+    },
+    {
+      accessorKey: 'stock',
+      header: 'Stock',
+      size: 100,
+      Cell: ({ cell }) => {
+        const stock = cell.getValue();
+        const isLowStock = stock < 10;
+        return (
+          <Chip 
+            label={stock}
+            size="small"
+            color={isLowStock ? 'error' : 'success'}
+            variant={isLowStock ? 'filled' : 'outlined'}
+          />
+        );
+      },
     },
     { 
-      accessorKey: 'rol.nombrerol', 
-      header: 'Rol',
+      accessorKey: 'marca', 
+      header: 'Marca',
+      size: 120
+    },
+    {
+      accessorKey: 'activo',
+      header: 'Estado',
       size: 100,
-      Cell: ({ cell }) => cell.getValue() || 'No asignado',
-      
+      Cell: ({ cell }) => (
+        <Chip 
+          label={cell.getValue() ? 'Activo' : 'Inactivo'}
+          color={cell.getValue() ? 'success' : 'default'}
+          size="small"
+        />
+      ),
     },
     {
       id: 'acciones',
@@ -303,7 +381,7 @@ const Crud = () => {
       size: 150,
       Cell: ({ row }) => (
         <Box sx={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-          <Tooltip title="Editar usuario">
+          <Tooltip title="Editar producto">
             <IconButton
               color="primary"
               onClick={() => handleOpenEditModal(row.original)}
@@ -312,7 +390,7 @@ const Crud = () => {
               <EditIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Eliminar usuario">
+          <Tooltip title="Eliminar producto">
             <IconButton
               color="error"
               onClick={() => handleOpenDeleteDialog(row.original)}
@@ -328,7 +406,7 @@ const Crud = () => {
 
   const table = useMaterialReactTable({
     columns,
-    data: userProfiles,
+    data: products,
     enableRowSelection: true,
     initialState: {
       pagination: { pageSize: 5, pageIndex: 0 },
@@ -361,21 +439,75 @@ const Crud = () => {
     enableColumnFilters: true
   });
 
+  const fieldConfiguration = [
+    { name: 'nombre', label: 'Nombre del Producto', type: 'text', md: 6, required: true },
+    { name: 'codigo_producto', label: 'Código de Producto', type: 'text', md: 6, required: false },
+    { name: 'descripcion', label: 'Descripción', type: 'text', md: 12, required: false, multiline: true },
+    { name: 'precio', label: 'Precio (COP)', type: 'number', md: 6, required: true },
+    { name: 'stock', label: 'Stock Disponible', type: 'number', md: 6, required: false },
+    { name: 'marca', label: 'Marca', type: 'text', md: 6, required: false },
+    { name: 'peso', label: 'Peso (kg)', type: 'number', md: 6, required: false },
+    { name: 'dimensiones', label: 'Dimensiones', type: 'text', md: 6, required: false },
+    { name: 'imagen_url', label: 'URL de Imagen', type: 'url', md: 6, required: false },
+  ];
+
+  const renderFormFields = (isAddMode = false) => {
+    return fieldConfiguration.map(({ name, label, type, md, required, multiline }) => (
+      <Grid item xs={12} md={md} key={name}>
+        <TextField
+          margin="dense"
+          name={name}
+          label={label}
+          type={type}
+          fullWidth
+          variant="outlined"
+          value={formData[name] || ''}
+          onChange={handleInputChange}
+          required={required}
+          multiline={multiline}
+          rows={multiline ? 3 : 1}
+          sx={{
+            width: '100%',
+            input: { color: 'white' },
+            textarea: { color: 'white' },
+            label: { color: '#17bebb' },
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: '#17bebb',
+              },
+              '&:hover fieldset': {
+                borderColor: '#17e6c9',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#0fa59d',
+              },
+            },
+          }}
+        />
+      </Grid>
+    ));
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Paper elevation={0} sx={{ minHeight: '100vh', background: 'transparent' }}>
-        <h5 class="text-center text-white my-4">Gestión de Usuarios</h5>
+        <h5 className="text-center text-white my-4">
+          <ShoppingCartIcon sx={{ mr: 2, verticalAlign: 'middle' }} />
+          Gestión de Productos
+        </h5>
         <section className='crud-container'>
-          <Paper elevation={3} sx={{  p: 2, borderRadius: '10px', background: 'black', width: '100%' }}>
+          <Paper elevation={3} sx={{ p: 2, borderRadius: '10px', background: 'black', width: '100%' }}>
             
             <Box 
-            sx={{ display: 'flex', 
-                  flexDirection: isMobile ? 'column' : 'row', 
-                  justifyContent: 'space-between', alignItems: isMobile ? 
-                  'flex-start' : 'center', 
-                  mb: 2, 
-                  gap: 2,
-                  }}>
+              sx={{ 
+                display: 'flex', 
+                flexDirection: isMobile ? 'column' : 'row', 
+                justifyContent: 'space-between', 
+                alignItems: isMobile ? 'flex-start' : 'center', 
+                mb: 2, 
+                gap: 2,
+              }}
+            >
               <MRT_GlobalFilterTextField 
                 table={table} 
                 sx={{ 
@@ -385,7 +517,7 @@ const Crud = () => {
                   }
                 }}
               />
-              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', }}>
+              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
                 <Button
                   variant="contained"
                   startIcon={<AddIcon />}
@@ -393,16 +525,16 @@ const Crud = () => {
                   sx={{
                     borderRadius: '8px',
                     boxShadow: 2,
-                    background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+                    background: 'linear-gradient(45deg, #4caf50 30%, #66bb6a 90%)',
                   }}
                 >
-                  Agregar Usuario
+                  Agregar Producto
                 </Button>
                 {!isMobile && <MRT_TablePagination table={table} />}
               </Box>
             </Box>
             
-            <TableContainer sx={{ overflowX: 'auto', borderRadius: '8px' , background: 'black' }}>
+            <TableContainer sx={{ overflowX: 'auto', borderRadius: '8px', background: 'black' }}>
               <Table>
                 <TableHead>
                   {table.getHeaderGroups().map((headerGroup) => (
@@ -488,331 +620,308 @@ const Crud = () => {
                 position: 'fixed', 
                 bottom: 20, 
                 right: 20,
-                background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+                background: 'linear-gradient(45deg, #4caf50 30%, #66bb6a 90%)',
               }}
             >
               <AddIcon />
             </Fab>
           )}
           
-          {/* Modal para agregar usuario */}
-        <Dialog open={openAddModal} onClose={handleCloseAddModal} maxWidth="md" fullWidth>
-  <DialogTitle
-    sx={{
-      bgcolor: '#17bebb',
-      color: 'white',
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    }}
-  >
-    <Typography variant="h6">Agregar Nuevo Usuario</Typography>
-    <IconButton onClick={handleCloseAddModal} sx={{ color: 'white' }}>
-      <CloseIcon />
-    </IconButton>
-  </DialogTitle>
+          {/* Modal para agregar producto */}
+          <Dialog open={openAddModal} onClose={handleCloseAddModal} maxWidth="md" fullWidth>
+            <DialogTitle
+              sx={{
+                bgcolor: '#17bebb',
+                color: 'white',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+              }}
+            >
+              <Typography variant="h6">Agregar Nuevo Producto</Typography>
+              <IconButton onClick={handleCloseAddModal} sx={{ color: 'white' }}>
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
 
-  <DialogContent sx={{ mt: 2, bgcolor: 'black' }}>
-    <Grid container spacing={2} sx={{ mt: 1 }}>
-      {[
-        { name: 'nombres', label: 'Nombres', type: 'text', md: 6 },
-        { name: 'apellidos', label: 'Apellidos', type: 'text', md: 6 },
-        { name: 'correo_electronico', label: 'Correo Electrónico', type: 'email', md: 6 },
-        { name: 'nombre_usuario', label: 'Nombre de Usuario', type: 'text', md: 6 },
-        { name: 'confirmar_correo', label: 'Confirmar Email', type: 'text', md: 6 },
-        { name: 'celular', label: 'Número de Celular', type: 'tel', md: 6 },
-      ].map(({ name, label, type, md }) => (
-        <Grid item xs={12} md={md} key={name}>
-          <TextField
-            margin="dense"
-            name={name}
-            label={label}
-            type={type}
-            fullWidth
-            variant="outlined"
-            value={formData[name]}
-            onChange={handleInputChange}
-            required
-            sx={{
-              width: '100%',
-              input: { color: 'white' },
-              label: { color: '#17bebb' },
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
+            <DialogContent sx={{ mt: 2, bgcolor: 'black' }}>
+              <Grid container spacing={2} sx={{ mt: 1 }}>
+                {renderFormFields(true)}
+
+                <Grid item xs={12} md={6}>
+                  <FormControl fullWidth margin="dense" variant="outlined" required
+                    sx={{
+                      '& .MuiInputLabel-root': { color: '#17bebb' },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: '#17bebb',
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#17e6c9',
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#0fa59d',
+                        },
+                      },
+                    }}
+                  >
+                    <InputLabel id="categoria-label">Categoría</InputLabel>
+                    <Select
+                      labelId="categoria-label"
+                      name="categoria"
+                      value={formData.categoria}
+                      onChange={handleInputChange}
+                      label="Categoría"
+                      sx={{
+                        color: 'white',
+                        '& .MuiSelect-icon': {
+                          color: '#17bebb',
+                        },
+                      }}
+                    >
+                      {categories.map((categoria) => (
+                        <MenuItem key={categoria.id} value={categoria.nombre}>
+                          {categoria.nombre}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={formData.activo}
+                        onChange={handleInputChange}
+                        name="activo"
+                        sx={{
+                          '& .MuiSwitch-switchBase.Mui-checked': {
+                            color: '#17bebb',
+                          },
+                          '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                            backgroundColor: '#17bebb',
+                          },
+                        }}
+                      />
+                    }
+                    label={
+                      <Typography sx={{ color: 'white' }}>
+                        Producto Activo
+                      </Typography>
+                    }
+                    sx={{ mt: 2 }}
+                  />
+                </Grid>
+              </Grid>
+            </DialogContent>
+
+            <DialogActions sx={{ p: 2, bgcolor: 'black' }}>
+              <Button
+                onClick={handleCloseAddModal}
+                variant="outlined"
+                startIcon={<CloseIcon />}
+                sx={{
+                  color: 'white',
                   borderColor: '#17bebb',
-                },
-                '&:hover fieldset': {
-                  borderColor: '#17e6c9',
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: '#0fa59d',
-                },
-              },
-            }}
-          />
-        </Grid>
-      ))}
-
-      <Grid item xs={12}>
-        <FormControl fullWidth margin="dense" variant="outlined" required
-          sx={{
-            '& .MuiInputLabel-root': { color: '#17bebb' },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: '#17bebb',
-              },
-              '&:hover fieldset': {
-                borderColor: '#17e6c9',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#0fa59d',
-              },
-            },
-          }}
-        >
-          <InputLabel id="rol-label">Rol</InputLabel>
-          <Select
-            labelId="rol-label"
-            name="rol"
-            value={formData.rol}
-            onChange={handleInputChange}
-            label="Rol"
-            sx={{
-              color: 'white',
-              '& .MuiSelect-icon': {
-                color: '#17bebb',
-              },
-            }}
-          >
-            {roles.map((rol) => (
-              <MenuItem key={rol.id} value={rol.nombre}>
-                {rol.nombre}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Grid>
-    </Grid>
-  </DialogContent>
-
-  <DialogActions sx={{ p: 2, bgcolor: 'black' }}>
-    <Button
-      onClick={handleCloseAddModal}
-      variant="outlined"
-      startIcon={<CloseIcon />}
-      sx={{
-        color: 'white',
-        borderColor: '#17bebb',
-        '&:hover': {
-          borderColor: '#17e6c9',
-          backgroundColor: 'rgba(23, 190, 187, 0.1)',
-        }
-      }}
-    >
-      Cancelar
-    </Button>
-    <Button
-      onClick={handleAddUser}
-      variant="contained"
-      startIcon={<SaveIcon />}
-      sx={{
-        bgcolor: '#17bebb',
-        color: 'black',
-        '&:hover': {
-          bgcolor: '#17e6c9',
-        }
-      }}
-    >
-      Guardar
-    </Button>
-  </DialogActions>
-</Dialog>
-
+                  '&:hover': {
+                    borderColor: '#17e6c9',
+                    backgroundColor: 'rgba(23, 190, 187, 0.1)',
+                  }
+                }}
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={handleAddProduct}
+                variant="contained"
+                startIcon={<SaveIcon />}
+                sx={{
+                  bgcolor: '#17bebb',
+                  color: 'black',
+                  '&:hover': {
+                    bgcolor: '#17e6c9',
+                  }
+                }}
+              >
+                Guardar
+              </Button>
+            </DialogActions>
+          </Dialog>
           
-          {/* Modal para editar usuario */}
+          {/* Modal para editar producto */}
           <Dialog open={openEditModal} onClose={handleCloseEditModal} maxWidth="md" fullWidth>
-  <DialogTitle sx={{
-    bgcolor: '#17bebb',
-    color: 'white',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  }}>
-    <Typography variant="h6">Editar Usuario</Typography>
-    <IconButton onClick={handleCloseEditModal} sx={{ color: 'white' }}>
-      <CloseIcon />
-    </IconButton>
-  </DialogTitle>
-
-  <DialogContent sx={{ bgcolor: 'black', mt: 2 }}>
-    <Grid container spacing={2} sx={{ mt: 1 }}>
-      {[
-        { name: 'nombres', label: 'Nombres', type: 'text' },
-        { name: 'apellidos', label: 'Apellidos', type: 'text' },
-        { name: 'correo_electronico', label: 'Correo Electrónico', type: 'email' },
-        { name: 'nombre_usuario', label: 'Nombre de Usuario', type: 'text' },
-        { name: 'celular', label: 'Número de Celular', type: 'tel' }
-      ].map((field, idx) => (
-        <Grid item xs={12} md={6} key={idx}>
-          <TextField
-            margin="dense"
-            name={field.name}
-            label={field.label}
-            type={field.type}
-            fullWidth
-            variant="outlined"
-            value={formData[field.name]}
-            onChange={handleInputChange}
-            required
-            sx={{
-              width: '100%',
-              input: { color: 'white' },
-              label: { color: '#17bebb' },
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': {
-                  borderColor: '#17bebb',
-                },
-                '&:hover fieldset': {
-                  borderColor: '#17e6c9',
-                },
-                '&.Mui-focused fieldset': {
-                  borderColor: '#0fa59d',
-                },
-              },
-            }}
-          />
-        </Grid>
-      ))}
-
-      <Grid item xs={12}>
-        <FormControl fullWidth margin="dense" variant="outlined"
-          sx={{
-            width: '100%',
-            '& .MuiInputLabel-root': { color: '#17bebb' },
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: '#17bebb',
-              },
-              '&:hover fieldset': {
-                borderColor: '#17e6c9',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#0fa59d',
-              },
-              '& input': { color: 'white' },
-              '& .MuiSelect-icon': { color: '#17bebb' },
-            },
-          }}
-        >
-          <InputLabel id="rol-edit-label">Rol</InputLabel>
-          <Select
-            labelId="rol-edit-label"
-            name="rol"
-            value={formData.rol}
-            onChange={handleInputChange}
-            label="Rol"
-            required
-            sx={{
+            <DialogTitle sx={{
+              bgcolor: '#17bebb',
               color: 'white',
-            }}
-          >
-            {roles.map((rol) => (
-              <MenuItem key={rol.id} value={rol.nombre}>
-                {rol.nombre}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Grid>
-    </Grid>
-  </DialogContent>
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }}>
+              <Typography variant="h6">Editar Producto</Typography>
+              <IconButton onClick={handleCloseEditModal} sx={{ color: 'white' }}>
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
 
-  <DialogActions sx={{ p: 2, bgcolor: 'black' }}>
-    <Button
-      onClick={handleCloseEditModal}
-      variant="outlined"
-      startIcon={<CloseIcon />}
-      sx={{
-        color: 'white',
-        borderColor: '#17bebb',
-        '&:hover': {
-          borderColor: '#17e6c9',
-          backgroundColor: 'rgba(23, 190, 187, 0.1)',
-        }
-      }}
-    >
-      Cancelar
-    </Button>
-    <Button
-      onClick={handleEditUser}
-      variant="contained"
-      startIcon={<SaveIcon />}
-      sx={{
-        bgcolor: '#17bebb',
-        color: 'black',
-        '&:hover': {
-          bgcolor: '#17e6c9',
-        }
-      }}
-    >
-      Actualizar
-    </Button>
-  </DialogActions>
-</Dialog>
+            <DialogContent sx={{ bgcolor: 'black', mt: 2 }}>
+              <Grid container spacing={2} sx={{ mt: 1 }}>
+                {renderFormFields(false)}
 
+                <Grid item xs={12} md={6}>
+                  <FormControl fullWidth margin="dense" variant="outlined"
+                    sx={{
+                      '& .MuiInputLabel-root': { color: '#17bebb' },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: '#17bebb',
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#17e6c9',
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#0fa59d',
+                        },
+                        '& input': { color: 'white' },
+                        '& .MuiSelect-icon': { color: '#17bebb' },
+                      },
+                    }}
+                  >
+                    <InputLabel id="categoria-edit-label">Categoría</InputLabel>
+                    <Select
+                      labelId="categoria-edit-label"
+                      name="categoria"
+                      value={formData.categoria}
+                      onChange={handleInputChange}
+                      label="Categoría"
+                      required
+                      sx={{
+                        color: 'white',
+                      }}
+                    >
+                      {categories.map((categoria) => (
+                        <MenuItem key={categoria.id} value={categoria.nombre}>
+                          {categoria.nombre}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={formData.activo}
+                        onChange={handleInputChange}
+                        name="activo"
+                        sx={{
+                          '& .MuiSwitch-switchBase.Mui-checked': {
+                            color: '#17bebb',
+                          },
+                          '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                            backgroundColor: '#17bebb',
+                          },
+                        }}
+                      />
+                    }
+                    label={
+                      <Typography sx={{ color: 'white' }}>
+                        Producto Activo
+                      </Typography>
+                    }
+                    sx={{ mt: 2 }}
+                  />
+                </Grid>
+              </Grid>
+            </DialogContent>
+
+            <DialogActions sx={{ p: 2, bgcolor: 'black' }}>
+              <Button
+                onClick={handleCloseEditModal}
+                variant="outlined"
+                startIcon={<CloseIcon />}
+                sx={{
+                  color: 'white',
+                  borderColor: '#17bebb',
+                  '&:hover': {
+                    borderColor: '#17e6c9',
+                    backgroundColor: 'rgba(23, 190, 187, 0.1)',
+                  }
+                }}
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={handleEditProduct}
+                variant="contained"
+                startIcon={<SaveIcon />}
+                sx={{
+                  bgcolor: '#17bebb',
+                  color: 'black',
+                  '&:hover': {
+                    bgcolor: '#17e6c9',
+                  }
+                }}
+              >
+                Actualizar
+              </Button>
+            </DialogActions>
+          </Dialog>
           
           {/* Dialog de confirmación para eliminar */}
-       <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
-  <DialogTitle
-    sx={{
-      fontWeight: 'bold',
-      bgcolor: '#17bebb',
-      color: 'white',
-    }}
-  >
-    Confirmar eliminación
-  </DialogTitle>
+          <Dialog open={openDeleteDialog} onClose={handleCloseDeleteDialog}>
+            <DialogTitle
+              sx={{
+                fontWeight: 'bold',
+                bgcolor: '#17bebb',
+                color: 'white',
+              }}
+            >
+              Confirmar eliminación
+            </DialogTitle>
 
-  <DialogContent sx={{ bgcolor: 'black' }}>
-    <DialogContentText sx={{ color: 'white' }}>
-      ¿Estás seguro de que deseas eliminar al usuario{' '}
-      <strong style={{ color: '#17bebb' }}>{userToDelete?.nombre_usuario}</strong>? Esta acción no se puede deshacer.
-    </DialogContentText>
-  </DialogContent>
+            <DialogContent sx={{ bgcolor: 'black' }}>
+              <DialogContentText sx={{ color: 'white' }}>
+                ¿Estás seguro de que deseas eliminar el producto{' '}
+                <strong style={{ color: '#17bebb' }}>{productToDelete?.nombre}</strong>? Esta acción no se puede deshacer.
+              </DialogContentText>
+            </DialogContent>
 
-  <DialogActions sx={{ p: 2, bgcolor: 'black' }}>
-    <Button
-      onClick={handleCloseDeleteDialog}
-      variant="outlined"
-      sx={{
-        color: 'white',
-        borderColor: '#17bebb',
-        '&:hover': {
-          borderColor: '#17e6c9',
-          backgroundColor: 'rgba(23, 190, 187, 0.1)',
-        }
-      }}
-    >
-      Cancelar
-    </Button>
-    <Button
-      onClick={handleDeleteUser}
-      variant="contained"
-      color="error"
-      startIcon={<DeleteIcon />}
-      sx={{
-        color: 'white',
-        '&:hover': {
-          bgcolor: '#c62828',
-        }
-      }}
-    >
-      Eliminar
-    </Button>
-  </DialogActions>
-</Dialog>
-
+            <DialogActions sx={{ p: 2, bgcolor: 'black' }}>
+              <Button
+                onClick={handleCloseDeleteDialog}
+                variant="outlined"
+                sx={{
+                  color: 'white',
+                  borderColor: '#17bebb',
+                  '&:hover': {
+                    borderColor: '#17e6c9',
+                    backgroundColor: 'rgba(23, 190, 187, 0.1)',
+                  }
+                }}
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={handleDeleteProduct}
+                variant="contained"
+                color="error"
+                startIcon={<DeleteIcon />}
+                sx={{
+                  color: 'white',
+                  '&:hover': {
+                    bgcolor: '#c62828',
+                  }
+                }}
+              >
+                Eliminar
+              </Button>
+            </DialogActions>
+          </Dialog>
           
+     // Final corregido del componente ProductsCrud
+
           {/* Snackbar para notificaciones */}
           <Snackbar
             open={snackbar.open}
@@ -842,11 +951,7 @@ const Crud = () => {
         @media (max-width: 600px) {
           .MuiTableCell-root {
             padding: 8px 4px;
-            font-size: 0.75rem;
-          }
-          
-          .MuiTypography-h4 {
-            font-size: 1.5rem;
+            font-size: 0.875rem;
           }
         }
       `}</style>
@@ -854,4 +959,4 @@ const Crud = () => {
   );
 };
 
-export default Crud;
+export default ProductsCrud;
