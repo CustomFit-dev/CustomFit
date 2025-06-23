@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'api'
 ]
 
+
+CORS_ALLOW_CREDENTIALS = True
+
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     "django.middleware.common.CommonMiddleware",
@@ -58,7 +61,9 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000'
+    'http://localhost:3000',
+    "http://127.0.0.1:3000"
+
 ]
 
 ROOT_URLCONF = 'custom_f.urls'
@@ -100,7 +105,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'customfit_d3',  
         'USER': 'root',           
-        'PASSWORD': 'root',           
+        'PASSWORD': '',           
         'HOST': '127.0.0.1',     
         'PORT': '3306',          
     }

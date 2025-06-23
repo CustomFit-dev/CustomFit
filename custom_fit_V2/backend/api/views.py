@@ -11,7 +11,7 @@ import random
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth.models import User
-import logging
+import logging 
 import string
 from django.core.mail import send_mail
 from .serializers import TelaSerializer, TallaSerializer, EstampadoSerializer, ColorSerializer, ProductoSerializer
