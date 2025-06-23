@@ -4,14 +4,14 @@
   right: 30px;
   width: 400px;
   height: 520px;
-  background: linear-gradient(145deg, #121218, #1a1a28);
-  color: #f0f0f0;
+  background: var(--bg-darker); /* Mismo fondo oscuro */
+  color: var(--text-white);
   border-radius: 20px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 18px 40px rgba(23, 190, 187, 0.15);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Poppins', sans-serif;
   animation: popUp 0.5s ease-out;
   border: 1px solid rgba(0, 169, 157, 0.25);
 }
@@ -28,23 +28,23 @@
 }
 
 .chatbot-header {
-  background-color: #0f0f1c;
+  background-color: var(--bg-dark);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
-  border-bottom: 1px solid #2a2a3f;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .chatbot-title {
-  font-weight: bold;
-  color: #00a99d;
+  font-weight: 700;
+  color: var(--accent-green);
   font-size: 1.2rem;
-  text-shadow: 0 0 5px rgba(0, 169, 157, 0.6);
+  text-shadow: 0 0 5px var(--accent-green);
 }
 
 .close-button {
-  color: #bbb;
+  color: var(--text-light);
   transition: color 0.2s ease;
 }
 
@@ -54,17 +54,15 @@
 
 .chatbot-body {
   padding: 10px;
-  flex-grow: 1; /* Hace que ocupe todo el espacio disponible */
+  flex-grow: 1;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 14px;
   background-color: transparent;
   scrollbar-width: thin;
-  scrollbar-color: #333 #111;
-  height: auto;
-  max-height: calc(100% - 120px); /* Evita que se achique */
-  /* Evitar que cambie el tamaño cuando se toca el input */
+  scrollbar-color: #17bebb33 var(--bg-darker);
+  max-height: calc(100% - 120px);
 }
 
 .chatbot-body::-webkit-scrollbar {
@@ -72,7 +70,7 @@
 }
 
 .chatbot-body::-webkit-scrollbar-thumb {
-  background: #444;
+  background: var(--accent-green);
   border-radius: 8px;
 }
 
@@ -85,7 +83,7 @@
   line-height: 1.5;
   animation: bubbleFade 0.3s ease;
   word-wrap: break-word;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(23, 190, 187, 0.2);
 }
 
 @keyframes bubbleFade {
@@ -100,26 +98,28 @@
 }
 
 .bot-message {
-  background: linear-gradient(145deg, #202033, #2f2f4f);
+  background: var(--active-bg);
   align-self: flex-start;
-  color: #d0f6ff;
-  border-left: 3px solid #00a99d;
+  color: var(--text-white);
+  border-left: 3px solid var(--accent-green);
 }
 
 .user-message {
-  background: linear-gradient(145deg, #007066, #009c90);
+  background: linear-gradient(135deg, var(--accent-green), #14a9a5);
   align-self: flex-end;
-  color: #fff;
-  border-right: 3px solid #00a99d;
+  color: var(--bg-darker);
+  border-right: 3px solid var(--accent-green);
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(23, 190, 187, 0.5);
 }
 
 .chatbot-footer {
   display: flex;
   gap: 10px;
   padding: 16px 20px;
-  background-color: #0f0f1c;
-  border-top: 1px solid #2a2a3f;
-  position: relative; /* Cambiado de absolute a relative */
+  background-color: var(--bg-dark);
+  border-top: 1px solid var(--border-color);
+  position: relative;
 }
 
 .chatbot-input {
@@ -127,36 +127,36 @@
 }
 
 .chatbot-input input {
-  color: #f0f0f0;
-  background-color: #202040;
+  color: var(--text-white);
+  background-color: var(--bg-dark);
   padding: 10px;
   border-radius: 10px;
-  border: 1px solid #333;
+  border: 1px solid var(--border-color);
   transition: border-color 0.2s ease, background-color 0.2s ease;
   width: 100%;
 }
 
 .chatbot-input fieldset {
-  border-color: #444 !important;
+  border-color: var(--border-color) !important;
 }
 
 .chatbot-input:hover fieldset {
-  border-color: #00a99d !important;
+  border-color: var(--accent-green) !important;
 }
 
 .send-button {
-  background-color: #00a99d !important;
-  color: #ffffff !important;
+  background-color: var(--accent-green) !important;
+  color: var(--bg-darker) !important;
   font-weight: 700;
   border-radius: 10px;
   padding: 6px 16px;
-  box-shadow: 0 0 8px rgba(0, 169, 157, 0.5) !important;
+  box-shadow: 0 0 8px rgba(23, 190, 187, 0.5) !important;
   transition: all 0.2s ease-in-out;
 }
 
 .send-button:hover {
-  background-color: #009c90 !important;
-  box-shadow: 0 0 12px rgba(0, 156, 144, 0.5) !important;
+  background-color: #13ada8 !important;
+  box-shadow: 0 0 12px rgba(23, 173, 168, 0.5) !important;
   transform: translateY(-1px) scale(1.05);
 }
 

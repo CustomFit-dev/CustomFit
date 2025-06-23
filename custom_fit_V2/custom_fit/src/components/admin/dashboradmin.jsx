@@ -3,7 +3,7 @@ import '../../scss/dashboard.scss';
 import {
   User, Edit, UserSearch, ShoppingCart, BarChart3,
   Shield, Package, NotepadTextDashed, CreditCard, LogOut, Menu, 
-  ChevronDown, ChevronUp, Layers, Palette, Shirt, Ruler, Scissors
+  ChevronDown, ChevronUp, Layers, Palette, Shirt, Ruler, Scissors,Bot
 } from 'lucide-react';
 
 // Import component modules
@@ -13,6 +13,7 @@ import MyOrders from '../modules/dashboard/mis-pedidos';
 import Contact from '../modules/dashboard/contacto';
 import Shop from '../modules/dashboard/mis-pedidos';
 import Productos from './crudProductos';
+import Chatbot from './AdminChatBot'
 
 // IMPORT CRUD de gestión
 import TelasCrud from './CrudTela';
@@ -32,6 +33,7 @@ const App = () => {
     { id: 'my-orders', name: 'Pedidos', icon: <ShoppingCart size={20} />, component: <MyOrders /> },
     { id: 'contact', name: 'Facturas', icon: <NotepadTextDashed size={20} />, component: <Contact /> },
     { id: 'shop', name: 'Productos Shop', icon: <ShoppingCart size={20} />, component: <Shop /> },
+    { id: 'admin-chatbot', name: 'Chatbot', icon: <Bot size={20} />, component: <Chatbot /> },
   ];
 
   // Gestión subitems con iconos específicos
