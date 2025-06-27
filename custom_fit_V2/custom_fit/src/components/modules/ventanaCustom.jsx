@@ -39,12 +39,10 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
     setShowImageModal(false);
   };
   
-  // Función para aplicar la imagen seleccionada
   const handleApplyImage = (image) => {
     onSelectImage(image.src);
     onClose();
   };
-
   return (
     <div className="modal show d-block" tabIndex="-1">
       <div className="modal-dialog modal-sm">
@@ -57,7 +55,6 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
               onClick={onClose}
             />
           </div>
-          
           <div className="modal-body p-2">
             {/* Galería de imágenes vertical con scroll */}
             <div style={{ maxHeight: '400px', overflowY: 'auto', paddingRight: '5px' }}>

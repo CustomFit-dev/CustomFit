@@ -20,10 +20,11 @@ import CamisetaFucsia from "../../img/camisassinfo/camisaFucsia.png";
 import '../../scss/camisaPer.scss';
 import html2canvas from "html2canvas";
 import Swal from "sweetalert2";
-
+import TextModal from '../modal/Textmodal'; 
+import EmojiModal from '../modal/EmojiModal'; 
+import ModalImageUpload from '../modal/imgModal'
 
 const TShirtCustomizer = () => {
-  // State management
   const [tshirtColor, setTshirtColor] = useState('bg-white');
   const [fabric, setFabric] = useState(null);
   const [size, setSize] = useState('M');
@@ -31,19 +32,16 @@ const TShirtCustomizer = () => {
   const [imageElements, setImageElements] = useState([]);
   const [emojiElements, setEmojiElements] = useState([]);
 
-  // Modals state
   const [showTextModal, setShowTextModal] = useState(false);
   const [showImageModal, setShowImageModal] = useState(false);
   const [showEmojiModal, setShowEmojiModal] = useState(false);
   const [showCustomModal, setShowCustomModal] = useState(false);
 
-  // Text modal state
   const [newText, setNewText] = useState('');
   const [textFont, setTextFont] = useState('Arial');
   const [textSize, setTextSize] = useState(20);
   const [textColor, setTextColor] = useState('#000000');
 
-  // Drag state
   const [activeElement, setActiveElement] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -51,14 +49,11 @@ const TShirtCustomizer = () => {
   const [origPos, setOrigPos] = useState({ x: 0, y: 0 });
   const [elementSize, setElementSize] = useState({ width: 100, height: 100 });
   
-  // Design area reference
   const designAreaRef = useRef(null);
   const tshirtRef = useRef(null);
 
-  // Image upload state
   const fileInputRef = useRef(null);
 
-  // Color options
   const colorImages = {
     "bg-danger": CamisetaRoja,
     "bg-primary": CamisetaAzul,
@@ -72,9 +67,6 @@ const TShirtCustomizer = () => {
     "bg-beige": CamisetaBeige,
     "bg-turquoise": CamisetaTurquesa,
     "bg-fuchsia": CamisetaFucsia,
-
-
-
   };
   
   const handleBuy = async () => {
@@ -110,8 +102,6 @@ const TShirtCustomizer = () => {
   });
 };
 
-
-
   const handleSelectCustomDesign = (imageSrc) => {
     // Crear un nuevo elemento de imagen con la imagen seleccionada
     setImageElements([...imageElements, {
@@ -124,7 +114,7 @@ const TShirtCustomizer = () => {
     }]);
     setShowCustomModal(false);
   };
-  
+
   // Size options
   const sizeOptions = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '3XL'];
 
@@ -258,25 +248,20 @@ const TShirtCustomizer = () => {
       }
     }
   };
-
   // Mouse up handler
   const handleMouseUp = () => {
     setIsDragging(false);
     setIsResizing(false);
     setActiveElement(null);
   };
-
   // Add event listeners
   useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('mouseup', handleMouseUp);
-    
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-    };
+      window.removeEventListener('mouseup', handleMouseUp);};
   }, [isDragging, isResizing, activeElement, startPos, origPos, elementSize]);
-
   // Add Text Handler
   const handleAddText = () => {
     const newTextElement = {
@@ -286,13 +271,10 @@ const TShirtCustomizer = () => {
       size: textSize,
       color: textColor,
       x: 50,
-      y: 50
-    };
+      y: 50};
     setTextElements([...textElements, newTextElement]);
     setShowTextModal(false);
-    setNewText('');
-  };
-
+    setNewText('');};
   // Add Image Handler
   const handleAddImage = (event) => {
     const file = event.target.files[0];
@@ -307,13 +289,9 @@ const TShirtCustomizer = () => {
           width: 100,
           height: 100
         }]);
-        setShowImageModal(false);
-      };
-      reader.readAsDataURL(file);
-    }
+        setShowImageModal(false);};
+      reader.readAsDataURL(file);}
   };
-
-  // Add Emoji Handler
   const handleAddEmoji = (emoji) => {
     setEmojiElements([...emojiElements, {
       id: Date.now(),
@@ -322,22 +300,14 @@ const TShirtCustomizer = () => {
       y: 50,
       size: 48 // Default emoji size
     }]);
-    setShowEmojiModal(false);
-  };
-
+    setShowEmojiModal(false);};
   // Remove Element Handlers
   const removeTextElement = (id) => {
-    setTextElements(textElements.filter(el => el.id !== id));
-  };
-
+    setTextElements(textElements.filter(el => el.id !== id));};
   const removeImageElement = (id) => {
-    setImageElements(imageElements.filter(el => el.id !== id));
-  };
-
+    setImageElements(imageElements.filter(el => el.id !== id));};
   const removeEmojiElement = (id) => {
-    setEmojiElements(emojiElements.filter(el => el.id !== id));
-  };
-
+    setEmojiElements(emojiElements.filter(el => el.id !== id));};
   // Emoji Picker (simplified)
   const EmojiPicker = ({ onSelect }) => {
     const emojis = ['😀', '😍', '🎉', '👍', '🌟', '🚀', '❤️', '🍕'];
@@ -347,15 +317,13 @@ const TShirtCustomizer = () => {
           <button 
             key={emoji} 
             onClick={() => onSelect(emoji)} 
-            className="btn btn-outline-secondary fs-3"
-          >
+            className="btn btn-outline-secondary fs-3">
             {emoji}
           </button>
         ))}
       </div>
     );
   };
-
   return (
     <div className="container-fluid p-4" id='Contapersonalizar'>
       <div className="titulo-container">
@@ -363,14 +331,10 @@ const TShirtCustomizer = () => {
         <h2 className="titl2">Selecciona el modelo, sube tu diseño y haz tu pedido</h2>
       </div>
       <div className="row">
-        {/* Left Sidebar - New Layout */}
         <div className="col-md-3">
-          {/* Title */}
           <div className="mb-4">
             <h4 className="fw-bold titleCam">Camisa Sencilla</h4>
           </div>
-
-          {/* Fabric Selection */}
           <div className="contTela mb-4">
             <h5 className="fw-bold mb-3">Telas</h5>
             <div className="contela">
@@ -379,15 +343,11 @@ const TShirtCustomizer = () => {
                 key={fabricType}
                 className={`btnTela ${fabric === fabricType ? "btn-primary" : "btn-outline-secondary"}`}
                 onClick={() => setFabric(fabricType)}
-                style={fabric === fabricType ? { backgroundColor: '#17BEBB', border: 'none'} : {}}
-              >
+                style={fabric === fabricType ? { backgroundColor: '#17BEBB', border: 'none'} : {}}>
                 {fabricType}
-              </button>
-              ))}
+              </button>))}
             </div>
           </div>
-
-          {/* Size Selection */}
           <div className="mb-4">
             <h5 className="fw-bold mb-3">Tallas</h5>
             <div className="d-flex flex-wrap gap-2">
@@ -396,15 +356,10 @@ const TShirtCustomizer = () => {
                   key={sizeOption}
                   className={`btn ${size === sizeOption ? "btn-primary" : "btn-outline-secondary"}`}
                   onClick={() => setSize(sizeOption)}
-                  style={size === sizeOption ? { backgroundColor: '#17BEBB', border: 'none' } : {}}
-                >
-                  {sizeOption}
-                </button>
-              ))}
+                  style={size === sizeOption ? { backgroundColor: '#17BEBB', border: 'none' } : {}}>
+                  {sizeOption}</button>))}
             </div>
           </div>
-
-          {/* Customization Buttons */}
           <h5 className="fw-bold mb-2">Personalización</h5>
           <div className="ContaSubur d-flex gap-3">
             <button className="btnCustom d-flex align-items-center" onClick={() => setShowTextModal(true)}>
@@ -421,11 +376,8 @@ const TShirtCustomizer = () => {
             </button>
           </div>
         </div>
-
-        {/* T-Shirt Display Area - Middle */}
         <div className="col-md-6">
           <div className="position-relative" style={{ height: '700px', width: '100%' }} ref={tshirtRef}>
-            {/* Container with relative positioning for the t-shirt */}
             <div 
               className="tshirt-container position-relative" 
               style={{ 
@@ -433,10 +385,7 @@ const TShirtCustomizer = () => {
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              {/* T-shirt image - Made larger and positioned independently */}
+                alignItems: 'center'}}>
               <img 
                 ref={tshirtRef}
                 src={colorImages[tshirtColor] || CamisetaBase} 
@@ -446,11 +395,7 @@ const TShirtCustomizer = () => {
                   width: '100%',   /* Increased size */
                   maxWidth: '120%',   /* Increased size */
                   maxHeight: '140%',  /* Increased size */
-                  zIndex: 1
-                }} 
-              />
-              
-              {/* Design area with absolute positioning relative to the t-shirt container */}
+                  zIndex: 1}} />
               <div
                 ref={designAreaRef}
                 className="position-absolute border border-2 border-danger border-dashed"
@@ -461,10 +406,7 @@ const TShirtCustomizer = () => {
                   left: '50%',
                   transform: 'translate(-50%, -50%)',
                   zIndex: 2,
-                  overflow: 'visible',
-                }}
-              >
-                {/* Text Elements */}
+                  overflow: 'visible',}}>
                 {textElements.map((el) => (
                   <div 
                     key={el.id}
@@ -476,36 +418,24 @@ const TShirtCustomizer = () => {
                       fontSize: `${el.size}px`,
                       color: el.color,
                       zIndex: 3,
-                      cursor: isDragging ? 'grabbing' : 'grab'
-                    }}
-                  >
+                      cursor: isDragging ? 'grabbing' : 'grab'}}>
                     <div
-                      onMouseDown={(e) => handleMouseDown(e, 'text', el, 'move')}
-                    >
+                      onMouseDown={(e) => handleMouseDown(e, 'text', el, 'move')}>
                       {el.text}
                     </div>
-                    
-                    {/* Controls */}
                     <div className="d-flex position-absolute top-0 end-0 transform translate-middle-y" style={{ marginTop: '-20px' }}>
-                      {/* Move button */}
                       <button 
                         className="btn btn-sm btn-light border p-1 me-1"
                         onMouseDown={(e) => handleMouseDown(e, 'text', el, 'move')}
-                        title="Mover"
-                      >
+                        title="Mover">
                         <Move size={16} />
                       </button>
-                      
-                      {/* Resize button */}
                       <button 
                         className="btn btn-sm btn-light border p-1 me-1"
                         onMouseDown={(e) => handleMouseDown(e, 'text', el, 'resize')}
-                        title="Cambiar tamaño"
-                      >
+                        title="Cambiar tamaño">
                         <Maximize size={16} />
                       </button>
-                      
-                      {/* Delete button */}
                       <button 
                         onClick={() => removeTextElement(el.id)}
                         className="btn btn-sm btn-danger p-1"
@@ -514,10 +444,7 @@ const TShirtCustomizer = () => {
                         <X size={16} />
                       </button>
                     </div>
-                  </div>
-                ))}
-
-                {/* Image Elements */}
+                  </div>))}
                 {imageElements.map((el) => (
                   <div 
                     key={el.id}
@@ -526,53 +453,36 @@ const TShirtCustomizer = () => {
                       left: `${el.x}px`,
                       top: `${el.y}px`,
                       zIndex: 3,
-                      cursor: isDragging ? 'grabbing' : 'grab'
-                    }}
-                  >
+                      cursor: isDragging ? 'grabbing' : 'grab'}}>
                     <img 
                       id={`img-${el.id}`}
                       src={el.src} 
                       alt="Custom" 
                       style={{ 
                         width: el.width ? `${el.width}px` : '100px', 
-                        height: el.height ? `${el.height}px` : 'auto' 
-                      }}
-                      onMouseDown={(e) => handleMouseDown(e, 'image', el, 'move')}
-                    />
-                    
-                    {/* Controls */}
+                        height: el.height ? `${el.height}px` : 'auto' }}
+                      onMouseDown={(e) => handleMouseDown(e, 'image', el, 'move')}/>
                     <div className="d-flex position-absolute top-0 end-0 transform translate-middle-y" style={{ marginTop: '-20px' }}>
-                      {/* Move button */}
                       <button 
                         className="btn btn-sm btn-light border p-1 me-1"
                         onMouseDown={(e) => handleMouseDown(e, 'image', el, 'move')}
-                        title="Mover"
-                      >
+                        title="Mover">
                         <Move size={16} />
-                      </button>
-                      
-                      {/* Resize button */}
+                      </button> 
                       <button 
                         className="btn btn-sm btn-light border p-1 me-1"
                         onMouseDown={(e) => handleMouseDown(e, 'image', el, 'resize')}
-                        title="Cambiar tamaño"
-                      >
+                        title="Cambiar tamaño">
                         <Maximize size={16} />
                       </button>
-                      
-                      {/* Delete button */}
                       <button 
                         onClick={() => removeImageElement(el.id)}
                         className="btn btn-sm btn-danger p-1"
-                        title="Eliminar"
-                      >
+                        title="Eliminar">
                         <X size={16} />
                       </button>
                     </div>
-                  </div>
-                ))}
-
-                {/* Emoji Elements */}
+                  </div>))}
                 {emojiElements.map((el) => (
                   <div 
                     key={el.id}
@@ -582,36 +492,23 @@ const TShirtCustomizer = () => {
                       top: `${el.y}px`,
                       fontSize: `${el.size}px`,
                       zIndex: 3,
-                      cursor: isDragging ? 'grabbing' : 'grab'
-                    }}
-                  >
-                    <div
-                      onMouseDown={(e) => handleMouseDown(e, 'emoji', el, 'move')}
-                    >
+                      cursor: isDragging ? 'grabbing' : 'grab'}}>
+                    <div onMouseDown={(e) => handleMouseDown(e, 'emoji', el, 'move')}>
                       {el.emoji}
                     </div>
-                    
-                    {/* Controls */}
                     <div className="d-flex position-absolute top-0 end-0 transform translate-middle-y" style={{ marginTop: '-20px' }}>
-                      {/* Move button */}
                       <button 
                         className="btn btn-sm btn-light border p-1 me-1"
                         onMouseDown={(e) => handleMouseDown(e, 'emoji', el, 'move')}
-                        title="Mover"
-                      >
+                        title="Mover">
                         <Move size={16} />
                       </button>
-                      
-                      {/* Resize button */}
                       <button 
                         className="btn btn-sm btn-light border p-1 me-1"
                         onMouseDown={(e) => handleMouseDown(e, 'emoji', el, 'resize')}
-                        title="Cambiar tamaño"
-                      >
+                        title="Cambiar tamaño">
                         <Maximize size={16} />
                       </button>
-                      
-                      {/* Delete button */}
                       <button 
                         onClick={() => removeEmojiElement(el.id)}
                         className="btn btn-sm btn-danger p-1"
@@ -626,10 +523,7 @@ const TShirtCustomizer = () => {
             </div>
           </div>
         </div>
-
-        {/* Right Sidebar */}
         <div className="col-md-3">
-          {/* Color Selection */}
           <div className="mb-4">
             <h5 className="fw-bold mb-2">Colores de Camiseta</h5>
             <div className="d-flex flex-wrap gap-2">
@@ -644,22 +538,18 @@ const TShirtCustomizer = () => {
               ))}
             </div>
           </div>
-
-          {/* Pricing Card */}
           <div className="card bg-dark text-white mb-4">
-            <div className="card-body">
-              <h6 className="card-title fw-bold mb-2">Detalles y Precios</h6>
-              <ul className="list-unstyled">
-                <li>Estampado: $2.000</li>
-                <li>Logo: $1.000</li>
-                <li>Texto extra: $2.000</li>
-                <li>Talla extra: $5.000</li>
-                <li>Tela especial: $10.000</li>
-              </ul>
-            </div>
+          <div className="card-body">
+         <h6 className="card-title fw-bold mb-2">Hazla tuya</h6>
+          <ul className="list-unstyled">
+            <li>🎨 Personaliza el diseño</li>
+            <li>🖼️ Agrega imágenes o logos</li>
+            <li>✍️ Escribe tu propio texto</li>
+            <li>📏 Elige la talla perfecta</li>
+            <li>🧵 Escoge entre telas exclusivas</li>
+          </ul>
           </div>
-
-          {/* Selected Options Summary */}
+            </div>
           <div className="card mb-4">
             <div className="card-body">
               <h6 className="card-title fw-bold mb-2">Tu Selección</h6>
@@ -670,8 +560,6 @@ const TShirtCustomizer = () => {
               </ul>
             </div>
           </div>
-
-          {/* Action Buttons */}
           <div className="d-grid gap-3">
             <button className="btn btn-success btn-lg fw-bold" onClick={handleBuy}>
               Comprar
@@ -679,146 +567,41 @@ const TShirtCustomizer = () => {
             <button className="btn btn-primary btn-lg fw-bold">
               Agregar al Carrito
             </button>
+            <span style={{ fontFamily: textFont }}>
+              Fuente seleccionada: <strong>{textFont}</strong>
+            </span>
           </div>
         </div>
-      </div>
-
-      {/* Text Modal */}
-      {showTextModal && (
-        <div className="modal show d-block" tabIndex="-1">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Agregar Texto</h5>
-                <button 
-                  type="button" 
-                  className="btn-close" 
-                  onClick={() => setShowTextModal(false)}
-                />
-              </div>
-              <div className="modal-body">
-                <div className="mb-3">
-                  <input 
-                    type="text" 
-                    className="form-control" 
-                    placeholder="Texto"
-                    value={newText}
-                    onChange={(e) => setNewText(e.target.value)}
-                  />
-                </div>
-                <div className="mb-3">
-                  <select 
-                    className="form-select"
-                    value={textFont}
-                    onChange={(e) => setTextFont(e.target.value)}
-                  >
-                    <option value="Arial">Arial</option>
-                    <option value="Times New Roman">Times New Roman</option>
-                    <option value="Cursive">Cursive</option>
-                    <option value="Fantasy">Fantasy</option>
-                  </select>
-                </div>
-                <div className="mb-3">
-                  <input 
-                    type="number" 
-                    className="form-control"
-                    min="10" 
-                    max="50" 
-                    value={textSize}
-                    onChange={(e) => setTextSize(Number(e.target.value))}
-                    placeholder="Tamaño"
-                  />
-                </div>
-                <div className="mb-3">
-                  <input 
-                    type="color" 
-                    className="form-control form-control-color"
-                    value={textColor}
-                    onChange={(e) => setTextColor(e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button 
-                  type="button" 
-                  className="btn btn-primary"
-                  onClick={handleAddText}
-                >
-                  Aplicar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showCustomModal && (
-  <CustomGaleria 
-    onSelectImage={handleSelectCustomDesign}
-    onClose={() => setShowCustomModal(false)}
-  />
-)}
-
-      {/* Image Modal */}
-      {showImageModal && (
-        <div className="modal show d-block" tabIndex="-1">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Subir Imagen</h5>
-                <button 
-                  type="button" 
-                  className="btn-close" 
-                  onClick={() => setShowImageModal(false)}
-                />
-              </div>
-              <div className="modal-body">
-                <input 
-                  type="file" 
-                  ref={fileInputRef}
-                  accept="image/*"
-                  onChange={handleAddImage}
-                  className="form-control"
-                />
-              </div>
-              <div className="modal-footer">
-                <button 
-                  type="button" 
-                  className="btn btn-primary"
-                  onClick={() => fileInputRef.current.click()}
-                >
-                  Aplicar
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Emoji Modal */}
-      {showEmojiModal && (
-        <div className="modal show d-block" tabIndex="-1">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Seleccionar Emoji</h5>
-                <button 
-                  type="button" 
-                  className="btn-close" 
-                  onClick={() => setShowEmojiModal(false)}
-                />
-              </div>
-              <div className="modal-body">
-                <EmojiPicker onSelect={handleAddEmoji} />
-              </div>
-              <div className="modal-footer">
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Add CSS styles for resize handles */}
+      </div>    
+                <TextModal 
+          show={showTextModal}
+          setShow={setShowTextModal}
+          newText={newText}
+          setNewText={setNewText}
+          textFont={textFont}
+          setTextFont={setTextFont}
+          textSize={textSize}
+          setTextSize={setTextSize}
+          textColor={textColor}
+          setTextColor={setTextColor}
+          handleAddText={handleAddText}
+        />
+          {showCustomModal && (
+      <CustomGaleria 
+        onSelectImage={handleSelectCustomDesign}
+        onClose={() => setShowCustomModal(false)}
+      />
+    )}
+      <ModalImageUpload 
+        show={showImageModal}
+        setShowImageModal={setShowImageModal}
+        handleAddImage={handleAddImage}
+      />
+        <EmojiModal 
+        show={showEmojiModal}
+        onClose={() => setShowEmojiModal(false)}
+        onSelectEmoji={handleAddEmoji}
+      />
       <style jsx>{`
         .cursor-move {
           cursor: move;
@@ -843,5 +626,4 @@ const TShirtCustomizer = () => {
     </div>
   );
 };
-
 export default TShirtCustomizer;
