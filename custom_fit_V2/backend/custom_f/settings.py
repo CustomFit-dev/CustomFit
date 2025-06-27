@@ -85,9 +85,12 @@ ALLOWED_HOSTS = ['*']
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
 }
+
 
 WSGI_APPLICATION = 'custom_f.wsgi.application'
 
@@ -100,7 +103,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'customfit_d3',  
         'USER': 'root',           
-        'PASSWORD': 'root',           
+        'PASSWORD': '',           
         'HOST': '127.0.0.1',     
         'PORT': '3306',          
     }

@@ -549,3 +549,83 @@ body {
     transform: translateX(0);
   }
 }
+
+.crud-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+
+  th, td {
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    text-align: left;
+    color: var(--text-light);
+  }
+
+  th {
+    background-color: var(--active-bg);
+    color: var(--accent-green);
+    font-weight: 500;
+  }
+
+  tr:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+
+  tr:hover {
+    background-color: rgba(23, 190, 187, 0.05);
+  }
+}
+
+.btn-accept {
+  background-color: var(--accent-green);
+  color: var(--bg-dark);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #0fa5a2;
+    transform: scale(1.05);
+  }
+}
+
+.status {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.status.pending {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ccc;
+}
+
+.status.accepted {
+  background-color: rgba(23, 190, 187, 0.1);
+  color: var(--accent-green);
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+  color: var(--text-white);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #c0392b;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}

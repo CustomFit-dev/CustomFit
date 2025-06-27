@@ -1,53 +1,29 @@
 from django.urls import path, include
-from .views import (
-    home, register_user, enviar_codigo_view, login_view,
-    UserViewSet, delete_user, logout_view, update_user,
-    tela_list, tela_detail,
-    talla_list, talla_detail, talla_create, talla_update_delete,
-    estampado_list, estampado_detail, estampado_create, estampado_update_delete,
-    color_list, color_detail, color_create, color_update_delete,
-    producto_list, producto_detail, producto_create, producto_update_delete
-)
-from rest_framework.routers import DefaultRouter
+from rest_framework import routers
+from . import views
 
-router = DefaultRouter()
-router.register(r'userprofiles', UserViewSet)
+router = routers.DefaultRouter()
+router.register(r'users', views.UserViewSet)
 
 urlpatterns = [
-    path('', home, name='home'),
-    path('api/register/', register_user, name='register_user'),
-    path('api/enviar_codigo/', enviar_codigo_view, name='enviar_codigo'),
-    path('api/login/', login_view, name='login'),
-    path('api/logout/', logout_view, name='logout'),
+    path('', views.home),
+
+    # DRF Router
     path('api/', include(router.urls)),
-    path('api/delete-user/<int:pk>/', delete_user, name='delete-user'),
-    path('api/update-user/<int:pk>/', update_user, name='update-user'),
+
+    # User endpoints
+    path('api/register/', views.register_user),
+    path('api/enviar-codigo/', views.enviar_codigo_view),
+    path('api/login/', views.login_view),
+    path('api/logout/', views.logout_view),
+    path('api/delete-user/<int:pk>/', views.delete_user),
+    path('api/update-user/<int:pk>/', views.update_user),
 
     # Telas
-    path('api/telas/', tela_list, name='tela-list'),
-    path('api/telas/<int:pk>/', tela_detail, name='tela-detail'),
+    path('api/telas/', views.tela_list),
+    path('api/telas/<int:pk>/', views.tela_detail),
 
-    # Tallas
-    path('api/tallas/', talla_list, name='talla-list'),
-    path('api/tallas/<int:pk>/', talla_detail, name='talla-detail'),
-    path('api/tallas/create/', talla_create, name='talla-create'),
-    path('api/tallas/<int:pk>/edit/', talla_update_delete, name='talla-update-delete'),
-
-    # Estampados
-    path('api/estampados/', estampado_list, name='estampado-list'),
-    path('api/estampados/<int:pk>/', estampado_detail, name='estampado-detail'),
-    path('api/estampados/create/', estampado_create, name='estampado-create'),
-    path('api/estampados/<int:pk>/edit/', estampado_update_delete, name='estampado-update-delete'),
-
-    # Colores
-    path('api/colores/', color_list, name='color-list'),
-    path('api/colores/<int:pk>/', color_detail, name='color-detail'),
-    path('api/colores/create/', color_create, name='color-create'),
-    path('api/colores/<int:pk>/edit/', color_update_delete, name='color-update-delete'),
-
-    # Productos
-    path('api/productos/', producto_list, name='producto-list'),
-    path('api/productos/<int:pk>/', producto_detail, name='producto-detail'),
-    path('api/productos/create/', producto_create, name='producto-create'),
-    path('api/productos/<int:pk>/edit/', producto_update_delete, name='producto-update-delete'),
+    # Proveedores
+    path('api/proveedores/', views.proveedor_list, name='proveedor-list'),
+    path('api/proveedores/<int:pk>/', views.proveedor_detail, name='proveedor-detail'),
 ]

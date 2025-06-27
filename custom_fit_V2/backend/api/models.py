@@ -118,14 +118,18 @@ class Producto(models.Model):
         db_table = 'productos'
         managed = False
 
+
 class Proveedor(models.Model):
-    nombre = models.CharField(max_length=100)
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=255)
     correo = models.EmailField()
     telefono = models.CharField(max_length=20)
-    tiene_local = models.BooleanField()
+    tiene_local = models.BooleanField(default=False)
     direccion_local = models.CharField(max_length=255, blank=True, null=True)
-    estilo_ropa = models.TextField()
+    estilo_ropa = models.CharField(max_length=255)
     mensaje = models.TextField(blank=True, null=True)
+    aceptado = models.BooleanField(default=False)
 
     def __str__(self):
         return self.nombre
+

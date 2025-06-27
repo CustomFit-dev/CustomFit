@@ -55,12 +55,16 @@ const ChatbotModal = ({ open, handleClose }) => {
               '_blank'
             );
             resetChat();
-            handleClose(); // Opcional: cierra el modal
+            handleClose();
           }, 1500);
           break;
         case '2':
-          botReply =
-            'Gracias por tu interés. Por favor llena el formulario en https://camishub.com/proveedores para iniciar el proceso.';
+          botReply = 'Perfecto. Abriendo formulario de proveedor...';
+          setTimeout(() => {
+            navigate('/FormProveedor'); // <- esta es la ruta que debes tener en tu App.js o Routes.jsx
+            resetChat();
+            handleClose();
+          }, 1500);
           break;
         case '3':
           botReply =
@@ -70,9 +74,9 @@ const ChatbotModal = ({ open, handleClose }) => {
         case '4':
           botReply = 'Redirigiéndote al catálogo...';
           setTimeout(() => {
-            navigate('/Store'); // Redirige directamente al catálogo
+            navigate('/Store');
             resetChat();
-            handleClose(); // Opcional
+            handleClose();
           }, 1500);
           break;
         default:
@@ -83,7 +87,7 @@ const ChatbotModal = ({ open, handleClose }) => {
         case '1':
           botReply = '¡Perfecto! Redirigiéndote al diseñador para subir tu diseño...';
           setTimeout(() => {
-            navigate('/Personalizar'); // Redirige directamente a la página de personalizar
+            navigate('/Personalizar');
             resetChat();
             handleClose();
           }, 1500);
@@ -91,7 +95,7 @@ const ChatbotModal = ({ open, handleClose }) => {
         case '2':
           botReply = 'Mostrando plantillas disponibles...';
           setTimeout(() => {
-            navigate('/Personalizar?plantillas=true'); // Redirige con el parámetro de plantillas
+            navigate('/Personalizar?plantillas=true');
             resetChat();
             handleClose();
           }, 1500);
@@ -99,7 +103,7 @@ const ChatbotModal = ({ open, handleClose }) => {
         case '3':
           botReply = 'Mostrando ejemplos de camisetas...';
           setTimeout(() => {
-            navigate('/ejemplos'); // Redirige directamente a la página de ejemplos
+            navigate('/ejemplos');
             resetChat();
             handleClose();
           }, 1500);
