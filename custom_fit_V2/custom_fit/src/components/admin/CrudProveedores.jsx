@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Check, Trash2 } from 'lucide-react';
+
 
 const CrudProveedores = () => {
   const [proveedores, setProveedores] = useState([]);
@@ -74,22 +76,25 @@ const CrudProveedores = () => {
                     <span className="status pending">Pendiente</span>
                   )}
                 </td>
-                <td>
+                <td style={{ display: 'flex', gap: '8px' }}>
                   {!proveedor.aceptado && (
                     <button
-                      className="btn-accept"
+                      className="icon-btn"
                       onClick={() => aceptarProveedor(proveedor.id)}
+                      title="Aceptar proveedor"
                     >
-                      Aceptar
+                      <Check size={16} />
                     </button>
                   )}
                   <button
-                    className="btn-delete"
+                    className="icon-btn danger"
                     onClick={() => eliminarProveedor(proveedor.id)}
+                    title="Eliminar proveedor"
                   >
-                    Eliminar
+                    <Trash2 size={16} />
                   </button>
                 </td>
+
               </tr>
             ))
           ) : (
