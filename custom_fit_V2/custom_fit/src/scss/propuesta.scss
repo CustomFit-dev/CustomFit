@@ -1,0 +1,498 @@
+    /* propuesta.scss - Estilos mejorados */
+
+    // Variables
+    $primary-color: #0d6efd;
+    $success-color: #198754;
+    $warning-color: #ffc107;
+    $danger-color: #dc3545;
+    $light-gray: #f8f9fa;
+    $dark-gray: #6c757d;
+    $white: #ffffff;
+    $shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+    $shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.15);
+    $shadow-heavy: 0 8px 30px rgba(0, 0, 0, 0.2);
+    $border-radius: 12px;
+    $transition: all 0.3s ease;
+
+    // Modal backdrop personalizado
+    .modal-backdrop-custom {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), rgba(0, 0, 0, 0.6));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+    padding: 1rem;
+    overflow-y: auto;
+    animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+    }
+
+    // Container del modal
+    .modal-container {
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    margin: auto;
+    animation: slideIn 0.4s ease-out;
+    }
+
+    @keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    }
+
+    // Contenido del modal
+    .modal-content-custom {
+    background: $white;
+    border-radius: $border-radius;
+    box-shadow: $shadow-heavy;
+    overflow: hidden;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    border: none;
+    }
+
+    // Header personalizado
+    .modal-header-custom {
+    background: linear-gradient(135deg, $primary-color, lighten($primary-color, 10%));
+    color: $white;
+    padding: 1.5rem 2rem;
+    border-bottom: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    }
+
+    .step-indicator {
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .step-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: $white;
+    }
+
+    .modal-title-custom {
+    color: $white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    }
+
+    .modal-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    font-weight: 400;
+    }
+
+    .btn-close-custom {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+    }
+    }
+
+    // Progress bar
+    .progress-container {
+    padding: 0 2rem;
+    background: $white;
+    padding-top: 1rem;
+    }
+
+    .progress {
+    height: 6px;
+    border-radius: 3px;
+    background-color: #e9ecef;
+    overflow: hidden;
+    }
+
+    .progress-bar {
+    transition: width 0.5s ease;
+    border-radius: 3px;
+    }
+
+    // Body personalizado
+    .modal-body-custom {
+    padding: 2rem;
+    flex: 1;
+    overflow-y: auto;
+    background: $white;
+    }
+
+    .step-content {
+    animation: fadeInUp 0.4s ease-out;
+    }
+
+    @keyframes fadeInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    }
+
+    // Formularios mejorados
+    .form-control-custom {
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 1rem;
+    padding: 1rem 1.25rem;
+    transition: $transition;
+    background-color: #fafbfc;
+
+    &:focus {
+        border-color: $primary-color;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+        background-color: $white;
+    }
+
+    &::placeholder {
+        color: $dark-gray;
+    }
+    }
+
+    .form-floating {
+    position: relative;
+
+    label {
+        color: $dark-gray;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+
+        i {
+        color: $primary-color;
+        }
+    }
+    }
+
+    // Sección de plantillas
+    .plantilla-section {
+    border: 1px solid #e9ecef;
+    border-radius: $border-radius;
+    padding: 1.5rem;
+    background: #fafbfc;
+    margin-bottom: 1.5rem;
+    }
+
+    .plantilla-title {
+    color: $primary-color;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+
+    i {
+        color: $primary-color;
+    }
+    }
+
+    .plantilla-options {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    }
+
+    .plantilla-card {
+    position: relative;
+    border: 2px solid #e9ecef;
+    border-radius: $border-radius;
+    padding: 1rem;
+    background: $white;
+    cursor: pointer;
+    transition: $transition;
+    width: 120px;
+    text-align: center;
+    box-shadow: $shadow-light;
+
+    &:hover {
+        border-color: $primary-color;
+        transform: translateY(-2px);
+        box-shadow: $shadow-medium;
+    }
+
+    &.selected {
+        border-color: $primary-color;
+        background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), rgba(13, 110, 253, 0.05));
+        transform: translateY(-2px);
+        box-shadow: $shadow-medium;
+    }
+    }
+
+    .plantilla-image {
+    width: 80px;
+    height: 100px;
+    margin: 0 auto 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+    }
+
+    .no-template {
+    background: $light-gray;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $dark-gray;
+    border-radius: 6px;
+    }
+
+    .plantilla-label {
+    font-size: 0.85rem;
+    color: $dark-gray;
+    font-weight: 500;
+    margin: 0;
+    }
+
+    .selected-indicator {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: $primary-color;
+    color: $white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    box-shadow: $shadow-light;
+    animation: bounce 0.5s ease;
+    }
+
+    @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-5px);
+    }
+    60% {
+        transform: translateY(-3px);
+    }
+    }
+
+    // Footer personalizado
+    .modal-footer-custom {
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    padding: 1.5rem 2rem;
+    border-bottom-left-radius: $border-radius;
+    border-bottom-right-radius: $border-radius;
+    }
+
+    // Botones mejorados
+    .btn {
+    border-radius: 10px;
+    font-weight: 500;
+    transition: $transition;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: $shadow-light;
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+
+    i {
+        font-size: 0.9rem;
+    }
+    }
+
+    .btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+    }
+
+    .btn-primary {
+    background: linear-gradient(135deg, $primary-color, darken($primary-color, 10%));
+    border: none;
+
+    &:hover {
+        background: linear-gradient(135deg, darken($primary-color, 5%), darken($primary-color, 15%));
+    }
+    }
+
+    .btn-success {
+    background: linear-gradient(135deg, $success-color, darken($success-color, 10%));
+    border: none;
+
+    &:hover {
+        background: linear-gradient(135deg, darken($success-color, 5%), darken($success-color, 15%));
+    }
+    }
+
+    .btn-outline-secondary {
+    border: 2px solid #6c757d;
+    color: #6c757d;
+
+    &:hover {
+        background: #6c757d;
+        border-color: #6c757d;
+        color: $white;
+    }
+    }
+
+    // Responsive design
+    @media (max-width: 768px) {
+    .modal-container {
+        max-width: 95%;
+        margin: 1rem auto;
+    }
+
+    .modal-header-custom {
+        padding: 1.25rem 1.5rem;
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+
+        .btn-close-custom {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        }
+    }
+
+    .modal-body-custom {
+        padding: 1.5rem;
+    }
+
+    .modal-footer-custom {
+        padding: 1.25rem 1.5rem;
+        flex-direction: column;
+        gap: 1rem;
+
+        .d-flex {
+        flex-direction: column !important;
+        gap: 1rem;
+        }
+    }
+
+    .plantilla-options {
+        justify-content: center;
+    }
+
+    .plantilla-card {
+        width: auto;
+        min-width: 100px;
+    }
+
+    .step-indicator {
+        width: 40px;
+        height: 40px;
+    }
+
+    .step-number {
+        font-size: 1.2rem;
+    }
+
+    .modal-title-custom {
+        font-size: 1.3rem;
+    }
+    }
+
+    @media (max-width: 576px) {
+    .modal-backdrop-custom {
+        padding: 0.5rem;
+    }
+
+    .modal-container {
+        max-height: 95vh;
+    }
+
+    .plantilla-options {
+        gap: 0.75rem;
+    }
+
+    .plantilla-card {
+        width: 90px;
+        padding: 0.75rem;
+    }
+
+    .plantilla-image {
+        width: 60px;
+        height: 75px;
+    }
+    }
+
+    // Animaciones adicionales
+    @keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+    }
+
+    .btn-primary:hover,
+    .btn-success:hover {
+    animation: pulse 0.6s ease-in-out;
+    }
