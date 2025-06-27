@@ -1,18 +1,78 @@
     /* propuesta.scss - Estilos mejorados */
 
-    // Variables
-    $primary-color: #0d6efd;
-    $success-color: #198754;
-    $warning-color: #ffc107;
-    $danger-color: #dc3545;
-    $light-gray: #f8f9fa;
-    $dark-gray: #6c757d;
-    $white: #ffffff;
-    $shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
-    $shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.15);
-    $shadow-heavy: 0 8px 30px rgba(0, 0, 0, 0.2);
-    $border-radius: 12px;
-    $transition: all 0.3s ease;
+   // propuesta.scss - Estilos mejorados
+
+$primary-color: #00a99d;
+$success-color: #198754;
+$warning-color: #ffc107;
+$danger-color: #dc3545;
+$light-gray: #f8f9fa;
+$dark-gray: #6c757d;
+$white: #ffffff;
+$shadow-light: 0 2px 10px rgba(0, 0, 0, 0.1);
+$shadow-medium: 0 4px 20px rgba(0, 0, 0, 0.15);
+$shadow-heavy: 0 8px 30px rgba(0, 0, 0, 0.2);
+$border-radius: 12px;
+$transition: all 0.3s ease;
+
+.textoss {
+  color: $primary-color;
+}
+
+.input-group-custom {
+  position: relative;
+
+  .input-icon {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+    color: $primary-color;
+    font-size: 1.2rem;
+  }
+
+  .form-control,
+  .form-select {
+    padding-left: 2.5rem;
+  }
+}
+
+.form-control-custom,
+.form-select.form-control-custom {
+  color: white;
+  border-radius: 10px;
+  font-size: 1rem;
+  padding: 1rem 1.25rem;
+  transition: $transition;
+  background-color: #0000007a !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
+    background-color: $white;
+    color: #000;
+  }
+
+  &::placeholder {
+    color: $dark-gray;
+  }
+}
+
+.form-floating {
+  position: relative;
+
+  label {
+    color: $dark-gray;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+
+    i {
+      color: $primary-color;
+    }
+  }
+}
 
     // Modal backdrop personalizado
     .modal-backdrop-custom {
@@ -127,6 +187,7 @@
     cursor: pointer;
     transition: $transition;
 
+
     &:hover {
         background: rgba(255, 255, 255, 0.3);
         transform: scale(1.1);
@@ -136,11 +197,12 @@
     // Progress bar
     .progress-container {
     padding: 0 2rem;
-    background: $white;
+    background-color: black;
     padding-top: 1rem;
     }
 
     .progress {
+
     height: 6px;
     border-radius: 3px;
     background-color: #e9ecef;
@@ -157,7 +219,7 @@
     padding: 2rem;
     flex: 1;
     overflow-y: auto;
-    background: $white;
+    background-color: black;
     }
 
     .step-content {
@@ -177,12 +239,12 @@
 
     // Formularios mejorados
     .form-control-custom {
-    border: 2px solid #e9ecef;
+        color: white;
     border-radius: 10px;
     font-size: 1rem;
     padding: 1rem 1.25rem;
     transition: $transition;
-    background-color: #fafbfc;
+    background-color: #0000007a !important;
 
     &:focus {
         border-color: $primary-color;
@@ -332,7 +394,7 @@
 
     // Footer personalizado
     .modal-footer-custom {
-    background: #f8f9fa;
+    background: #111111;
     border-top: 1px solid #e9ecef;
     padding: 1.5rem 2rem;
     border-bottom-left-radius: $border-radius;
@@ -348,6 +410,7 @@
     align-items: center;
     justify-content: center;
     text-decoration: none;
+    border: none;
 
     &:hover {
         transform: translateY(-1px);
@@ -370,7 +433,7 @@
 
     .btn-primary {
     background: linear-gradient(135deg, $primary-color, darken($primary-color, 10%));
-    border: none;
+    border: none !important;
 
     &:hover {
         background: linear-gradient(135deg, darken($primary-color, 5%), darken($primary-color, 15%));
@@ -496,3 +559,19 @@
     .btn-success:hover {
     animation: pulse 0.6s ease-in-out;
     }
+    // Ajustes adicionales
+.form-control-custom::placeholder {
+  color: $white !important;
+  opacity: 0.9;
+}
+
+.input-group-custom {
+  .form-control-custom,
+  .form-select {
+    padding-left: 2.75rem; // más espacio por el icono
+  }
+
+  .input-icon {
+    left: 0.75rem;
+  }
+}
