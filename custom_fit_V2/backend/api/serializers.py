@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import (
-    UserProfile, Project, Rol, Tela, Talla, Estampado, Color, Producto, Proveedor
+    UserProfile, Project, Rol, Tela, Talla, Estampado, Color, Producto, ProveedorSolicitud
 )
 
 class RolSerializer(serializers.ModelSerializer):
@@ -51,7 +51,8 @@ class ProductoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProveedorSerializer(serializers.ModelSerializer):
+
+class ProveedorSolicitudSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Proveedor
+        model = ProveedorSolicitud
         fields = '__all__'

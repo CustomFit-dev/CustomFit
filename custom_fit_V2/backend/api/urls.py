@@ -23,7 +23,9 @@ urlpatterns = [
     path('api/telas/', views.tela_list),
     path('api/telas/<int:pk>/', views.tela_detail),
 
-    # Proveedores
-    path('api/proveedores/', views.proveedor_list, name='proveedor-list'),
-    path('api/proveedores/<int:pk>/', views.proveedor_detail, name='proveedor-detail'),
+
+    # Proveedor Solicitudes
+    # ProveedorSolicitud endpoints
+    path('api/proveedorsolicitudes/', views.proveedor_solicitud_list, name='proveedor-solicitud-list'),
+    path('api/proveedorsolicitudes/<int:pk>/', views.proveedor_solicitud_detail, name='proveedorsolicitud-detail'),
 ]

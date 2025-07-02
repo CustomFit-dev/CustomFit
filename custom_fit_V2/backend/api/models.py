@@ -119,17 +119,17 @@ class Producto(models.Model):
         managed = False
 
 
-class Proveedor(models.Model):
-    id = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=255)
-    correo = models.EmailField()
-    telefono = models.CharField(max_length=20)
-    tiene_local = models.BooleanField(default=False)
-    direccion_local = models.CharField(max_length=255, blank=True, null=True)
-    estilo_ropa = models.CharField(max_length=255)
-    mensaje = models.TextField(blank=True, null=True)
-    aceptado = models.BooleanField(default=False)
+class ProveedorSolicitud(models.Model):
+    id_solicitud = models.AutoField(primary_key=True)
+    nit_cedula = models.CharField(max_length=30)
+    direccion = models.CharField(max_length=255)
+    nombre_empresa = models.CharField(max_length=255)
+    descripcion_empresa = models.TextField()
+    anios_experiencia = models.IntegerField()
+    id_usuario = models.IntegerField(null=True, blank=True)  # <- aquí bien puesto
+    estado = models.CharField(max_length=20, default='Pendiente')
 
-    def __str__(self):
-        return self.nombre
+    class Meta:
+        db_table = 'proveedorsolicitud'
+        managed = False  # porque la tabla ya está creada en MySQL
 

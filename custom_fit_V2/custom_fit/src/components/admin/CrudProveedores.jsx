@@ -2,94 +2,94 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Check, Trash2 } from 'lucide-react';
 
+const CrudProveedorSolicitudes = () => {
+  const [solicitudes, setSolicitudes] = useState([]);
 
-const CrudProveedores = () => {
-  const [proveedores, setProveedores] = useState([]);
-
-  const fetchProveedores = async () => {
+  const fetchSolicitudes = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/proveedores/');
-      setProveedores(response.data);
+      const response = await axios.get('http://localhost:8000/api/proveedorsolicitudes/');
+      setSolicitudes(response.data);
     } catch (error) {
-      console.error('Error al obtener proveedores:', error);
+      console.error('Error al obtener solicitudes:', error);
     }
   };
 
   useEffect(() => {
-    fetchProveedores();
+    fetchSolicitudes();
   }, []);
 
-  const aceptarProveedor = async (id) => {
+  const aceptarSolicitud = async (id) => {
     try {
-      await axios.patch(`http://localhost:8000/api/proveedores/${id}/`, { aceptado: true });
-      fetchProveedores();
+      await axios.patch(`http://localhost:8000/api/proveedorsolicitudes/${id}/`, {
+        estado: 'Aceptado'
+      });
+      fetchSolicitudes();
     } catch (error) {
-      console.error('Error al aceptar proveedor:', error);
+      console.error('Error al aceptar solicitud:', error);
     }
   };
 
-  const eliminarProveedor = async (id) => {
-    if (window.confirm('¿Estás seguro de eliminar este proveedor?')) {
+  const eliminarSolicitud = async (id) => {
+    if (window.confirm('¿Estás seguro de eliminar esta solicitud?')) {
       try {
-        await axios.delete(`http://localhost:8000/api/proveedores/${id}/`);
-        fetchProveedores();
+        await axios.delete(`http://localhost:8000/api/proveedorsolicitudes/${id}/`);
+        fetchSolicitudes();
       } catch (error) {
-        console.error('Error al eliminar proveedor:', error);
+        console.error('Error al eliminar solicitud:', error);
       }
     }
   };
 
   return (
     <div>
-      <h3>Lista de Proveedores</h3>
+      <h3>Solicitudes de Proveedores</h3>
       <table className="crud-table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Correo</th>
-            <th>Teléfono</th>
-            <th>Local</th>
+            <th>ID Solicitud</th>
+            <th>NIT/Cédula</th>
             <th>Dirección</th>
-            <th>Estilo Ropa</th>
-            <th>Mensaje</th>
+            <th>Nombre Empresa</th>
+            <th>Descripción Empresa</th>
+            <th>Años Experiencia</th>
+            <th>ID Usuario</th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
-          {proveedores.length > 0 ? (
-            proveedores.map((proveedor) => (
-              <tr key={proveedor.id}>
-                <td>{proveedor.id}</td>
-                <td>{proveedor.nombre}</td>
-                <td>{proveedor.correo}</td>
-                <td>{proveedor.telefono}</td>
-                <td>{proveedor.tiene_local ? 'Sí' : 'No'}</td>
-                <td>{proveedor.direccion_local}</td>
-                <td>{proveedor.estilo_ropa}</td>
-                <td>{proveedor.mensaje}</td>
+          {solicitudes.length > 0 ? (
+            solicitudes.map((solicitud) => (
+              <tr key={solicitud.id_solicitud}>
+                <td>{solicitud.id_solicitud}</td>
+                <td>{solicitud.nit_cedula}</td>
+                <td>{solicitud.direccion}</td>
+                <td>{solicitud.nombre_empresa}</td>
+                <td>{solicitud.descripcion_empresa}</td>
+                <td>{solicitud.anios_experiencia}</td>
+                <td>{solicitud.id_usuario}</td>
                 <td>
-                  {proveedor.aceptado ? (
-                    <span className="status accepted">Aceptado</span>
-                  ) : (
-                    <span className="status pending">Pendiente</span>
-                  )}
+                  <span
+                    className={`status ${solicitud.estado === 'Aceptado' ? 'accepted' : 'pending'
+                      }`}
+                  >
+                    {solicitud.estado}
+                  </span>
                 </td>
-                <td style={{ display: 'flex', gap: '8px' }}>
-                  {!proveedor.aceptado && (
+                <td className="actions-cell">
+                  {solicitud.estado !== 'Aceptado' && (
                     <button
                       className="icon-btn"
-                      onClick={() => aceptarProveedor(proveedor.id)}
-                      title="Aceptar proveedor"
+                      onClick={() => aceptarSolicitud(solicitud.id_solicitud)}
+                      title="Aceptar solicitud"
                     >
                       <Check size={16} />
                     </button>
                   )}
                   <button
                     className="icon-btn danger"
-                    onClick={() => eliminarProveedor(proveedor.id)}
-                    title="Eliminar proveedor"
+                    onClick={() => eliminarSolicitud(solicitud.id_solicitud)}
+                    title="Eliminar solicitud"
                   >
                     <Trash2 size={16} />
                   </button>
@@ -99,7 +99,7 @@ const CrudProveedores = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="10">No hay proveedores registrados.</td>
+              <td colSpan="9">No hay solicitudes registradas.</td>
             </tr>
           )}
         </tbody>
@@ -108,4 +108,4 @@ const CrudProveedores = () => {
   );
 };
 
-export default CrudProveedores;
+export default CrudProveedorSolicitudes;

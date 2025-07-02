@@ -10,12 +10,12 @@ import random
 import logging
 
 from .models import (
-    UserProfile, Project, Rol, Tela, Talla, Estampado, Color, Producto, Proveedor
+    UserProfile, Project, Rol, Tela, Talla, Estampado, Color, Producto, ProveedorSolicitud
 )
 from .serializers import (
     UserProfileSerializer, ProjectSerializer, RolSerializer,
     TelaSerializer, TallaSerializer, EstampadoSerializer,
-    ColorSerializer, ProductoSerializer, ProveedorSerializer
+    ColorSerializer, ProductoSerializer, ProveedorSolicitudSerializer
 )
 
 logger = logging.getLogger(__name__)
@@ -177,15 +177,14 @@ def tela_detail(request, pk):
         return Response(status=204)
 
 
-# -------------------- CRUD PROVEEDORES --------------------
-
+# -------------------- CRUD PROVEEDOR SOLICITUD --------------------
 @api_view(['GET', 'POST'])
-def proveedor_list(request):
+def proveedor_solicitud_list(request):
     if request.method == 'GET':
-        proveedores = Proveedor.objects.all()
-        return Response(ProveedorSerializer(proveedores, many=True).data)
+        solicitudes = ProveedorSolicitud.objects.all()
+        return Response(ProveedorSolicitudSerializer(solicitudes, many=True).data)
     elif request.method == 'POST':
-        serializer = ProveedorSerializer(data=request.data)
+        serializer = ProveedorSolicitudSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
@@ -193,22 +192,22 @@ def proveedor_list(request):
 
 
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
-def proveedor_detail(request, pk):
+def proveedor_solicitud_detail(request, pk):
     try:
-        proveedor = Proveedor.objects.get(pk=pk)
-    except Proveedor.DoesNotExist:
-        return Response({'error': 'Proveedor no encontrado'}, status=404)
+        solicitud = ProveedorSolicitud.objects.get(pk=pk)
+    except ProveedorSolicitud.DoesNotExist:
+        return Response({'error': 'Solicitud no encontrada'}, status=404)
 
     if request.method == 'GET':
-        return Response(ProveedorSerializer(proveedor).data)
+        return Response(ProveedorSolicitudSerializer(solicitud).data)
     
     elif request.method in ['PUT', 'PATCH']:
-        serializer = ProveedorSerializer(proveedor, data=request.data, partial=True)
+        serializer = ProveedorSolicitudSerializer(solicitud, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
 
     elif request.method == 'DELETE':
-        proveedor.delete()
+        solicitud.delete()
         return Response(status=204)

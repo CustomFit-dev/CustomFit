@@ -555,6 +555,17 @@ body {
   border-collapse: collapse;
   margin-top: 20px;
 
+.crud-table td.actions-cell {
+  display: flex;
+  gap: 8px;
+  justify-content: center; /* para que queden centrados */
+  align-items: center;
+  padding: 8px 12px; /* un poco menos para que quede compacto */
+  white-space: nowrap; /* evitar que se quiebren los botones */
+  width: 130px; /* fijo para mantener el ancho */
+}
+
+
   th, td {
     padding: 12px;
     border: 1px solid var(--border-color);
