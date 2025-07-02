@@ -119,17 +119,18 @@ class Producto(models.Model):
         managed = False
 
 
+
 class ProveedorSolicitud(models.Model):
     id_solicitud = models.AutoField(primary_key=True)
-    nit_cedula = models.CharField(max_length=30)
-    direccion = models.CharField(max_length=255)
-    nombre_empresa = models.CharField(max_length=255)
-    descripcion_empresa = models.TextField()
-    anios_experiencia = models.IntegerField()
-    id_usuario = models.IntegerField(null=True, blank=True)  # <- aquí bien puesto
-    estado = models.CharField(max_length=20, default='Pendiente')
+    nit_cedula = models.CharField(max_length=30, null=False)
+    direccion = models.CharField(max_length=255, null=False)
+    nombre_empresa = models.CharField(max_length=255, null=False)
+    descripcion_empresa = models.TextField(null=False)
+    anios_experiencia = models.IntegerField(null=False)
+    estado = models.CharField(max_length=20, default='Pendiente', null=True, blank=True)
+    id_us = models.BigIntegerField(null=True)
 
     class Meta:
         db_table = 'proveedorsolicitud'
-        managed = False  # porque la tabla ya está creada en MySQL
+        managed = False  # Porque la tabla ya existe en la base de datos
 
