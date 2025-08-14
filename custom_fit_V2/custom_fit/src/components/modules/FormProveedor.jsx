@@ -97,7 +97,7 @@ const FormularioProveedor = () => {
         {/* Botón salir */}
         <button
           className="exit-x"
-          onClick={() => navigate('/')}
+          onClick={() => navigate('/home_l')}
           aria-label="Salir"
           type="button"
         >
