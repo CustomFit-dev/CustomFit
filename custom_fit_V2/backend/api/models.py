@@ -118,19 +118,14 @@ class Producto(models.Model):
         db_table = 'productos'
         managed = False
 
-
-
 class ProveedorSolicitud(models.Model):
-    id_solicitud = models.AutoField(primary_key=True)
-    nit_cedula = models.CharField(max_length=30, null=False)
+    id_solicitud = models.AutoField(primary_key=True, db_column='id_solicitud')
+    nit_cedula = models.CharField(max_length=30, null=False, db_column='Nitcedula')
     direccion = models.CharField(max_length=255, null=False)
-    nombre_empresa = models.CharField(max_length=255, null=False)
-    descripcion_empresa = models.TextField(null=False)
-    anios_experiencia = models.IntegerField(null=False)
-    estado = models.CharField(max_length=20, default='Pendiente', null=True, blank=True)
-    id_us = models.BigIntegerField(null=True)
+    nombre_empresa = models.CharField(max_length=255, null=False, db_column='NombreEmpresa')
+    descripcion_empresa = models.TextField(null=False, db_column='descripcionEmpresa')
+    anios_experiencia = models.IntegerField(null=False, db_column='AñosExp')
 
     class Meta:
         db_table = 'proveedorsolicitud'
-        managed = False  # Porque la tabla ya existe en la base de datos
 

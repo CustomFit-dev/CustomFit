@@ -21,7 +21,6 @@ const CrudProveedorSolicitudes = () => {
   const aceptarSolicitud = async (id) => {
     try {
       await axios.patch(`http://localhost:8000/api/proveedorsolicitudes/${id}/`, {
-        estado: 'Aceptado'
       });
       fetchSolicitudes();
     } catch (error) {
@@ -52,8 +51,7 @@ const CrudProveedorSolicitudes = () => {
             <th>Nombre Empresa</th>
             <th>Descripción Empresa</th>
             <th>Años Experiencia</th>
-            <th>ID Usuario</th>
-            <th>Estado</th>
+            {/* <th>ID Usuario</th> Quitar esta columna */}
             <th>Acciones</th>
           </tr>
         </thead>
@@ -67,15 +65,7 @@ const CrudProveedorSolicitudes = () => {
                 <td>{solicitud.nombre_empresa}</td>
                 <td>{solicitud.descripcion_empresa}</td>
                 <td>{solicitud.anios_experiencia}</td>
-                <td>{solicitud.id_usuario}</td>
-                <td>
-                  <span
-                    className={`status ${solicitud.estado === 'Aceptado' ? 'accepted' : 'pending'
-                      }`}
-                  >
-                    {solicitud.estado}
-                  </span>
-                </td>
+  
                 <td className="actions-cell">
                   {solicitud.estado !== 'Aceptado' && (
                     <button
@@ -94,12 +84,11 @@ const CrudProveedorSolicitudes = () => {
                     <Trash2 size={16} />
                   </button>
                 </td>
-
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="9">No hay solicitudes registradas.</td>
+              <td colSpan="8">No hay solicitudes registradas.</td> {/* Cambiar a 8 columnas */}
             </tr>
           )}
         </tbody>

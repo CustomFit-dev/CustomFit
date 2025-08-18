@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';  // <-- Importar aquí
+import { useNavigate } from 'react-router-dom';
 import '../../scss/ProveedorForm.scss';
 
 const FormularioProveedor = () => {
@@ -11,7 +11,6 @@ const FormularioProveedor = () => {
     nombre_empresa: '',
     descripcion_empresa: '',
     anios_experiencia: '',
-    celular: '',
     aceptarTerminos: false,
   });
 
@@ -31,21 +30,14 @@ const FormularioProveedor = () => {
       newErrors.anios_experiencia = true;
     }
 
-    if (!formData.celular) {
-      newErrors.celular = true;
-    } else if (!/^\d{10,11}$/.test(formData.celular)) {
-      newErrors.celular = true;
-    }
-
     if (!formData.aceptarTerminos) {
       newErrors.aceptarTerminos = true;
     }
 
     setErrors(newErrors);
 
-    // Si hay errores, limpiarlos después de 3 segundos
     if (Object.keys(newErrors).length > 0) {
-      setTimeout(() => setErrors({}), 5000); // 3000 ms = 3 segundos
+      setTimeout(() => setErrors({}), 5000);
     }
 
     return Object.keys(newErrors).length === 0;
@@ -70,7 +62,7 @@ const FormularioProveedor = () => {
           nombre_empresa: formData.nombre_empresa,
           descripcion_empresa: formData.descripcion_empresa,
           anios_experiencia: formData.anios_experiencia,
-          estado: 'Pendiente',
+          aceptarTerminos: formData.aceptarTerminos,
         });
 
         alert('Solicitud enviada correctamente');
@@ -80,7 +72,6 @@ const FormularioProveedor = () => {
           nombre_empresa: '',
           descripcion_empresa: '',
           anios_experiencia: '',
-          celular: '',
           aceptarTerminos: false,
         });
         setErrors({});
@@ -94,7 +85,6 @@ const FormularioProveedor = () => {
   return (
     <div className="proveedor-container">
       <div className="form-wrapper">
-        {/* Botón salir */}
         <button
           className="exit-x"
           onClick={() => navigate('/home_l')}
@@ -157,18 +147,6 @@ const FormularioProveedor = () => {
               value={formData.anios_experiencia}
               onChange={handleChange}
               className={errors.anios_experiencia ? 'input-error' : ''}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Teléfono de Contacto:</label>
-            <input
-              type="text"
-              name="celular"
-              value={formData.celular}
-              onChange={handleChange}
-              placeholder="Ej: 3001234567"
-              className={errors.celular ? 'input-error' : ''}
             />
           </div>
 

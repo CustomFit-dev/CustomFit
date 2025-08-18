@@ -495,13 +495,15 @@ def proveedor_solicitud_list(request):
     if request.method == 'GET':
         solicitudes = ProveedorSolicitud.objects.all()
         return Response(ProveedorSolicitudSerializer(solicitudes, many=True).data)
+    
     elif request.method == 'POST':
         serializer = ProveedorSolicitudSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
-        return Response(serializer.errors, status=400)
-
+        else:
+            print(serializer.errors)  # Esto te ayudará a depurar en consola
+            return Response(serializer.errors, status=400)
 
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def proveedor_solicitud_detail(request, pk):
@@ -523,3 +525,5 @@ def proveedor_solicitud_detail(request, pk):
     elif request.method == 'DELETE':
         solicitud.delete()
         return Response(status=204)
+    
+    
