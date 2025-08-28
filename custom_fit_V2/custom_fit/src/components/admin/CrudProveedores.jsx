@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Check, Trash2 } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Check, Trash2 } from "lucide-react";
 
 const CrudProveedorSolicitudes = () => {
   const [solicitudes, setSolicitudes] = useState([]);
 
   const fetchSolicitudes = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/proveedorsolicitudes/');
+      const response = await axios.get(
+        "http://localhost:8000/api/proveedorsolicitudes/"
+      );
       setSolicitudes(response.data);
     } catch (error) {
-      console.error('Error al obtener solicitudes:', error);
+      console.error("Error al obtener solicitudes:", error);
     }
   };
 
@@ -20,21 +22,32 @@ const CrudProveedorSolicitudes = () => {
 
   const aceptarSolicitud = async (id) => {
     try {
-      await axios.patch(`http://localhost:8000/api/proveedorsolicitudes/${id}/`, {
-      });
+      console.log("Aceptando solicitud con ID:", id);
+      await axios.patch(
+        `http://localhost:8000/api/proveedorsolicitudes/${id}/`,
+        {
+          estado: "Aceptado",
+        }
+      );
       fetchSolicitudes();
     } catch (error) {
-      console.error('Error al aceptar solicitud:', error);
+      console.error(
+        "Error al aceptar solicitud:",
+        error.response || error.message
+      );
+      alert("No se pudo aceptar la solicitud.");
     }
   };
 
   const eliminarSolicitud = async (id) => {
-    if (window.confirm('¿Estás seguro de eliminar esta solicitud?')) {
+    if (window.confirm("¿Estás seguro de eliminar esta solicitud?")) {
       try {
-        await axios.delete(`http://localhost:8000/api/proveedorsolicitudes/${id}/`);
+        await axios.delete(
+          `http://localhost:8000/api/proveedorsolicitudes/${id}/`
+        );
         fetchSolicitudes();
       } catch (error) {
-        console.error('Error al eliminar solicitud:', error);
+        console.error("Error al eliminar solicitud:", error);
       }
     }
   };
@@ -46,12 +59,15 @@ const CrudProveedorSolicitudes = () => {
         <thead>
           <tr>
             <th>ID Solicitud</th>
+            <th>Id Usuario</th>
+            <th>Nombre Usuario</th>
+            <th>Celular</th>
             <th>NIT/Cédula</th>
             <th>Dirección</th>
             <th>Nombre Empresa</th>
             <th>Descripción Empresa</th>
             <th>Años Experiencia</th>
-            {/* <th>ID Usuario</th> Quitar esta columna */}
+            <th>Estado</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -60,14 +76,17 @@ const CrudProveedorSolicitudes = () => {
             solicitudes.map((solicitud) => (
               <tr key={solicitud.id_solicitud}>
                 <td>{solicitud.id_solicitud}</td>
+                <td>{solicitud.usuario?.id || "N/A"}</td>
+                <td>{solicitud.usuario?.profile?.nombres || "Sin nombre"}</td>
+                <td>{solicitud.usuario?.profile?.celular || "Sin celular"}</td>
                 <td>{solicitud.nit_cedula}</td>
                 <td>{solicitud.direccion}</td>
                 <td>{solicitud.nombre_empresa}</td>
                 <td>{solicitud.descripcion_empresa}</td>
                 <td>{solicitud.anios_experiencia}</td>
-  
+                <td>{solicitud.estado || "Pendiente"}</td>
                 <td className="actions-cell">
-                  {solicitud.estado !== 'Aceptado' && (
+                  {solicitud.estado !== "Aceptado" && (
                     <button
                       className="icon-btn"
                       onClick={() => aceptarSolicitud(solicitud.id_solicitud)}
@@ -88,7 +107,7 @@ const CrudProveedorSolicitudes = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="8">No hay solicitudes registradas.</td> {/* Cambiar a 8 columnas */}
+              <td colSpan="11">No hay solicitudes registradas.</td>
             </tr>
           )}
         </tbody>

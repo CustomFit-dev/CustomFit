@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import '../../scss/ProveedorForm.scss';
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "../../scss/ProveedorForm.scss";
+import { useAuth } from "../modules/authcontext";
 
 const FormularioProveedor = () => {
+  const { authToken } = useAuth();
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    nit_cedula: '',
-    direccion: '',
-    nombre_empresa: '',
-    descripcion_empresa: '',
-    anios_experiencia: '',
+    nit_cedula: "",
+    direccion: "",
+    nombre_empresa: "",
+    descripcion_empresa: "",
+    anios_experiencia: "",
     aceptarTerminos: false,
   });
 
@@ -26,7 +29,10 @@ const FormularioProveedor = () => {
 
     if (!formData.anios_experiencia) {
       newErrors.anios_experiencia = true;
-    } else if (isNaN(formData.anios_experiencia) || formData.anios_experiencia < 0) {
+    } else if (
+      isNaN(formData.anios_experiencia) ||
+      formData.anios_experiencia < 0
+    ) {
       newErrors.anios_experiencia = true;
     }
 
@@ -47,7 +53,7 @@ const FormularioProveedor = () => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     });
   };
 
@@ -56,28 +62,35 @@ const FormularioProveedor = () => {
 
     if (validateForm()) {
       try {
-        await axios.post('http://localhost:8000/api/proveedorsolicitudes/', {
-          nit_cedula: formData.nit_cedula,
-          direccion: formData.direccion,
-          nombre_empresa: formData.nombre_empresa,
-          descripcion_empresa: formData.descripcion_empresa,
-          anios_experiencia: formData.anios_experiencia,
-          aceptarTerminos: formData.aceptarTerminos,
-        });
+        await axios.post(
+          "http://localhost:8000/api/proveedorsolicitudes/",
+          {
+            nit_cedula: formData.nit_cedula,
+            direccion: formData.direccion,
+            nombre_empresa: formData.nombre_empresa,
+            descripcion_empresa: formData.descripcion_empresa,
+            anios_experiencia: formData.anios_experiencia,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
 
-        alert('Solicitud enviada correctamente');
+        alert("Solicitud enviada correctamente");
         setFormData({
-          nit_cedula: '',
-          direccion: '',
-          nombre_empresa: '',
-          descripcion_empresa: '',
-          anios_experiencia: '',
+          nit_cedula: "",
+          direccion: "",
+          nombre_empresa: "",
+          descripcion_empresa: "",
+          anios_experiencia: "",
           aceptarTerminos: false,
         });
         setErrors({});
       } catch (error) {
-        console.error('Error al enviar solicitud:', error);
-        alert('Error al enviar la solicitud');
+        console.error("Error al enviar solicitud:", error);
+        alert("Error al enviar la solicitud");
       }
     }
   };
@@ -87,7 +100,7 @@ const FormularioProveedor = () => {
       <div className="form-wrapper">
         <button
           className="exit-x"
-          onClick={() => navigate('/home_l')}
+          onClick={() => navigate("/home_l")}
           aria-label="Salir"
           type="button"
         >
@@ -103,7 +116,7 @@ const FormularioProveedor = () => {
               name="nit_cedula"
               value={formData.nit_cedula}
               onChange={handleChange}
-              className={errors.nit_cedula ? 'input-error' : ''}
+              className={errors.nit_cedula ? "input-error" : ""}
             />
           </div>
 
@@ -114,7 +127,7 @@ const FormularioProveedor = () => {
               name="direccion"
               value={formData.direccion}
               onChange={handleChange}
-              className={errors.direccion ? 'input-error' : ''}
+              className={errors.direccion ? "input-error" : ""}
             />
           </div>
 
@@ -125,7 +138,7 @@ const FormularioProveedor = () => {
               name="nombre_empresa"
               value={formData.nombre_empresa}
               onChange={handleChange}
-              className={errors.nombre_empresa ? 'input-error' : ''}
+              className={errors.nombre_empresa ? "input-error" : ""}
             />
           </div>
 
@@ -135,7 +148,7 @@ const FormularioProveedor = () => {
               name="descripcion_empresa"
               value={formData.descripcion_empresa}
               onChange={handleChange}
-              className={errors.descripcion_empresa ? 'input-error' : ''}
+              className={errors.descripcion_empresa ? "input-error" : ""}
             />
           </div>
 
@@ -146,11 +159,15 @@ const FormularioProveedor = () => {
               name="anios_experiencia"
               value={formData.anios_experiencia}
               onChange={handleChange}
-              className={errors.anios_experiencia ? 'input-error' : ''}
+              className={errors.anios_experiencia ? "input-error" : ""}
             />
           </div>
 
-          <div className={`checkbox-group ${errors.aceptarTerminos ? 'checkbox-error' : ''}`}>
+          <div
+            className={`checkbox-group ${
+              errors.aceptarTerminos ? "checkbox-error" : ""
+            }`}
+          >
             <input
               type="checkbox"
               name="aceptarTerminos"
@@ -162,7 +179,9 @@ const FormularioProveedor = () => {
             </label>
           </div>
 
-          <button type="submit" className="submit-button">Enviar Solicitud</button>
+          <button type="submit" className="submit-button">
+            Enviar Solicitud
+          </button>
         </form>
       </div>
     </div>

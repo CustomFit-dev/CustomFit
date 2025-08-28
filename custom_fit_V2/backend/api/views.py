@@ -8,10 +8,12 @@ from django.core.mail import send_mail
 from .serializers import UserProfileSerializer, ProjectSerializer, RolSerializer
 from .models import UserProfile, Project, Rol, Tela, Talla, Estampado, Color, Producto, ProveedorSolicitud
 import random
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth.models import User
 import logging
+from rest_framework.decorators import permission_classes
 import string
 from django.core.mail import send_mail
 from .serializers import TelaSerializer, TallaSerializer, EstampadoSerializer, ColorSerializer, ProductoSerializer, ProveedorSolicitudSerializer
@@ -491,6 +493,7 @@ def producto_update_delete(request, pk):
 
 # -------------------- CRUD PROVEEDOR SOLICITUD --------------------
 @api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
 def proveedor_solicitud_list(request):
     if request.method == 'GET':
         solicitudes = ProveedorSolicitud.objects.all()
@@ -499,11 +502,12 @@ def proveedor_solicitud_list(request):
     elif request.method == 'POST':
         serializer = ProveedorSolicitudSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(usuario=request.user)  # ✅ Asignación de usuario autenticado
             return Response(serializer.data, status=201)
         else:
-            print(serializer.errors)  # Esto te ayudará a depurar en consola
+            print(serializer.errors)
             return Response(serializer.errors, status=400)
+
 
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
 def proveedor_solicitud_detail(request, pk):
@@ -525,5 +529,3 @@ def proveedor_solicitud_detail(request, pk):
     elif request.method == 'DELETE':
         solicitud.delete()
         return Response(status=204)
-    
-    

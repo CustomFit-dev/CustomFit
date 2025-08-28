@@ -1,9 +1,10 @@
 from rest_framework import serializers
 from .models import UserProfile, Project, Rol
-
 from rest_framework import serializers
 from .models import UserProfile, Project, Rol
 from .models import Tela, Talla, Estampado, Color, Producto, ProveedorSolicitud
+from .models import ProveedorSolicitud, UserProfile
+from django.contrib.auth.models import User
 
 class RolSerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,6 +86,25 @@ class ProductoSerializer(serializers.ModelSerializer):
 
         
 class ProveedorSolicitudSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProveedorSolicitud
+        fields = '__all__'
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['nombres', 'celular']
+
+class UserSerializer(serializers.ModelSerializer):
+    profile = UserProfileSerializer(source='userprofile', read_only=True)
+    
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'profile']
+
+class ProveedorSolicitudSerializer(serializers.ModelSerializer):
+    usuario = UserSerializer(read_only=True)
+
     class Meta:
         model = ProveedorSolicitud
         fields = '__all__'
