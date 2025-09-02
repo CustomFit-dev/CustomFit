@@ -133,7 +133,6 @@ class ProveedorSolicitud(models.Model):
         null=False,
         db_column='Estado'
     )
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE, db_column='usuario_id')
 
     class Meta:
         db_table = 'proveedorsolicitud'

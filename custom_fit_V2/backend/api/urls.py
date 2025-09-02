@@ -9,6 +9,7 @@ from .views import (
     producto_list, producto_detail, producto_create, producto_update_delete, proveedor_solicitud_list, proveedor_solicitud_detail
 )
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken.views import obtain_auth_token
 
 router = DefaultRouter()
 router.register(r'userprofiles', UserViewSet)
@@ -53,5 +54,7 @@ urlpatterns = [
 
     path('api/proveedorsolicitudes/', proveedor_solicitud_list, name='proveedor-solicitud-list'),
     path('api/proveedorsolicitudes/<int:pk>/', proveedor_solicitud_detail, name='proveedorsolicitud-detail'),
+
+    path('login/', obtain_auth_token, name='api_token_auth'),
 ]
 

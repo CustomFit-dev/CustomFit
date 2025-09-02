@@ -1,53 +1,92 @@
+// src/components/CrudProveedorSolicitudes.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Check, Trash2 } from "lucide-react";
+import { useAuth } from "../modules/authcontext";
 
 const CrudProveedorSolicitudes = () => {
+  const { authToken } = useAuth();
   const [solicitudes, setSolicitudes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const fetchSolicitudes = async () => {
+    if (!authToken) {
+      setError("No hay token de autorización disponible");
+      return;
+    }
     try {
+      setLoading(true);
+      setError(null);
+
       const response = await axios.get(
-        "http://localhost:8000/api/proveedorsolicitudes/"
+        "http://localhost:8000/api/proveedorsolicitudes/",
+        {
+          headers: {
+            Authorization: `Token ${authToken}`, // Cambiado a Token para consistencia
+          },
+        }
       );
       setSolicitudes(response.data);
     } catch (error) {
       console.error("Error al obtener solicitudes:", error);
+      if (error.response) {
+        setError(`Error ${error.response.status}: ${error.response.statusText}`);
+      } else {
+        setError("Error al obtener solicitudes");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchSolicitudes();
-  }, []);
+    if (authToken) {
+      fetchSolicitudes();
+    }
+  }, [authToken]);
 
   const aceptarSolicitud = async (id) => {
+    if (!authToken) {
+      alert("No autorizado");
+      return;
+    }
     try {
-      console.log("Aceptando solicitud con ID:", id);
       await axios.patch(
         `http://localhost:8000/api/proveedorsolicitudes/${id}/`,
+        { estado: "Aceptado" },
         {
-          estado: "Aceptado",
+          headers: {
+            Authorization: `Token ${authToken}`,
+          },
         }
       );
       fetchSolicitudes();
     } catch (error) {
-      console.error(
-        "Error al aceptar solicitud:",
-        error.response || error.message
-      );
+      console.error("Error al aceptar solicitud:", error);
       alert("No se pudo aceptar la solicitud.");
     }
   };
 
   const eliminarSolicitud = async (id) => {
+    if (!authToken) {
+      alert("No autorizado");
+      return;
+    }
     if (window.confirm("¿Estás seguro de eliminar esta solicitud?")) {
       try {
         await axios.delete(
-          `http://localhost:8000/api/proveedorsolicitudes/${id}/`
+          `http://localhost:8000/api/proveedorsolicitudes/${id}/`,
+          {
+            headers: {
+              Authorization: `Token ${authToken}`,
+            },
+          }
         );
         fetchSolicitudes();
       } catch (error) {
         console.error("Error al eliminar solicitud:", error);
+        alert("No se pudo eliminar la solicitud.");
       }
     }
   };
@@ -55,6 +94,8 @@ const CrudProveedorSolicitudes = () => {
   return (
     <div>
       <h3>Solicitudes de Proveedores</h3>
+      {loading && <p>Cargando solicitudes...</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <table className="crud-table">
         <thead>
           <tr>
@@ -106,9 +147,11 @@ const CrudProveedorSolicitudes = () => {
               </tr>
             ))
           ) : (
-            <tr>
-              <td colSpan="11">No hay solicitudes registradas.</td>
-            </tr>
+            !loading && (
+              <tr>
+                <td colSpan="11">No hay solicitudes registradas.</td>
+              </tr>
+            )
           )}
         </tbody>
       </table>

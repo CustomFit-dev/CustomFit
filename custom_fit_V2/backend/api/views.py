@@ -17,6 +17,7 @@ from rest_framework.decorators import permission_classes
 import string
 from django.core.mail import send_mail
 from .serializers import TelaSerializer, TallaSerializer, EstampadoSerializer, ColorSerializer, ProductoSerializer, ProveedorSolicitudSerializer
+from rest_framework.permissions import AllowAny
 
 logger = logging.getLogger(__name__)
     
@@ -41,6 +42,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.save()
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def register_user(request):
 
     
@@ -107,6 +109,7 @@ def generar_codigo():
 
     
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def enviar_codigo_view(request):
     """Enviar un código de verificación al correo electrónico del usuario."""
     correo_electronico = request.data.get('correo_electronico')
@@ -134,6 +137,7 @@ def enviar_codigo_view(request):
         return Response({'status': 'error', 'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def login_view(request):
     correo_electronico = request.data.get('correo_electronico')
     codigo_verificacion = request.data.get('codigo_verificacion')
@@ -269,13 +273,14 @@ def rol_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def update_user(request, pk):
     try:
         user_profile = UserProfile.objects.get(pk=pk)
     except UserProfile.DoesNotExist:
         return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
     
-    serializer = UserProfileSerializer(user_profile, data=request.data, partial=True)  # partial=True permite actualizar parcialmente
+    serializer = UserProfileSerializer(user_profile, data=request.data, partial=True)
 
     if serializer.is_valid():
         serializer.save()
@@ -491,41 +496,41 @@ def producto_update_delete(request, pk):
         producto.delete()
         return Response(status=204)
 
-# -------------------- CRUD PROVEEDOR SOLICITUD --------------------
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def proveedor_solicitud_list(request):
     if request.method == 'GET':
         solicitudes = ProveedorSolicitud.objects.all()
-        return Response(ProveedorSolicitudSerializer(solicitudes, many=True).data)
-    
+        serializer = ProveedorSolicitudSerializer(solicitudes, many=True)
+        return Response(serializer.data)
+
     elif request.method == 'POST':
         serializer = ProveedorSolicitudSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(usuario=request.user)  # ✅ Asignación de usuario autenticado
-            return Response(serializer.data, status=201)
-        else:
-            print(serializer.errors)
-            return Response(serializer.errors, status=400)
+            serializer.save(usuario=request.user)  # Aquí asignas el usuario autenticado
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+@permission_classes([IsAuthenticated])
 def proveedor_solicitud_detail(request, pk):
     try:
         solicitud = ProveedorSolicitud.objects.get(pk=pk)
     except ProveedorSolicitud.DoesNotExist:
-        return Response({'error': 'Solicitud no encontrada'}, status=404)
+        return Response({'error': 'Solicitud no encontrada'}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        return Response(ProveedorSolicitudSerializer(solicitud).data)
-    
+        serializer = ProveedorSolicitudSerializer(solicitud)
+        return Response(serializer.data)
+
     elif request.method in ['PUT', 'PATCH']:
         serializer = ProveedorSolicitudSerializer(solicitud, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
         solicitud.delete()
-        return Response(status=204)
+        return Response(status=status.HTTP_204_NO_CONTENT)
