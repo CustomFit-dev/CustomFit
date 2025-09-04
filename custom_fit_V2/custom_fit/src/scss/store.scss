@@ -49,32 +49,86 @@
 .card {
   position: relative;
   overflow: hidden;
-  border-radius: 10px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  margin-bottom: 20px;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  margin-bottom: 30px;
+  background: #fff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 12px 24px rgba(23, 190, 187, 0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 14px 28px rgba(5, 141, 131, 0.15), 0 10px 10px rgba(5, 141, 131, 0.1);
 }
 
 .image-container {
   position: relative;
   overflow: hidden;
+  background: #f8f9fa;
+  padding: 20px;
+  text-align: center;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card-img-top {
-  width: 100%;
-  height: 250px;
+  max-width: 100%;
+  max-height: 280px;
+  width: auto;
+  height: auto;
   object-fit: contain;
-  object-position: center;
   transition: transform 0.5s ease;
+  mix-blend-mode: multiply;
 }
 
 .card:hover .card-img-top {
-  transform: scale(1.05);
+  transform: scale(1.08);
+}
+
+.card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-family: 'Rubik', sans-serif;
+}
+
+.card-text {
+  color: #7f8c8d;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
+  flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0.5rem 0 1rem;
+}
+
+.price::before {
+  content: '$';
+  font-size: 0.9em;
+  margin-right: 2px;
+  font-weight: 400;
 }
 
 /* Botones de hover mejorados */
@@ -82,24 +136,118 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0);
+  transform: translate(-50%, -50%) scale(0.9);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   z-index: 2;
-  background-color: rgba(0, 0, 0, 0.75);
-  padding: 25px;
-  width: 80%;
-  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  width: 85%;
+  border-radius: 12px;
   opacity: 0;
-  transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   pointer-events: none;
+  border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .image-container:hover .hover-buttons {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
-  pointer-events: all;
+  pointer-events: auto;
+}
+
+.btn-details, .btn-view {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-details {
+  background-color: #2c3e50;
+  color: white;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: none;
+}
+
+.btn-details:hover {
+  background-color: #1a252f;
+  transform: translateY(-2px);
+}
+
+.btn-details svg {
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.btn-details:hover svg {
+  transform: scale(1.1);
+}
+
+.btn-view {
+  background-color: #05b3a4;
+  color: white;
+}
+
+.btn-view:hover {
+  background-color: #048c80;
+  transform: translateY(-2px);
+}
+
+/* Estilos para el botón de compra */
+.btn-primary {
+  background-color: #17BEBB;
+  border: none;
+  color: white;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.btn-primary:hover {
+  background-color: #128a88;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilo del ícono del carrito */
+.btn-primary svg {
+  color: #2c3e50 !important; /* Color negro para el ícono */
+  transition: transform 0.3s ease;
+}
+
+/* Efecto hover en el ícono */
+.btn-primary:hover svg {
+  color: #2c3e50 !important; /* Mantener negro en hover */
+  transform: scale(1.1); /* Efecto de escala similar al botón de precio */
 }
 
 /* Overlay para efecto de oscurecimiento */

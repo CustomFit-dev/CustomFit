@@ -15,7 +15,6 @@ const CamisetaCard = ({estado, cambiarEstado}) => {
       {/* Imagen de la camiseta */}
       <div className="image-section">
       
-        <div className="discount-tag">30%</div>
         <div style={{ position: 'relative' }}>
   <IconButton1 className="salirx1" onClick={() => cambiarEstado()}>
     <CloseIcon1 />
@@ -35,7 +34,6 @@ const CamisetaCard = ({estado, cambiarEstado}) => {
             <div className="price-section">
             <h2>Camiseta Sencilla</h2>
         <p className="descripc">Camiseta con estampado color negro</p>
-              <span className="old-price">$75.000</span>
               <span className="current-price">$45.000</span>
             </div>
             
