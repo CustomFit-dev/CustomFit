@@ -1,14 +1,13 @@
-    import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-    export const useDragAndResize = ({
-    textElements,
-    setTextElements,
-    imageElements,
-    setImageElements,
-    emojiElements,
-    setEmojiElements,
+export const useDragAndResize = ({
+    designElements,
+    currentView,
+    setCurrentTextElements,
+    setCurrentImageElements,
+    setCurrentEmojiElements,
     designAreaRef
-    }) => {
+}) => {
     const [activeElement, setActiveElement] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
     const [isResizing, setIsResizing] = useState(false);
@@ -22,30 +21,37 @@
         setActiveElement({ type: elementType, id: element.id });
         
         if (action === 'move') {
-        setIsDragging(true);
-        setStartPos({ x: e.clientX, y: e.clientY });
-        setOrigPos({ x: element.x, y: element.y });
+            setIsDragging(true);
+            setStartPos({ x: e.clientX, y: e.clientY });
+            setOrigPos({ x: element.x, y: element.y });
         } else if (action === 'resize') {
-        setIsResizing(true);
-        setStartPos({ x: e.clientX, y: e.clientY });
-        
-        if (elementType === 'image') {
-            const imgElement = document.getElementById(`img-${element.id}`);
-            setElementSize({
-            width: imgElement.width,
-            height: imgElement.height
-            });
-        } else if (elementType === 'emoji') {
-            setElementSize({
-            width: parseFloat(element.size || 48),
-            height: parseFloat(element.size || 48)
-            });
-        } else if (elementType === 'text') {
-            setElementSize({
-            width: element.size,
-            height: element.size
-            });
-        }
+            setIsResizing(true);
+            setStartPos({ x: e.clientX, y: e.clientY });
+            
+            if (elementType === 'image') {
+                const imgElement = document.getElementById(`img-${element.id}`);
+                if (imgElement) {
+                    setElementSize({
+                        width: imgElement.width,
+                        height: imgElement.height
+                    });
+                } else {
+                    setElementSize({
+                        width: element.width || 100,
+                        height: element.height || 100
+                    });
+                }
+            } else if (elementType === 'emoji') {
+                setElementSize({
+                    width: parseFloat(element.size || 48),
+                    height: parseFloat(element.size || 48)
+                });
+            } else if (elementType === 'text') {
+                setElementSize({
+                    width: element.size,
+                    height: element.size
+                });
+            }
         }
     };
 
@@ -53,72 +59,72 @@
         if (!activeElement || (!isDragging && !isResizing)) return;
         
         if (isDragging) {
-        const dx = e.clientX - startPos.x;
-        const dy = e.clientY - startPos.y;
-        
-        if (activeElement.type === 'text') {
-            setTextElements(prevElements => 
-            prevElements.map(el => 
-                el.id === activeElement.id 
-                ? { ...el, x: origPos.x + dx, y: origPos.y + dy } 
-                : el
-            )
-            );
-        } else if (activeElement.type === 'image') {
-            setImageElements(prevElements => 
-            prevElements.map(el => 
-                el.id === activeElement.id 
-                ? { ...el, x: origPos.x + dx, y: origPos.y + dy } 
-                : el
-            )
-            );
-        } else if (activeElement.type === 'emoji') {
-            setEmojiElements(prevElements => 
-            prevElements.map(el => 
-                el.id === activeElement.id 
-                ? { ...el, x: origPos.x + dx, y: origPos.y + dy } 
-                : el
-            )
-            );
-        }
+            const dx = e.clientX - startPos.x;
+            const dy = e.clientY - startPos.y;
+            
+            if (activeElement.type === 'text') {
+                const currentElements = designElements[currentView].textElements;
+                const updatedElements = currentElements.map(el => 
+                    el.id === activeElement.id 
+                        ? { ...el, x: origPos.x + dx, y: origPos.y + dy } 
+                        : el
+                );
+                setCurrentTextElements(updatedElements);
+            } else if (activeElement.type === 'image') {
+                const currentElements = designElements[currentView].imageElements;
+                const updatedElements = currentElements.map(el => 
+                    el.id === activeElement.id 
+                        ? { ...el, x: origPos.x + dx, y: origPos.y + dy } 
+                        : el
+                );
+                setCurrentImageElements(updatedElements);
+            } else if (activeElement.type === 'emoji') {
+                const currentElements = designElements[currentView].emojiElements;
+                const updatedElements = currentElements.map(el => 
+                    el.id === activeElement.id 
+                        ? { ...el, x: origPos.x + dx, y: origPos.y + dy } 
+                        : el
+                );
+                setCurrentEmojiElements(updatedElements);
+            }
         } else if (isResizing) {
-        const dx = e.clientX - startPos.x;
-        const aspectRatio = elementSize.width / elementSize.height;
-        
-        let newWidth = Math.max(20, elementSize.width + dx);
-        let newHeight;
-        
-        if (activeElement.type === 'image') {
-            newHeight = newWidth / aspectRatio;
+            const dx = e.clientX - startPos.x;
+            const aspectRatio = elementSize.width / elementSize.height;
             
-            setImageElements(prevElements => 
-            prevElements.map(el => 
-                el.id === activeElement.id 
-                ? { ...el, width: newWidth, height: newHeight } 
-                : el
-            )
-            );
-        } else if (activeElement.type === 'emoji') {
-            const newSize = Math.max(20, elementSize.width + dx);
+            let newWidth = Math.max(20, elementSize.width + dx);
+            let newHeight;
             
-            setEmojiElements(prevElements => 
-            prevElements.map(el => 
-                el.id === activeElement.id 
-                ? { ...el, size: newSize } 
-                : el
-            )
-            );
-        } else if (activeElement.type === 'text') {
-            const newSize = Math.max(10, elementSize.width + dx * 0.5);
-            
-            setTextElements(prevElements => 
-            prevElements.map(el => 
-                el.id === activeElement.id 
-                ? { ...el, size: newSize } 
-                : el
-            )
-            );
-        }
+            if (activeElement.type === 'image') {
+                newHeight = newWidth / aspectRatio;
+                
+                const currentElements = designElements[currentView].imageElements;
+                const updatedElements = currentElements.map(el => 
+                    el.id === activeElement.id 
+                        ? { ...el, width: newWidth, height: newHeight } 
+                        : el
+                );
+                setCurrentImageElements(updatedElements);
+            } else if (activeElement.type === 'emoji') {
+                const newSize = Math.max(20, elementSize.width + dx);
+                
+                const currentElements = designElements[currentView].emojiElements;
+                const updatedElements = currentElements.map(el => 
+                    el.id === activeElement.id 
+                        ? { ...el, size: newSize } 
+                        : el
+                );
+                setCurrentEmojiElements(updatedElements);
+            } else if (activeElement.type === 'text') {
+                const newSize = Math.max(10, elementSize.width + dx * 0.5);
+                
+                const currentElements = designElements[currentView].textElements;
+                const updatedElements = currentElements.map(el => 
+                    el.id === activeElement.id 
+                        ? { ...el, size: newSize } 
+                        : el
+                );
+                setCurrentTextElements(updatedElements);
+            }
         }
     };
 
@@ -132,10 +138,10 @@
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('mouseup', handleMouseUp);
         return () => {
-        window.removeEventListener('mousemove', handleMouseMove);
-        window.removeEventListener('mouseup', handleMouseUp);
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [isDragging, isResizing, activeElement, startPos, origPos, elementSize]);
+    }, [isDragging, isResizing, activeElement, startPos, origPos, elementSize, designElements, currentView]);
 
     return {
         activeElement,
@@ -143,4 +149,4 @@
         isResizing,
         handleMouseDown
     };
-    };
+};
