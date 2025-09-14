@@ -7,10 +7,10 @@ import CamisetaNegra from "../../img/personalizar/frontal/negroFRON.png";
 import CamisetaAmarilla from "../../img//personalizar/frontal/amarilloFRON.png";
 import CamisetaGris from "../../img/personalizar/frontal/grisFRON.png";
 import CamisetaCafe from "../../img/personalizar/frontal/cafeFRON.png";
-import CamisetaLila from "../../img/camisassinfo/camisalila.png";
-import CamisetaBeige from "../../img/camisassinfo/camisabeige.png";
-import CamisetaTurquesa from "../../img/camisassinfo/camisaTurquesa.png";
-import CamisetaFucsia from "../../img/camisassinfo/camisaFucsia.png";
+import CamisetaLila from "../../img/personalizar/frontal/rosadoFRON.png";
+import CamisetaBeige from "../../img/personalizar/frontal/BeigeFRON.png";
+import CamisetaTurquesa from "../../img/personalizar/frontal/cierloFRON.png";
+import CamisetaFucsia from "../../img/personalizar/frontal/moradoFRON.png";
 
 // Imágenes traseras (espaldar) - CAMBIA ESTAS RUTAS POR LAS TUYAS
 import CamisetaRojaEspaldar from "../../img/personalizar/espaldar/rojoES.png";
@@ -21,10 +21,10 @@ import CamisetaNegraEspaldar from "../../img/personalizar/espaldar/negroES.png";
 import CamisetaAmarillaEspaldar from "../../img/personalizar/espaldar/amarilloES.png";
 import CamisetaGrisEspaldar from "../../img//personalizar/espaldar/grisES.png";
 import CamisetaCafeEspaldar from "../../img/personalizar/espaldar/cafeES.png";
-import CamisetaLilaEspaldar from "../../img/camisassinfo/cam7.png";
-import CamisetaBeigeEspaldar from "../../img/personalizar/espaldar/negroES.png";
-import CamisetaTurquesaEspaldar from "../../img/camisassinfo/cam7.png";
-import CamisetaFucsiaEspaldar from "../../img/camisassinfo/CamisaVerde.png";
+import CamisetaLilaEspaldar from "../../img/personalizar/espaldar/rosadoES.png";
+import CamisetaBeigeEspaldar from "../../img/personalizar/espaldar/BeigeES.png";
+import CamisetaTurquesaEspaldar from "../../img/personalizar/espaldar/cieloES.png";
+import CamisetaFucsiaEspaldar from "../../img/personalizar/espaldar/moradoES.png";
 
 // Imágenes de manga derecha - CAMBIA ESTAS RUTAS POR LAS TUYAS
 import CamisetaRojaMangaDer from "../../img/personalizar/lateralDR/rojoDR.png";
@@ -34,11 +34,11 @@ import CamisetaBlancaMangaDer from "../../img/personalizar/lateralDR/blancaDR.pn
 import CamisetaNegraMangaDer from "../../img/personalizar/lateralDR/negroDR.png";
 import CamisetaAmarillaMangaDer from "../../img/personalizar/lateralDR/amarilloDR.png";
 import CamisetaGrisMangaDer from "../../img/personalizar/lateralDR/grisIZ.png";
-import CamisetaCafeMangaDer from "../../img/camisassinfo/cam5.png";
-import CamisetaLilaMangaDer from "../../img/camisassinfo/cam5.png";
-import CamisetaBeigeMangaDer from "../../img/camisassinfo/cam7.png";
-import CamisetaTurquesaMangaDer from "../../img/camisassinfo/cam4.png";
-import CamisetaFucsiaMangaDer from "../../img/camisassinfo/cam5.png";
+import CamisetaCafeMangaDer from "../../img/personalizar/lateralDR/cafeDR.png";
+import CamisetaLilaMangaDer from "../../img/personalizar/lateralDR/rosadoDR.png";
+import CamisetaBeigeMangaDer from "../../img/personalizar/lateralDR/BeigeDR.png";
+import CamisetaTurquesaMangaDer from "../../img/personalizar/lateralDR/cieloDR.png";
+import CamisetaFucsiaMangaDer from "../../img/personalizar/lateralDR/moradoDR.png";
 
 // Imágenes de manga izquierda - CAMBIA ESTAS RUTAS POR LAS TUYAS
 import CamisetaRojaMangaIzq from "../../img/personalizar/lateralIZ/rojoIZ.png";
@@ -48,11 +48,11 @@ import CamisetaBlancaMangaIzq from "../../img/personalizar/lateralIZ/blancaIZ.pn
 import CamisetaNegraMangaIzq from "../../img/personalizar/lateralIZ/negroIZ.png";
 import CamisetaAmarillaMangaIzq from "../../img/personalizar/lateralIZ/amarilloIZ.png";
 import CamisetaGrisMangaIzq from "../../img/personalizar/lateralIZ/grisIZ.png";
-import CamisetaCafeMangaIzq from "../../img/camisassinfo/CamisaRoja.png";
-import CamisetaLilaMangaIzq from "../../img/camisassinfo/camisaTurquesa.png";
-import CamisetaBeigeMangaIzq from "../../img/camisassinfo/camisagris.png";
-import CamisetaTurquesaMangaIzq from "../../img/camisassinfo/cam6.png";
-import CamisetaFucsiaMangaIzq from "../../img/camisassinfo/camisablanca.png";
+import CamisetaCafeMangaIzq from "../../img/personalizar/lateralIZ/cafeIZ.png";
+import CamisetaLilaMangaIzq from "../../img/personalizar/lateralIZ/rosadoIZ.png";
+import CamisetaBeigeMangaIzq from "../../img/personalizar/lateralIZ/BeigeIZ.png";
+import CamisetaTurquesaMangaIzq from "../../img/personalizar/lateralIZ/cieloIZ.png";
+import CamisetaFucsiaMangaIzq from "../../img/personalizar/lateralIZ/moradoIZ.png";
 
 // Imágenes frontales (vista por defecto)
 export const colorImages = {

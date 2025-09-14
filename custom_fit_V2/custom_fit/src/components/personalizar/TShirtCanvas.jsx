@@ -81,7 +81,7 @@ const TShirtCanvas = ({
                     </div>
                 </div>
                 <div className="text-center mt-2">
-                    <small className="text-muted">Vista actual: <strong>{views.find(v => v.id === currentView)?.name}</strong></small>
+                    <br></br>
                 </div>
             </div>
 
