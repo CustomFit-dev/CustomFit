@@ -5,7 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import ChatbotModal from './ChatbotModal_l'; // <-- Importa el modal
+import ChatbotModal from './ChatbotModal'; // <-- Importa el modal
 import '../../scss/FloatingButton.scss';
 
 const FloatingButton = () => {
