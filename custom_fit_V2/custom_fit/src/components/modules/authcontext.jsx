@@ -1,4 +1,3 @@
-// src/authcontext.js
 import React, { createContext, useState, useEffect } from 'react';
 import useLocalStorage from './useLocalStorage';
 
@@ -41,7 +40,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, authToken, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

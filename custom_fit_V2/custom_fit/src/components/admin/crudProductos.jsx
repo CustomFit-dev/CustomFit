@@ -11,6 +11,8 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useAuth } from "../modules/authcontext";
+
 
 const theme = createTheme({
   palette: {
@@ -23,6 +25,7 @@ const theme = createTheme({
 });
 
 const ProductoCrud = () => {
+  const { authToken } = useAuth();
   const [productos, setProductos] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -49,7 +52,9 @@ const ProductoCrud = () => {
 
   const fetchProductos = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/productos/');
+      const res = await axios.get("http://localhost:8000/api/productos/", {
+      headers: { Authorization: `Token ${authToken}` }
+    });
       setProductos(res.data);
     } catch (err) {
       console.error(err);
@@ -91,7 +96,9 @@ const ProductoCrud = () => {
   const save = async () => {
     try {
       if (editMode) {
-        await axios.put(`http://localhost:8000/api/productos/${current.idProductos}/edit/`, formData);
+        const res = await axios.put(`http://localhost:8000/api/productos/${current.idProductos}/edit/`, formData, {
+          headers: { Authorization: `Token ${authToken}` }
+        });
         Swal.fire('Actualizado', 'Producto actualizado', 'success');
       } else {
         await axios.post('http://localhost:8000/api/productos/create/', formData);

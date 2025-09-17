@@ -117,3 +117,22 @@ class Producto(models.Model):
     class Meta:
         db_table = 'productos'
         managed = False
+
+class ProveedorSolicitud(models.Model):
+    id_solicitud = models.AutoField(primary_key=True, db_column='id_solicitud')
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE, db_column='usuario_id')
+    nit_cedula = models.CharField(max_length=30, null=False, db_column='Nitcedula')
+    direccion = models.CharField(max_length=255, null=False)
+    nombre_empresa = models.CharField(max_length=255, null=False, db_column='NombreEmpresa')
+    descripcion_empresa = models.TextField(null=False, db_column='descripcionEmpresa')
+    anios_experiencia = models.IntegerField(null=False, db_column='AñosExp')
+    estado = models.CharField(
+        max_length=20,
+        choices=[('Pendiente', 'Pendiente'), ('Aceptado', 'Aceptado')],
+        default='Pendiente',
+        null=False,
+        db_column='Estado'
+    )
+
+    class Meta:
+        db_table = 'proveedorsolicitud'

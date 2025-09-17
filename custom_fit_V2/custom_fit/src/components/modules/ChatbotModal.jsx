@@ -10,11 +10,11 @@ const ChatbotModal = ({ open, handleClose }) => {
     {
       sender: 'bot',
       text:
-        'Hola,¿en qué puedo ayudarte?\n' +
-        '1.Quiero contactarlos\n' +
-        '2.Quiero ser proveedor\n' +
-        '3.Quiero diseñar una camiseta\n' +
-        '4.Ver catálogo',
+        'Hola, ¿en qué puedo ayudarte?\n' +
+        '1. Quiero contactarlos\n' +
+        '2. Quiero ser proveedor\n' +
+        '3. Quiero diseñar una camiseta\n' +
+        '4. Ver catálogo',
     },
   ]);
   const [context, setContext] = useState('main');
@@ -26,11 +26,11 @@ const ChatbotModal = ({ open, handleClose }) => {
       {
         sender: 'bot',
         text:
-          'Hola,¿en qué puedo ayudarte?\n' +
-          '1.Quiero contactarlos\n' +
-          '2.Quiero ser proveedor\n' +
-          '3.Quiero diseñar una camiseta\n' +
-          '4.Ver catálogo',
+          'Hola, ¿en qué puedo ayudarte?\n' +
+          '1. Quiero contactarlos\n' +
+          '2. Quiero ser proveedor\n' +
+          '3. Quiero diseñar una camiseta\n' +
+          '4. Ver catálogo',
       },
     ]);
     setContext('main');
@@ -59,17 +59,25 @@ const ChatbotModal = ({ open, handleClose }) => {
           }, 1500);
           break;
         case '2':
-          botReply =
-            'Gracias por tu interés. Por favor llena el formulario en https://camishub.com/proveedores.';
-          break;
-        case '3':
-        case '4':
-          botReply = 'Perfecto. Sin embargo, primero necesitas iniciar sesión para continuar. Redirigiéndote al login...';
+          botReply = 'Perfecto. Abriendo formulario de proveedor...';
           setTimeout(() => {
-            navigate('/iniciar');
+            navigate('/FormProveedor'); // <- esta es la ruta que debes tener en tu App.js o Routes.jsx
             resetChat();
             handleClose();
-          }, 2500);
+          }, 1500);
+          break;
+        case '3':
+          botReply =
+            '¿Qué tipo de diseño te interesa?\n1. Subir mi propio diseño\n2. Usar plantillas\n3. Ver ejemplos';
+          nextContext = 'design-options';
+          break;
+        case '4':
+          botReply = 'Redirigiéndote al catálogo...';
+          setTimeout(() => {
+            navigate('/Store');
+            resetChat();
+            handleClose();
+          }, 1500);
           break;
         default:
           botReply = 'No entendí esa opción. Por favor responde con un número del 1 al 4.';
@@ -147,7 +155,7 @@ const ChatbotModal = ({ open, handleClose }) => {
               if (e.key === 'Enter') handleSend();
             }}
           />
-          <Button variant="contained" className="send-button" onClick={handleSend}>
+          <Button variant="contained" color="primary" className="send-button" onClick={handleSend}>
             Enviar
           </Button>
         </div>

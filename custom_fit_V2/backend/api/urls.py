@@ -6,9 +6,10 @@ from .views import (
     talla_list, talla_detail, talla_create, talla_update_delete,
     estampado_list, estampado_detail, estampado_create, estampado_update_delete,
     color_list, color_detail, color_create, color_update_delete,
-    producto_list, producto_detail, producto_create, producto_update_delete
+    producto_list, producto_detail, producto_create, producto_update_delete, proveedor_solicitud_list, proveedor_solicitud_detail
 )
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken.views import obtain_auth_token
 
 router = DefaultRouter()
 router.register(r'userprofiles', UserViewSet)
@@ -50,4 +51,7 @@ urlpatterns = [
     path('api/productos/<int:pk>/', producto_detail, name='producto-detail'),
     path('api/productos/create/', producto_create, name='producto-create'),
     path('api/productos/<int:pk>/edit/', producto_update_delete, name='producto-update-delete'),
+
+    path('api/proveedorsolicitudes/', proveedor_solicitud_list, name='proveedor-solicitud-list'),
+    path('api/proveedorsolicitudes/<int:pk>/', proveedor_solicitud_detail, name='proveedorsolicitud-detail'),
 ]

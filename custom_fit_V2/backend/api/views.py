@@ -6,24 +6,38 @@ from rest_framework.decorators import api_view
 from rest_framework.exceptions import ValidationError
 from django.core.mail import send_mail
 from .serializers import UserProfileSerializer, ProjectSerializer, RolSerializer
-from .models import UserProfile, Project, Rol, Tela, Talla, Estampado, Color, Producto
+from .models import UserProfile, Project, Rol, Tela, Talla, Estampado, Color, Producto, ProveedorSolicitud
 import random
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from django.contrib.auth.models import User
 import logging
 import string
 from django.core.mail import send_mail
-from .serializers import TelaSerializer, TallaSerializer, EstampadoSerializer, ColorSerializer, ProductoSerializer
-
+from .serializers import TelaSerializer, TallaSerializer, EstampadoSerializer, ColorSerializer, ProductoSerializer, ProveedorSolicitudSerializer
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import permission_classes
+from functools import wraps;
+from rest_framework.decorators import authentication_classes
 logger = logging.getLogger(__name__)
-    
+
+def admin_required(func):
+    @wraps(func)
+    def wrapper(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return Response({'error': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        if not hasattr(request.user, 'userprofile') or request.user.userprofile.rol.id != 2:
+            return Response({'error': 'NO autenticado'}, status=status.HTTP_403_FORBIDDEN)
+
+        return func(request, *args, **kwargs)
+    return wrapper
+
 
 def home(request):
     """Vista de inicio."""
     return HttpResponse("Principal")
-
-
 class UserViewSet(viewsets.ModelViewSet):
     """Vista para gestionar el perfil del usuario."""
     queryset = UserProfile.objects.all()
@@ -39,9 +53,9 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer.save()
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
+@authentication_classes([])
 def register_user(request):
-
-    
     """Registrar un nuevo usuario."""
     try:
         # Obtener los datos del request
@@ -105,6 +119,8 @@ def generar_codigo():
 
     
 @api_view(['POST'])
+@permission_classes([AllowAny])
+@authentication_classes([])
 def enviar_codigo_view(request):
     """Enviar un código de verificación al correo electrónico del usuario."""
     correo_electronico = request.data.get('correo_electronico')
@@ -132,6 +148,8 @@ def enviar_codigo_view(request):
         return Response({'status': 'error', 'message': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
+@authentication_classes([])
 def login_view(request):
     correo_electronico = request.data.get('correo_electronico')
     codigo_verificacion = request.data.get('codigo_verificacion')
@@ -180,6 +198,8 @@ class CustomAuthToken(ObtainAuthToken):
         })
 
 @api_view(['POST'])
+@permission_classes([AllowAny])
+@authentication_classes([])
 def logout_view(request):
     """Cerrar sesión del usuario."""
     try:
@@ -449,12 +469,15 @@ def color_update_delete(request, pk):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@admin_required
 def producto_list(request):
     productos = Producto.objects.all()
     serializer = ProductoSerializer(productos, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def producto_detail(request, pk):
     try:
         producto = Producto.objects.get(pk=pk)
@@ -464,6 +487,7 @@ def producto_detail(request, pk):
         return Response({'error': 'Producto no encontrado'}, status=404)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def producto_create(request):
     serializer = ProductoSerializer(data=request.data)
     if serializer.is_valid():
@@ -472,6 +496,7 @@ def producto_create(request):
     return Response(serializer.errors, status=400)
 
 @api_view(['PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
 def producto_update_delete(request, pk):
     try:
         producto = Producto.objects.get(pk=pk)
@@ -488,3 +513,42 @@ def producto_update_delete(request, pk):
     elif request.method == 'DELETE':
         producto.delete()
         return Response(status=204)
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def proveedor_solicitud_list(request):
+    if request.method == 'GET':
+        solicitudes = ProveedorSolicitud.objects.all()
+        serializer = ProveedorSolicitudSerializer(solicitudes, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = ProveedorSolicitudSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(usuario=request.user)  # Aquí asignas el usuario autenticado
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def proveedor_solicitud_detail(request, pk):
+    try:
+        solicitud = ProveedorSolicitud.objects.get(pk=pk)
+    except ProveedorSolicitud.DoesNotExist:
+        return Response({'error': 'Solicitud no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = ProveedorSolicitudSerializer(solicitud)
+        return Response(serializer.data)
+
+    elif request.method in ['PUT', 'PATCH']:
+        serializer = ProveedorSolicitudSerializer(solicitud, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        solicitud.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

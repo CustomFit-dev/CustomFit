@@ -82,10 +82,16 @@ TEMPLATES = [
 
 ALLOWED_HOSTS = ['*']
 
+
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+    ],
+        'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',  # opcional, para que todas las vistas requieran auth
     ],
 }
 
@@ -100,7 +106,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'customfit_d3',  
         'USER': 'root',           
-        'PASSWORD': '',           
+        'PASSWORD': 'root',           
         'HOST': '127.0.0.1',     
         'PORT': '3306',          
     }

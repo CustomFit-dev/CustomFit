@@ -13,6 +13,7 @@ import MyOrders from '../modules/dashboard/mis-pedidos';
 import Contact from '../modules/dashboard/contacto';
 import Shop from '../modules/dashboard/mis-pedidos';
 import Productos from './crudProductos';
+import CrudProveedores from '../admin/CrudProveedores';
 
 // IMPORT CRUD de gestión
 import TelasCrud from './CrudTela';
@@ -32,6 +33,7 @@ const App = () => {
     { id: 'my-orders', name: 'Pedidos', icon: <ShoppingCart size={20} />, component: <MyOrders /> },
     { id: 'contact', name: 'Facturas', icon: <NotepadTextDashed size={20} />, component: <Contact /> },
     { id: 'shop', name: 'Productos Shop', icon: <ShoppingCart size={20} />, component: <Shop /> },
+    { id: 'proveedores-data', name: 'Proveedores', icon: <User size={20} />, component: <CrudProveedores /> },
   ];
 
   // Gestión subitems con iconos específicos
