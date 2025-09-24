@@ -50,6 +50,7 @@ import { flexRender } from '@tanstack/react-table';
 import theme from './modules/Themes';
 import '../scss/admin/crud.scss';
 import { color } from '@mui/system';
+import { useAuth } from "./modules/authcontext";
 
 const Crud = () => {
   const [userProfiles, setUserProfiles] = useState([]);
@@ -67,6 +68,7 @@ const Crud = () => {
     rol: '',
     
   });
+  const { authToken } = useAuth();
   const [roles, setRoles] = useState([]);
   const [snackbar, setSnackbar] = useState({
     open: false,
@@ -197,10 +199,8 @@ const Crud = () => {
     
     try {
       const response = await axios.put(`http://localhost:8000/api/update-user/${userToEdit.id}/`, formData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      headers: { Authorization: `Token ${authToken}` }
+    });
 
       if (response.status === 200) {
         // Actualizar la lista de usuarios
@@ -228,10 +228,8 @@ const Crud = () => {
     
     try {
       const response = await axios.delete(`http://localhost:8000/api/delete-user/${userToDelete.id}/`, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      headers: { Authorization: `Token ${authToken}` }
+    });
 
       if (response.status === 204) {
         // Usuario eliminado correctamente

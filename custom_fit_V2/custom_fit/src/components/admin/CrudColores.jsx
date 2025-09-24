@@ -9,6 +9,7 @@ import { Add, Edit, Delete, Close, Save } from '@mui/icons-material';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { useAuth } from "../modules/authcontext";
 
 const theme = createTheme({
   palette: {
@@ -21,6 +22,7 @@ const theme = createTheme({
 });
 
 const ColorCrud = () => {
+  const { authToken } = useAuth();
   const [colores, setColores] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -35,7 +37,9 @@ const ColorCrud = () => {
 
   const fetchColores = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/colores/');
+      const res = await axios.get('http://localhost:8000/api/colores/', {
+        headers: { Authorization: `Token ${authToken}` }
+      });
       setColores(res.data);
     } catch (err) {
       console.error('Error al obtener colores', err);
@@ -64,11 +68,25 @@ const ColorCrud = () => {
 
   const handleSave = async () => {
     try {
+      const today = new Date().toISOString(); // 👈 fecha actual
+
       if (editMode) {
-        await axios.put(`http://localhost:8000/api/colores/${current.IdColor}/edit/`, formData);
+        await axios.put(
+          `http://localhost:8000/api/colores/${current.IdColor}/edit/`,
+          { ...formData, updated_at: today }, // 👈 se agrega updated_at
+          {
+            headers: { Authorization: `Token ${authToken}` }
+          }
+        );
         Swal.fire('Actualizado', 'Color actualizado correctamente', 'success');
       } else {
-        await axios.post('http://localhost:8000/api/colores/create/', formData);
+        await axios.post(
+          'http://localhost:8000/api/colores/create/',
+          { ...formData, updated_at: today }, // 👈 se agrega updated_at
+          {
+            headers: { Authorization: `Token ${authToken}` }
+          }
+        );
         Swal.fire('Creado', 'Color creado correctamente', 'success');
       }
       fetchColores();
@@ -92,7 +110,9 @@ const ColorCrud = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:8000/api/colores/${id}/edit/`);
+        await axios.delete(`http://localhost:8000/api/colores/${id}/edit/` , {
+          headers: { Authorization: `Token ${authToken}` }
+        });
         Swal.fire('Eliminado', 'Color eliminado', 'success');
         fetchColores();
       } catch (error) {

@@ -303,6 +303,8 @@ def update_user(request, pk):
 
 # telas
 @api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+@admin_required
 def tela_list(request):
     if request.method == 'GET':
         telas = Tela.objects.all()
@@ -316,6 +318,8 @@ def tela_list(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+@admin_required
 def tela_detail(request, pk):
     try:
         tela = Tela.objects.get(pk=pk)
@@ -340,12 +344,16 @@ def tela_detail(request, pk):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@admin_required
 def talla_list(request):
     tallas = Talla.objects.all()
     serializer = TallaSerializer(tallas, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@admin_required
 def talla_detail(request, pk):
     try:
         talla = Talla.objects.get(pk=pk)
@@ -356,6 +364,8 @@ def talla_detail(request, pk):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@admin_required
 def talla_create(request):
     serializer = TallaSerializer(data=request.data)
     if serializer.is_valid():
@@ -364,6 +374,8 @@ def talla_create(request):
     return Response(serializer.errors, status=400)
     
 @api_view(['PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+@admin_required
 def talla_update_delete(request, pk):
     try:
         talla = Talla.objects.get(pk=pk)
@@ -384,12 +396,16 @@ def talla_update_delete(request, pk):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@admin_required
 def estampado_list(request):
     estampados = Estampado.objects.all()
     serializer = EstampadoSerializer(estampados, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@admin_required
 def estampado_detail(request, pk):
     try:
         estampado = Estampado.objects.get(pk=pk)
@@ -399,6 +415,8 @@ def estampado_detail(request, pk):
         return Response({'error': 'Estampado no encontrado'}, status=404)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@admin_required
 def estampado_create(request):
     serializer = EstampadoSerializer(data=request.data)
     if serializer.is_valid():
@@ -407,6 +425,8 @@ def estampado_create(request):
     return Response(serializer.errors, status=400)
 
 @api_view(['PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+@admin_required
 def estampado_update_delete(request, pk):
     try:
         estampado = Estampado.objects.get(pk=pk)
@@ -427,12 +447,16 @@ def estampado_update_delete(request, pk):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@admin_required
 def color_list(request):
     colores = Color.objects.all()
     serializer = ColorSerializer(colores, many=True)
     return Response(serializer.data)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@admin_required
 def color_detail(request, pk):
     try:
         color = Color.objects.get(pk=pk)
@@ -442,6 +466,8 @@ def color_detail(request, pk):
         return Response({'error': 'Color no encontrado'}, status=404)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
+@admin_required
 def color_create(request):
     serializer = ColorSerializer(data=request.data)
     if serializer.is_valid():
@@ -450,6 +476,8 @@ def color_create(request):
     return Response(serializer.errors, status=400)
 
 @api_view(['PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+@admin_required
 def color_update_delete(request, pk):
     try:
         color = Color.objects.get(pk=pk)
@@ -488,6 +516,7 @@ def producto_detail(request, pk):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@admin_required
 def producto_create(request):
     serializer = ProductoSerializer(data=request.data)
     if serializer.is_valid():
@@ -497,6 +526,7 @@ def producto_create(request):
 
 @api_view(['PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
+@admin_required
 def producto_update_delete(request, pk):
     try:
         producto = Producto.objects.get(pk=pk)

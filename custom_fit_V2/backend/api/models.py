@@ -79,14 +79,12 @@ class Estampado(models.Model):
     PrecioEstampado = models.BigIntegerField()
     ImgEstampado = models.CharField(max_length=100)
     ColorEstampado = models.CharField(max_length=45)
-    fecha_agregado = models.DateField()
+    fecha_agregado = models.DateField(auto_now_add=True)  # ✅ fecha solo al crear
     Disponibilidad = models.CharField(max_length=45)
-    updated_at = models.DateTimeField()
+    updated_at = models.DateTimeField(auto_now=True)  # ✅ Django también actualiza solo
 
     class Meta:
-        db_table = 'estampado'  # nombre exacto de tu tabla
-        managed = False  
-
+        db_table = "estampado"
 
 class Color(models.Model):
     IdColor = models.BigAutoField(primary_key=True)

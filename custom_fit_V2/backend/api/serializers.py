@@ -72,6 +72,7 @@ class EstampadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Estampado
         fields = '__all__'
+        read_only_fields = ('created_at', 'updated_at')
 
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:

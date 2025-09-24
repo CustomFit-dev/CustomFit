@@ -47,6 +47,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
 import { flexRender } from '@tanstack/react-table';
 import Swal from 'sweetalert2';
+import { useAuth } from "../modules/authcontext";
 
 // Tema personalizado
 const theme = createTheme({
@@ -70,6 +71,7 @@ const theme = createTheme({
 });
 
 const EstampadoCrud = () => {
+  const { authToken } = useAuth();
   const [estampados, setEstampados] = useState([]);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -96,7 +98,9 @@ const EstampadoCrud = () => {
 
   const fetchEstampados = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/estampados/');
+      const response = await axios.get('http://localhost:8000/api/estampados/' , {
+        headers: { Authorization: `Token ${authToken}` }
+      });
       setEstampados(response.data);
     } catch (error) {
       setSnackbar({
@@ -151,7 +155,9 @@ const EstampadoCrud = () => {
 
   const handleAddEstampado = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/estampados/create/', formData);
+      const response = await axios.post('http://localhost:8000/api/estampados/create/', formData, {
+        headers: { Authorization: `Token ${authToken}` }
+      });
       if (response.status === 201 || response.status === 200) {
         await fetchEstampados();
         setOpenAddModal(false);
@@ -190,7 +196,9 @@ const EstampadoCrud = () => {
     if (!currentEstampado) return;
     
     try {
-      const response = await axios.put(`http://localhost:8000/api/estampados/${currentEstampado.idEstampado}/edit/`, formData);
+      const response = await axios.put(`http://localhost:8000/api/estampados/${currentEstampado.idEstampado}/edit/`, formData, {
+        headers: { Authorization: `Token ${authToken}` }
+      });
       if (response.status === 200) {
         await fetchEstampados();
         handleCloseEditModal();
@@ -241,7 +249,9 @@ const EstampadoCrud = () => {
 
     if (result.isConfirmed) {
       try {
-        const response = await axios.delete(`http://localhost:8000/api/estampados/${estampado.idEstampado}/edit/`);
+        const response = await axios.delete(`http://localhost:8000/api/estampados/${estampado.idEstampado}/edit/`, { 
+          headers: { Authorization: `Token ${authToken}` }
+        });
         if (response.status === 204 || response.status === 200) {
           await fetchEstampados();
           setSnackbar({
