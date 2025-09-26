@@ -1,214 +1,295 @@
 import React, { useEffect, useState } from 'react';
 import {
   Box, Button, Dialog, DialogActions, DialogContent, DialogTitle,
-  TextField, Grid, IconButton, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, Snackbar, Alert, Tooltip, Typography
+  TextField, Grid, IconButton, Table, TableBody, TableCell,
+  TableContainer, TableHead, TableRow, Paper, Snackbar, Alert,
+  Tooltip, Typography, useMediaQuery, FormControl, InputLabel,
+  Select, MenuItem
 } from '@mui/material';
 import { Add, Edit, Delete, Close, Save } from '@mui/icons-material';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useAuth } from "../modules/authcontext";
 
-const TallaCrud = () => {
-  const [tallas, setTallas] = useState([]);
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#17bebb' },
+    secondary: { main: '#00a99d' },
+    background: { default: '#000', paper: '#000' },
+    text: { primary: '#fff', secondary: '#17bebb' },
+  },
+});
+
+const ProductoCrud = () => {
+  const { authToken } = useAuth();
+  const [productos, setProductos] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [currentTalla, setCurrentTalla] = useState(null);
-  const [formData, setFormData] = useState({ Talla: '', Disponibilidad: '', genero: '' });
+  const [current, setCurrent] = useState(null);
+  const [formData, setFormData] = useState({
+    NombreProductos: '',
+    imgProducto: '',
+    TipoProductos: '',
+    PrecioProducto: '',
+    Descripcion: '',
+    Color_IdColor: '',
+    Tela_idTela: '',
+    Tallas_idTallas: '',
+    fecha_creacion: '',
+    fecha_actualizacion: '',
+    tipo_producto: 'personalizado',
+  });
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
-  const { authToken } = useAuth();
+  const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
-    fetchTallas();
+    fetchProductos();
   }, []);
 
-  const fetchTallas = async () => {
+  const fetchProductos = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/tallas/', {
+      const res = await axios.get("http://localhost:8000/api/productos/", {
         headers: { Authorization: `Token ${authToken}` }
       });
-      setTallas(response.data);
-    } catch (error) {
-      console.error('Error al obtener tallas', error);
+      setProductos(res.data);
+    } catch (err) {
+      console.error(err);
     }
   };
 
-  const handleOpenModal = (talla = null) => {
-    if (talla) {
+  const open = (prod = null) => {
+    if (prod) {
       setEditMode(true);
-      setCurrentTalla(talla);        // guarda la talla seleccionada
-      setFormData({ ...talla });      // clona los datos
+      setCurrent(prod);
+      setFormData({
+        ...prod,
+        fecha_creacion: prod.fecha_creacion || '',
+        fecha_actualizacion: prod.fecha_actualizacion || '',
+      });
     } else {
       setEditMode(false);
-      setCurrentTalla(null);
-      setFormData({ Talla: '', Disponibilidad: '', genero: '' });
+      setCurrent(null);
+      setFormData({
+        NombreProductos: '',
+        imgProducto: '',
+        TipoProductos: '',
+        PrecioProducto: '',
+        Descripcion: '',
+        Color_IdColor: '',
+        Tela_idTela: '',
+        Tallas_idTallas: '',
+        fecha_creacion: new Date().toISOString().split('T')[0],
+        fecha_actualizacion: new Date().toISOString().split('T')[0],
+        tipo_producto: 'personalizado',
+      });
     }
     setOpenModal(true);
   };
 
-  const handleCloseModal = () => {
+  const close = () => {
     setOpenModal(false);
+    // devolver el foco al botón principal al cerrar
+    setTimeout(() => {
+      document.getElementById("btn-nuevo-producto")?.focus();
+    }, 100);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const change = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSave = async () => {
+  const save = async () => {
     try {
+      const payload = {
+        ...formData,
+        PrecioProducto: parseFloat(formData.PrecioProducto) || 0,
+        Color_IdColor: formData.Color_IdColor ? parseInt(formData.Color_IdColor) : null,
+        Tela_idTela: formData.Tela_idTela ? parseInt(formData.Tela_idTela) : null,
+        Tallas_idTallas: formData.Tallas_idTallas ? parseInt(formData.Tallas_idTallas) : null,
+      };
+
       if (editMode) {
-        if (!currentTalla || !currentTalla.idTallas) {
-          Swal.fire('Error', 'No se ha seleccionado una talla válida', 'error');
-          return;
-        }
-
-        // Excluir updated_at antes de enviar al backend
-        const { updated_at, ...formDataToSend } = formData;
-
-        await axios.put(`http://localhost:8000/api/tallas/${currentTalla.idTallas}/edit/`, formDataToSend, {
-          headers: { Authorization: `Token ${authToken}` }
-        });
-
-        Swal.fire('Actualizado', 'Talla actualizada correctamente', 'success');
+        await axios.put(
+          `http://localhost:8000/api/productos/${current.idProductos}/edit/`,
+          payload,
+          { headers: { Authorization: `Token ${authToken}` } }
+        );
+        Swal.fire('Actualizado', 'Producto actualizado', 'success');
       } else {
-        await axios.post('http://localhost:8000/api/tallas/create/', formData, {
-          headers: { Authorization: `Token ${authToken}` }
-        });
-
-        Swal.fire('Guardado', 'Talla creada correctamente', 'success');
-        setSnackbar({ open: true, message: 'Talla agregada correctamente', severity: 'success' });
+        await axios.post(
+          'http://localhost:8000/api/productos/create/',
+          payload,
+          { headers: { Authorization: `Token ${authToken}` } }
+        );
+        Swal.fire('Guardado', 'Producto creado', 'success');
       }
 
-      handleCloseModal();
-      fetchTallas();
-    } catch (error) {
-      console.error(error);
-      Swal.fire('Error', 'Ocurrió un error al guardar', 'error');
+      fetchProductos();
+      close();
+    } catch (err) {
+      console.error("Error al guardar producto:", err.response?.data || err.message);
+      Swal.fire('Error', 'No se pudo guardar', 'error');
     }
   };
 
-  const handleDelete = async (idTallas) => {
-    if (!idTallas) {
-      Swal.fire('Error', 'No se ha seleccionado una talla válida', 'error');
-      return;
-    }
-
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'Esta acción eliminará la talla permanentemente.',
+  const erase = async id => {
+    const res = await Swal.fire({
+      title: 'Confirmar eliminación',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
       confirmButtonText: 'Sí, eliminar'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await axios.delete(`http://localhost:8000/api/tallas/${idTallas}/`, {
-  headers: { Authorization: `Token ${authToken}` }
-});
-
-          Swal.fire('Eliminado', 'La talla ha sido eliminada.', 'success');
-          fetchTallas();
-        } catch (error) {
-          console.error(error);
-          Swal.fire('Error', 'No se pudo eliminar la talla.', 'error');
-        }
-      }
     });
-  };
-
-  const handleCloseSnackbar = () => {
-    setSnackbar({ ...snackbar, open: false });
+    if (res.isConfirmed) {
+      try {
+        await axios.delete(`http://localhost:8000/api/productos/${id}/edit/`, {
+          headers: { Authorization: `Token ${authToken}` }
+        });
+        Swal.fire('Eliminado', 'Producto eliminado', 'success');
+        fetchProductos();
+      } catch (err) {
+        console.error("Error al eliminar producto:", err.response?.data || err.message);
+        Swal.fire('Error', 'No se pudo eliminar', 'error');
+      }
+    }
   };
 
   return (
-    <Box className="bg-gray-900 p-6 rounded-xl shadow-xl">
-      <Typography variant="h4" color="white" gutterBottom>
-        Gestión de Tallas
-      </Typography>
+    <ThemeProvider theme={theme}>
+      <Paper sx={{ background: 'transparent', minHeight: '100vh' }}>
+        <Box sx={{ maxWidth: 1280, mx: 'auto', p: 2 }}>
+          <Typography variant="h4" align="center" color="white" sx={{ my: 4, fontWeight: 'bold' }}>
+            Gestión de Productos
+          </Typography>
+          <Button
+            id="btn-nuevo-producto"
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => open()}
+          >
+            Nuevo Producto
+          </Button>
+          <TableContainer sx={{ mt: 2, background: '#000', borderRadius: 2 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {['Nombre','Tipo','Precio','Creación','Actualización','Acciones'].map(h => (
+                    <TableCell key={h} align="center" sx={{ color: '#17bebb' }}>{h}</TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {productos.map(p => (
+                  <TableRow key={p.idProductos} hover sx={{ '&:hover': { bgcolor: '#00a99d' } }}>
+                    <TableCell align="center" sx={{ color: 'white' }}>{p.NombreProductos}</TableCell>
+                    <TableCell align="center" sx={{ color: 'white' }}>{p.TipoProductos}</TableCell>
+                    <TableCell align="center" sx={{ color: 'white' }}>${p.PrecioProducto}</TableCell>
+                    <TableCell align="center" sx={{ color: 'white' }}>{p.fecha_creacion}</TableCell>
+                    <TableCell align="center" sx={{ color: 'white' }}>{p.fecha_actualizacion}</TableCell>
+                    <TableCell align="center">
+                      <Tooltip title="Editar">
+                        <IconButton color="primary" onClick={() => open(p)}><Edit /></IconButton>
+                      </Tooltip>
+                      <Tooltip title="Eliminar">
+                        <IconButton color="error" onClick={() => erase(p.idProductos)}><Delete /></IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
 
-      <Button
-        variant="contained"
-        startIcon={<Add />}
-        onClick={() => handleOpenModal()}
-        sx={{ mb: 2, backgroundColor: '#4caf50', '&:hover': { backgroundColor: '#45a049' } }}
-      >
-        Nueva Talla
-      </Button>
-
-      <TableContainer component={Paper} sx={{ backgroundColor: '#1e1e1e' }}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              {['Talla', 'Disponible', 'Género', 'Acciones'].map((head) => (
-                <TableCell key={head} sx={{ color: 'white', fontWeight: 'bold' }}>{head}</TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {tallas.map((talla) => (
-              <TableRow key={talla.idTallas} hover>
-                <TableCell sx={{ color: 'white' }}>{talla.Talla}</TableCell>
-                <TableCell sx={{ color: 'white' }}>{talla.Disponibilidad}</TableCell>
-                <TableCell sx={{ color: 'white' }}>{talla.genero}</TableCell>
-                <TableCell>
-                  <Tooltip title="Editar">
-                    <IconButton color="primary" onClick={() => handleOpenModal(talla)}><Edit /></IconButton>
-                  </Tooltip>
-                  <Tooltip title="Eliminar">
-                    <IconButton color="error" onClick={() => handleDelete(talla.idTallas)}><Delete /></IconButton>
-                  </Tooltip>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      <Dialog open={openModal} onClose={handleCloseModal} fullWidth disableEnforceFocus>
-        <DialogTitle sx={{ backgroundColor: '#1976d2', color: 'white' }}>{editMode ? 'Editar Talla' : 'Crear Talla'}</DialogTitle>
-        <DialogContent sx={{ backgroundColor: '#f5f5f5' }}>
-          <Grid container spacing={2} sx={{ mt: 1 }}>
-            {[{ name: 'Talla', label: 'Talla' },
-              { name: 'Disponibilidad', label: 'Disponibilidad' },
-              { name: 'genero', label: 'Género' }].map(({ name, label }) => (
-              <Grid item xs={12} sm={6} key={name}>
-                <TextField
-                  name={name}
-                  label={label}
-                  value={formData[name]}
-                  onChange={handleChange}
-                  fullWidth
-                  variant="outlined"
-                />
+          <Dialog open={openModal} onClose={close} fullWidth maxWidth="md">
+            <DialogTitle sx={{ bgcolor: '#17bebb', color: 'white' }}>
+              {editMode ? 'Editar Producto' : 'Nuevo Producto'}
+            </DialogTitle>
+            <DialogContent sx={{ background: '#000' }}>
+              <Grid container spacing={2}>
+                { [
+                  { name: 'NombreProductos', label: 'Nombre' },
+                  { name: 'imgProducto', label: 'Imagen URL' },
+                  { name: 'TipoProductos', label: 'Tipo' },
+                  { name: 'PrecioProducto', label: 'Precio' },
+                  { name: 'Descripcion', label: 'Descripción' },
+                  { name: 'Color_IdColor', label: 'Color (ID)' },
+                  { name: 'Tela_idTela', label: 'Tela (ID)' },
+                  { name: 'Tallas_idTallas', label: 'Talla (ID)' },
+                  { name: 'fecha_creacion', label: 'Fecha Creación', type: 'date' },
+                  { name: 'fecha_actualizacion', label: 'Fecha Actualización', type: 'date' },
+                ].map(f => (
+                  <Grid item xs={12} md={6} key={f.name}>
+                    <TextField
+                    autoFocus
+                      fullWidth
+                      name={f.name}
+                      label={f.label}
+                      type={f.type || 'text'}
+                      value={formData[f.name] || ''}
+                      onChange={change}
+                      variant="outlined"
+                      sx={{
+                        input: { color: 'white' },
+                        label: { color: '#17bebb' },
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': { borderColor: '#17bebb' },
+                          '&:hover fieldset': { borderColor: '#17e6c9' },
+                          '&.Mui-focused fieldset': { borderColor: '#0fa59d' },
+                        },
+                      }}
+                    />
+                  </Grid>
+                )) }
+                <Grid item xs={12}>
+                  <FormControl fullWidth variant="outlined" sx={{ mt: 1 }}>
+                    <InputLabel sx={{ color: '#17bebb' }}>Tipo producto</InputLabel>
+                    <Select
+                      name="tipo_producto"
+                      value={formData.tipo_producto}
+                      onChange={change}
+                      label="Tipo producto"
+                      sx={{ color: 'white','& .MuiSelect-icon': { color: '#17bebb' } }}
+                    >
+                      <MenuItem value="shop">shop</MenuItem>
+                      <MenuItem value="personalizado">personalizado</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
               </Grid>
-            ))}
-          </Grid>
-        </DialogContent>
-        <DialogActions sx={{ backgroundColor: '#f5f5f5' }}>
-          <Button onClick={handleCloseModal} startIcon={<Close />} variant="outlined" color="secondary">
-            Cancelar
-          </Button>
-          <Button onClick={handleSave} startIcon={<Save />} variant="contained" color="primary">
-            {editMode ? 'Actualizar' : 'Guardar'}
-          </Button>
-        </DialogActions>
-      </Dialog>
+            </DialogContent>
+            <DialogActions sx={{ background: '#000', p: 2 }}>
+              <Button
+                onClick={close}
+                variant="outlined"
+                startIcon={<Close />}
+                sx={{ color: 'white', borderColor: '#17bebb' }}
+              >
+                Cancelar
+              </Button>
+              <Button
+                onClick={save}
+                variant="contained"
+                startIcon={<Save />}
+                sx={{ backgroundColor: '#17bebb', color: '#000' }}
+              >
+                {editMode ? 'Actualizar' : 'Guardar'}
+              </Button>
+            </DialogActions>
+          </Dialog>
 
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      >
-        <Alert severity={snackbar.severity} onClose={handleCloseSnackbar} sx={{ width: '100%' }}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-    </Box>
+          <Snackbar
+            open={snackbar.open}
+            autoHideDuration={4000}
+            onClose={() => setSnackbar(s => ({ ...s, open: false }))}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          >
+            <Alert severity={snackbar.severity} variant="filled">
+              {snackbar.message}
+            </Alert>
+          </Snackbar>
+        </Box>
+      </Paper>
+    </ThemeProvider>
   );
 };
 
-export default TallaCrud;
+export default ProductoCrud;

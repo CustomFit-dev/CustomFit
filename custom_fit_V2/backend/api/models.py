@@ -108,9 +108,9 @@ class Producto(models.Model):
     Tela_idTela = models.ForeignKey('Tela', on_delete=models.DO_NOTHING, db_column='Tela_idTela')
     Tallas_idTallas = models.ForeignKey('Talla', on_delete=models.DO_NOTHING, db_column='Tallas_idTallas')
     
-    fecha_creacion = models.DateField()
-    fecha_actualizacion = models.DateField()
-    updated_at = models.DateTimeField()
+    fecha_creacion = models.DateField(auto_now_add=True)
+    fecha_actualizacion = models.DateField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'productos'

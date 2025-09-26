@@ -84,6 +84,10 @@ class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producto
         fields = '__all__'
+        read_only_fields = ('idProductos', 'fecha_creacion', 'fecha_actualizacion', 'updated_at')
+        extra_kwargs = {
+            'Descripcion': {'required': False}  # <-- no obligatorio
+        }
 
 
 
