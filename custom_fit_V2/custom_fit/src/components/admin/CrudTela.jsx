@@ -47,6 +47,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import axios from 'axios';
 import { flexRender } from '@tanstack/react-table';
 import Swal from 'sweetalert2';
+import { useAuth } from "../modules/authcontext";
 
 // Tema personalizado
 const theme = createTheme({
@@ -70,6 +71,7 @@ const theme = createTheme({
 });
 
 const TelaCrud = () => {
+   const { authToken } = useAuth();
   const [telas, setTelas] = useState([]);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -95,7 +97,9 @@ const TelaCrud = () => {
 
   const fetchTelas = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/telas/');
+      const response = await axios.get('http://localhost:8000/api/telas/', {
+        headers: { Authorization: `Token ${authToken}` }
+      });
       setTelas(response.data);
     } catch (error) {
       setSnackbar({
@@ -148,7 +152,9 @@ const TelaCrud = () => {
 
   const handleAddTela = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/telas/', formData);
+      const response = await axios.post('http://localhost:8000/api/telas/', formData, {
+        headers: { Authorization: `Token ${authToken}` }
+      });
       if (response.status === 201) {
         await fetchTelas();
         setOpenAddModal(false);
@@ -171,7 +177,9 @@ const TelaCrud = () => {
     if (!currentTela) return;
     
     try {
-      const response = await axios.put(`http://localhost:8000/api/telas/${currentTela.idTela}/`, formData);
+      const response = await axios.put(`http://localhost:8000/api/telas/${currentTela.idTela}/`, formData, {
+        headers: { Authorization: `Token ${authToken}` }
+      });
       if (response.status === 200) {
         await fetchTelas();
         handleCloseEditModal();
@@ -206,7 +214,9 @@ const TelaCrud = () => {
 
     if (result.isConfirmed) {
       try {
-        const response = await axios.delete(`http://localhost:8000/api/telas/${tela.idTela}/`);
+        const response = await axios.delete(`http://localhost:8000/api/telas/${tela.idTela}/`, {
+          headers: { Authorization: `Token ${authToken}` }
+        });
         if (response.status === 204) {
           await fetchTelas();
           setSnackbar({

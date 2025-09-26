@@ -27,6 +27,7 @@ urlpatterns = [
     # Telas
     path('api/telas/', tela_list, name='tela-list'),
     path('api/telas/<int:pk>/', tela_detail, name='tela-detail'),
+    path('api/tallas/<int:pk>/', talla_update_delete, name='talla-update-delete'),
 
     # Tallas
     path('api/tallas/', talla_list, name='talla-list'),

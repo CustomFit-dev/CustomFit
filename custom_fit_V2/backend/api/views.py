@@ -340,6 +340,31 @@ def tela_detail(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+@permission_classes([IsAuthenticated])
+@admin_required
+def talla_update_delete(request, pk):
+    """
+    Endpoint para ver, actualizar (PUT/PATCH) o eliminar una talla por su id.
+    """
+    try:
+        talla = Talla.objects.get(pk=pk)
+    except Talla.DoesNotExist:
+        return Response({'error': 'Talla no encontrada'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = TallaSerializer(talla)
+        return Response(serializer.data)
+    elif request.method in ['PUT', 'PATCH']:
+        partial = request.method == 'PATCH'
+        serializer = TallaSerializer(talla, data=request.data, partial=partial)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        talla.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 
