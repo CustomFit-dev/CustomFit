@@ -1,67 +1,84 @@
-    import React from 'react';
-    import CustomGaleria from '../modules/ventanaCustom';
-    import TextModal from '../modal/Textmodal';
-    import EmojiModal from '../modal/EmojiModal';
-    import ModalImageUpload from '../modal/imgModal';
+// Importamos React
+import React from 'react';
 
-    const ModalsContainer = ({
-    showTextModal,
-    setShowTextModal,
-    showCustomModal,
-    setShowCustomModal,
-    showImageModal,
-    setShowImageModal,
-    showEmojiModal,
-    setShowEmojiModal,
-    newText,
-    setNewText,
-    textFont,
-    setTextFont,
-    textSize,
-    setTextSize,
-    textColor,
-    setTextColor,
-    handleAddText,
-    handleAddImage,
-    handleAddEmoji,
-    handleSelectCustomDesign
-    }) => {
-    return (
-        <>
-        <TextModal 
-            show={showTextModal}
-            setShow={setShowTextModal}
-            newText={newText}
-            setNewText={setNewText}
-            textFont={textFont}
-            setTextFont={setTextFont}
-            textSize={textSize}
-            setTextSize={setTextSize}
-            textColor={textColor}
-            setTextColor={setTextColor}
-            handleAddText={handleAddText}
+// Importamos los diferentes modales que se usan en la app
+import CustomGaleria from '../modules/ventanaCustom';   // Galería de diseños personalizados
+import TextModal from '../modal/Textmodal';            // Modal para agregar texto
+import EmojiModal from '../modal/EmojiModal';          // Modal para agregar emojis
+import ModalImageUpload from '../modal/imgModal';      // Modal para subir imágenes
+
+// Componente contenedor de todos los modales
+// Se encarga de centralizar la lógica y renderizar condicionalmente cada modal
+const ModalsContainer = ({
+  showTextModal,           // Estado: mostrar u ocultar modal de texto
+  setShowTextModal,        // Función: cambiar visibilidad del modal de texto
+
+  showCustomModal,         // Estado: mostrar u ocultar modal de galería de diseños
+  setShowCustomModal,      // Función: cambiar visibilidad del modal de galería
+
+  showImageModal,          // Estado: mostrar u ocultar modal de imágenes
+  setShowImageModal,       // Función: cambiar visibilidad del modal de imágenes
+
+  showEmojiModal,          // Estado: mostrar u ocultar modal de emojis
+  setShowEmojiModal,       // Función: cambiar visibilidad del modal de emojis
+
+  // Props relacionadas con el texto
+  newText,                 // Texto que se está escribiendo en el modal
+  setNewText,              // Función para actualizar el texto
+  textFont,                // Fuente seleccionada
+  setTextFont,             // Función para actualizar la fuente
+  textSize,                // Tamaño de la fuente
+  setTextSize,             // Función para actualizar tamaño
+  textColor,               // Color del texto
+  setTextColor,            // Función para actualizar color
+
+  // Handlers de acciones principales
+  handleAddText,           // Agregar texto a la camiseta
+  handleAddImage,          // Agregar imagen subida
+  handleAddEmoji,          // Agregar emoji seleccionado
+  handleSelectCustomDesign // Seleccionar un diseño de la galería personalizada
+}) => {
+  return (
+    <>
+      {/* Modal para agregar y configurar texto */}
+      <TextModal 
+        show={showTextModal}
+        setShow={setShowTextModal}
+        newText={newText}
+        setNewText={setNewText}
+        textFont={textFont}
+        setTextFont={setTextFont}
+        textSize={textSize}
+        setTextSize={setTextSize}
+        textColor={textColor}
+        setTextColor={setTextColor}
+        handleAddText={handleAddText}
+      />
+
+      {/* Modal de galería de diseños personalizados (se renderiza solo si está abierto) */}
+      {showCustomModal && (
+        <CustomGaleria 
+          onSelectImage={handleSelectCustomDesign}    // Selección de diseño
+          onClose={() => setShowCustomModal(false)}   // Cierra modal
         />
+      )}
 
-        {showCustomModal && (
-            <CustomGaleria 
-            onSelectImage={handleSelectCustomDesign}
-            onClose={() => setShowCustomModal(false)}
-            />
-        )}
+      {/* Modal para subir imágenes */}
+      <ModalImageUpload 
+        show={showImageModal}
+        setShowImageModal={setShowImageModal}
+        handleAddImage={handleAddImage}
+      />
 
-        <ModalImageUpload 
-            show={showImageModal}
-            setShowImageModal={setShowImageModal}
-            handleAddImage={handleAddImage}
-        />
+      {/* Modal para seleccionar emojis */}
+      <EmojiModal 
+        show={showEmojiModal}
+        onClose={() => setShowEmojiModal(false)}
+        onSelectEmoji={handleAddEmoji}
+      />
+    </>
+  );
+};
 
-        <EmojiModal 
-            show={showEmojiModal}
-            onClose={() => setShowEmojiModal(false)}
-            onSelectEmoji={handleAddEmoji}
-        />
-        </>
-    );
-    };
-
-    export default ModalsContainer;
+// Exportamos el componente
+export default ModalsContainer;

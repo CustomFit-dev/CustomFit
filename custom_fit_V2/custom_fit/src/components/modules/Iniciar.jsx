@@ -132,6 +132,8 @@ switch(roleId) {
                     onChange={(e) => setCorreoElectronico(e.target.value)}
                     onKeyDown={handleKeyDown}
                     className={`${error ? 'error' : ''} ${correoElectronico.trim() ? 'not-empty' : ''}`}
+                    aria-invalid={!!error}
+                    aria-describedby={error ? 'login-email-error' : undefined}
                     required
                     autoComplete="email"
                   />
@@ -139,7 +141,11 @@ switch(roleId) {
                   <label htmlFor="correo-electronico">Correo Electrónico</label>
                   <div className="input-line"></div>
                 </div>
-                {error && <p className="error-message">{error}</p>}
+                {error && (
+                  <p id="login-email-error" role="alert" className="error-message">
+                    {error}
+                  </p>
+                )}
               </div>
 
               <p className="help-text">¿Problemas para iniciar sesión?</p>

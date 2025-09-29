@@ -247,7 +247,7 @@ switch (userData.rol) {
               )}
             </div>
 
-            <form onSubmit={handleVerificarCodigo} onPaste={handlePaste}>
+            <form onSubmit={handleVerificarCodigo} onPaste={handlePaste} aria-describedby={error ? 'verify-error' : undefined}>
               <div className="code-inputs">
                 {codigo.map((value, index) => (
                   <input
@@ -264,12 +264,17 @@ switch (userData.rol) {
                     className="code-input"
                     ref={(el) => (inputsRef.current[index] = el)}
                     disabled={isLoading}
-                    autoComplete="off"
+                    autoComplete="one-time-code"
+                    aria-label={`Dígito ${index + 1} del código de verificación`}
+                    aria-invalid={!!error}
+                    aria-describedby={error ? 'verify-error' : undefined}
                   />
                 ))}
               </div>
 
-              {error && <div className="error-message">{error}</div>}
+              {error && (
+                <div id="verify-error" role="alert" aria-live="polite" className="error-message">{error}</div>
+              )}
 
               <div className="resend-section">
                 <p className="resend-text">¿No recibiste el código?</p>

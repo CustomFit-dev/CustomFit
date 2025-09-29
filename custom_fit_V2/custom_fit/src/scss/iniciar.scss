@@ -208,7 +208,8 @@
 .input-container-i {
   position: relative;
   margin-bottom: 5px;
-  width: 487px !important;
+  width: 100%;
+  max-width: 487px;
 }
 
 .input-container-i input {

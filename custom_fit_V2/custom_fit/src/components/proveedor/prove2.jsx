@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { TextField } from "@mui/material";
 import "../../scss/prove2.scss";
 import img21 from '../../img/perso.png';
 import { useAuth } from '../modules/authcontext'; // Importar el hook useAuth
+
 const SupplierForm = () => {
     const { user } = useAuth(); // Obtener datos del usuario autenticado
 
@@ -27,7 +28,7 @@ const SupplierForm = () => {
     const [formData, setFormData] = useState(initialData);
     const [formDataOriginal, setFormDataOriginal] = useState(initialData);
 
-    // Estadísticas (puedes también cargarlas del backend si lo deseas)
+    // Estadísticas
     const [estadisticas, setEstadisticas] = useState({
         productos: user?.estadisticas?.productos || 0,
         productosVendidos: user?.estadisticas?.productosVendidos || 121,
@@ -52,7 +53,6 @@ const SupplierForm = () => {
             setFormData(newData);
             setFormDataOriginal(newData);
 
-            // Actualizar estadísticas si están disponibles
             if (user.estadisticas) {
                 setEstadisticas({
                     productos: user.estadisticas.productos || 0,
@@ -82,7 +82,6 @@ const SupplierForm = () => {
         setFormData(formDataOriginal);
     };
 
-    // Mostrar loading si no hay usuario
     if (!user) {
         return (
             <Container fluid className="promail">
@@ -92,6 +91,17 @@ const SupplierForm = () => {
             </Container>
         );
     }
+
+    // 🔹 Configuración reutilizable de estilos para todos los inputs
+    const textFieldProps = {
+        variant: "standard",
+        fullWidth: true,
+        sx: { 
+            borderBottom: '2px solid #00FFFF',
+            input: { color: 'white' } 
+        },
+        InputLabelProps: { style: { color: 'white' } }
+    };
 
     return (
         <>
@@ -119,94 +129,70 @@ const SupplierForm = () => {
                             <Row>
                                 <Col md={6}>
                                     <div className="form-groupprove">
-                                        <TextField 
-                                            sx={{ borderBottom: '2px solid #00FFFF' }} 
+                                        <TextField {...textFieldProps} 
                                             label="Nombres" 
-                                            variant="standard" 
                                             name="nombres"
-                                            value={formData.nombres} 
+                                            value={formData.nombres}
                                             onChange={handleChange} 
-                                            fullWidth 
                                         />
                                     </div>
                                     <div className="form-groupprove">
-                                        <TextField 
-                                            sx={{ borderBottom: '2px solid #00FFFF' }} 
+                                        <TextField {...textFieldProps} 
                                             label="Apellidos" 
-                                            variant="standard" 
                                             name="apellidos"
-                                            value={formData.apellidos} 
+                                            value={formData.apellidos}
                                             onChange={handleChange} 
-                                            fullWidth 
                                         />
                                     </div>
                                     <div className="form-groupprove">
-                                        <TextField 
-                                            sx={{ borderBottom: '2px solid #00FFFF' }} 
+                                        <TextField {...textFieldProps} 
                                             label="Dirección" 
-                                            variant="standard" 
                                             name="direccion"
-                                            value={formData.direccion} 
+                                            value={formData.direccion}
                                             onChange={handleChange} 
-                                            fullWidth 
                                         />
                                     </div>
                                     <div className="form-groupprove">
-                                        <TextField 
-                                            sx={{ borderBottom: '2px solid #00FFFF' }} 
+                                        <TextField {...textFieldProps} 
                                             label="Teléfono" 
-                                            variant="standard" 
                                             name="telefono"
-                                            value={formData.telefono} 
+                                            value={formData.telefono}
                                             onChange={handleChange} 
-                                            fullWidth 
                                         />
                                     </div>
                                 </Col>
 
                                 <Col md={6}>
                                     <div className="form-groupprove">
-                                        <TextField 
-                                            sx={{ borderBottom: '2px solid #00FFFF' }} 
+                                        <TextField {...textFieldProps} 
                                             label="Email" 
-                                            variant="standard" 
                                             name="email"
-                                            value={formData.email} 
+                                            value={formData.email}
                                             onChange={handleChange} 
-                                            fullWidth 
                                         />
                                     </div>
                                     <div className="form-groupprove">
-                                        <TextField 
-                                            sx={{ borderBottom: '2px solid #00FFFF' }} 
+                                        <TextField {...textFieldProps} 
                                             label="Empresa" 
-                                            variant="standard" 
                                             name="empresa"
-                                            value={formData.empresa} 
+                                            value={formData.empresa}
                                             onChange={handleChange} 
-                                            fullWidth 
                                         />
                                     </div>
                                     <div className="form-groupprove">
-                                        <TextField 
-                                            sx={{ borderBottom: '2px solid #00FFFF' }} 
+                                        <TextField {...textFieldProps} 
                                             label="RUC" 
-                                            variant="standard" 
                                             name="ruc"
-                                            value={formData.ruc} 
+                                            value={formData.ruc}
                                             onChange={handleChange} 
-                                            fullWidth 
                                         />
                                     </div>
                                     <div className="form-groupprove">
-                                        <TextField 
-                                            sx={{ borderBottom: '2px solid #00FFFF' }} 
+                                        <TextField {...textFieldProps} 
                                             label="Número de Identificación" 
-                                            variant="standard" 
                                             name="cc"
-                                            value={formData.cc} 
+                                            value={formData.cc}
                                             onChange={handleChange} 
-                                            fullWidth 
                                         />
                                     </div>
                                 </Col>

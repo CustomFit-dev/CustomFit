@@ -1,26 +1,28 @@
+// Importamos React
 import React from 'react';
+// Importamos los colores y función para obtener imagen de camiseta según la vista
 import { colorImages, getImageByView } from './colors';
-
+// Importamos el componente que renderiza cada elemento (texto, imagen o emoji)
 import DesignElement from './DesignElement';
 
-
+// Componente principal que representa el "lienzo" donde se diseña la camiseta
 const TShirtCanvas = ({
-    tshirtColor,
-    tshirtRef,
-    designAreaRef,
-    textElements,
-    imageElements,
-    emojiElements,
-    activeElement,
-    isDragging,
-    handleMouseDown,
-    removeTextElement,
-    removeImageElement,
-    removeEmojiElement,
-    currentView,
-    setCurrentView
+    tshirtColor,         // Color de la camiseta seleccionado
+    tshirtRef,           // Referencia al contenedor de la camiseta (para capturas/descargas)
+    designAreaRef,       // Referencia al área donde se colocan los elementos
+    textElements,        // Lista de elementos de texto añadidos
+    imageElements,       // Lista de imágenes añadidas
+    emojiElements,       // Lista de emojis añadidos
+    activeElement,       // Elemento actualmente activo (seleccionado)
+    isDragging,          // Estado que indica si un elemento está siendo arrastrado
+    handleMouseDown,     // Función que gestiona el inicio del arrastre o redimensionado
+    removeTextElement,   // Función para eliminar textos
+    removeImageElement,  // Función para eliminar imágenes
+    removeEmojiElement,  // Función para eliminar emojis
+    currentView,         // Vista actual de la camiseta (frontal, espaldar, manga)
+    setCurrentView       // Función para cambiar la vista
 }) => {
-    // Configuración de vistas
+    // Definición de las vistas disponibles
     const views = [
         { id: 'frontal', name: 'Frontal' },
         { id: 'mangaDerecha', name: 'Manga derecha' },
@@ -28,7 +30,7 @@ const TShirtCanvas = ({
         { id: 'espaldar', name: 'Espaldar' }
     ];
 
-    // Obtener configuraciones específicas para cada vista
+    // Configuración específica para cada vista de la camiseta
     const getViewConfig = (view) => {
         const configs = {
             frontal: {
@@ -56,14 +58,15 @@ const TShirtCanvas = ({
                 left: '50%'
             }
         };
-        return configs[view] || configs.frontal;
+        return configs[view] || configs.frontal; // Retorna frontal por defecto
     };
 
+    // Configuración actual en función de la vista seleccionada
     const viewConfig = getViewConfig(currentView);
 
     return (
         <div className="col-md-6">
-            {/* Navegación de vistas */}
+            {/* Selector de vistas (botones para frontal, mangas, espaldar) */}
             <div className="mb-3">
                 <div className="d-flex justify-content-center">
                     <div className="btn-group" role="group">
@@ -81,10 +84,11 @@ const TShirtCanvas = ({
                     </div>
                 </div>
                 <div className="text-center mt-2">
-                    <br></br>
+                    <br />
                 </div>
             </div>
 
+            {/* Contenedor principal de la camiseta */}
             <div className="position-relative" style={{ height: '700px', width: '100%' }} ref={tshirtRef}>
                 <div 
                     className="tshirt-container position-relative" 
@@ -96,6 +100,7 @@ const TShirtCanvas = ({
                         alignItems: 'center'
                     }}
                 >
+                    {/* Imagen de la camiseta según vista y color */}
                     <img 
                         src={getImageByView(currentView, tshirtColor)} 
                         alt={`Camiseta ${views.find(v => v.id === currentView)?.name}`} 
@@ -108,6 +113,7 @@ const TShirtCanvas = ({
                         }} 
                     />
                 
+                    {/* Área de diseño: aquí se renderizan los elementos personalizados */}
                     <div
                         ref={designAreaRef}
                         className="position-absolute border border-2 border-danger border-dashed"
@@ -121,6 +127,7 @@ const TShirtCanvas = ({
                             overflow: 'visible',
                         }}
                     >
+                        {/* Renderizar elementos de texto */}
                         {textElements.map((el) => (
                             <DesignElement
                                 key={el.id}
@@ -133,6 +140,7 @@ const TShirtCanvas = ({
                             />
                         ))}
 
+                        {/* Renderizar elementos de imagen */}
                         {imageElements.map((el) => (
                             <DesignElement
                                 key={el.id}
@@ -145,6 +153,7 @@ const TShirtCanvas = ({
                             />
                         ))}
 
+                        {/* Renderizar elementos de emoji */}
                         {emojiElements.map((el) => (
                             <DesignElement
                                 key={el.id}
@@ -160,6 +169,7 @@ const TShirtCanvas = ({
                 </div>
             </div>
 
+            {/* Estilos internos específicos */}
             <style jsx>{`
                 .cursor-move {
                     cursor: move;
@@ -189,4 +199,5 @@ const TShirtCanvas = ({
     );
 };
 
+// Exportamos el componente
 export default TShirtCanvas;
