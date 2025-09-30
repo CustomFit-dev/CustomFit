@@ -25,46 +25,63 @@ const Shop = () => {
       imagen: camisa1,
       titulo: "Camiseta Beige",
       descripcion: "Camiseta relajada con un diseño minimalista que combina un paisaje de atardecer rojo detrás de una palmera negra, ideal para estilos casuales.",
-      precio: 30000
+      precio: 30000,
+      talla: 'M',
+      color: 'Beige',
+      tela: 'Algodón'
     },
     {
       id: 2,
       imagen: camisa2,
       titulo: "Camiseta Rosa",
       descripcion: "Diseño sutil que presenta una ilustración en línea de palmeras y un horizonte, perfecta para un look fresco y ligero.",
-      precio: 30000
+      precio: 30000,
+      talla: 'S',
+      color: 'Rosa',
+      tela: 'Poliéster'
     },
     {
       id: 3,
       imagen: camisa3,
       titulo: "Camiseta Negra",
       descripcion: "Diseño moderno y elegante, con una palmera destacada dentro de un marco geométrico blanco, para estilos urbanos.",
-      precio: 30000
+      precio: 30000,
+      talla: 'L',
+      color: 'Negro',
+      tela: 'Fibra'
     },
     {
       id: 4,
       imagen: camisa5,
       titulo: "Camiseta Blanca",
       descripcion: "Presenta un estampado vibrante de palmeras y tonos cálidos, evocando un ambiente tropical. Perfecta para un día al aire libre.",
-      precio: 30000
+      precio: 30000,
+      talla: 'M',
+      color: 'Blanco',
+      tela: 'Algodón peinado'
     },
     {
       id: 5,
       imagen: camisa4,
       titulo: "Camiseta Negra",
       descripcion: "Diseño discreto con texto impreso en el centro, dando un toque misterioso y casual.",
-      precio: 30000
+      precio: 30000,
+      talla: 'XL',
+      color: 'Negro',
+      tela: 'Lycra'
     },
     {
       id: 6,
       imagen: camisa6,
       titulo: "Camiseta Beige",
       descripcion: "Diseño sencillo y natural con una gran palmera negra centrada, ideal para un estilo relajado y minimalista.",
-      precio: 30000
+      precio: 30000,
+      talla: 'S',
+      color: 'Beige',
+      tela: 'Mezcla algodón'
     }
   ];
 
-  // Manejadores de modales
   const abrirModalDetalles = (producto) => {
     setModalData({
       detallesVisible: true,

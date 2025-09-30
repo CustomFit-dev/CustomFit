@@ -7,17 +7,18 @@ import styled from 'styled-components';
 import IconButton1 from '@mui/material/IconButton';
 import CloseIcon1 from '@mui/icons-material/Close';
 
-const ShirtViewer = ({estado, cambiarEstado}) => {
+const ShirtViewer = ({ estado, cambiarEstado, producto }) => {
   const [view, setView] = useState('front');
   const [zoomLevel, setZoomLevel] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [startDrag, setStartDrag] = useState({ x: 0, y: 0 });
 
+  // Restore controls for view and zoom
   const showView = (selectedView) => {
     setView(selectedView);
     setZoomLevel(1);
-    setPosition({ x: 0, y: 0 }); // Restablece la posición al cambiar de vista
+    setPosition({ x: 0, y: 0 });
   };
 
   const increaseZoom = () => {
@@ -26,7 +27,7 @@ const ShirtViewer = ({estado, cambiarEstado}) => {
 
   const decreaseZoom = () => {
     setZoomLevel((prev) => Math.max(prev - 0.5, 1));
-    setPosition({ x: 0, y: 0 }); // Resetea la posición cuando el zoom se reduce
+    setPosition({ x: 0, y: 0 });
   };
 
   const handleMouseDown = (e) => {
@@ -69,8 +70,8 @@ const ShirtViewer = ({estado, cambiarEstado}) => {
         }}
       >
         <img
-          src={Frontal}
-          alt="Camisa Frontal"
+          src={producto?.imagen || Frontal}
+          alt={producto?.titulo || 'Camisa Frontal'}
           className={`shirt-image ${view === 'front' ? '' : 'hidden'}`}
           style={{
             transform: `scale(${zoomLevel}) translate(${position.x}px, ${position.y}px)`,

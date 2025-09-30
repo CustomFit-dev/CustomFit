@@ -1,0 +1,44 @@
+Resumen de cambios – Frontend (Footer y estilos)
+
+Ubicación del proyecto: custom_fit_V2/custom_fit/
+Fecha: 2025-09-29
+
+1) Componente del Footer
+- Archivo editado: src/components/modules/footer.jsx
+- Cambios:
+  - Se añadió paquete react-icons para mostrar iconos de redes (Facebook, Instagram, Whatsapp) y un icono de chevrón para la lista de páginas.
+  - Se reorganizó la estructura del footer en 3 columnas responsivas (logo, páginas, redes) con clases: footer-top, footer-title, footer-links, social-list, social-link.
+  - Se agregó un separador visual (hr.footer-sep) entre el contenido del footer y el crédito inferior.
+  - Se centró el texto del crédito “Diseñado por Custom-fit ©” envolviéndolo en un contenedor footer-bottom con text-center.
+  - Se ajustó temporalmente el padding vertical (py-4 → py-3) y los gutters (g-4 → g-3) para compactar; luego se revirtió a py-4 y g-4 a solicitud del usuario.
+
+2) Estilos SCSS del Footer
+- Archivo editado: src/scss/style.scss
+- Cambios:
+  - Se corrigieron llaves desbalanceadas/artefactos que generaban errores de compilación en bloques cercanos al footer.
+  - Se añadieron estilos no intrusivos para el footer:
+    - body footer .image-container y body footer .image-container img (alineación y tamaño del logo).
+    - body footer .footer-title (título de sección, color y separación).
+    - body footer .footer-links y .footer-link-item (listas con icono y espaciados consistentes).
+    - body footer .social-list y .social-link (botones circulares, hovers con color por red y brillo sutil).
+    - hr.footer-sep (línea divisoria con degradado suave para mantener la estética oscura).
+  - Se hicieron pruebas de compactación (reducir tamaños de iconos, gaps y márgenes); finalmente se revirtió a valores más cómodos visualmente a petición del usuario.
+
+3) Alineación y detalles visuales
+- Se solucionó el desnivel entre las secciones "Páginas" y "Redes sociales" normalizando la alineación vertical y espaciados.
+- Se mantuvo la estética original (tema oscuro, acentos en #00a99d/#00ffff) y se mejoró la jerarquía visual con títulos e iconografía discreta.
+
+4) Pendientes/Notas
+- Si se requieren enlaces reales para redes sociales y rutas definitivas de “Páginas”, se pueden actualizar en footer.jsx (href y Link). 
+- Si se desea un footer aún más compacto o con una cuarta columna (Contacto/Newsletter), se puede implementar bajo la estructura ya creada.
+
+Lista de archivos modificados
+- src/components/modules/footer.jsx
+- src/scss/style.scss
+
+Historial breve (orden aproximado)
+- Añadido iconos y estructura nueva del footer.
+- Añadidos estilos específicos del footer en style.scss.
+- Agregado separador (hr.footer-sep) sobre el crédito inferior y centrado del crédito.
+- Intento de compactación (~40%): reducción de paddings, márgenes e iconos.
+- Reversión de compactación a solicitud del usuario: vuelta a py-4, g-4 y tamaños más cómodos.

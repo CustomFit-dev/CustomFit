@@ -5,7 +5,7 @@ import IconButton1 from '@mui/material/IconButton';
 import CloseIcon1 from '@mui/icons-material/Close';
 import styled from 'styled-components';
 
-const CamisetaCard = ({estado, cambiarEstado}) => {
+const CamisetaCard = ({ estado, cambiarEstado, producto }) => {
   
   return (
     <>
@@ -15,15 +15,14 @@ const CamisetaCard = ({estado, cambiarEstado}) => {
       {/* Imagen de la camiseta */}
       <div className="image-section">
       
-        <div className="discount-tag">30%</div>
         <div style={{ position: 'relative' }}>
   <IconButton1 className="salirx1" onClick={() => cambiarEstado()}>
     <CloseIcon1 />
   </IconButton1>
 </div>
         <img
-          src={img} // Cambia este link por la URL de tu imagen
-          alt="Camiseta"
+          src={producto?.imagen || img}
+          alt={producto?.titulo || 'Camiseta'}
           className="shirt-image"
         />
       </div>
@@ -33,10 +32,15 @@ const CamisetaCard = ({estado, cambiarEstado}) => {
           {/* Sección izquierda: Precio y estrellas */}
           <div className="left-section">
             <div className="price-section">
-            <h2>Camiseta Sencilla</h2>
-        <p className="descripc">Camiseta con estampado color negro</p>
-              <span className="old-price">$75.000</span>
-              <span className="current-price">$45.000</span>
+              <h2>{producto?.titulo || 'Camiseta'}</h2>
+              <p className="descripc">{producto?.descripcion || 'Sin descripción disponible'}</p>
+              {producto?.precio ? (
+                <>
+                  <span className="current-price">
+                    ${producto.precio.toLocaleString()}
+                  </span>
+                </>
+              ) : null}
             </div>
             
           </div>
@@ -47,16 +51,16 @@ const CamisetaCard = ({estado, cambiarEstado}) => {
           {/* Sección derecha: Detalles */}
           <div className="right-section">
             <div className="detail">
-              <strong>Talla:</strong> <span className="highlighted">M</span>
-              <p>Intermedia para personas de complexión media</p>
+              <strong>Talla:</strong> <span className="highlighted">{producto?.talla || 'Única'}</span>
+              <p>{producto?.talla ? `Talla ${producto.talla} según disponibilidad.` : 'Talla única o por confirmar.'}</p>
             </div>
             <div className="detail">
-              <strong>Color:</strong> <span className="highlighted">Negro</span>
-              <p>Color oscuro que simboliza elegancia y sofisticación</p>
+              <strong>Color:</strong> <span className="highlighted">{producto?.color || 'N/A'}</span>
+              <p>{producto?.color ? `Color ${producto.color.toLowerCase()} seleccionado.` : 'Color por definir.'}</p>
             </div>
             <div className="detail">
-              <strong>Tela:</strong> <span className="highlighted">Fibra</span>
-              <p>Material versátil, ligero y duradero, de fácil cuidado.</p>
+              <strong>Tela:</strong> <span className="highlighted">{producto?.tela || 'N/A'}</span>
+              <p>{producto?.tela ? `Confeccionada en ${producto.tela.toLowerCase()}.` : 'Tela por definir.'}</p>
             </div>
           </div>
         </div>
