@@ -24,11 +24,8 @@ urlpatterns = [
     path('api/delete-user/<int:pk>/', delete_user, name='delete-user'),
     path('api/update-user/<int:pk>/', update_user, name='update-user'),
 
-    # Telas
-    path('api/telas/', tela_list, name='tela-list'),
-    path('api/telas/<int:pk>/', tela_detail, name='tela-detail'),
-    path('api/tallas/<int:pk>/', talla_update_delete, name='talla-update-delete'),
-
+   path('api/telas/', tela_list, name='tela-list'),  # GET: listar, POST: crear
+    path('api/telas/<int:pk>/', tela_detail, name='tela-detail'),  # GET, PUT, DELETE por id
     # Tallas
     path('api/tallas/', talla_list, name='talla-list'),
     path('api/tallas/<int:pk>/', talla_detail, name='talla-detail'),
@@ -48,7 +45,7 @@ urlpatterns = [
     path('api/colores/<int:pk>/edit/', color_update_delete, name='color-update-delete'),
 
     # Productos
-    path('api/productos/', producto_list, name='producto-list'),
+     path('api/productos/', producto_list, name='producto-list'),
     path('api/productos/<int:pk>/', producto_detail, name='producto-detail'),
     path('api/productos/create/', producto_create, name='producto-create'),
     path('api/productos/<int:pk>/edit/', producto_update_delete, name='producto-update-delete'),

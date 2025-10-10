@@ -50,27 +50,17 @@ class Project(models.Model):
 class Tela(models.Model):
     idTela = models.BigAutoField(primary_key=True)
     NombreTela = models.CharField(max_length=45)
-    TipoTela = models.CharField(max_length=45)
-    PrecioTela = models.BigIntegerField()
     fecha_agregado = models.DateField()
     Disponibilidad = models.CharField(max_length=45)
     updated_at = models.DateTimeField(auto_now=True)
+    precio = models.FloatField(null=True, blank=True)
 
     class Meta:
-        db_table = 'tela' 
-        managed = False 
+        db_table = 'tela'
+        managed = False  # porque la tabla ya existe en tu base de datos
 
-
-class Talla(models.Model):
-    idTallas = models.BigAutoField(primary_key=True)
-    Talla = models.CharField(max_length=3)
-    Disponibilidad = models.CharField(max_length=45)
-    genero = models.CharField(max_length=45)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = 'tallas'
-
+    def __str__(self):
+        return self.NombreTela
 
 class Estampado(models.Model):
     idEstampado = models.BigAutoField(primary_key=True)
@@ -86,31 +76,25 @@ class Estampado(models.Model):
     class Meta:
         db_table = "estampado"
 
-class Color(models.Model):
-    IdColor = models.BigAutoField(primary_key=True)
-    NombreColor = models.CharField(max_length=45)
-    disponibilidad = models.CharField(max_length=2)
-    updated_at = models.DateTimeField()
 
-    class Meta:
-        db_table = 'color'  # nombre exacto en tu base de datos
-        managed = False 
+from django.db import models
 
 class Producto(models.Model):
     idProductos = models.BigAutoField(primary_key=True)
     NombreProductos = models.CharField(max_length=45)
-    imgProducto = models.CharField(max_length=100)
     TipoProductos = models.CharField(max_length=45)
     PrecioProducto = models.BigIntegerField()
     Descripcion = models.CharField(max_length=255)
-    
-    Color_IdColor = models.ForeignKey('Color', on_delete=models.DO_NOTHING, db_column='Color_IdColor')
-    Tela_idTela = models.ForeignKey('Tela', on_delete=models.DO_NOTHING, db_column='Tela_idTela')
-    Tallas_idTallas = models.ForeignKey('Talla', on_delete=models.DO_NOTHING, db_column='Tallas_idTallas')
-    
     fecha_creacion = models.DateField(auto_now_add=True)
     fecha_actualizacion = models.DateField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
+    urlFrontal = models.CharField(max_length=100, null=True, blank=True)
+    urlEspaldar = models.CharField(max_length=100, null=True, blank=True)
+    urlMangaIzquierda = models.CharField(max_length=100, null=True, blank=True)
+    urlMangaDerecha = models.CharField(max_length=100, null=True, blank=True)
+    Tallas = models.CharField(max_length=50)
+    Color = models.CharField(max_length=50)
+    Tela_idTela = models.ForeignKey('Tela', on_delete=models.DO_NOTHING, db_column='Tela_idTela')
 
     class Meta:
         db_table = 'productos'

@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.exceptions import ValidationError
 from django.core.mail import send_mail
 from .serializers import UserProfileSerializer, ProjectSerializer, RolSerializer
-from .models import UserProfile, Project, Rol, Tela, Talla, Estampado, Color, Producto, ProveedorSolicitud
+from .models import UserProfile, Project, Rol, Tela, Estampado, Producto, ProveedorSolicitud
 import random
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
@@ -15,7 +15,7 @@ from django.contrib.auth.models import User
 import logging
 import string
 from django.core.mail import send_mail
-from .serializers import TelaSerializer, TallaSerializer, EstampadoSerializer, ColorSerializer, ProductoSerializer, ProveedorSolicitudSerializer
+from .serializers import TelaSerializer,EstampadoSerializer,ProductoSerializer, ProveedorSolicitudSerializer
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from functools import wraps;
@@ -301,15 +301,15 @@ def update_user(request, pk):
     
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# telas
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 @admin_required
 def tela_list(request):
     if request.method == 'GET':
-        telas = Tela.objects.all()
+        telas = Tela.objects.all().order_by('idTela')
         serializer = TelaSerializer(telas, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
     elif request.method == 'POST':
         serializer = TelaSerializer(data=request.data)
         if serializer.is_valid():
@@ -317,6 +317,8 @@ def tela_list(request):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+# 🔍 Consultar, actualizar o eliminar una tela específica
 @api_view(['GET', 'PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @admin_required
@@ -328,16 +330,21 @@ def tela_detail(request, pk):
 
     if request.method == 'GET':
         serializer = TelaSerializer(tela)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
     elif request.method == 'PUT':
-        serializer = TelaSerializer(tela, data=request.data)
+        serializer = TelaSerializer(tela, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
     elif request.method == 'DELETE':
         tela.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'message': 'Tela eliminada correctamente'}, status=status.HTTP_204_NO_CONTENT)
+
+
+
 
 
 @api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
@@ -529,16 +536,21 @@ def producto_list(request):
     serializer = ProductoSerializer(productos, many=True)
     return Response(serializer.data)
 
+
+# 🔹 Obtener detalle de un producto (cualquier usuario autenticado)
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def producto_detail(request, pk):
     try:
         producto = Producto.objects.get(pk=pk)
-        serializer = ProductoSerializer(producto)
-        return Response(serializer.data)
     except Producto.DoesNotExist:
         return Response({'error': 'Producto no encontrado'}, status=404)
 
+    serializer = ProductoSerializer(producto)
+    return Response(serializer.data)
+
+
+# 🔹 Crear un nuevo producto (solo admin)
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 @admin_required
@@ -549,6 +561,8 @@ def producto_create(request):
         return Response(serializer.data, status=201)
     return Response(serializer.errors, status=400)
 
+
+# 🔹 Actualizar o eliminar producto (solo admin)
 @api_view(['PUT', 'DELETE'])
 @permission_classes([IsAuthenticated])
 @admin_required
@@ -567,8 +581,7 @@ def producto_update_delete(request, pk):
 
     elif request.method == 'DELETE':
         producto.delete()
-        return Response(status=204)
-
+        return Response({'message': 'Producto eliminado correctamente'}, status=204)
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def proveedor_solicitud_list(request):

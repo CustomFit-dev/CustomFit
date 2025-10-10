@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 from .models import UserProfile, Project, Rol
-from .models import Tela, Talla, Estampado, Color, Producto, ProveedorSolicitud
+from .models import Tela, Estampado,  Producto, ProveedorSolicitud
 
 class RolSerializer(serializers.ModelSerializer):
     class Meta:
@@ -63,10 +63,6 @@ class TelaSerializer(serializers.ModelSerializer):
         model = Tela
         fields = '__all__'
 
-class TallaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Talla
-        fields = '__all__'
 
 class EstampadoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -74,22 +70,11 @@ class EstampadoSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ('created_at', 'updated_at')
 
-class ColorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Color
-        fields = '__all__'
-
 
 class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producto
         fields = '__all__'
-        read_only_fields = ('idProductos', 'fecha_creacion', 'fecha_actualizacion', 'updated_at')
-        extra_kwargs = {
-            'Descripcion': {'required': False}  # <-- no obligatorio
-        }
-
-
 
 
 class UserSerializer(serializers.ModelSerializer):
