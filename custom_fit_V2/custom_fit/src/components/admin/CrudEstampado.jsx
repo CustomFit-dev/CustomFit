@@ -1,96 +1,65 @@
 import React, { useEffect, useState } from 'react';
 import {
-  MRT_GlobalFilterTextField,
-  MRT_TableBodyCellValue,
-  MRT_TablePagination,
-  MRT_ToolbarAlertBanner,
-  useMaterialReactTable,
-} from 'material-react-table';
-import {
-  Box,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  IconButton,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Grid,
-  Paper,
-  useMediaQuery,
-  Tooltip,
-  Fab,
-  Alert,
-  Snackbar,
-  Chip
+  Box, Paper, Typography, Button, IconButton, Dialog, DialogTitle, DialogContent, DialogActions,
+  Grid, TextField, Table, TableHead, TableRow, TableCell, TableBody, TableContainer,
+  Tooltip, Snackbar, Alert, Fab, useMediaQuery, TablePagination
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
-import { MRT_Localization_ES } from 'material-react-table/locales/es';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import axios from 'axios';
-import { flexRender } from '@tanstack/react-table';
 import Swal from 'sweetalert2';
+import axios from 'axios';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useAuth } from "../modules/authcontext";
 
-// Tema personalizado
 const theme = createTheme({
   palette: {
     mode: 'dark',
-    primary: {
-      main: '#17bebb',
-    },
-    secondary: {
-      main: '#00a99d',
-    },
-    background: {
-      default: '#000000',
-      paper: '#000000',
-    },
-    text: {
-      primary: '#ffffff',
-      secondary: '#17bebb',
-    },
+    primary: { main: '#17bebb' },
+    background: { default: '#000000', paper: '#000000' },
+    text: { primary: '#ffffff', secondary: '#17bebb' },
   },
+  typography: { fontFamily: 'Poppins, sans-serif' },
 });
 
 const EstampadoCrud = () => {
   const { authToken } = useAuth();
   const [estampados, setEstampados] = useState([]);
-  const [openAddModal, setOpenAddModal] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [currentEstampado, setCurrentEstampado] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [currentId, setCurrentId] = useState(null);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  const isMobile = useMediaQuery('(max-width:600px)');
+
   const [formData, setFormData] = useState({
     NombreEstampado: '',
     TipoEstampado: '',
     PrecioEstampado: '',
     ImgEstampado: '',
-    ColorEstampado: '',
-    Disponibilidad: ''
-  });
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success'
+    ColorEstampado: ''
   });
 
-  const isMobile = useMediaQuery('(max-width:600px)');
+  // paginación
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    const newSize = parseInt(event.target.value, 10);
+    setRowsPerPage(newSize);
+    setPage(0);
+  };
+
+  // Si cambian los datos y la página actual queda fuera de rango, resetear a 0
+  useEffect(() => {
+    const maxPage = Math.max(0, Math.ceil(estampados.length / rowsPerPage) - 1);
+    if (page > maxPage) setPage(0);
+  }, [estampados, rowsPerPage, page]);
 
   useEffect(() => {
     fetchEstampados();
@@ -98,145 +67,81 @@ const EstampadoCrud = () => {
 
   const fetchEstampados = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/estampados/' , {
-        headers: { Authorization: `Token ${authToken}` }
+      const res = await axios.get('http://localhost:8000/api/estampados/', {
+        headers: { Authorization: `Token ${authToken}` },
       });
-      setEstampados(response.data);
-    } catch (error) {
-      setSnackbar({
-        open: true,
-        message: 'Error al cargar los estampados',
-        severity: 'error'
-      });
-    }
-  };
-
-  const handleOpenAddModal = () => {
-    setFormData({
-      NombreEstampado: '',
-      TipoEstampado: '',
-      PrecioEstampado: '',
-      ImgEstampado: '',
-      ColorEstampado: '',
-      Disponibilidad: ''
-    });
-    setOpenAddModal(true);
-  };
-
-  const handleCloseAddModal = () => {
-    setOpenAddModal(false);
-  };
-
-  const handleOpenEditModal = (estampado) => {
-    setCurrentEstampado(estampado);
-    setFormData({
-      NombreEstampado: estampado.NombreEstampado || '',
-      TipoEstampado: estampado.TipoEstampado || '',
-      PrecioEstampado: estampado.PrecioEstampado || '',
-      ImgEstampado: estampado.ImgEstampado || '',
-      ColorEstampado: estampado.ColorEstampado || '',
-      Disponibilidad: estampado.Disponibilidad || ''
-    });
-    setOpenEditModal(true);
-  };
-
-  const handleCloseEditModal = () => {
-    setOpenEditModal(false);
-    setCurrentEstampado(null);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
-  };
-
-  const handleAddEstampado = async () => {
-    try {
-      const response = await axios.post('http://localhost:8000/api/estampados/create/', formData, {
-        headers: { Authorization: `Token ${authToken}` }
-      });
-      if (response.status === 201 || response.status === 200) {
-        await fetchEstampados();
-        setOpenAddModal(false);
-        setSnackbar({
-          open: true,
-          message: 'Estampado agregado correctamente',
-          severity: 'success'
-        });
-        Swal.fire({
-          title: 'Creado',
-          text: 'Estampado creado exitosamente',
-          icon: 'success',
-          background: '#1a1a1a',
-          color: '#ffffff',
-          confirmButtonColor: '#17bebb'
-        });
-      }
-    } catch (error) {
-      setSnackbar({
-        open: true,
-        message: 'Error al agregar estampado',
-        severity: 'error'
-      });
+      setEstampados(Array.isArray(res.data) ? res.data : []);
+    } catch {
       Swal.fire({
-        title: 'Error',
-        text: 'Ocurrió un error al guardar',
         icon: 'error',
+        title: 'Error',
+        text: 'No se pudieron cargar los estampados',
         background: '#1a1a1a',
-        color: '#ffffff',
+        color: '#fff',
         confirmButtonColor: '#17bebb'
       });
     }
   };
 
-  const handleEditEstampado = async () => {
-    if (!currentEstampado) return;
-    
+  const handleInput = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  const handleOpenModal = (estampado = null) => {
+    if (estampado) {
+      setEditMode(true);
+      setCurrentId(estampado.idEstampado);
+      setFormData(estampado);
+    } else {
+      setEditMode(false);
+      setFormData({ NombreEstampado: '', TipoEstampado: '', PrecioEstampado: '', ImgEstampado: '', ColorEstampado: '' });
+    }
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setEditMode(false);
+  };
+
+  const handleSave = async () => {
     try {
-      const response = await axios.put(`http://localhost:8000/api/estampados/${currentEstampado.idEstampado}/edit/`, formData, {
-        headers: { Authorization: `Token ${authToken}` }
+      const url = editMode
+        ? `http://localhost:8000/api/estampados/${currentId}/edit/`
+        : 'http://localhost:8000/api/estampados/create/';
+      const method = editMode ? axios.put : axios.post;
+
+      const res = await method(url, formData, {
+        headers: { Authorization: `Token ${authToken}` },
       });
-      if (response.status === 200) {
-        await fetchEstampados();
-        handleCloseEditModal();
-        setSnackbar({
-          open: true,
-          message: 'Estampado actualizado correctamente',
-          severity: 'success'
-        });
+
+      if (res.status === 200 || res.status === 201) {
+        fetchEstampados();
+        handleCloseModal();
         Swal.fire({
-          title: 'Actualizado',
-          text: 'Estampado actualizado exitosamente',
           icon: 'success',
+          title: editMode ? 'Actualizado' : 'Creado',
+          text: editMode ? 'Estampado actualizado correctamente' : 'Estampado agregado correctamente',
           background: '#1a1a1a',
-          color: '#ffffff',
+          color: '#fff',
           confirmButtonColor: '#17bebb'
         });
       }
-    } catch (error) {
-      setSnackbar({
-        open: true,
-        message: 'Error al actualizar estampado',
-        severity: 'error'
-      });
+    } catch (err) {
+      console.error(err);
       Swal.fire({
-        title: 'Error',
-        text: 'Ocurrió un error al actualizar',
         icon: 'error',
+        title: 'Error',
+        text: 'Error al guardar el estampado',
         background: '#1a1a1a',
-        color: '#ffffff',
+        color: '#fff',
         confirmButtonColor: '#17bebb'
       });
     }
   };
 
-  const handleDeleteEstampado = async (estampado) => {
+  const handleDelete = async (id, nombre) => {
     const result = await Swal.fire({
-      title: '¿Estás seguro?',
-      text: `¿Deseas eliminar el estampado "${estampado.NombreEstampado}"?`,
+      title: '¿Eliminar estampado?',
+      text: `Se eliminará "${nombre}"`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -249,625 +154,195 @@ const EstampadoCrud = () => {
 
     if (result.isConfirmed) {
       try {
-        const response = await axios.delete(`http://localhost:8000/api/estampados/${estampado.idEstampado}/edit/`, { 
-          headers: { Authorization: `Token ${authToken}` }
+        await axios.delete(`http://localhost:8000/api/estampados/${id}/edit/`, {
+          headers: { Authorization: `Token ${authToken}` },
         });
-        if (response.status === 204 || response.status === 200) {
-          await fetchEstampados();
-          setSnackbar({
-            open: true,
-            message: 'Estampado eliminado correctamente',
-            severity: 'success'
-          });
-          Swal.fire({
-            title: 'Eliminado',
-            text: 'El estampado ha sido eliminado correctamente',
-            icon: 'success',
-            background: '#1a1a1a',
-            color: '#ffffff',
-            confirmButtonColor: '#17bebb'
-          });
-        }
-      } catch (error) {
-        setSnackbar({
-          open: true,
-          message: 'Error al eliminar estampado',
-          severity: 'error'
-        });
+        fetchEstampados();
         Swal.fire({
-          title: 'Error',
-          text: 'No se pudo eliminar el estampado',
-          icon: 'error',
+          icon: 'success',
+          title: 'Eliminado',
+          text: 'Estampado eliminado correctamente',
           background: '#1a1a1a',
-          color: '#ffffff',
+          color: '#fff',
+          confirmButtonColor: '#17bebb'
+        });
+      } catch (err) {
+        console.error(err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error al eliminar estampado',
+          background: '#1a1a1a',
+          color: '#fff',
           confirmButtonColor: '#17bebb'
         });
       }
     }
   };
 
-  const handleCloseSnackbar = () => {
-    setSnackbar({
-      ...snackbar,
-      open: false
-    });
-  };
-
-  const columns = [
-    {
-      accessorKey: 'NombreEstampado',
-      header: 'Nombre del Estampado',
-      size: 150
-    },
-    {
-      accessorKey: 'TipoEstampado',
-      header: 'Tipo de Estampado',
-      size: 150
-    },
-    {
-      accessorKey: 'PrecioEstampado',
-      header: 'Precio',
-      size: 120,
-      Cell: ({ cell }) => `$${parseFloat(cell.getValue() || 0).toLocaleString()}`
-    },
-    {
-      accessorKey: 'ImgEstampado',
-      header: 'Imagen',
-      size: 100,
-      Cell: ({ cell }) => {
-        const imageUrl = cell.getValue();
-        return imageUrl ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <img 
-              src={imageUrl} 
-              alt="Estampado" 
-              style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }}
-            />
-          </Box>
-        ) : 'Sin imagen';
-      }
-    },
-    {
-      accessorKey: 'ColorEstampado',
-      header: 'Color',
-      size: 120,
-      Cell: ({ cell }) => {
-        const color = cell.getValue();
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'center' }}>
-            <Box 
-              sx={{ 
-                width: 20, 
-                height: 20, 
-                backgroundColor: color || '#ccc', 
-                borderRadius: '50%',
-                border: '1px solid #17bebb'
-              }} 
-            />
-            <Typography variant="body2">{color}</Typography>
-          </Box>
-        );
-      }
-    },
-    {
-      accessorKey: 'Disponibilidad',
-      header: 'Disponibilidad',
-      size: 130,
-      Cell: ({ cell }) => {
-        const disponible = cell.getValue()?.toLowerCase() === 'si';
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <FiberManualRecordIcon 
-              sx={{ 
-                color: disponible ? '#4caf50' : '#f44336',
-                fontSize: 12
-              }} 
-            />
-            <Chip
-              label={disponible ? 'Disponible' : 'No Disponible'}
-              color={disponible ? 'success' : 'error'}
-              size="small"
-              variant="outlined"
-            />
-          </Box>
-        );
-      }
-    },
-    {
-      id: 'acciones',
-      header: 'Acciones',
-      size: 150,
-      Cell: ({ row }) => (
-        <Box sx={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-          <Tooltip title="Editar estampado">
-            <IconButton
-              color="primary"
-              onClick={() => handleOpenEditModal(row.original)}
-              size="small"
-            >
-              <EditIcon />
-            </IconButton>
-          </Tooltip>
-          <Tooltip title="Eliminar estampado">
-            <IconButton
-              color="error"
-              onClick={() => handleDeleteEstampado(row.original)}
-              size="small"
-            >
-              <DeleteIcon />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      ),
-    },
-  ];
-
-  const table = useMaterialReactTable({
-    columns,
-    data: estampados,
-    enableRowSelection: true,
-    initialState: {
-      pagination: { pageSize: 5, pageIndex: 0 },
-      showGlobalFilter: true,
-    },
-    muiPaginationProps: {
-      rowsPerPageOptions: [5, 10, 20],
-      variant: 'outlined',
-    },
-    paginationDisplayMode: 'pages',
-    localization: {
-      ...MRT_Localization_ES,
-      pagination: {
-        ...MRT_Localization_ES.pagination,
-        rowsPerPage: 'Filas por página',
-      },
-    },
-    muiTableBodyRowProps: {
-      hover: true,
-    },
-    muiTablePaperProps: {
-      elevation: 3,
-      sx: {
-        borderRadius: '10px',
-        overflow: 'hidden',
-      },
-    },
-    enableColumnResizing: true,
-    layoutMode: 'grid',
-    enableColumnFilters: true
-  });
+  // Datos a mostrar según paginación
+  const visibleRows = rowsPerPage > 0
+    ? estampados.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+    : estampados;
 
   return (
     <ThemeProvider theme={theme}>
-      <Paper elevation={0} sx={{ minHeight: '100vh', background: 'transparent' }}>
-        <Typography variant="h4" component="h1" sx={{ 
-          textAlign: 'center', 
-          color: 'white', 
-          my: 4,
-          fontWeight: 'bold'
-        }}>
+      <Paper sx={{ minHeight: '100vh', p: 3, background: 'black', boxShadow: '0 0 15px rgba(23,190,187,0.3)' }}>
+        <Typography variant="h4" textAlign="center" sx={{ mb: 3, fontWeight: 'bold', color: '#17bebb' }}>
           Gestión de Estampados
         </Typography>
-        
-        <Box sx={{ maxWidth: '1280px', margin: '0 auto', px: 2 }}>
-          <Paper elevation={3} sx={{ p: 2, borderRadius: '10px', background: 'black', width: '100%' }}>
-            
-            <Box sx={{ 
-              display: 'flex', 
-              flexDirection: isMobile ? 'column' : 'row', 
-              justifyContent: 'space-between', 
-              alignItems: isMobile ? 'flex-start' : 'center', 
-              mb: 2, 
-              gap: 2,
-            }}>
-              <MRT_GlobalFilterTextField 
-                table={table} 
-                sx={{ 
-                  width: isMobile ? '100%' : '300px',
-                  '& .MuiInputBase-root': {
-                    borderRadius: '8px',
-                  }
-                }}
-              />
-              <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  onClick={handleOpenAddModal}
-                  sx={{
-                    borderRadius: '8px',
-                    boxShadow: 2,
-                    background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
-                  }}
-                >
-                  Agregar Estampado
-                </Button>
-                {!isMobile && <MRT_TablePagination table={table} />}
-              </Box>
-            </Box>
-            
-            <TableContainer sx={{ overflowX: 'auto', borderRadius: '8px', background: 'black' }}>
-              <Table>
-                <TableHead>
-                  {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id} sx={{ background: 'black' }}>
-                      {headerGroup.headers.map((header) => (
-                        <TableCell 
-                          align="center" 
-                          variant="head" 
-                          key={header.id}
-                          sx={{ 
-                            fontWeight: 'bold',
-                            whiteSpace: 'nowrap',
-                            color: '#00a99d'
-                          }}
-                        >
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.Header ??
-                                  header.column.columnDef.header,
-                                header.getContext(),
-                              )}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableHead>
-                <TableBody>
-                  {table.getRowModel().rows.map((row, rowIndex) => (
-                    <TableRow 
-                      key={row.id} 
-                      selected={row.getIsSelected()}
-                      sx={{
-                        '&:nth-of-type(odd)': {
-                          backgroundColor: 'black',
-                        },
-                        '&:hover': {
-                          backgroundColor: '#00a99d',
-                        },
-                        transition: 'background-color 0.2s',
-                      }}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <TableCell 
-                          align="center" 
-                          variant="body" 
-                          key={cell.id}
-                          sx={{ 
-                            padding: isMobile ? '8px 4px' : '16px 8px',
-                            whiteSpace: 'normal',
-                            wordBreak: 'break-word'
-                          }}
-                        >
-                          <MRT_TableBodyCellValue
-                            cell={cell}
-                            table={table}
-                            staticRowIndex={rowIndex}
-                          />
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            
-            {isMobile && (
-              <Box sx={{ mt: 2 }}>
-                <MRT_TablePagination table={table} />
-              </Box>
-            )}
-            
-            <MRT_ToolbarAlertBanner stackAlertBanner table={table} />
-          </Paper>
-          
-          {/* Botón flotante para móviles */}
-          {isMobile && (
-            <Fab 
-              color="primary" 
-              aria-label="add" 
-              onClick={handleOpenAddModal}
-              sx={{ 
-                position: 'fixed', 
-                bottom: 20, 
-                right: 20,
-                background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
-              }}
-            >
-              <AddIcon />
-            </Fab>
-          )}
-          
-          {/* Modal para agregar estampado */}
-          <Dialog open={openAddModal} onClose={handleCloseAddModal} maxWidth="md" fullWidth>
-            <DialogTitle
-              sx={{
-                bgcolor: '#17bebb',
-                color: 'white',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-              }}
-            >
-              <Typography variant="h6">Agregar Nuevo Estampado</Typography>
-              <IconButton onClick={handleCloseAddModal} sx={{ color: 'white' }}>
-                <CloseIcon />
-              </IconButton>
-            </DialogTitle>
 
-            <DialogContent sx={{ mt: 2, bgcolor: 'black' }}>
-              <Grid container spacing={2} sx={{ mt: 1 }}>
-                {[
-                  { name: 'NombreEstampado', label: 'Nombre del Estampado', type: 'text', md: 6 },
-                  { name: 'TipoEstampado', label: 'Tipo de Estampado', type: 'text', md: 6 },
-                  { name: 'PrecioEstampado', label: 'Precio del Estampado', type: 'number', md: 6 },
-                  { name: 'ImgEstampado', label: 'URL de la Imagen', type: 'text', md: 6 },
-                  { name: 'ColorEstampado', label: 'Color del Estampado', type: 'text', md: 12 },
-                ].map(({ name, label, type, md }) => (
-                  <Grid item xs={12} md={md} key={name}>
-                    <TextField
-                      margin="dense"
-                      name={name}
-                      label={label}
-                      type={type}
-                      fullWidth
-                      variant="outlined"
-                      value={formData[name]}
-                      onChange={handleInputChange}
-                      required
-                      sx={{
-                        width: '100%',
-                        input: { color: 'white' },
-                        label: { color: '#17bebb' },
-                        '& .MuiOutlinedInput-root': {
-                          '& fieldset': {
-                            borderColor: '#17bebb',
-                          },
-                          '&:hover fieldset': {
-                            borderColor: '#17e6c9',
-                          },
-                          '&.Mui-focused fieldset': {
-                            borderColor: '#0fa59d',
-                          },
-                        },
-                      }}
-                    />
-                  </Grid>
-                ))}
-
-                <Grid item xs={12}>
-                  <FormControl fullWidth margin="dense" variant="outlined" required
-                    sx={{
-                      '& .MuiInputLabel-root': { color: '#17bebb' },
-                      '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                          borderColor: '#17bebb',
-                        },
-                        '&:hover fieldset': {
-                          borderColor: '#17e6c9',
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#0fa59d',
-                        },
-                      },
-                    }}
-                  >
-                    <InputLabel id="disponibilidad-label">Disponibilidad</InputLabel>
-                    <Select
-                      labelId="disponibilidad-label"
-                      name="Disponibilidad"
-                      value={formData.Disponibilidad}
-                      onChange={handleInputChange}
-                      label="Disponibilidad"
-                      sx={{
-                        color: 'white',
-                        '& .MuiSelect-icon': {
-                          color: '#17bebb',
-                        },
-                      }}
-                    >
-                      <MenuItem value="Si">Disponible</MenuItem>
-                      <MenuItem value="No">No Disponible</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-            </DialogContent>
-
-            <DialogActions sx={{ p: 2, bgcolor: 'black' }}>
-              <Button
-                onClick={handleCloseAddModal}
-                variant="outlined"
-                startIcon={<CloseIcon />}
-                sx={{
-                  color: 'white',
-                  borderColor: '#17bebb',
-                  '&:hover': {
-                    borderColor: '#17e6c9',
-                    backgroundColor: 'rgba(23, 190, 187, 0.1)',
-                  }
-                }}
-              >
-                Cancelar
-              </Button>
-              <Button
-                onClick={handleAddEstampado}
-                variant="contained"
-                startIcon={<SaveIcon />}
-                sx={{
-                  bgcolor: '#17bebb',
-                  color: 'black',
-                  '&:hover': {
-                    bgcolor: '#17e6c9',
-                  }
-                }}
-              >
-                Guardar
-              </Button>
-            </DialogActions>
-          </Dialog>
-          
-          {/* Modal para editar estampado */}
-          <Dialog open={openEditModal} onClose={handleCloseEditModal} maxWidth="md" fullWidth>
-            <DialogTitle sx={{
-              bgcolor: '#17bebb',
-              color: 'white',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}>
-              <Typography variant="h6">Editar Estampado</Typography>
-              <IconButton onClick={handleCloseEditModal} sx={{ color: 'white' }}>
-                <CloseIcon />
-              </IconButton>
-            </DialogTitle>
-
-            <DialogContent sx={{ bgcolor: 'black', mt: 2 }}>
-              <Grid container spacing={2} sx={{ mt: 1 }}>
-                {[
-                  { name: 'NombreEstampado', label: 'Nombre del Estampado', type: 'text' },
-                  { name: 'TipoEstampado', label: 'Tipo de Estampado', type: 'text' },
-                  { name: 'PrecioEstampado', label: 'Precio del Estampado', type: 'number' },
-                  { name: 'ImgEstampado', label: 'URL de la Imagen', type: 'text' },
-                  { name: 'ColorEstampado', label: 'Color del Estampado', type: 'text' }
-                ].map((field, idx) => (
-                  <Grid item xs={12} md={6} key={idx}>
-                    <TextField
-                      margin="dense"
-                      name={field.name}
-                      label={field.label}
-                      type={field.type}
-                      fullWidth
-                      variant="outlined"
-                      value={formData[field.name]}
-                      onChange={handleInputChange}
-                      required
-                      sx={{
-                        width: '100%',
-                        input: { color: 'white' },
-                        label: { color: '#17bebb' },
-                        '& .MuiOutlinedInput-root': {
-                          '& fieldset': {
-                            borderColor: '#17bebb',
-                          },
-                          '&:hover fieldset': {
-                            borderColor: '#17e6c9',
-                          },
-                          '&.Mui-focused fieldset': {
-                            borderColor: '#0fa59d',
-                          },
-                        },
-                      }}
-                    />
-                  </Grid>
-                ))}
-
-                <Grid item xs={12}>
-                  <FormControl fullWidth margin="dense" variant="outlined"
-                    sx={{
-                      width: '100%',
-                      '& .MuiInputLabel-root': { color: '#17bebb' },
-                      '& .MuiOutlinedInput-root': {
-                        '& fieldset': {
-                          borderColor: '#17bebb',
-                        },
-                        '&:hover fieldset': {
-                          borderColor: '#17e6c9',
-                        },
-                        '&.Mui-focused fieldset': {
-                          borderColor: '#0fa59d',
-                        },
-                        '& input': { color: 'white' },
-                        '& .MuiSelect-icon': { color: '#17bebb' },
-                      },
-                    }}
-                  >
-                    <InputLabel id="disponibilidad-edit-label">Disponibilidad</InputLabel>
-                    <Select
-                      labelId="disponibilidad-edit-label"
-                      name="Disponibilidad"
-                      value={formData.Disponibilidad}
-                      onChange={handleInputChange}
-                      label="Disponibilidad"
-                      required
-                      sx={{
-                        color: 'white',
-                      }}
-                    >
-                      <MenuItem value="Si">Disponible</MenuItem>
-                      <MenuItem value="No">No Disponible</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-              </Grid>
-            </DialogContent>
-
-            <DialogActions sx={{ p: 2, bgcolor: 'black' }}>
-              <Button
-                onClick={handleCloseEditModal}
-                variant="outlined"
-                startIcon={<CloseIcon />}
-                sx={{
-                  color: 'white',
-                  borderColor: '#17bebb',
-                  '&:hover': {
-                    borderColor: '#17e6c9',
-                    backgroundColor: 'rgba(23, 190, 187, 0.1)',
-                  }
-                }}
-              >
-                Cancelar
-              </Button>
-              <Button
-                onClick={handleEditEstampado}
-                variant="contained"
-                startIcon={<SaveIcon />}
-                sx={{
-                  bgcolor: '#17bebb',
-                  color: 'black',
-                  '&:hover': {
-                    bgcolor: '#17e6c9',
-                  }
-                }}
-              >
-                Actualizar
-              </Button>
-            </DialogActions>
-          </Dialog>
-          
-          {/* Snackbar para notificaciones */}
-          <Snackbar
-            open={snackbar.open}
-            autoHideDuration={4000}
-            onClose={handleCloseSnackbar}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => handleOpenModal()}
+            sx={{ bgcolor: '#17bebb', color: 'black', '&:hover': { bgcolor: '#17e6c9' } }}
           >
-            <Alert 
-              onClose={handleCloseSnackbar} 
-              severity={snackbar.severity} 
-              variant="filled"
-              sx={{ width: '100%' }}
-            >
-              {snackbar.message}
-            </Alert>
-          </Snackbar>
+            Nuevo Estampado
+          </Button>
         </Box>
+
+        <TableContainer component={Paper} sx={{ background: 'black' }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ color: '#17bebb', fontWeight: 'bold' }}>Nombre</TableCell>
+                <TableCell sx={{ color: '#17bebb', fontWeight: 'bold' }}>Tipo</TableCell>
+                <TableCell sx={{ color: '#17bebb', fontWeight: 'bold' }}>Precio</TableCell>
+                <TableCell sx={{ color: '#17bebb', fontWeight: 'bold' }}>Color</TableCell>
+                <TableCell sx={{ color: '#17bebb', fontWeight: 'bold' }}>Imagen</TableCell>
+                <TableCell sx={{ color: '#17bebb', fontWeight: 'bold' }} align="center">Acciones</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {visibleRows.map((e) => (
+                <TableRow key={e.idEstampado} hover sx={{ '&:hover': { backgroundColor: 'rgba(23,190,187,0.03)' } }}>
+                  <TableCell sx={{ color: 'white' }}>{e.NombreEstampado}</TableCell>
+                  <TableCell sx={{ color: 'white' }}>{e.TipoEstampado}</TableCell>
+                  <TableCell sx={{ color: 'white' }}>${parseFloat(e.PrecioEstampado || 0).toLocaleString()}</TableCell>
+                  <TableCell sx={{ color: 'white' }}>{e.ColorEstampado}</TableCell>
+                  <TableCell align="center">
+                    {e.ImgEstampado ? (
+                      <img src={e.ImgEstampado} alt="Estampado" width="48" height="48" style={{ borderRadius: 6, objectFit: 'cover', border: '1px solid rgba(255,255,255,0.06)' }} />
+                    ) : <Typography sx={{ color: '#bdbdbd' }}>Sin imagen</Typography>}
+                  </TableCell>
+                  <TableCell align="center">
+                    <Tooltip title="Editar">
+                      <IconButton color="primary" onClick={() => handleOpenModal(e)} sx={{ '&:hover': { bgcolor: 'rgba(23,190,187,0.06)' } }}>
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Eliminar">
+                      <IconButton color="error" onClick={() => handleDelete(e.idEstampado, e.NombreEstampado)} sx={{ '&:hover': { bgcolor: 'rgba(255,0,0,0.06)' } }}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))}
+
+              {estampados.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={6} align="center" sx={{ color: '#ccc' }}>
+                    No hay estampados registrados
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+
+        </TableContainer>
+
+        {/* Paginación centrada debajo de la tabla */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={estampados.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage="Filas por página"
+            labelDisplayedRows={({ from, to, count }) => `Página ${Math.ceil(from / (rowsPerPage || 1))} de ${Math.max(1, Math.ceil(count / (rowsPerPage || 1)))}`}
+            sx={{ color: '#17bebb', '& .MuiTablePagination-toolbar': { justifyContent: 'center' } }}
+          />
+        </Box>
+
+        {/* Modal agregar/editar */}
+        <Dialog open={openModal} onClose={handleCloseModal} maxWidth="md" fullWidth>
+          <DialogTitle sx={{ bgcolor: '#17bebb', color: 'white', display: 'flex', justifyContent: 'space-between' }}>
+            <Typography variant="h6">{editMode ? 'Editar Estampado' : 'Nuevo Estampado'}</Typography>
+            <IconButton onClick={handleCloseModal} sx={{ color: 'white' }}>
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+
+          <DialogContent sx={{ bgcolor: 'black', py: 3 }}>
+            <Grid container spacing={2}>
+              {[
+                { name: 'NombreEstampado', label: 'Nombre del Estampado' },
+                { name: 'TipoEstampado', label: 'Tipo de Estampado' },
+                { name: 'PrecioEstampado', label: 'Precio', type: 'number' },
+                { name: 'ImgEstampado', label: 'URL de la Imagen' },
+                { name: 'ColorEstampado', label: 'Color' },
+              ].map(({ name, label, type }) => (
+                <Grid item xs={12} md={6} key={name}>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    label={label}
+                    name={name}
+                    type={type || 'text'}
+                    value={formData[name] || ''}
+                    onChange={handleInput}
+                    InputLabelProps={{ style: { color: '#17bebb' } }}
+                    inputProps={{ style: { color: 'white' } }}
+                    sx={{
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': { borderColor: '#17bebb' },
+                        '&:hover fieldset': { borderColor: '#17e6c9' },
+                        '&.Mui-focused fieldset': { borderColor: '#0fa59d' },
+                      },
+                    }}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </DialogContent>
+
+          <DialogActions sx={{ bgcolor: 'black', p: 2 }}>
+            <Button
+              onClick={handleCloseModal}
+              variant="outlined"
+              startIcon={<CloseIcon />}
+              sx={{ color: 'white', borderColor: '#17bebb', '&:hover': { borderColor: '#17e6c9' } }}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={handleSave}
+              variant="contained"
+              startIcon={<SaveIcon />}
+              sx={{ bgcolor: '#17bebb', color: 'black', '&:hover': { bgcolor: '#17e6c9' } }}
+            >
+              {editMode ? 'Actualizar' : 'Guardar'}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* FAB móvil */}
+        {isMobile && (
+          <Fab
+            color="primary"
+            onClick={() => handleOpenModal()}
+            sx={{ position: 'fixed', bottom: 20, right: 20, bgcolor: '#17bebb', color: 'black' }}
+          >
+            <AddIcon />
+          </Fab>
+        )}
       </Paper>
-      
-      {/* Estilos CSS adicionales */}
-      <style jsx global>{`
-        @media (max-width: 600px) {
-          .MuiTableCell-root {
-            padding: 8px 4px;
-            font-size: 0.75rem;
-          }
-          
-          .MuiTypography-h4 {
-            font-size: 1.5rem;
-          }
-        }
-      `}</style>
     </ThemeProvider>
   );
 };

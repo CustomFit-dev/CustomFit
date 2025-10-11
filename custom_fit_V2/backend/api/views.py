@@ -582,6 +582,9 @@ def producto_update_delete(request, pk):
     elif request.method == 'DELETE':
         producto.delete()
         return Response({'message': 'Producto eliminado correctamente'}, status=204)
+
+
+        
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def proveedor_solicitud_list(request):

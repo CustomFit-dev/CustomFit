@@ -61,20 +61,25 @@ class Tela(models.Model):
 
     def __str__(self):
         return self.NombreTela
+        
 
 class Estampado(models.Model):
     idEstampado = models.BigAutoField(primary_key=True)
     NombreEstampado = models.CharField(max_length=45)
     TipoEstampado = models.CharField(max_length=45)
-    PrecioEstampado = models.BigIntegerField()
     ImgEstampado = models.CharField(max_length=100)
     ColorEstampado = models.CharField(max_length=45)
-    fecha_agregado = models.DateField(auto_now_add=True)  # ✅ fecha solo al crear
-    Disponibilidad = models.CharField(max_length=45)
-    updated_at = models.DateTimeField(auto_now=True)  # ✅ Django también actualiza solo
+    fecha_agregado = models.DateField(auto_now_add=True)  # ✅ se agrega automáticamente la fecha actual
+    updated_at = models.DateTimeField(auto_now=True)      # ✅ se actualiza al modificar el registro
+    PrecioEstampado = models.FloatField(null=True, blank=True)
 
     class Meta:
-        db_table = "estampado"
+        db_table = 'estampado'
+        managed = False  # porque la tabla ya existe en la base de datos
+
+    def __str__(self):
+        return self.NombreEstampado
+
 
 
 from django.db import models
