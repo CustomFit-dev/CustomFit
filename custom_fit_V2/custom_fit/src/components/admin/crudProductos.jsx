@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   Box, Button, Dialog, DialogActions, DialogContent, DialogTitle,
   TextField, Grid, IconButton, Table, TableBody, TableCell,
-  TableContainer, TableHead, TableRow, Paper, Snackbar, Alert,
+  TableContainer, TableHead, TableRow, Paper,
   Tooltip, Typography, useMediaQuery
 } from '@mui/material';
 import { Add, Edit, Delete, Close, Save, Visibility } from '@mui/icons-material';
@@ -44,7 +44,7 @@ const ProductoCrud = () => {
     Color: '',
     Tela_idTela: '',
   });
-  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+  // Usamos SweetAlert2 (Swal) para todas las alertas, ya no guardamos estado local de Snackbar
   const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
@@ -59,6 +59,7 @@ const ProductoCrud = () => {
       setProductos(res.data);
     } catch (err) {
       console.error(err);
+      Swal.fire('Error', 'No se pudieron cargar los productos. Revisa la consola para más detalles.', 'error');
     }
   };
 
@@ -103,10 +104,29 @@ const ProductoCrud = () => {
   const change = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const save = async () => {
+    // Validaciones básicas antes de enviar
+    const nombre = (formData.NombreProductos || '').toString().trim();
+    const tipo = (formData.TipoProductos || '').toString().trim();
+    const precioRaw = formData.PrecioProducto;
+    const precio = parseFloat(precioRaw);
+
+    if (!nombre) {
+      Swal.fire('Atención', 'El nombre del producto es requerido.', 'warning');
+      return;
+    }
+    if (!tipo) {
+      Swal.fire('Atención', 'El tipo de producto es requerido.', 'warning');
+      return;
+    }
+    if (isNaN(precio) || precio <= 0) {
+      Swal.fire('Atención', 'El precio debe ser un número mayor que 0.', 'warning');
+      return;
+    }
+
     try {
       const payload = {
         ...formData,
-        PrecioProducto: parseFloat(formData.PrecioProducto) || 0,
+        PrecioProducto: precio,
         Tela_idTela: formData.Tela_idTela ? parseInt(formData.Tela_idTela) : null,
       };
 
@@ -116,21 +136,22 @@ const ProductoCrud = () => {
           payload,
           { headers: { Authorization: `Token ${authToken}` } }
         );
-        Swal.fire('Actualizado', 'Producto actualizado correctamente', 'success');
+        Swal.fire('Éxito', 'Producto actualizado correctamente', 'success');
       } else {
         await axios.post(
           'http://localhost:8000/api/productos/create/',
           payload,
           { headers: { Authorization: `Token ${authToken}` } }
         );
-        Swal.fire('Guardado', 'Producto creado correctamente', 'success');
+        Swal.fire('Éxito', 'Producto creado correctamente', 'success');
       }
 
       fetchProductos();
       closeForm();
     } catch (err) {
       console.error("Error al guardar producto:", err.response?.data || err.message);
-      Swal.fire('Error', 'No se pudo guardar el producto', 'error');
+      const detail = err.response?.data ? JSON.stringify(err.response.data) : err.message;
+      Swal.fire('Error', `No se pudo guardar el producto. ${detail}`, 'error');
     }
   };
 

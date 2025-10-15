@@ -32,9 +32,7 @@ import {
   Paper,
   useMediaQuery,
   Tooltip,
-  Fab,
-  Alert,
-  Snackbar
+  Fab
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -46,6 +44,7 @@ import { fetchData } from './modules/Datos';
 import { MRT_Localization_ES } from 'material-react-table/locales/es';
 import { ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 import { flexRender } from '@tanstack/react-table';
 import theme from './modules/Themes';
 import '../scss/admin/crud.scss';
@@ -66,15 +65,12 @@ const Crud = () => {
     nombre_usuario: '',
     celular: '',
     rol: '',
-    
+    confirmar_correo: '',
+    password: '',
   });
   const { authToken } = useAuth();
   const [roles, setRoles] = useState([]);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'success'
-  });
+  // Usamos Swal (SweetAlert2) para mostrar alertas
   
   const isMobile = useMediaQuery('(max-width:600px)');
   const navigate = useNavigate();
@@ -119,7 +115,10 @@ const Crud = () => {
       correo_electronico: '',
       nombre_usuario: '',
       celular: '',
-      rol: ''
+      rol: '',
+      confirmar_correo: '',
+      password: "123456",
+  
     });
     setOpenAddModal(true);
   };
@@ -137,6 +136,9 @@ const Crud = () => {
       nombre_usuario: user.nombre_usuario,
       rol: user.rol?.nombrerol || '',
       celular: user.celular || '',
+      confirmar_correo: user.conf_correo_electronico || user.correo_electronico || '',
+      password: "123456",
+
 
     });
     setOpenEditModal(true);
@@ -167,7 +169,11 @@ const Crud = () => {
 
   const handleAddUser = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/register', formData, {
+      // Asegurar que confirmar_correo está presente
+      const payload = { ...formData };
+      if (!payload.confirmar_correo) payload.confirmar_correo = payload.correo_electronico;
+
+      const response = await axios.post('http://localhost:8000/api/register/', payload, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -178,19 +184,12 @@ const Crud = () => {
         const updatedUsers = await fetchData();
         setUserProfiles(updatedUsers);
         setOpenAddModal(false);
-        setSnackbar({
-          open: true,
-          message: 'Usuario agregado correctamente',
-          severity: 'success'
-        });
+        Swal.fire('Éxito', 'Usuario agregado correctamente', 'success');
       }
     } catch (error) {
       console.error('Error al agregar usuario:', error.response?.data || error.message);
-      setSnackbar({
-        open: true,
-        message: 'Error al agregar usuario',
-        severity: 'error'
-      });
+      const serverMessage = error.response?.data?.error || error.response?.data?.message || JSON.stringify(error.response?.data) || error.message;
+      Swal.fire('Error', serverMessage || 'Error al agregar usuario', 'error');
     }
   };
 
@@ -207,19 +206,12 @@ const Crud = () => {
         const updatedUsers = await fetchData();
         setUserProfiles(updatedUsers);
         handleCloseEditModal();
-        setSnackbar({
-          open: true,
-          message: 'Usuario actualizado correctamente',
-          severity: 'success'
-        });
+        Swal.fire('Éxito', 'Usuario actualizado correctamente', 'success');
       }
     } catch (error) {
       console.error('Error al actualizar usuario:', error.response?.data || error.message);
-      setSnackbar({
-        open: true,
-        message: 'Error al actualizar usuario',
-        severity: 'error'
-      });
+      const serverMessage = error.response?.data?.error || error.response?.data?.message || JSON.stringify(error.response?.data) || error.message;
+      Swal.fire('Error', serverMessage || 'Error al actualizar usuario', 'error');
     }
   };
 
@@ -237,30 +229,18 @@ const Crud = () => {
           prevProfiles.filter((profile) => profile.id !== userToDelete.id)
         );
         handleCloseDeleteDialog();
-        setSnackbar({
-          open: true,
-          message: 'Usuario eliminado correctamente',
-          severity: 'success'
-        });
+        Swal.fire('Éxito', 'Usuario eliminado correctamente', 'success');
       } else {
         throw new Error(`Respuesta inesperada: ${response.status}`);
       }
     } catch (error) {
       console.error('Error al borrar el usuario:', error.response?.data || error.message);
-      setSnackbar({
-        open: true,
-        message: 'Error al eliminar usuario',
-        severity: 'error'
-      });
+      const serverMessage = error.response?.data?.error || error.response?.data?.message || JSON.stringify(error.response?.data) || error.message;
+      Swal.fire('Error', serverMessage || 'Error al eliminar usuario', 'error');
     }
   };
 
-  const handleCloseSnackbar = () => {
-    setSnackbar({
-      ...snackbar,
-      open: false
-    });
-  };
+  // no necesitamos handleCloseSnackbar porque usamos Swal
 
   const columns = [
     { 
@@ -811,22 +791,7 @@ const Crud = () => {
 </Dialog>
 
           
-          {/* Snackbar para notificaciones */}
-          <Snackbar
-            open={snackbar.open}
-            autoHideDuration={4000}
-            onClose={handleCloseSnackbar}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          >
-            <Alert 
-              onClose={handleCloseSnackbar} 
-              severity={snackbar.severity} 
-              variant="filled"
-              sx={{ width: '100%' }}
-            >
-              {snackbar.message}
-            </Alert>
-          </Snackbar>
+          {/* Las notificaciones se muestran mediante SweetAlert2 (Swal.fire) */}
         </section>
       </Paper>
       

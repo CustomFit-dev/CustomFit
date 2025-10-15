@@ -87,6 +87,32 @@ def register_user(request):
             password=data['password']
         )
         codigo = generar_codigo()
+        # Validar confirmación de correo si viene
+        confirmar_correo = data.get('confirmar_correo') or data.get('conf_correo_electronico')
+        correo = data.get('correo_electronico')
+        if confirmar_correo and confirmar_correo != correo:
+            return Response({'error': 'El correo y su confirmación no coinciden'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Resolver rol: puede venir como id o como nombre (desde el frontend suelen enviar el nombre)
+        rol_input = data.get('rol')
+        rol_obj = None
+        if rol_input is not None and rol_input != '':
+            # intentar interpretar como id
+            try:
+                rol_obj = Rol.objects.get(pk=int(rol_input))
+            except (ValueError, TypeError, Rol.DoesNotExist):
+                # intentar buscar por nombre (case-insensitive)
+                rol_obj = Rol.objects.filter(nombrerol__iexact=str(rol_input)).first()
+
+        # si no se encontró, usar rol por defecto (intentamos id 2, si no existe creamos o usamos el primero)
+        if not rol_obj:
+            rol_obj = Rol.objects.filter(pk=2).first()
+            if not rol_obj:
+                rol_obj = Rol.objects.first()
+            if not rol_obj:
+                # crear un rol por defecto seguro
+                rol_obj = Rol.objects.create(nombrerol='User', descripcion='Usuario normal con permisos limitados')
+
         # Crear el perfil de usuario
         user_profile = UserProfile.objects.create(
             user=user,
@@ -94,10 +120,10 @@ def register_user(request):
             apellidos=data.get('apellidos'),
             nombre_usuario=user.username,
             celular=data.get('celular', ''),  # Campo opcional
-            correo_electronico=user.email,
-            conf_correo_electronico=user.email,
-            rol_id=data.get('rol', 1),  # Rol por defecto si no se proporcio
-             codigo_verificacion=codigo
+            correo_electronico=correo or user.email,
+            conf_correo_electronico=confirmar_correo or correo or user.email,
+            rol=rol_obj,
+            codigo_verificacion=codigo
         )
         
         # Serializar la respuesta
@@ -113,6 +139,8 @@ def register_user(request):
         return Response({
             'error': f'Error interno del servidor: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 def generar_codigo():
     """Generar un código de verificación aleatorio de 6 dígitos."""
     return str(random.randint(100000, 999999))
