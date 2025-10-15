@@ -123,3 +123,24 @@ class ProveedorSolicitud(models.Model):
 
     class Meta:
         db_table = 'proveedorsolicitud'
+
+
+class ProductosPersonalizados(models.Model):
+    # Ajustado para mapear a la tabla existente en la BD `productosperonalizaos`
+    idProductosPeronalizaos = models.BigAutoField(primary_key=True, db_column='idProductosPeronalizaos')
+    NombrePersonalizado = models.CharField(max_length=45, null=True, blank=True, db_column='NombrePersonalizado')
+    precioPersonalizado = models.FloatField(null=True, blank=True, db_column='precioPersonalizado')
+    rolProducto = models.CharField(max_length=45, null=True, blank=True, db_column='rolProducto')
+    stock = models.IntegerField(default=0, db_column='stock')
+    productos_idProductos = models.ForeignKey('Producto', on_delete=models.CASCADE, db_column='productos_idProductos')
+    urlFrontal = models.CharField(max_length=100, null=True, blank=True, db_column='urlFrontal')
+    urlEspadarl = models.CharField(max_length=100, null=True, blank=True, db_column='urlEspadarl')
+    urlMangaDerecha = models.CharField(max_length=100, null=True, blank=True, db_column='urlMangaDerecha')
+    urlMangaIzquierda = models.CharField(max_length=100, null=True, blank=True, db_column='urlMangaIzquierda')
+
+    class Meta:
+        db_table = 'productosperonalizaos'
+        managed = False  # usamos tabla existente
+
+    def __str__(self):
+        return self.NombrePersonalizado or f"Personalizado {self.idProductosPeronalizaos}"

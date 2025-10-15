@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 from .models import UserProfile, Project, Rol
-from .models import Tela, Estampado,  Producto, ProveedorSolicitud
+from .models import Tela, Estampado,  Producto, ProveedorSolicitud, ProductosPersonalizados
 
 class RolSerializer(serializers.ModelSerializer):
     class Meta:
@@ -74,6 +74,12 @@ class EstampadoSerializer(serializers.ModelSerializer):
 class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producto
+        fields = '__all__'
+
+
+class ProductosPersonalizadosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductosPersonalizados
         fields = '__all__'
 
 

@@ -13,6 +13,7 @@ import MyOrders from '../modules/dashboard/mis-pedidos';
 import Contact from '../modules/dashboard/contacto';
 import Shop from '../modules/dashboard/mis-pedidos';
 import Productos from './crudProductos';
+import ProductosPersonalizados from './crudProductosPersonalizados';
 import CrudProveedores from '../admin/CrudProveedores';
 
 // IMPORT CRUD de gestión
@@ -30,6 +31,7 @@ const App = () => {
     { id: 'purchase-history', name: 'Estadisticas', icon: <BarChart3 size={20} />, component: <PurchaseHistory /> },
     { id: 'personal-data', name: 'Usuarios', icon: <UserSearch size={20} />, component: <PersonalData /> },
     { id: 'productos-data', name: 'Productos', icon: <Package size={20} />, component: <Productos /> },
+  { id: 'productos-personalizados', name: 'Productos Personalizados', icon: <Package size={20} />, component: <ProductosPersonalizados /> },
     { id: 'my-orders', name: 'Pedidos', icon: <ShoppingCart size={20} />, component: <MyOrders /> },
     { id: 'contact', name: 'Facturas', icon: <NotepadTextDashed size={20} />, component: <Contact /> },
     { id: 'shop', name: 'Productos Shop', icon: <ShoppingCart size={20} />, component: <Shop /> },

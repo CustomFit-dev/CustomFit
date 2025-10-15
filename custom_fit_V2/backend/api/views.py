@@ -15,7 +15,9 @@ from django.contrib.auth.models import User
 import logging
 import string
 from django.core.mail import send_mail
-from .serializers import TelaSerializer,EstampadoSerializer,ProductoSerializer, ProveedorSolicitudSerializer
+from django.db import OperationalError
+from .serializers import TelaSerializer,EstampadoSerializer,ProductoSerializer, ProveedorSolicitudSerializer, ProductosPersonalizadosSerializer
+from .models import ProductosPersonalizados
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from functools import wraps;
@@ -563,6 +565,61 @@ def producto_list(request):
     productos = Producto.objects.all()
     serializer = ProductoSerializer(productos, many=True)
     return Response(serializer.data)
+
+
+# CRUD para Productos Personalizados
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+@admin_required
+def productos_personalizados_list(request):
+    try:
+        if request.method == 'GET':
+            items = ProductosPersonalizados.objects.all()
+            serializer = ProductosPersonalizadosSerializer(items, many=True)
+            return Response(serializer.data)
+        elif request.method == 'POST':
+            serializer = ProductosPersonalizadosSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except OperationalError as oe:
+        # probable migration / tabla no creada. Devolvemos lista vacía para no romper el frontend
+        logger.error(f"OperationalError in productos_personalizados_list (likely missing table): {str(oe)}")
+        return Response([], status=status.HTTP_200_OK)
+    except Exception as e:
+        logger.error(f"Error in productos_personalizados_list: {str(e)}")
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated])
+@admin_required
+def productos_personalizados_detail(request, pk):
+    try:
+        try:
+            item = ProductosPersonalizados.objects.get(pk=pk)
+        except ProductosPersonalizados.DoesNotExist:
+            return Response({'error': 'Producto personalizado no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+        if request.method == 'GET':
+            serializer = ProductosPersonalizadosSerializer(item)
+            return Response(serializer.data)
+        elif request.method == 'PUT':
+            serializer = ProductosPersonalizadosSerializer(item, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        elif request.method == 'DELETE':
+            item.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+    except OperationalError as oe:
+        logger.error(f"OperationalError in productos_personalizados_detail (likely missing table): {str(oe)}")
+        return Response({'error': 'Tabla productos_personalizados no encontrada. Ejecuta migraciones.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    except Exception as e:
+        logger.error(f"Error in productos_personalizados_detail: {str(e)}")
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 # 🔹 Obtener detalle de un producto (cualquier usuario autenticado)
