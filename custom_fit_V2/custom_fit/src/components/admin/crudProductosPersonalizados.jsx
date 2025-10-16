@@ -42,6 +42,12 @@ const CrudProductosPersonalizados = () => {
     urlMangaIzquierda: '',
   });
 
+  // NUEVOS estados para ver imágenes
+  const [openImgModal, setOpenImgModal] = useState(false); // ver imágenes del producto (urlFrontal, etc)
+  const [openEstampadosModal, setOpenEstampadosModal] = useState(false); // ver imágenes de estampados relacionados
+  const [selectedItem, setSelectedItem] = useState(null); // item seleccionado para ver imágenes del producto
+  const [selectedEstampados, setSelectedEstampados] = useState([]); // lista de estampados a mostrar
+
   useEffect(() => { fetchItems(); }, []);
 
   const fetchItems = async () => {
@@ -123,6 +129,27 @@ const CrudProductosPersonalizados = () => {
     }
   };
 
+  // Abrir modal para ver imágenes del producto (urlFrontal, urlEspaldar, urlMangas)
+  const verImagenesProducto = (item) => {
+    setSelectedItem(item);
+    setOpenImgModal(true);
+  };
+  const cerrarModalImagenProducto = () => {
+    setOpenImgModal(false);
+    setSelectedItem(null);
+  };
+
+  // Abrir modal para ver estampados relacionados
+  const verEstampados = (item) => {
+    // el serializer backend devuelve item.estampados como lista de objetos
+    setSelectedEstampados(item.estampados || []);
+    setOpenEstampadosModal(true);
+  };
+  const cerrarModalEstampados = () => {
+    setOpenEstampadosModal(false);
+    setSelectedEstampados([]);
+  };
+
   const filtered = items.filter(it => {
     const q = searchQuery.trim().toLowerCase();
     if (!q) return true;
@@ -157,6 +184,12 @@ const CrudProductosPersonalizados = () => {
                     <TableCell align="center" sx={{ color: 'white' }}>{it.stock}</TableCell>
                     <TableCell align="center" sx={{ color: 'white' }}>{it.productos_idProductos}</TableCell>
                     <TableCell align="center">
+                      {/* Ver imágenes del producto (urlFrontal, urlEspaldar, mangas) */}
+                      <Tooltip title="Ver imágenes del producto"><IconButton color="secondary" onClick={() => verImagenesProducto(it)}><Visibility /></IconButton></Tooltip>
+
+                      {/* Ver estampados relacionados */}
+                      <Tooltip title="Ver estampados"><IconButton color="primary" onClick={() => verEstampados(it)}><Visibility /></IconButton></Tooltip>
+
                       <Tooltip title="Editar"><IconButton color="primary" onClick={() => openEdit(it)}><Edit /></IconButton></Tooltip>
                       <Tooltip title="Eliminar"><IconButton color="error" onClick={() => erase(it.idProductosPeronalizaos)}><Delete /></IconButton></Tooltip>
                     </TableCell>
@@ -188,6 +221,94 @@ const CrudProductosPersonalizados = () => {
             <DialogActions sx={{ background: '#000', p: 2 }}>
               <Button onClick={closeForm} variant="outlined" startIcon={<Close />} sx={{ color: 'white', borderColor: '#17bebb' }}>Cancelar</Button>
               <Button onClick={save} variant="contained" startIcon={<Save />} sx={{ backgroundColor: '#17bebb', color: '#000' }}>{editMode ? 'Actualizar' : 'Guardar'}</Button>
+            </DialogActions>
+          </Dialog>
+
+          {/* Modal: imágenes del producto (urlFrontal, urlEspaldar, urlMangaIzquierda, urlMangaDerecha) */}
+          <Dialog open={openImgModal} onClose={cerrarModalImagenProducto} fullWidth maxWidth="md">
+            <DialogTitle sx={{ bgcolor: '#17bebb', color: 'white' }}>
+              Imágenes del producto
+            </DialogTitle>
+            <DialogContent sx={{ background: '#000' }}>
+              {selectedItem ? (
+                <Grid container spacing={2} justifyContent="center">
+                  {/*
+                    { label: 'Frontal', src: selectedItem.urlFrontal },
+                    { label: 'Espalda', src: selectedItem.urlEspadarl || selectedItem.urlEspaldar },
+                    { label: 'Manga Izquierda', src: selectedItem.urlMangaIzquierda },
+                    { label: 'Manga Derecha', src: selectedItem.urlMangaDerecha },
+                  */}
+                  {['Frontal', 'Espalda', 'Manga Izquierda', 'Manga Derecha'].map((label, i) => {
+                    const src = label === 'Frontal' ? selectedItem.urlFrontal :
+                              label === 'Espalda' ? selectedItem.urlEspadarl || selectedItem.urlEspaldar :
+                              label === 'Manga Izquierda' ? selectedItem.urlMangaIzquierda :
+                              label === 'Manga Derecha' ? selectedItem.urlMangaDerecha : '';
+                    return (
+                      <Grid item xs={12} sm={6} md={3} key={i} textAlign="center">
+                        <Typography sx={{ color: '#17bebb', mb: 1 }}>{label}</Typography>
+                        {src ? (
+                          <img
+                            src={src}
+                            alt={label}
+                            style={{
+                              width: '100%',
+                              height: 150,
+                              objectFit: 'cover',
+                              borderRadius: '10px',
+                              border: '2px solid #17bebb'
+                            }}
+                          />
+                        ) : (
+                          <Typography color="gray">Sin imagen</Typography>
+                        )}
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              ) : (
+                <Typography color="white">No hay imágenes para mostrar</Typography>
+              )}
+            </DialogContent>
+            <DialogActions sx={{ background: '#000', p: 2 }}>
+              <Button onClick={cerrarModalImagenProducto} variant="contained" startIcon={<Close />} sx={{ backgroundColor: '#17bebb', color: '#000' }}>Cerrar</Button>
+            </DialogActions>
+          </Dialog>
+
+          {/* Modal: imágenes de estampados relacionados */}
+          <Dialog open={openEstampadosModal} onClose={cerrarModalEstampados} fullWidth maxWidth="md">
+            <DialogTitle sx={{ bgcolor: '#17bebb', color: 'white' }}>
+              Estampados relacionados
+            </DialogTitle>
+            <DialogContent sx={{ background: '#000' }}>
+              {selectedEstampados && selectedEstampados.length > 0 ? (
+                <Grid container spacing={2} justifyContent="center">
+                  {selectedEstampados.map((est, idx) => (
+                    <Grid item xs={12} sm={6} md={3} key={idx} textAlign="center">
+                      <Typography sx={{ color: '#17bebb', mb: 1 }}>{est.NombreEstampado || est.nombrE || `Estampado ${est.idEstampado || idx}`}</Typography>
+                      {est.ImgEstampado ? (
+                        <img
+                          src={est.ImgEstampado}
+                          alt={est.NombreEstampado || `Estampado ${idx}`}
+                          style={{
+                            width: '100%',
+                            height: 150,
+                            objectFit: 'cover',
+                            borderRadius: '10px',
+                            border: '2px solid #17bebb'
+                          }}
+                        />
+                      ) : (
+                        <Typography color="gray">Sin imagen</Typography>
+                      )}
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Typography color="white">No hay estampados asociados</Typography>
+              )}
+            </DialogContent>
+            <DialogActions sx={{ background: '#000', p: 2 }}>
+              <Button onClick={cerrarModalEstampados} variant="contained" startIcon={<Close />} sx={{ backgroundColor: '#17bebb', color: '#000' }}>Cerrar</Button>
             </DialogActions>
           </Dialog>
 

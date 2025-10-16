@@ -78,9 +78,12 @@ class ProductoSerializer(serializers.ModelSerializer):
 
 
 class ProductosPersonalizadosSerializer(serializers.ModelSerializer):
+    # Incluir estampados relacionados (ImgEstampado, NombreEstampado, id, etc.)
+    estampados = EstampadoSerializer(many=True, read_only=True)
+
     class Meta:
         model = ProductosPersonalizados
-        fields = '__all__'
+        fields = '__all__'  # la declaración de 'estampados' será agregada automáticamente al serializer
 
 
 class UserSerializer(serializers.ModelSerializer):

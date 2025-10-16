@@ -137,6 +137,7 @@ class ProductosPersonalizados(models.Model):
     urlEspadarl = models.CharField(max_length=100, null=True, blank=True, db_column='urlEspadarl')
     urlMangaDerecha = models.CharField(max_length=100, null=True, blank=True, db_column='urlMangaDerecha')
     urlMangaIzquierda = models.CharField(max_length=100, null=True, blank=True, db_column='urlMangaIzquierda')
+    estampados = models.ManyToManyField('Estampado', through='ProductosPersonalizadosHasEstampado', related_name='personalizados', blank=True)
 
     class Meta:
         db_table = 'productosperonalizaos'
@@ -144,3 +145,14 @@ class ProductosPersonalizados(models.Model):
 
     def __str__(self):
         return self.NombrePersonalizado or f"Personalizado {self.idProductosPeronalizaos}"
+
+
+# Nuevo modelo que representa la tabla intermedia existente
+class ProductosPersonalizadosHasEstampado(models.Model):
+    ProductosPeronalizaos_idProductosPeronalizaos = models.ForeignKey(ProductosPersonalizados, db_column='ProductosPeronalizaos_idProductosPeronalizaos', on_delete=models.CASCADE)
+    estampado_idEstampado = models.ForeignKey(Estampado, db_column='estampado_idEstampado', on_delete=models.CASCADE)
+
+    class Meta:
+        db_table = 'productosperonalizaos_has_estampado'
+        managed = False
+        unique_together = (('ProductosPeronalizaos_idProductosPeronalizaos','estampado_idEstampado'),)
