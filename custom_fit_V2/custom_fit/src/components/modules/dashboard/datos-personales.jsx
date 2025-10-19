@@ -1,6 +1,7 @@
+// src/components/dashboard/perfil/PersonalDataForm.js
 import React, { useState, useRef, useEffect } from 'react';
 import '../../../scss/DatosPersonales.scss';
-
+import axios from 'axios';
 import {
   TextField,
   Button,
@@ -10,6 +11,11 @@ import {
   Paper,
   Grid,
   Divider,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useAuth } from '../authcontext';
@@ -25,7 +31,9 @@ const theme = createTheme({
 });
 
 function PersonalDataForm() {
-  const { user } = useAuth();
+  const { user, logout, authToken } = useAuth();
+  const [openDialog, setOpenDialog] = useState(false);
+  const fileInputRef = useRef(null);
 
   const nombre = (user?.nombres || '').split(' ')[0];
   const apellido = (user?.apellidos || '').split(' ')[0];
@@ -42,7 +50,6 @@ function PersonalDataForm() {
   const [formData, setFormData] = useState(initialData);
   const [formDataOriginal, setFormDataOriginal] = useState(initialData);
   const [profileImage, setProfileImage] = useState(null);
-  const fileInputRef = useRef(null);
 
   useEffect(() => {
     setFormData(initialData);
@@ -57,7 +64,6 @@ function PersonalDataForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('Datos guardados:', formData);
-    console.log('Imagen subida:', profileImage);
     setFormDataOriginal(formData);
   };
 
@@ -66,9 +72,7 @@ function PersonalDataForm() {
     setProfileImage(null);
   };
 
-  const handleAvatarClick = () => {
-    fileInputRef.current.click();
-  };
+  const handleAvatarClick = () => fileInputRef.current.click();
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -76,6 +80,30 @@ function PersonalDataForm() {
       const reader = new FileReader();
       reader.onloadend = () => setProfileImage(reader.result);
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!user?.id) {
+      console.error('⚠ No se encontró el ID del usuario');
+      return;
+    }
+
+    try {
+      // Si usas autenticación con token, inclúyelo aquí
+      const headers = authToken ? { Authorization: `Bearer ${authToken}` } : {};
+
+      const response = await axios.delete(
+        `http://localhost:8000/api/delete-user/${user.id}/`,
+        { headers }
+      );
+
+      console.log('✅ Cuenta eliminada:', response.data);
+
+      logout(); // cerrar sesión
+      window.location.href = '/'; // redirigir al inicio
+    } catch (error) {
+      console.error('❌ Error al eliminar la cuenta:', error.response?.data || error.message);
     }
   };
 
@@ -87,7 +115,6 @@ function PersonalDataForm() {
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xl" sx={{ py: 6 }}>
         <Paper
-          className="Cajaaaaa"
           elevation={3}
           sx={{
             p: 5,
@@ -98,6 +125,7 @@ function PersonalDataForm() {
           }}
         >
           <Grid container spacing={4} alignItems="center">
+            {/* Avatar y correo */}
             <Grid
               item
               xs={12}
@@ -145,6 +173,7 @@ function PersonalDataForm() {
               }}
             />
 
+            {/* Formulario */}
             <Grid item xs={12} md={8}>
               <Typography
                 variant="h5"
@@ -180,7 +209,7 @@ function PersonalDataForm() {
                     ))
                   )}
 
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={4}>
                     <Button
                       type="submit"
                       variant="contained"
@@ -200,7 +229,8 @@ function PersonalDataForm() {
                       Guardar
                     </Button>
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+
+                  <Grid item xs={12} sm={4}>
                     <Button
                       onClick={handleCancel}
                       variant="outlined"
@@ -222,11 +252,56 @@ function PersonalDataForm() {
                       Cancelar
                     </Button>
                   </Grid>
+
+                  <Grid item xs={12} sm={4}>
+                    <Button
+                      onClick={() => setOpenDialog(true)}
+                      variant="outlined"
+                      color="error"
+                      fullWidth
+                      sx={{
+                        borderRadius: 2,
+                        borderColor: '#ff4d4d',
+                        color: '#ff4d4d',
+                        textTransform: 'none',
+                        fontSize: '1rem',
+                        py: 1.3,
+                        '&:hover': {
+                          bgcolor: '#ff4d4d',
+                          color: '#000',
+                        },
+                      }}
+                    >
+                      Eliminar cuenta
+                    </Button>
+                  </Grid>
                 </Grid>
               </form>
             </Grid>
           </Grid>
         </Paper>
+
+        {/* Modal de confirmación */}
+        <Dialog
+          open={openDialog}
+          onClose={() => setOpenDialog(false)}
+          PaperProps={{ sx: { bgcolor: '#1c1c1c', color: '#fff' } }}
+        >
+          <DialogTitle>Eliminar cuenta</DialogTitle>
+          <DialogContent>
+            <DialogContentText sx={{ color: '#ccc' }}>
+              ¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenDialog(false)} sx={{ color: '#17BEBB' }}>
+              Cancelar
+            </Button>
+            <Button onClick={handleDeleteAccount} sx={{ color: '#ff4d4d' }}>
+              Eliminar
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </ThemeProvider>
   );

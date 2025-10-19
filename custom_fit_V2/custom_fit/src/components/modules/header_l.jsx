@@ -1,6 +1,6 @@
 // src/components/Header.jsx
 import React from 'react';
-import { useAuth } from './authcontext'; // Asegúrate de la ruta correcta
+import { useAuth } from './authcontext';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,6 +13,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
+import Divider from '@mui/material/Divider';
 import { Link, useNavigate } from 'react-router-dom';
 import logo from './mod_img/Logo-prin-f.png';
 import { ThemeProvider } from '@mui/material/styles';
@@ -20,11 +21,7 @@ import theme from './Themes';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import BuildIcon from '@mui/icons-material/Build';
-import SupportAgentIcon from '@mui/icons-material/SupportAgent';
-import DesignServicesIcon from '@mui/icons-material/DesignServices';
-import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import Divider from '@mui/material/Divider';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 const pages = [
   { name: 'Inicio', route: '/Home_L#home' },
@@ -37,10 +34,7 @@ const pages = [
 
 const settings = [
   { name: 'Perfil', route: '/Profile', icon: <AccountCircleIcon /> },
-  { name: 'Mis Pedidos', route: '#', icon: <LocalShippingIcon /> },
-  { name: 'Mis Diseños', route: '#', icon: <DesignServicesIcon /> },
-  { name: 'Crud', route: '/Crud', icon: <BuildIcon /> },
-  { name: 'Soporte', route: '#soporte', icon: <SupportAgentIcon /> },
+  { name: 'Administracion', route: '/admin', icon: <AdminPanelSettingsIcon /> },
   { name: 'Cerrar sesión', route: '#', icon: <ExitToAppIcon /> },
 ];
 
@@ -72,23 +66,37 @@ function Header_l() {
     navigate('/Home');
   };
 
-  // Función genérica para hacer scroll suave a un id en /Home_L
   const handleScrollToId = (id) => {
     if (window.location.pathname !== '/Home_L') {
       navigate('/Home_L');
       setTimeout(() => {
         const elem = document.getElementById(id);
-        if (elem) {
-          elem.scrollIntoView({ behavior: 'smooth' });
-        }
+        if (elem) elem.scrollIntoView({ behavior: 'smooth' });
       }, 100);
     } else {
       const elem = document.getElementById(id);
-      if (elem) {
-        elem.scrollIntoView({ behavior: 'smooth' });
-      }
+      if (elem) elem.scrollIntoView({ behavior: 'smooth' });
     }
     handleCloseNavMenu();
+  };
+
+  // Estilo común para todos los botones del menú
+  const menuButtonStyles = {
+    my: 2,
+    color: 'white',
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+    '&:hover': {
+      color: '#ffffff',
+    },
+  };
+
+  const textStyles = {
+    ml: 1,
+    color: 'white',
+    transition: 'color 0.3s ease',
+    '&:hover': { color: '#17BEBB' },
   };
 
   return (
@@ -96,7 +104,7 @@ function Header_l() {
       <AppBar position="static" sx={{ zIndex: 1300 }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters sx={{ zIndex: 1300 }}>
-            {/* Logo en pantallas grandes */}
+            {/* Logo grande */}
             <Typography
               variant="h6"
               noWrap
@@ -115,7 +123,7 @@ function Header_l() {
               <img src={logo} alt="logo" id="logo" />
             </Typography>
 
-            {/* Menú desplegable en pantallas pequeñas */}
+            {/* Menú pequeño */}
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
               <IconButton
                 size="large"
@@ -130,30 +138,20 @@ function Header_l() {
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
                 keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
-                }}
+                transformOrigin={{ vertical: 'top', horizontal: 'left' }}
                 open={Boolean(anchorElNav)}
                 onClose={handleCloseNavMenu}
-                sx={{
-                  display: { xs: 'block', md: 'none' },
-                }}
+                sx={{ display: { xs: 'block', md: 'none' } }}
               >
                 {pages.map((page) => (
                   <MenuItem
                     key={page.name}
                     onClick={() => {
-                      if (page.name === 'Comentarios') {
-                        handleScrollToId('comentarios');
-                      } else if (page.name === '¿Como personalizar?') {
-                        handleScrollToId('video');
-                      } else {
+                      if (page.name === 'Comentarios') handleScrollToId('comentarios');
+                      else if (page.name === '¿Como personalizar?') handleScrollToId('video');
+                      else {
                         handleCloseNavMenu();
                         if (page.route) navigate(page.route);
                       }
@@ -167,7 +165,7 @@ function Header_l() {
               </Menu>
             </Box>
 
-            {/* Logo en pantallas pequeñas */}
+            {/* Logo pequeño */}
             <Typography
               variant="h5"
               noWrap
@@ -187,7 +185,7 @@ function Header_l() {
               <img src={logo} alt="logo" id="logo" />
             </Typography>
 
-            {/* Botones de navegación en pantallas grandes */}
+            {/* Botones grandes */}
             <Box
               sx={{
                 flexGrow: 1,
@@ -199,54 +197,30 @@ function Header_l() {
               {pages.map((page) => {
                 if (page.name === 'Comentarios') {
                   return (
-                    <Button
-                      key={page.name}
-                      onClick={() => handleScrollToId('comentarios')}
-                      sx={{
-                        my: 2,
-                        color: 'white',
-                        display: 'flex',
-                        alignItems: 'center',
-                        cursor: 'pointer',
-                      }}
-                    >
+                    <Button key={page.name} onClick={() => handleScrollToId('comentarios')} sx={menuButtonStyles}>
                       {page.icon}
-                      <Typography sx={{ ml: 1 }}>{page.name}</Typography>
+                      <Typography sx={textStyles}>{page.name}</Typography>
                     </Button>
                   );
                 } else if (page.name === '¿Como personalizar?') {
                   return (
-                    <Button
-                      key={page.name}
-                      onClick={() => handleScrollToId('video')}
-                      sx={{
-                        my: 2,
-                        color: 'white',
-                        display: 'flex',
-                        alignItems: 'center',
-                        cursor: 'pointer',
-                      }}
-                    >
+                    <Button key={page.name} onClick={() => handleScrollToId('video')} sx={menuButtonStyles}>
                       {page.icon}
-                      <Typography sx={{ ml: 1 }}>{page.name}</Typography>
+                      <Typography sx={textStyles}>{page.name}</Typography>
+                    </Button>
+                  );
+                } else {
+                  return (
+                    <Button key={page.name} component={Link} to={page.route} sx={menuButtonStyles}>
+                      {page.icon}
+                      <Typography sx={textStyles}>{page.name}</Typography>
                     </Button>
                   );
                 }
-                return (
-                  <Button
-                    key={page.name}
-                    component={Link}
-                    to={page.route}
-                    sx={{ my: 2, color: 'white', display: 'flex', alignItems: 'center' }}
-                  >
-                    {page.icon}
-                    <Typography sx={{ ml: 1 }}>{page.name}</Typography>
-                  </Button>
-                );
               })}
             </Box>
 
-            {/* Icono de usuario y menú de configuraciones */}
+            {/* Usuario */}
             <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
               {isAuthenticated && (
                 <>
@@ -269,31 +243,29 @@ function Header_l() {
                 sx={{ mt: '45px' }}
                 id="menu-appbar"
                 anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                 keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting, index) => (
                   <React.Fragment key={setting.name}>
                     {index === 3 && <Divider />}
-                    <MenuItem onClick={setting.name === 'Cerrar sesión' ? handleLogout : handleCloseUserMenu}>
+                    <MenuItem
+                      onClick={() => {
+                        handleCloseUserMenu();
+                        if (setting.name === 'Cerrar sesión') {
+                          handleLogout();
+                        } else if (setting.route && setting.route !== '#' && setting.route !== '') {
+                          navigate(setting.route);
+                        }
+                      }}
+                      sx={{ display: 'flex', alignItems: 'center' }}
+                    >
                       {setting.icon}
                       <Typography textAlign="center" sx={{ ml: 1 }}>
-                        {setting.name !== 'Cerrar sesión' ? (
-                          <Link to={setting.route} style={{ textDecoration: 'none', color: 'inherit' }}>
-                            {setting.name}
-                          </Link>
-                        ) : (
-                          setting.name
-                        )}
+                        {setting.name}
                       </Typography>
                     </MenuItem>
                   </React.Fragment>

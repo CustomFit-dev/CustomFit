@@ -12,18 +12,20 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import logo from './mod_img/Logo-prin-f.png';
-import Form from './Iniciar'; 
-import RegisterForm from './Registrar'; 
+import Form from './Iniciar';
+import RegisterForm from './Registrar';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './Themes';
 import ReactDOM from 'react-dom';
+import Swal from 'sweetalert2';
+
 
 const pages = [
   { name: 'Inicio', route: '/Home' },
   { name: 'Nosotros', route: '#sobre' },
-  { name: 'Productos', route: '#prod' },
+  { name: 'Tienda', route: '/Tienda' },  
 ];
 
 const settings = [
@@ -36,6 +38,8 @@ function Header() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [isFormVisible, setFormVisible] = React.useState(false);
   const [formType, setFormType] = React.useState('login');
+
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -62,13 +66,55 @@ function Header() {
     setFormVisible(false);
   };
 
+  // Función para hacer scroll lento a sec1
+  const scrollToSec1 = () => {
+    const sec1 = document.getElementById('sec1');
+    if (sec1) {
+      sec1.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Maneja clicks en menú
+  const handlePageClick = (page) => {
+    handleCloseNavMenu();
+
+    if (page.name === 'Inicio') {
+      navigate('/Home');
+      setTimeout(() => {
+        scrollToSec1();  // Scroll suave solo a sec1
+      }, 300);
+    } else if (page.name === 'Tienda') {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Debes iniciar sesión',
+        text: 'Para acceder a la tienda necesitas iniciar sesión primero.',
+        showCancelButton: true,
+        confirmButtonText: 'Iniciar sesión',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          handleOpenForm('login');  // Abre modal login
+        }
+      });
+    } else if (page.route.startsWith('#')) {
+      const id = page.route.replace('#', '');
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      navigate(page.route);
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <header>
         <AppBar position="static" className="custom-appbar">
           <Container maxWidth="xl">
             <Toolbar disableGutters className="custom-toolbar">
-              <Typography variant="h6" noWrap component={Link} to="/Home" className="logo-text-large">
+              <Typography variant="h6" noWrap component="div" className="logo-text-large" sx={{ cursor: 'pointer' }} onClick={() => handlePageClick(pages[0])}>
                 <img src={logo} alt="logo" id="logo" />
               </Typography>
 
@@ -78,22 +124,29 @@ function Header() {
                 </IconButton>
                 <Menu anchorEl={anchorElNav} open={Boolean(anchorElNav)} onClose={handleCloseNavMenu}>
                   {pages.map((page) => (
-                    <MenuItem key={page.name} onClick={handleCloseNavMenu}>
-                      <Typography textAlign="center">
-                        <Link to={page.route} style={{ textDecoration: 'none', color: 'inherit' }}>{page.name}</Link>
+                    <MenuItem key={page.name} onClick={() => handlePageClick(page)}>
+                      <Typography textAlign="center" sx={{ color: 'white' }}>
+                        {page.name}
                       </Typography>
                     </MenuItem>
                   ))}
                 </Menu>
               </Box>
 
-              <Typography variant="h5" noWrap component={Link} to="/Home" className="logo-text-small">
+              <Typography variant="h5" noWrap component="div" className="logo-text-small" sx={{ cursor: 'pointer' }} onClick={() => handlePageClick(pages[0])}>
                 <img src={logo} alt="logo" id="logo" />
               </Typography>
 
               <Box className="menu-buttons">
                 {pages.map((page) => (
-                  <Button key={page.name} component={Link} to={page.route} className="nav-button">{page.name}</Button>
+                  <Button
+                    key={page.name}
+                    onClick={() => handlePageClick(page)}
+                    className="nav-button"
+                    sx={{ color: 'white' }} // Texto blanco
+                  >
+                    {page.name}
+                  </Button>
                 ))}
               </Box>
 
@@ -115,7 +168,7 @@ function Header() {
           </Container>
         </AppBar>
 
-                {isFormVisible && ReactDOM.createPortal(
+        {isFormVisible && ReactDOM.createPortal(
           <div className="overlay">
             <div className="form-container">
               {formType === 'login' ? <Form onClose={handleCloseForm} /> : <RegisterForm onClose={handleCloseForm} />}

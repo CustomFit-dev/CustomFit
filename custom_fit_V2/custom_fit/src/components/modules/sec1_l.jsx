@@ -38,7 +38,7 @@ const Section = () => {
                 />
               </span>
               <div className='buttons'>
-                <button className='btn btn-outline-primary' onClick={handleDesignClick}>Diseñar ya</button>
+                <button className='btn btn-secondary' onClick={handleDesignClick}>Diseñar ya</button>
                 <button className='btn btn-secondary' onClick={handleStoreClick}>Tienda</button>
               </div>
             </div>

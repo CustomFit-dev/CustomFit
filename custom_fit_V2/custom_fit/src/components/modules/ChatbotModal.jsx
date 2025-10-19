@@ -12,9 +12,8 @@ const ChatbotModal = ({ open, handleClose }) => {
       text:
         'Hola, ¿en qué puedo ayudarte?\n' +
         '1. Quiero contactarlos\n' +
-        '2. Quiero ser proveedor\n' +
-        '3. Quiero diseñar una camiseta\n' +
-        '4. Ver catálogo',
+        '2. Quiero diseñar una camiseta\n' +
+        '3. Ver catálogo de productos',
     },
   ]);
   const [context, setContext] = useState('main');
@@ -28,9 +27,8 @@ const ChatbotModal = ({ open, handleClose }) => {
         text:
           'Hola, ¿en qué puedo ayudarte?\n' +
           '1. Quiero contactarlos\n' +
-          '2. Quiero ser proveedor\n' +
-          '3. Quiero diseñar una camiseta\n' +
-          '4. Ver catálogo',
+          '2. Quiero diseñar una camiseta\n' +
+          '3. Ver catálogo de productos',
       },
     ]);
     setContext('main');
@@ -59,19 +57,11 @@ const ChatbotModal = ({ open, handleClose }) => {
           }, 1500);
           break;
         case '2':
-          botReply = 'Perfecto. Abriendo formulario de proveedor...';
-          setTimeout(() => {
-            navigate('/FormProveedor'); // <- esta es la ruta que debes tener en tu App.js o Routes.jsx
-            resetChat();
-            handleClose();
-          }, 1500);
-          break;
-        case '3':
           botReply =
             '¿Qué tipo de diseño te interesa?\n1. Subir mi propio diseño\n2. Usar plantillas\n3. Ver ejemplos';
           nextContext = 'design-options';
           break;
-        case '4':
+        case '3':
           botReply = 'Redirigiéndote al catálogo...';
           setTimeout(() => {
             navigate('/Store');
@@ -80,7 +70,7 @@ const ChatbotModal = ({ open, handleClose }) => {
           }, 1500);
           break;
         default:
-          botReply = 'No entendí esa opción. Por favor responde con un número del 1 al 4.';
+          botReply = 'No entendí esa opción. Por favor responde con un número del 1 al 3.';
       }
     } else if (context === 'design-options') {
       switch (trimmed) {
@@ -155,7 +145,12 @@ const ChatbotModal = ({ open, handleClose }) => {
               if (e.key === 'Enter') handleSend();
             }}
           />
-          <Button variant="contained" color="primary" className="send-button" onClick={handleSend}>
+          <Button
+            variant="contained"
+            color="primary"
+            className="send-button"
+            onClick={handleSend}
+          >
             Enviar
           </Button>
         </div>

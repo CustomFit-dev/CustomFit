@@ -8,7 +8,6 @@ import Sec3 from './modules/sec3_l'; // Video o contenido multimedia
 import Sec4 from './modules/comen'; // Comentarios o reseñas
 import Floating from './modules/FloatingButton_l'; // Botón flotante
 import Footer from './modules/footer'; // Pie de página
-import Propuesta from './modules/propuesta'; // Propuesta de valor
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -42,7 +41,6 @@ const Home = () => {
           </div>
           <Sec2 />
           <div id="video">
-            <Propuesta />
             <Sec3 />
           </div>
           <div id="comentarios">

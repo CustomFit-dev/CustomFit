@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../scss/dashboard.scss';
 import {
-  User, Edit, UserSearch, ShoppingCart, BarChart3,
-  Shield, Package, NotepadTextDashed, CreditCard, LogOut, Menu, 
-  ChevronDown, ChevronUp, Layers, Palette, Shirt, Ruler, Scissors
+  LogOut, UserSearch, ShoppingCart, BarChart3,
+  Package, Menu, ChevronDown, Layers, Palette, Shirt, Ruler, Scissors
 } from 'lucide-react';
 
 // Import component modules
 import PersonalData from '../Crud';
 import PurchaseHistory from './estadisticas';
 import MyOrders from '../modules/dashboard/mis-pedidos';
-import Contact from '../modules/dashboard/contacto';
-import Shop from '../modules/dashboard/mis-pedidos';
 import Productos from './crudProductos';
 import ProductosPersonalizados from './crudProductosPersonalizados';
-import CrudProveedores from '../admin/CrudProveedores';
 
 // IMPORT CRUD de gestión
 import TelasCrud from './CrudTela';
@@ -26,16 +23,15 @@ const App = () => {
   const [activeMenu, setActiveMenu] = useState('Estadisticas');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
+  const navigate = useNavigate();
 
+  // ✅ Eliminados: Proveedores, Facturas y Productos Shop
   const menuItems = [
     { id: 'purchase-history', name: 'Estadisticas', icon: <BarChart3 size={20} />, component: <PurchaseHistory /> },
     { id: 'personal-data', name: 'Usuarios', icon: <UserSearch size={20} />, component: <PersonalData /> },
     { id: 'productos-data', name: 'Productos', icon: <Package size={20} />, component: <Productos /> },
-  { id: 'productos-personalizados', name: 'Productos Personalizados', icon: <Package size={20} />, component: <ProductosPersonalizados /> },
+    { id: 'productos-personalizados', name: 'Productos Personalizados', icon: <Package size={20} />, component: <ProductosPersonalizados /> },
     { id: 'my-orders', name: 'Pedidos', icon: <ShoppingCart size={20} />, component: <MyOrders /> },
-    { id: 'contact', name: 'Facturas', icon: <NotepadTextDashed size={20} />, component: <Contact /> },
-    { id: 'shop', name: 'Productos Shop', icon: <ShoppingCart size={20} />, component: <Shop /> },
-    { id: 'proveedores-data', name: 'Proveedores', icon: <User size={20} />, component: <CrudProveedores /> },
   ];
 
   // Gestión subitems con iconos específicos
@@ -61,6 +57,12 @@ const App = () => {
     }
   };
 
+  const handleLogout = () => {
+    // Aquí podrías limpiar auth si usas contexto
+    // logout(); 
+    navigate('/home_l'); // Redirige al Home
+  };
+
   return (
     <div className="app-container">
       <div className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
@@ -79,7 +81,7 @@ const App = () => {
             </div>
           ))}
 
-          {/* Gestión Dropdown Mejorado */}
+          {/* Gestión Dropdown */}
           <div className="gestion-dropdown">
             <div
               className={`menu-item gestion-header ${openDropdown ? 'open' : ''}`}
@@ -113,14 +115,22 @@ const App = () => {
 
       <div className="main-content">
         <div className="header">
-          <button className="menu-toggle" onClick={toggleSidebar}>
+          <button className="menu-toggle" onClick={toggleSidebar} aria-label="Toggle menu">
             <Menu size={24} />
           </button>
           <h2>Panel de Administración</h2>
-          <div className="user-avatar">
-            <User size={24} />
-          </div>
+
+          {/* 🔹 Botón de administración con estilo user-avatar */}
+          <button
+            className="user-avatar"
+            onClick={handleLogout}
+            title="Salir del panel"
+            aria-label="Salir"
+          >
+            <LogOut sx={{ color: 'white' }} fontSize="medium" />
+          </button>
         </div>
+
         <div className="content-area">
           <div className="content-module">
             {activeComponent}

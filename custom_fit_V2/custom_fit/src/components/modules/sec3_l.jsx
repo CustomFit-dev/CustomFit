@@ -44,66 +44,79 @@ const CustomStepIcon = (props) => {
 
 // Sección 3 que acepta textos personalizados
 const Section3 = ({ steps }) => {
-    return (
-      <section className='sec3l' id='prod'>
-          <div  className="sec3texto1">
-              <h1>¿Cómo personalizar tus camisetas con CustomFit?</h1>
-              <p style={{ color: '#ffffff', fontSize: '0.9rem', marginTop: '8px',fontFamily: 'rubik' }}>
-                  Sigue los pasos a continuación para diseñar tus camisetas de forma sencilla y rápida.
-              </p>
-          </div>
-          <Box
-            sx={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              alignItems: 'center',
-              '& > :not(style)': {
-                m: 6,
-                width: 390,
-                height: 300,
-                backgroundColor: 'transparent',
-                border: 'none',
-                boxShadow: 'none',
-                
-              },
-            }}
-          >
-            <Paper className="paper"  elevation={0} style={{ backgroundImage: `url(${image1})` }} />
-            <Paper className="paper"  style={{ backgroundImage: `url(${image2})` }} />
-            <Paper className="paper"  elevation={3} style={{ backgroundImage: `url(${image3})` }} />
-          </Box>
-          <Box sx={{ width: '100%', marginTop: 4 }}>
-            <Stepper 
-              activeStep={1} 
-              alternativeLabel 
-              connector={<CustomConnector />}
-            >
-              {steps.map((step, index) => (
-                <Step key={step.label}>
-                  <StepLabel 
-                    StepIconComponent={CustomStepIcon} 
-                    sx={{ 
-                      '& .MuiStepLabel-label': { color: '#ffffff' },
-                      '& .MuiStepLabel-labelContainer': {
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        fontFamily: 'rubik',
-                      }
-                    }} // Color blanco para el texto
-                  >
-                    <h2 style={{ margin: 0, color: '#ffffff' }}>{step.label}</h2>
-                    <h3 style={{ fontSize: '0.8rem', color: '#ffffff99', marginTop: '4px', margin: 0 }}>
-                      {step.description}
-                    </h3>
-                  </StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-          </Box>
-      </section>
-    );
+  return (
+    <section className='sec3l' id='prod'>
+      <div className="sec3texto1">
+        <h1>¿Cómo personalizar tus camisetas con CustomFit?</h1>
+        <p style={{ color: '#ffffff', fontSize: '0.9rem', marginTop: '8px', fontFamily: 'rubik' }}>
+          Sigue los pasos a continuación para diseñar tus camisetas de forma sencilla y rápida.
+        </p>
+      </div>
+      <Box
+        sx={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          alignItems: 'center',
+          '& > :not(style)': {
+            m: 6,
+            width: 400,
+            height: 300,
+            backgroundColor: 'transparent',
+            border: 'none',
+            boxShadow: 'none',
+
+          },
+        }}
+      >
+        <Paper className="paper" elevation={0} style={{
+          backgroundImage: `url(${image1})`,
+          position: 'relative',
+          left: '50px',
+        }} />
+        <Paper className="paper" style={{
+          backgroundImage: `url(${image2})`,
+          position: 'relative',
+          left: '50px',
+        }} />
+        <Paper className="paper" elevation={3} style={{
+          backgroundImage: `url(${image3})`,
+          position: 'relative',
+          left: '50px',
+        }}
+        />
+      </Box>
+      <Box sx={{ width: '100%', marginTop: 1 }}>
+        <Stepper
+          activeStep={1}
+          alternativeLabel
+          connector={<CustomConnector />}
+        >
+          {steps.map((step, index) => (
+            <Step key={step.label}>
+              <StepLabel
+                StepIconComponent={CustomStepIcon}
+                sx={{
+                  '& .MuiStepLabel-label': { color: '#ffffff' },
+                  '& .MuiStepLabel-labelContainer': {
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    fontFamily: 'rubik',
+                  }
+                }} // Color blanco para el texto
+              >
+                <h2 style={{ margin: 0, color: '#ffffff' }}>{step.label}</h2>
+                <h3 style={{ fontSize: '0.8rem', color: '#ffffff99', marginTop: '4px', margin: 0 }}>
+                  {step.description}
+                </h3>
+              </StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+      </Box>
+    </section>
+  );
 };
 
 // Ejemplo de cómo utilizar el componente con los textos actualizados
