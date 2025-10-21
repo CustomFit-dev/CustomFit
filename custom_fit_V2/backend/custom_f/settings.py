@@ -104,11 +104,11 @@ WSGI_APPLICATION = 'custom_f.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'customfit_d3',  
-        'USER': 'root',           
-        'PASSWORD': '',           
-        'HOST': '127.0.0.1',     
-        'PORT': '3306',          
+        'NAME': os.environ.get('DATABASE_NAME', 'customfit_d3'),
+        'USER': os.environ.get('DATABASE_USER', 'root'),
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD', ''),
+        'HOST': os.environ.get('DATABASE_HOST', '127.0.0.1'),
+        'PORT': os.environ.get('DATABASE_PORT', '3306'),
     }
 }
 
