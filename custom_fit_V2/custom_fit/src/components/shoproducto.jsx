@@ -5,7 +5,7 @@ import IconButton1 from '@mui/material/IconButton';
 import CloseIcon1 from '@mui/icons-material/Close';
 import styled from 'styled-components';
 
-const CamisetaCard = ({estado, cambiarEstado}) => {
+const CamisetaCard = ({estado, cambiarEstado, producto}) => {
   
   return (
     <>
@@ -13,17 +13,15 @@ const CamisetaCard = ({estado, cambiarEstado}) => {
     <Overlay>
     <div className="card-container">  
       {/* Imagen de la camiseta */}
-      <div className="image-section">
-      
-        <div className="discount-tag">30%</div>
+  <div className="image-section">
         <div style={{ position: 'relative' }}>
   <IconButton1 className="salirx1" onClick={() => cambiarEstado()}>
     <CloseIcon1 />
   </IconButton1>
 </div>
         <img
-          src={img} // Cambia este link por la URL de tu imagen
-          alt="Camiseta"
+          src={producto?.imagen || img} // usar imagen del producto si viene
+          alt={producto?.titulo || 'Camiseta'}
           className="shirt-image"
         />
       </div>
@@ -33,38 +31,58 @@ const CamisetaCard = ({estado, cambiarEstado}) => {
           {/* Sección izquierda: Precio y estrellas */}
           <div className="left-section">
             <div className="price-section">
-            <h2>Camiseta Sencilla</h2>
-        <p className="descripc">Camiseta con estampado color negro</p>
-              <span className="old-price">$75.000</span>
-              <span className="current-price">$45.000</span>
+            <h2>{producto?.titulo || 'Camiseta'}</h2>
+        <p className="descripc">{producto?.descripcion || 'Descripción no disponible'}</p>
+              <span className="current-price">${(producto?.precio || producto?.raw?.precioPersonalizado || 0).toLocaleString()}</span>
             </div>
             
           </div>
 
-          {/* Línea vertical entre detalles y botón */}
-     <div className="vertical-divider-below"></div>
+    {/* Línea vertical entre detalles y botón */}
+  <div className="vertical-divider-below"></div>
 
           {/* Sección derecha: Detalles */}
           <div className="right-section">
-            <div className="detail">
-              <strong>Talla:</strong> <span className="highlighted">M</span>
-              <p>Intermedia para personas de complexión media</p>
-            </div>
-            <div className="detail">
-              <strong>Color:</strong> <span className="highlighted">Negro</span>
-              <p>Color oscuro que simboliza elegancia y sofisticación</p>
-            </div>
-            <div className="detail">
-              <strong>Tela:</strong> <span className="highlighted">Fibra</span>
-              <p>Material versátil, ligero y duradero, de fácil cuidado.</p>
-            </div>
+                <div className="detail">
+                  <strong>Talla:</strong>
+                  <span className="highlighted">
+                    {producto?.raw?.productos_idProductos?.Tallas || producto?.raw?.productos?.Tallas || '—'}
+                  </span>
+                </div>
+                <div className="detail">
+                  <strong>Color:</strong>
+                  <span className="highlighted">
+                    {producto?.raw?.productos_idProductos?.Color || producto?.raw?.productos?.Color || '—'}
+                  </span>
+                </div>
+                <div className="detail">
+                  <strong>Tela:</strong>
+                  <span className="highlighted">
+                    {producto?.raw?.productos_idProductos?.Tela_idTela || producto?.raw?.productos?.Tela_idTela || producto?.raw?.tela?.NombreTela || '—'}
+                  </span>
+                </div>
+                {/* Mostrar stock si viene */}
+                <div className="detail">
+                  <strong>Stock:</strong>
+                  <span className="highlighted">{producto?.raw?.stock ?? producto?.raw?.stock === 0 ? producto.raw.stock : '—'}</span>
+                </div>
+                {/* Mostrar mini-estampado principal si existe */}
+                {producto?.raw?.estampados && producto.raw.estampados.length > 0 && (
+                  <div className="detail">
+                    <strong>Estampado:</strong>
+                    <div style={{ marginTop: 6 }}>
+                      <img src={producto.raw.estampados[0].ImgEstampado || ''} alt={producto.raw.estampados[0].NombreEstampado} style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 6 }} />
+                      <div style={{ fontSize: 12 }}>{producto.raw.estampados[0].NombreEstampado}</div>
+                    </div>
+                  </div>
+                )}
           </div>
         </div>
 
         
 
-        {/* Botón de comprar */}
-        <button className="buy-button">Comprar</button>
+  {/* Botón de agregar al carrito */}
+  <button className="buy-button">Agregar al carrito</button>
       </div>
     </div>
     

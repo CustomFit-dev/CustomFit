@@ -7,7 +7,8 @@ from .views import (
     estampado_list, estampado_detail, estampado_create, estampado_update_delete,
     color_list, color_detail, color_create, color_update_delete,
     producto_list, producto_detail, producto_create, producto_update_delete, proveedor_solicitud_list, proveedor_solicitud_detail,
-    productos_personalizados_list, productos_personalizados_detail
+    productos_personalizados_list, productos_personalizados_detail, tienda_productos_list
+    , cart_get, cart_add_item, cart_remove_item, cart_clear
 )
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken.views import obtain_auth_token
@@ -54,7 +55,14 @@ urlpatterns = [
     # Productos personalizados
     path('api/productos_personalizados/', productos_personalizados_list, name='productos-personalizados-list'),
     path('api/productos_personalizados/<int:pk>/', productos_personalizados_detail, name='productos-personalizados-detail'),
+    # Productos de la tienda (público)
+    path('api/tienda_productos/', tienda_productos_list, name='tienda-productos-list'),
 
     path('api/proveedorsolicitudes/', proveedor_solicitud_list, name='proveedor-solicitud-list'),
     path('api/proveedorsolicitudes/<int:pk>/', proveedor_solicitud_detail, name='proveedorsolicitud-detail'),
+    # Carrito
+    path('api/cart/', cart_get, name='cart-get'),
+    path('api/cart/items/', cart_add_item, name='cart-add-item'),
+    path('api/cart/items/<int:item_id>/', cart_remove_item, name='cart-remove-item'),
+    path('api/cart/clear/', cart_clear, name='cart-clear'),
 ]

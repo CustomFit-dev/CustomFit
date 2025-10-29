@@ -19,6 +19,9 @@ import logo from './mod_img/Logo-prin-f.png';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './Themes';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import CartModal from './CartModal';
+import { cartCount, CART_EVENT_NAME, fetchServerCart } from './cartUtils';
+import Badge from '@mui/material/Badge';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
@@ -29,7 +32,7 @@ const pages = [
   { name: 'Comentarios', route: '/Home_L#comentarios' },
   { name: 'Personalizar', route: '/personalizar' },
   { name: 'Tienda', route: '/Store' },
-  { name: '', route: '#', icon: <ShoppingCartIcon /> },
+  { name: 'Carrito', route: '#', icon: <ShoppingCartIcon /> },
 ];
 
 const settings = [
@@ -41,7 +44,7 @@ const settings = [
 function Header_l() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout, isAuthenticated, authToken } = useAuth();
   const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
@@ -79,6 +82,40 @@ function Header_l() {
     }
     handleCloseNavMenu();
   };
+
+  // Cart modal state
+  const [cartOpen, setCartOpen] = React.useState(false);
+  const handleOpenCart = () => setCartOpen(true);
+  const handleCloseCart = () => setCartOpen(false);
+  // contador reactivo del carrito
+  const [cartItemsCount, setCartItemsCount] = React.useState(() => cartCount(user?.id || user?.nombreUsuario || 'guest'));
+
+  React.useEffect(() => {
+    const userId = user?.id || user?.nombreUsuario || 'guest';
+    const updateLocal = () => setCartItemsCount(cartCount(userId));
+
+    const update = async () => {
+      if (authToken) {
+        const serverCart = await fetchServerCart(authToken);
+        if (serverCart && Array.isArray(serverCart.items)) {
+          const totalCount = serverCart.items.reduce((s, it) => s + (it.cantidad || it.quantity || 0), 0);
+          setCartItemsCount(totalCount);
+          return;
+        }
+      }
+      // fallback a localStorage
+      updateLocal();
+    };
+
+    window.addEventListener('storage', updateLocal);
+    window.addEventListener(CART_EVENT_NAME, updateLocal);
+    // run once
+    update();
+    return () => {
+      window.removeEventListener('storage', updateLocal);
+      window.removeEventListener(CART_EVENT_NAME, updateLocal);
+    };
+  }, [user?.id, user?.nombreUsuario, authToken]);
 
   // Estilo común para todos los botones del menú
   const menuButtonStyles = {
@@ -209,6 +246,16 @@ function Header_l() {
                       <Typography sx={textStyles}>{page.name}</Typography>
                     </Button>
                   );
+                } else if (page.name === 'Carrito') {
+                  // abrir modal del carrito
+                  return (
+                    <Button key={page.name} onClick={() => { handleOpenCart(); }} sx={menuButtonStyles}>
+                      <Badge badgeContent={cartItemsCount} color="error">
+                        {page.icon}
+                      </Badge>
+                      <Typography sx={textStyles}>{page.name}</Typography>
+                    </Button>
+                  );
                 } else {
                   return (
                     <Button key={page.name} component={Link} to={page.route} sx={menuButtonStyles}>
@@ -272,6 +319,8 @@ function Header_l() {
                 ))}
               </Menu>
             </Box>
+            {/* Cart modal (local) */}
+            <CartModal open={cartOpen} onClose={handleCloseCart} user={user} authToken={authToken} />
           </Toolbar>
         </Container>
       </AppBar>

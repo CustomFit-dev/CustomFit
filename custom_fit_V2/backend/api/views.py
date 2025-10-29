@@ -16,13 +16,15 @@ import logging
 import string
 from django.core.mail import send_mail
 from django.db import OperationalError
-from .serializers import TelaSerializer,EstampadoSerializer,ProductoSerializer, ProveedorSolicitudSerializer, ProductosPersonalizadosSerializer
+from .serializers import TelaSerializer,EstampadoSerializer,ProductoSerializer, ProveedorSolicitudSerializer, ProductosPersonalizadosSerializer, ProductosPersonalizadosDetalleSerializer
 from .models import ProductosPersonalizados
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from functools import wraps;
 from rest_framework.decorators import authentication_classes
 logger = logging.getLogger(__name__)
+from .models import Carrito, CarritoItem
+from .serializers import CarritoSerializer, CarritoItemSerializer
 
 def admin_required(func):
     @wraps(func)
@@ -281,6 +283,94 @@ def project_detail(request, pk):
     elif request.method == 'DELETE':
         project.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# -------------------- Carrito endpoints --------------------
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def cart_get(request):
+    """Obtener (o crear) el carrito del usuario autenticado."""
+    user = request.user
+    carrito, created = Carrito.objects.get_or_create(user=user)
+    # recalcular total por si acaso
+    total = sum([it.subtotal for it in carrito.items.all()])
+    carrito.total = total
+    carrito.save()
+    serializer = CarritoSerializer(carrito)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def cart_add_item(request):
+    """Añadir o actualizar un item en el carrito.
+    Body: { producto: <id opcional>, nombre: <str>, precio: <decimal>, cantidad: <int> }
+    """
+    user = request.user
+    carrito, _ = Carrito.objects.get_or_create(user=user)
+    producto_id = request.data.get('producto')
+    nombre = request.data.get('nombre')
+    precio = request.data.get('precio')
+    cantidad = int(request.data.get('cantidad', 1))
+
+    if not nombre and not producto_id:
+        return Response({'error': 'producto o nombre requerido'}, status=status.HTTP_400_BAD_REQUEST)
+
+    item = None
+    if producto_id:
+        item = carrito.items.filter(producto_id=producto_id).first()
+
+    if item:
+        item.cantidad = item.cantidad + cantidad
+        item.precio = precio or item.precio
+        item.save()
+    else:
+        item = CarritoItem.objects.create(
+            carrito=carrito,
+            producto_id=producto_id if producto_id else None,
+            nombre=nombre or (item.producto.NombreProductos if item and item.producto else 'Producto'),
+            precio=precio or 0,
+            cantidad=cantidad,
+        )
+
+    # recalcular total
+    total = sum([it.subtotal for it in carrito.items.all()])
+    carrito.total = total
+    carrito.save()
+
+    # devolver carrito actualizado
+    serializer = CarritoSerializer(carrito)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def cart_remove_item(request, item_id):
+    user = request.user
+    try:
+        item = CarritoItem.objects.get(pk=item_id, carrito__user=user)
+    except CarritoItem.DoesNotExist:
+        return Response({'error': 'Item no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+    carrito = item.carrito
+    item.delete()
+    total = sum([it.subtotal for it in carrito.items.all()])
+    carrito.total = total
+    carrito.save()
+    return Response({'status': 'ok', 'total': carrito.total})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def cart_clear(request):
+    user = request.user
+    carrito = Carrito.objects.filter(user=user).first()
+    if not carrito:
+        return Response({'status': 'ok'})
+    carrito.items.all().delete()
+    carrito.total = 0
+    carrito.save()
+    return Response({'status': 'ok'})
 
 # Add views for Rol model
 @api_view(['GET', 'POST'])
@@ -589,6 +679,27 @@ def productos_personalizados_list(request):
         return Response([], status=status.HTTP_200_OK)
     except Exception as e:
         logger.error(f"Error in productos_personalizados_list: {str(e)}")
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# Endpoint público para listar productos de la tienda (rolProducto == 'tienda')
+@api_view(['GET'])
+@permission_classes([AllowAny])
+@authentication_classes([])
+def tienda_productos_list(request):
+    """Devuelve los ProductosPersonalizados cuyo campo rolProducto (case-insensitive) sea 'tienda'.
+    Este endpoint es público y está pensado para alimentar la vista de la tienda en el frontend.
+    """
+    try:
+        items = ProductosPersonalizados.objects.filter(rolProducto__iexact='tienda')
+        # Usar el serializer de detalle que anida el producto y la tela para que el frontend reciba Tallas/Color/Tela
+        serializer = ProductosPersonalizadosDetalleSerializer(items, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except OperationalError as oe:
+        logger.error(f"OperationalError in tienda_productos_list: {str(oe)}")
+        return Response([], status=status.HTTP_200_OK)
+    except Exception as e:
+        logger.error(f"Error in tienda_productos_list: {str(e)}")
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 

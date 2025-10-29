@@ -5,6 +5,28 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import UserProfile, Project, Rol
 from .models import Tela, Estampado,  Producto, ProveedorSolicitud, ProductosPersonalizados
+from .models import Carrito, CarritoItem
+from rest_framework import serializers
+
+
+class CarritoItemSerializer(serializers.ModelSerializer):
+    subtotal = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CarritoItem
+        fields = ['id', 'producto', 'nombre', 'precio', 'cantidad', 'subtotal']
+
+    def get_subtotal(self, obj):
+        return obj.subtotal
+
+
+class CarritoSerializer(serializers.ModelSerializer):
+    items = CarritoItemSerializer(many=True, read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    class Meta:
+        model = Carrito
+        fields = ['id', 'user', 'fechaCreacion', 'total', 'items']
 
 class RolSerializer(serializers.ModelSerializer):
     class Meta:
@@ -75,6 +97,16 @@ class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producto
         fields = '__all__'
+
+
+class ProductosPersonalizadosDetalleSerializer(serializers.ModelSerializer):
+    productos = ProductoSerializer(source='productos_idProductos', read_only=True)
+    tela = TelaSerializer(source='productos_idProductos.Tela_idTela', read_only=True)
+
+    class Meta:
+        model = ProductosPersonalizados
+        fields = '__all__'
+        depth = 1
 
 
 class ProductosPersonalizadosSerializer(serializers.ModelSerializer):

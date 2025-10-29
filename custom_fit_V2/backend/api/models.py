@@ -156,3 +156,37 @@ class ProductosPersonalizadosHasEstampado(models.Model):
         db_table = 'productosperonalizaos_has_estampado'
         managed = False
         unique_together = (('ProductosPeronalizaos_idProductosPeronalizaos','estampado_idEstampado'),)
+
+
+class Carrito(models.Model):
+    """Carrito por usuario. Cada usuario tiene (como mucho) un carrito activo."""
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='carritos')
+    fechaCreacion = models.DateTimeField(auto_now_add=True)
+    total = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+
+    class Meta:
+        db_table = 'carrito'
+
+    def __str__(self):
+        return f"Carrito {self.id} - {self.user.username}"
+
+
+class CarritoItem(models.Model):
+    id = models.AutoField(primary_key=True)
+    carrito = models.ForeignKey(Carrito, on_delete=models.CASCADE, related_name='items')
+    # Intentamos vincular con Producto si existe, si no se usa nombre/precio copiados
+    producto = models.ForeignKey('Producto', on_delete=models.SET_NULL, null=True, blank=True)
+    nombre = models.CharField(max_length=255)
+    precio = models.DecimalField(max_digits=12, decimal_places=2, default=0)
+    cantidad = models.IntegerField(default=1)
+
+    class Meta:
+        db_table = 'carrito_item'
+
+    def __str__(self):
+        return f"{self.nombre} x{self.cantidad}"
+
+    @property
+    def subtotal(self):
+        return float(self.precio) * int(self.cantidad)

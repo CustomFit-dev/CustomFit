@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../scss/store.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import camisa1 from '../../img/camisa1.jpg';
@@ -17,52 +17,50 @@ const Shop = () => {
     verCamisaVisible: false,
     productoSeleccionado: null
   });
+  const [productos, setProductos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
-  // Datos de productos
-  const productos = [
-    {
-      id: 1,
-      imagen: camisa1,
-      titulo: "Camiseta Beige",
-      descripcion: "Camiseta relajada con un diseño minimalista que combina un paisaje de atardecer rojo detrás de una palmera negra, ideal para estilos casuales.",
-      precio: 30000
-    },
-    {
-      id: 2,
-      imagen: camisa2,
-      titulo: "Camiseta Rosa",
-      descripcion: "Diseño sutil que presenta una ilustración en línea de palmeras y un horizonte, perfecta para un look fresco y ligero.",
-      precio: 30000
-    },
-    {
-      id: 3,
-      imagen: camisa3,
-      titulo: "Camiseta Negra",
-      descripcion: "Diseño moderno y elegante, con una palmera destacada dentro de un marco geométrico blanco, para estilos urbanos.",
-      precio: 30000
-    },
-    {
-      id: 4,
-      imagen: camisa5,
-      titulo: "Camiseta Blanca",
-      descripcion: "Presenta un estampado vibrante de palmeras y tonos cálidos, evocando un ambiente tropical. Perfecta para un día al aire libre.",
-      precio: 30000
-    },
-    {
-      id: 5,
-      imagen: camisa4,
-      titulo: "Camiseta Negra",
-      descripcion: "Diseño discreto con texto impreso en el centro, dando un toque misterioso y casual.",
-      precio: 30000
-    },
-    {
-      id: 6,
-      imagen: camisa6,
-      titulo: "Camiseta Beige",
-      descripcion: "Diseño sencillo y natural con una gran palmera negra centrada, ideal para un estilo relajado y minimalista.",
-      precio: 30000
-    }
-  ];
+  // Cargar productos desde el backend (solo los que tengan rolProducto == 'tienda')
+  useEffect(() => {
+    let mounted = true;
+    const API_BASE = process.env.REACT_APP_API_BASE_URL || 'http://127.0.0.1:8000';
+    const fetchData = async () => {
+      try {
+        // Usar URL absoluta hacia el backend para evitar que el dev server de React devuelva index.html
+        const res = await fetch(`${API_BASE}/api/tienda_productos/`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        if (!mounted) return;
+
+        // Mapear datos del backend al formato que usa este componente
+        const mapped = data.map((p) => ({
+          id: p.idProductosPeronalizaos || p.idproductosperonalizaos || p.id || Math.random(),
+          imagen: p.urlFrontal || p.urlFrontal || null,
+          titulo: p.NombrePersonalizado || p.NombrePersonalizado || 'Producto',
+          descripcion: p.descripcion || p.Descripcion || '',
+          precio: p.precioPersonalizado || p.precioPersonalizado || 0,
+          raw: p,
+        }));
+
+        // Si no hay imagen en backend, asignar imágenes locales como fallback (mantener diseño)
+        const withFallback = mapped.map((item, idx) => ({
+          ...item,
+          imagen: item.imagen || [camisa1, camisa2, camisa3, camisa4, camisa5, camisa6][idx % 6]
+        }));
+
+        setProductos(withFallback);
+      } catch (err) {
+        console.error('Error cargando productos de tienda:', err);
+        setError(err.message || 'Error desconocido');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+    return () => { mounted = false };
+  }, []);
 
   // Manejadores de modales
   const abrirModalDetalles = (producto) => {
@@ -114,17 +112,18 @@ const Shop = () => {
               >
                 Ver Camisa
               </button>
-              <button className="btn-33 btn-33">Comprar Ahora</button>
+              <button className="btn-33 btn-33">Agregar al carrito</button>
             </div>
           </div>
-          <div className="card-body">
+            <div className="card-body">
             <h5 className="card-title">{producto.titulo}</h5>
             <p className="card-text">{producto.descripcion}</p>
+            {/* Badge de stock o categoría si viene */}
+            <div style={{ marginBottom: 6 }}>
+              <small className="text-muted">{producto.raw?.productos?.Tallas ? `Tallas: ${producto.raw.productos.Tallas}` : ''}</small>
+            </div>
             <div className='dotos'>
               <button className="precio btn-primary">${producto.precio.toLocaleString()}</button>
-              <button className='carritosss'>
-                <ShoppingCartIcon className='logocar'/>
-              </button>
             </div>
           </div>
         </div>
@@ -142,12 +141,20 @@ const Shop = () => {
 
         {/* Primera fila de productos */}
         <div className="row cajasss">
-          {productos.slice(0, 3).map(renderizarProducto)}
+          {loading ? (
+            <div className="col-12 text-center">Cargando productos...</div>
+          ) : error ? (
+            <div className="col-12 text-center text-danger">Error: {error}</div>
+          ) : productos.length === 0 ? (
+            <div className="col-12 text-center">No hay productos disponibles en la tienda.</div>
+          ) : (
+            productos.slice(0, 3).map(renderizarProducto)
+          )}
         </div>
 
         {/* Segunda fila de productos */}
         <div className="row cajasss">
-          {productos.slice(3, 6).map(renderizarProducto)}
+          {(!loading && !error) && productos.slice(3, 6).map(renderizarProducto)}
         </div>
       </div>
 

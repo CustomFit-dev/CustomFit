@@ -1,4 +1,5 @@
 /* Estilos generales mejorados */
+/* Estilos generales mejorados */
 .h111 {
   color: #17BEBB;
   font-size: 42px;
@@ -346,3 +347,82 @@
     font-size: 12px;
   }
 }
+
+/* Estilos para dispositivos móviles */
+ 
+/* --- Overrides y mejoras visuales adicionales --- */
+
+:root{
+  --accent: #0b8791;
+  --accent-2: #17BEBB;
+  --muted: #6b7c7d;
+}
+
+/* Imagen principal: más enfoque, cover y ligero zoom */
+.card-img-top{
+  height: 260px !important;
+  object-fit: cover !important;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  transition: transform .35s ease, filter .35s ease;
+}
+.card:hover .card-img-top{ transform: scale(1.03); filter: brightness(.96); }
+
+/* Hover buttons más suave */
+.hover-buttons{ background: rgba(6,18,20,0.88); }
+.hover-buttons button{ font-weight:700; letter-spacing: .6px }
+
+/* Botones colores coherentes */
+.btn-11{ background: var(--accent); }
+.btn-22{ background: var(--accent-2); }
+.btn-33{ background: #e76f51; }
+
+/* Precio con estilo moderno */
+.precio{ background: var(--accent); color:#fff; border-radius:999px; padding:8px 16px; box-shadow:0 8px 18px rgba(11,135,145,.12); }
+
+/* Ocultar botón circular de carrito (ya no se usa) */
+.carritosss{ display:none !important; }
+
+/* Badge pequeño para mostrar talla o tag */
+.badge-small{ display:inline-block; background:#eef8f8; color:var(--accent); padding:4px 8px; border-radius:999px; font-size:12px; font-weight:600 }
+
+/* Import fonts (fallbacks) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@500;700&display=swap');
+
+/* Container general para la tienda */
+.store-hero{
+  padding: 36px 12px 18px;
+  background: linear-gradient(180deg, #f7fbfb 0%, #ffffff 60%);
+}
+
+.store-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+/* Tarjeta: línea superior con badge y categoria */
+.card .card-header-badge{
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(255,255,255,0.9);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  color: var(--accent);
+  box-shadow: 0 6px 18px rgba(11,135,145,0.06);
+  font-size: 12px;
+}
+
+/* Footer dentro de la card para info adicional */
+.card .card-footer-mini{
+  display:flex; justify-content:space-between; align-items:center; gap:8px; margin-top:8px;
+}
+
+/* Ajustes de tipografía global para la sección */
+.card, .card *{ font-family: 'Inter', 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }
+
+/* Micro-interactions */
+.card:hover .card-title{ transform: translateY(-4px); }
+

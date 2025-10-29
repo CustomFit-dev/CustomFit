@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import IconButton1 from '@mui/material/IconButton';
 import CloseIcon1 from '@mui/icons-material/Close';
 
-const ShirtViewer = ({estado, cambiarEstado}) => {
+const ShirtViewer = ({estado, cambiarEstado, producto}) => {
   const [view, setView] = useState('front');
   const [zoomLevel, setZoomLevel] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -69,26 +69,36 @@ const ShirtViewer = ({estado, cambiarEstado}) => {
         }}
       >
         <img
-          src={Frontal}
+          src={producto?.raw?.urlFrontal || producto?.imagen || Frontal}
           alt="Camisa Frontal"
           className={`shirt-image ${view === 'front' ? '' : 'hidden'}`}
           style={{
             transform: `scale(${zoomLevel}) translate(${position.x}px, ${position.y}px)`,
           }}
         />
-        
+
         <img
-          src={Trasera}
+          src={producto?.raw?.urlEspadarl || Trasera}
           alt="Camisa Trasera"
           className={`shirt-image ${view === 'back' ? '' : 'hidden'}`}
           style={{
             transform: `scale(${zoomLevel}) translate(${position.x}px, ${position.y}px)`,
           }}
         />
+
         <img
-          src={Mangas}
-          alt="Camisa Mangas"
-          className={`shirt-image ${view === 'sleeve' ? '' : 'hidden'}`}
+          src={producto?.raw?.urlMangaIzquierda || Mangas}
+          alt="Manga Izquierda"
+          className={`shirt-image ${view === 'left_sleeve' ? '' : 'hidden'}`}
+          style={{
+            transform: `scale(${zoomLevel}) translate(${position.x}px, ${position.y}px)`,
+          }}
+        />
+
+        <img
+          src={producto?.raw?.urlMangaDerecha || Mangas}
+          alt="Manga Derecha"
+          className={`shirt-image ${view === 'right_sleeve' ? '' : 'hidden'}`}
           style={{
             transform: `scale(${zoomLevel}) translate(${position.x}px, ${position.y}px)`,
           }}
@@ -102,7 +112,8 @@ const ShirtViewer = ({estado, cambiarEstado}) => {
       <div className="view-buttons">
         <button onClick={() => showView('front')}>Frontal</button>
         <button onClick={() => showView('back')}>Trasera</button>
-        <button onClick={() => showView('sleeve')}>Logo</button>
+        <button onClick={() => showView('left_sleeve')}>Manga Izquierda</button>
+        <button onClick={() => showView('right_sleeve')}>Manga Derecha</button>
       </div>
 
       <div className="zoom-controls">
@@ -110,6 +121,24 @@ const ShirtViewer = ({estado, cambiarEstado}) => {
         <span>Zoom: {zoomLevel}x</span>
         <button onClick={increaseZoom}>+</button>
       </div>
+
+      {/* Datos del producto: talla / color / tela */}
+      <div style={{ position: 'absolute', top: 20, right: 20, background: 'rgba(255,255,255,0.9)', padding: 12, borderRadius: 8 }}>
+        <div><strong>Talla:</strong> {producto?.raw?.productos?.Tallas || producto?.raw?.productos_idProductos?.Tallas || '—'}</div>
+        <div><strong>Color:</strong> {producto?.raw?.productos?.Color || producto?.raw?.productos_idProductos?.Color || '—'}</div>
+        <div><strong>Tela:</strong> {producto?.raw?.tela?.NombreTela || producto?.raw?.productos?.Tela_idTela || producto?.raw?.productos_idProductos?.Tela_idTela || '—'}</div>
+      </div>
+      {/* Estampados si existen */}
+      {producto?.raw?.estampados && producto.raw.estampados.length > 0 && (
+        <div className="estampados-list" style={{ position: 'absolute', bottom: 20, left: 20, display: 'flex', gap: 8 }}>
+          {producto.raw.estampados.map((e, idx) => (
+            <div key={idx} style={{ textAlign: 'center' }}>
+              <img src={e.ImgEstampado || e.ImgEstampado} alt={e.NombreEstampado} style={{ width: 48, height: 48, objectFit: 'cover', borderRadius: 6 }} />
+              <div style={{ fontSize: 10 }}>{e.NombreEstampado}</div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
     </Overlay>
 }
