@@ -1,70 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../scss/store.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import camisa1 from '../../img/camisa1.jpg';
-import camisa2 from '../../img/camisa2.jpg';
-import camisa3 from '../../img/2104.jpg';
-import camisa4 from '../../img/camisa4.webp';
-import camisa5 from '../../img/camisa5.jpg';
-import camisa6 from '../../img/camisa6.jpg';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Schopcar from '../shoproducto';
 import VerC from '../modules/verCamisa';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { useAuth } from "../modules/authcontext";
 
 const Shop = () => {
+  const { authToken } = useAuth();
+  const [productos, setProductos] = useState([]);
   const [modalData, setModalData] = useState({
     detallesVisible: false,
     verCamisaVisible: false,
     productoSeleccionado: null
   });
-  
-  // Datos de productos
-  const productos = [
-    {
-      id: 1,
-      imagen: camisa1,
-      titulo: "Camiseta Beige",
-      descripcion: "Camiseta relajada con un diseño minimalista que combina un paisaje de atardecer rojo detrás de una palmera negra, ideal para estilos casuales.",
-      precio: 30000
-    },
-    {
-      id: 2,
-      imagen: camisa2,
-      titulo: "Camiseta Rosa",
-      descripcion: "Diseño sutil que presenta una ilustración en línea de palmeras y un horizonte, perfecta para un look fresco y ligero.",
-      precio: 30000
-    },
-    {
-      id: 3,
-      imagen: camisa3,
-      titulo: "Camiseta Negra",
-      descripcion: "Diseño moderno y elegante, con una palmera destacada dentro de un marco geométrico blanco, para estilos urbanos.",
-      precio: 30000
-    },
-    {
-      id: 4,
-      imagen: camisa5,
-      titulo: "Camiseta Blanca",
-      descripcion: "Presenta un estampado vibrante de palmeras y tonos cálidos, evocando un ambiente tropical. Perfecta para un día al aire libre.",
-      precio: 30000
-    },
-    {
-      id: 5,
-      imagen: camisa4,
-      titulo: "Camiseta Negra",
-      descripcion: "Diseño discreto con texto impreso en el centro, dando un toque misterioso y casual.",
-      precio: 30000
-    },
-    {
-      id: 6,
-      imagen: camisa6,
-      titulo: "Camiseta Beige",
-      descripcion: "Diseño sencillo y natural con una gran palmera negra centrada, ideal para un estilo relajado y minimalista.",
-      precio: 30000
-    }
-  ];
 
-  // Manejadores de modales
+  // Carrito
+  const [cartItems, setCartItems] = useState([]);
+  const [cartVisible, setCartVisible] = useState(false);
+
+  useEffect(() => {
+    fetchProductos();
+  }, []);
+
+  const fetchProductos = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/api/productos/", {
+        headers: { Authorization: `Token ${authToken}` }
+      });
+      setProductos(res.data);
+    } catch (err) {
+      console.error(err);
+      Swal.fire('Error', 'No se pudieron cargar los productos.', 'error');
+    }
+  };
+
+  // Modales
   const abrirModalDetalles = (producto) => {
     setModalData({
       detallesVisible: true,
@@ -89,43 +62,76 @@ const Shop = () => {
     });
   };
 
-  // Función para renderizar tarjetas de producto
+  // Carrito funcional
+  const addToCart = (producto) => {
+    setCartItems(prev => {
+      const existing = prev.find(item => item.idProductos === producto.idProductos);
+      if (existing) {
+        return prev.map(item =>
+          item.idProductos === producto.idProductos
+            ? { ...item, cantidad: item.cantidad + 1 }
+            : item
+        );
+      } else {
+        return [...prev, { ...producto, cantidad: 1 }];
+      }
+    });
+    setCartVisible(true); // Abrir carrito al agregar
+  };
+
+  const removeFromCart = (productoId) => {
+    setCartItems(prev => prev.filter(item => item.idProductos !== productoId));
+  };
+
+  const updateQuantity = (productoId, cantidad) => {
+    if (cantidad < 1) return;
+    setCartItems(prev =>
+      prev.map(item =>
+        item.idProductos === productoId ? { ...item, cantidad } : item
+      )
+    );
+  };
+
+  const totalItems = cartItems.reduce((sum, item) => sum + item.cantidad, 0);
+  const totalPrice = cartItems.reduce((sum, item) => sum + item.PrecioProducto * item.cantidad, 0);
+
+  // Render productos
   const renderizarProducto = (producto) => {
+    const imagen = producto.urlFrontal || 'https://via.placeholder.com/250x250?text=Sin+imagen';
+    
     return (
-      <div className="col-12 col-sm-6 col-md-4 mb-4" key={producto.id}>
-        <div className="card" style={{ width: '100%' }}>
+      <div className="col-12 col-sm-6 col-md-4 mb-4" key={producto.idProductos}>
+        <div className="card card-producto">
           <div className="image-container">
             <img 
-              src={producto.imagen} 
+              src={imagen} 
               className="card-img-top" 
-              alt={producto.titulo} 
+              alt={producto.NombreProductos} 
               style={{ width: '100%', height: '250px', objectFit: 'contain' }} 
             />
             <div className="hover-buttons">
-              <button 
-                className="btn-11 btn-11" 
-                onClick={() => abrirModalDetalles(producto)}
-              >
+              <button className="btn-11" onClick={() => abrirModalDetalles(producto)}>
                 Ver Detalles
               </button>
-              <button 
-                className="btn-22 btn-22" 
-                onClick={() => abrirModalVerCamisa(producto)}
-              >
+              <button className="btn-22" onClick={() => abrirModalVerCamisa(producto)}>
                 Ver Camisa
               </button>
-              <button className="btn-33 btn-33">Comprar Ahora</button>
+              <button className="btn-33" onClick={() => addToCart(producto)}>
+                Comprar Ahora
+              </button>
             </div>
           </div>
           <div className="card-body">
-            <h5 className="card-title">{producto.titulo}</h5>
-            <p className="card-text">{producto.descripcion}</p>
-            <div className='dotos'>
-              <button className="precio btn-primary">${producto.precio.toLocaleString()}</button>
-              <button className='carritosss'>
-                <ShoppingCartIcon className='logocar'/>
-              </button>
-            </div>
+            <h5 className="card-title">{producto.NombreProductos}</h5>
+            <p className="card-text">{producto.Descripcion}</p>
+            <p className="precio-texto">${producto.PrecioProducto?.toLocaleString()}</p>
+            <button 
+              className="btn btn-carrito d-flex align-items-center justify-content-center"
+              onClick={() => addToCart(producto)}
+            >
+              <ShoppingCartIcon className="icon-carrito" />
+              Agregar al carrito
+            </button>
           </div>
         </div>
       </div>
@@ -133,21 +139,15 @@ const Shop = () => {
   };
 
   return (
-    <div className='container-fluid'>
+    <div className="container-fluid">
       <div className="row">
         <div className="col-md-12 text-center">
           <h1 className="h111">¡Te Encantará Comprar Aquí!</h1>
           <p className="sub1">Explora Nuestra Amplia Gama de Productos y Encuentra lo que Necesitas</p>
         </div>
 
-        {/* Primera fila de productos */}
         <div className="row cajasss">
-          {productos.slice(0, 3).map(renderizarProducto)}
-        </div>
-
-        {/* Segunda fila de productos */}
-        <div className="row cajasss">
-          {productos.slice(3, 6).map(renderizarProducto)}
+          {productos.map(renderizarProducto)}
         </div>
       </div>
 
@@ -157,12 +157,45 @@ const Shop = () => {
         cambiarEstado={cerrarModales}
         producto={modalData.productoSeleccionado}
       />
-      
       <VerC 
         estado={modalData.verCamisaVisible}
         cambiarEstado={cerrarModales}
         producto={modalData.productoSeleccionado}
       />
+
+      {/* Carrito flotante */}
+      <div className={`cart-panel ${cartVisible ? 'visible' : ''}`}>
+        <h3>Carrito ({totalItems} items)</h3>
+        <button className="close-cart" onClick={() => setCartVisible(false)}>X</button>
+        {cartItems.length === 0 ? (
+          <p>Tu carrito está vacío</p>
+        ) : (
+          <ul>
+            {cartItems.map(item => (
+              <li key={item.idProductos}>
+                <img src={item.urlFrontal || 'https://via.placeholder.com/50'} alt={item.NombreProductos} />
+                <div className="cart-item-info">
+                  <h4>{item.NombreProductos}</h4>
+                  <p>${item.PrecioProducto?.toLocaleString()}</p>
+                  <input 
+                    type="number" 
+                    min={1} 
+                    value={item.cantidad} 
+                    onChange={(e) => updateQuantity(item.idProductos, parseInt(e.target.value))}
+                  />
+                </div>
+                <button onClick={() => removeFromCart(item.idProductos)}>Eliminar</button>
+              </li>
+            ))}
+          </ul>
+        )}
+        <h4>Total: ${totalPrice.toLocaleString()}</h4>
+      </div>
+
+      {/* Botón flotante para abrir carrito */}
+      <button className="floating-cart-btn" onClick={() => setCartVisible(true)}>
+        <ShoppingCartIcon /> ({totalItems})
+      </button>
     </div>
   );
 };

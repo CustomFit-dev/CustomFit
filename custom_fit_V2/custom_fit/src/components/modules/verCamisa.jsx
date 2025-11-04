@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import '../../scss/verCamisa.scss'; // CSS asociado
-import Frontal from '../../img/camisa11.png';
-import Trasera from '../../img/trasera1.png';
-import Mangas from '../../img/logo1.png';
 import styled from 'styled-components';
 import IconButton1 from '@mui/material/IconButton';
 import CloseIcon1 from '@mui/icons-material/Close';
 
-const ShirtViewer = ({estado, cambiarEstado}) => {
+const ShirtViewer = ({ estado, cambiarEstado, producto }) => {
   const [view, setView] = useState('front');
   const [zoomLevel, setZoomLevel] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -17,7 +14,7 @@ const ShirtViewer = ({estado, cambiarEstado}) => {
   const showView = (selectedView) => {
     setView(selectedView);
     setZoomLevel(1);
-    setPosition({ x: 0, y: 0 }); // Restablece la posición al cambiar de vista
+    setPosition({ x: 0, y: 0 });
   };
 
   const increaseZoom = () => {
@@ -26,7 +23,7 @@ const ShirtViewer = ({estado, cambiarEstado}) => {
 
   const decreaseZoom = () => {
     setZoomLevel((prev) => Math.max(prev - 0.5, 1));
-    setPosition({ x: 0, y: 0 }); // Resetea la posición cuando el zoom se reduce
+    setPosition({ x: 0, y: 0 });
   };
 
   const handleMouseDown = (e) => {
@@ -50,83 +47,102 @@ const ShirtViewer = ({estado, cambiarEstado}) => {
     setIsDragging(false);
   };
 
+  if (!producto) return null; // Evita errores si no hay producto
+
   return (
     <>
-    {estado &&
-    <Overlay>
-    
-    <div
-      className="shirt-view-container"
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-    >
-      <div
-        className="shirt-view"
-        onMouseDown={handleMouseDown}
-        style={{
-          cursor: zoomLevel > 1 ? 'grab' : 'default',
-        }}
-      >
-        <img
-          src={Frontal}
-          alt="Camisa Frontal"
-          className={`shirt-image ${view === 'front' ? '' : 'hidden'}`}
-          style={{
-            transform: `scale(${zoomLevel}) translate(${position.x}px, ${position.y}px)`,
-          }}
-        />
-        
-        <img
-          src={Trasera}
-          alt="Camisa Trasera"
-          className={`shirt-image ${view === 'back' ? '' : 'hidden'}`}
-          style={{
-            transform: `scale(${zoomLevel}) translate(${position.x}px, ${position.y}px)`,
-          }}
-        />
-        <img
-          src={Mangas}
-          alt="Camisa Mangas"
-          className={`shirt-image ${view === 'sleeve' ? '' : 'hidden'}`}
-          style={{
-            transform: `scale(${zoomLevel}) translate(${position.x}px, ${position.y}px)`,
-          }}
-        />
-      </div>
-      <div className='salir' style={{ position: 'relative' }}>
-          <IconButton1 className="salirx1" onClick={() => cambiarEstado()}>
-          <CloseIcon1 />
-          </IconButton1>  
-      </div>
-      <div className="view-buttons">
-        <button onClick={() => showView('front')}>Frontal</button>
-        <button onClick={() => showView('back')}>Trasera</button>
-        <button onClick={() => showView('sleeve')}>Logo</button>
-      </div>
+      {estado && (
+        <Overlay>
+          <div
+            className="shirt-view-container"
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+          >
+            <div
+              className="shirt-view"
+              onMouseDown={handleMouseDown}
+              style={{
+                cursor: zoomLevel > 1 ? 'grab' : 'default',
+              }}
+            >
+              {/* Imagen frontal */}
+              <img
+                src={producto.urlFrontal}
+                alt="Camisa Frontal"
+                className={`shirt-image ${view === 'front' ? '' : 'hidden'}`}
+                style={{
+                  transform: `scale(${zoomLevel}) translate(${position.x}px, ${position.y}px)`,
+                }}
+              />
 
-      <div className="zoom-controls">
-        <button onClick={decreaseZoom}>-</button>
-        <span>Zoom: {zoomLevel}x</span>
-        <button onClick={increaseZoom}>+</button>
-      </div>
-    </div>
-    </Overlay>
-}
+              {/* Imagen trasera */}
+              <img
+                src={producto.urlEspaldar}
+                alt="Camisa Trasera"
+                className={`shirt-image ${view === 'back' ? '' : 'hidden'}`}
+                style={{
+                  transform: `scale(${zoomLevel}) translate(${position.x}px, ${position.y}px)`,
+                }}
+              />
+
+              {/* Manga izquierda */}
+              <img
+                src={producto.urlMangaIzquierda}
+                alt="Manga Izquierda"
+                className={`shirt-image ${view === 'left-sleeve' ? '' : 'hidden'}`}
+                style={{
+                  transform: `scale(${zoomLevel}) translate(${position.x}px, ${position.y}px)`,
+                }}
+              />
+
+              {/* Manga derecha */}
+              <img
+                src={producto.urlMangaDerecha}
+                alt="Manga Derecha"
+                className={`shirt-image ${view === 'right-sleeve' ? '' : 'hidden'}`}
+                style={{
+                  transform: `scale(${zoomLevel}) translate(${position.x}px, ${position.y}px)`,
+                }}
+              />
+            </div>
+
+            <div className='salir' style={{ position: 'relative' }}>
+              <IconButton1 className="salirx1" onClick={() => cambiarEstado()}>
+                <CloseIcon1 />
+              </IconButton1>  
+            </div>
+
+            <div className="view-buttons">
+              <button onClick={() => showView('front')}>Frontal</button>
+              <button onClick={() => showView('back')}>Trasera</button>
+              <button onClick={() => showView('left-sleeve')}>Manga Izquierda</button>
+              <button onClick={() => showView('right-sleeve')}>Manga Derecha</button>
+            </div>
+
+            <div className="zoom-controls">
+              <button onClick={decreaseZoom}>-</button>
+              <span>Zoom: {zoomLevel}x</span>
+              <button onClick={increaseZoom}>+</button>
+            </div>
+          </div>
+        </Overlay>
+      )}
     </>
   );
 };
 
 export default ShirtViewer;
+
 const Overlay = styled.div`
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.9);
-    display: flex;
-    justify-content: center; /* Centra los elementos horizontalmente */
-    align-items: center; /* Centra los elementos verticalmente */
-    z-index: 9999; /* Asegura que esté encima de otros elementos */
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 `;

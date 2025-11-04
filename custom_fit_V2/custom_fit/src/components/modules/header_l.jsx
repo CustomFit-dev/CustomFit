@@ -1,27 +1,28 @@
-// src/components/Header.jsx
-import React from 'react';
+// src/components/Header_l.jsx
+import React, { useState } from 'react';
 import { useAuth } from './authcontext';
+import { Link, useNavigate } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
-import { Link, useNavigate } from 'react-router-dom';
-import logo from './mod_img/Logo-prin-f.png';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './Themes';
+import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import { ThemeProvider } from '@mui/material/styles';
+import theme from './Themes';
+import logo from './mod_img/Logo-prin-f.png';
+import Cart from '../modules/carrito'; // Importa el carrito
 
 const pages = [
   { name: 'Inicio', route: '/Home_L#home' },
@@ -29,36 +30,25 @@ const pages = [
   { name: 'Comentarios', route: '/Home_L#comentarios' },
   { name: 'Personalizar', route: '/personalizar' },
   { name: 'Tienda', route: '/Store' },
-  { name: '', route: '#', icon: <ShoppingCartIcon /> },
 ];
 
 const settings = [
   { name: 'Perfil', route: '/Profile', icon: <AccountCircleIcon /> },
-  { name: 'Administracion', route: '/admin', icon: <AdminPanelSettingsIcon /> },
+  { name: 'Administración', route: '/admin', icon: <AdminPanelSettingsIcon /> },
   { name: 'Cerrar sesión', route: '#', icon: <ExitToAppIcon /> },
 ];
 
-function Header_l() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+function Header_l({ cartItems, removeFromCart, onCheckout }) {
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
   const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
+  const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
+  const handleCloseNavMenu = () => setAnchorElNav(null);
 
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
+  const handleOpenUserMenu = (event) => setAnchorElUser(event.currentTarget);
+  const handleCloseUserMenu = () => setAnchorElUser(null);
 
   const handleLogout = () => {
     logout();
@@ -80,16 +70,13 @@ function Header_l() {
     handleCloseNavMenu();
   };
 
-  // Estilo común para todos los botones del menú
   const menuButtonStyles = {
     my: 2,
     color: 'white',
     display: 'flex',
     alignItems: 'center',
     cursor: 'pointer',
-    '&:hover': {
-      color: '#ffffff',
-    },
+    '&:hover': { color: '#ffffff' },
   };
 
   const textStyles = {
@@ -153,7 +140,7 @@ function Header_l() {
                       else if (page.name === '¿Como personalizar?') handleScrollToId('video');
                       else {
                         handleCloseNavMenu();
-                        if (page.route) navigate(page.route);
+                        navigate(page.route);
                       }
                     }}
                   >
@@ -198,21 +185,18 @@ function Header_l() {
                 if (page.name === 'Comentarios') {
                   return (
                     <Button key={page.name} onClick={() => handleScrollToId('comentarios')} sx={menuButtonStyles}>
-                      {page.icon}
                       <Typography sx={textStyles}>{page.name}</Typography>
                     </Button>
                   );
                 } else if (page.name === '¿Como personalizar?') {
                   return (
                     <Button key={page.name} onClick={() => handleScrollToId('video')} sx={menuButtonStyles}>
-                      {page.icon}
                       <Typography sx={textStyles}>{page.name}</Typography>
                     </Button>
                   );
                 } else {
                   return (
                     <Button key={page.name} component={Link} to={page.route} sx={menuButtonStyles}>
-                      {page.icon}
                       <Typography sx={textStyles}>{page.name}</Typography>
                     </Button>
                   );
@@ -220,9 +204,11 @@ function Header_l() {
               })}
             </Box>
 
-            {/* Usuario */}
+            {/* Usuario y Carrito */}
             <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
-              {isAuthenticated && (
+              <Cart cartItems={cartItems} removeFromCart={removeFromCart} onCheckout={onCheckout} />
+
+              {isAuthenticated ? (
                 <>
                   <Typography variant="body1" sx={{ marginRight: 2, color: 'white' }}>
                     {user?.nombreUsuario || 'Usuario'}
@@ -233,12 +219,12 @@ function Header_l() {
                     </IconButton>
                   </Tooltip>
                 </>
-              )}
-              {!isAuthenticated && (
+              ) : (
                 <Button color="inherit" onClick={handleOpenUserMenu}>
                   Iniciar Sesión
                 </Button>
               )}
+
               <Menu
                 sx={{ mt: '45px' }}
                 id="menu-appbar"
@@ -255,11 +241,8 @@ function Header_l() {
                     <MenuItem
                       onClick={() => {
                         handleCloseUserMenu();
-                        if (setting.name === 'Cerrar sesión') {
-                          handleLogout();
-                        } else if (setting.route && setting.route !== '#' && setting.route !== '') {
-                          navigate(setting.route);
-                        }
+                        if (setting.name === 'Cerrar sesión') handleLogout();
+                        else if (setting.route && setting.route !== '#' && setting.route !== '') navigate(setting.route);
                       }}
                       sx={{ display: 'flex', alignItems: 'center' }}
                     >
