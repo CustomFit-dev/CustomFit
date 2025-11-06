@@ -15,14 +15,12 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Divider from '@mui/material/Divider';
 import MenuIcon from '@mui/icons-material/Menu';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './Themes';
 import logo from './mod_img/Logo-prin-f.png';
-import Cart from '../modules/carrito'; // Importa el carrito
 
 const pages = [
   { name: 'Inicio', route: '/Home_L#home' },
@@ -206,7 +204,7 @@ function Header_l({ cartItems, removeFromCart, onCheckout }) {
 
             {/* Usuario y Carrito */}
             <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
-              <Cart cartItems={cartItems} removeFromCart={removeFromCart} onCheckout={onCheckout} />
+              
 
               {isAuthenticated ? (
                 <>

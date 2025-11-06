@@ -560,7 +560,6 @@ def color_update_delete(request, pk):
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-@admin_required
 def producto_list(request):
     productos = Producto.objects.all()
     serializer = ProductoSerializer(productos, many=True)

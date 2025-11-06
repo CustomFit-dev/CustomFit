@@ -3,7 +3,7 @@ import {
   Box, Button, Dialog, DialogActions, DialogContent, DialogTitle,
   TextField, Grid, IconButton, Table, TableBody, TableCell,
   TableContainer, TableHead, TableRow, Paper,
-  Tooltip, Typography, useMediaQuery
+  Tooltip, Typography, useMediaQuery, Select, MenuItem, InputLabel, FormControl
 } from '@mui/material';
 import { Add, Edit, Delete, Close, Save, Visibility } from '@mui/icons-material';
 import axios from 'axios';
@@ -44,7 +44,7 @@ const ProductoCrud = () => {
     Color: '',
     Tela_idTela: '',
   });
-  // Usamos SweetAlert2 (Swal) para todas las alertas, ya no guardamos estado local de Snackbar
+
   const isMobile = useMediaQuery('(max-width:600px)');
 
   useEffect(() => {
@@ -104,7 +104,6 @@ const ProductoCrud = () => {
   const change = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const save = async () => {
-    // Validaciones básicas antes de enviar
     const nombre = (formData.NombreProductos || '').toString().trim();
     const tipo = (formData.TipoProductos || '').toString().trim();
     const precioRaw = formData.PrecioProducto;
@@ -176,7 +175,6 @@ const ProductoCrud = () => {
     }
   };
 
-  // 🔹 Ver imágenes
   const verImagenes = (producto) => {
     setSelectedProducto(producto);
     setOpenImgModal(true);
@@ -245,9 +243,32 @@ const ProductoCrud = () => {
             </DialogTitle>
             <DialogContent sx={{ background: '#000' }}>
               <Grid container spacing={2}>
+
+                {/* 🟢 CAMBIO AQUÍ — Selector de tipo de producto */}
+                <Grid item xs={12} md={6}>
+                  <FormControl fullWidth>
+                    <InputLabel sx={{ color: '#17bebb' }}>Tipo de Producto</InputLabel>
+                    <Select
+                      name="TipoProductos"
+                      value={formData.TipoProductos || ''}
+                      onChange={change}
+                      label="Tipo de Producto"
+                      sx={{
+                        color: 'white',
+                        '& .MuiOutlinedInput-notchedOutline': { borderColor: '#17bebb' },
+                        '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#17e6c9' },
+                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#0fa59d' },
+                      }}
+                    >
+                      <MenuItem value="Camisas">Camisas</MenuItem>
+                      <MenuItem value="Camisas Personalizadas">Camisas Personalizadas</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+
+                {/* 🟢 Restante de campos */}
                 {[
                   { name: 'NombreProductos', label: 'Nombre' },
-                  { name: 'TipoProductos', label: 'Tipo' },
                   { name: 'PrecioProducto', label: 'Precio' },
                   { name: 'Descripcion', label: 'Descripción' },
                   { name: 'Color', label: 'Color' },
@@ -281,6 +302,7 @@ const ProductoCrud = () => {
                 ))}
               </Grid>
             </DialogContent>
+
             <DialogActions sx={{ background: '#000', p: 2 }}>
               <Button
                 onClick={closeForm}
@@ -301,7 +323,7 @@ const ProductoCrud = () => {
             </DialogActions>
           </Dialog>
 
-          {/* 🔹 Modal para ver imágenes */}
+          {/* 🔹 Modal de imágenes */}
           <Dialog open={openImgModal} onClose={cerrarModalImagen} fullWidth maxWidth="md">
             <DialogTitle sx={{ bgcolor: '#17bebb', color: 'white' }}>
               Imágenes del producto
