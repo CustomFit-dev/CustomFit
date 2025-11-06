@@ -107,7 +107,7 @@ DATABASES = {
         'NAME': os.environ.get('DATABASE_NAME', 'customfit_d3'),
         'USER': os.environ.get('DATABASE_USER', 'root'),
         'PASSWORD': os.environ.get('DATABASE_PASSWORD', ''),
-        'HOST': os.environ.get('DATABASE_HOST', '127.0.0.1'),
+        'HOST': os.environ.get('DATABASE_HOST', 'db'),
         'PORT': os.environ.get('DATABASE_PORT', '3306'),
     }
 }
