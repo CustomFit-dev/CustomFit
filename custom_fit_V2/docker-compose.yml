@@ -22,7 +22,7 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_NAME: customfit_d3
+      DATABASE_NAME: customfit_d2
       DATABASE_USER: root
       DATABASE_PASSWORD: ""
       DATABASE_HOST: db
