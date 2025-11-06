@@ -156,3 +156,5 @@ class ProductosPersonalizadosHasEstampado(models.Model):
         db_table = 'productosperonalizaos_has_estampado'
         managed = False
         unique_together = (('ProductosPeronalizaos_idProductosPeronalizaos','estampado_idEstampado'),)
+
+        
