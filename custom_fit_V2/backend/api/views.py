@@ -465,6 +465,19 @@ def estampado_list(request):
     serializer = EstampadoSerializer(estampados, many=True)
     return Response(serializer.data)
 
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def estampados_usuario_list(request):
+    """Endpoint público que devuelve solo estampados creados por usuarios (rolestampado='usuario')."""
+    try:
+        estampados = Estampado.objects.filter(rolestampado='usuario')
+        serializer = EstampadoSerializer(estampados, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        logger.error(f"Error fetching usuario estampados: {e}")
+        return Response({'error': 'Error interno al obtener estampados'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @admin_required

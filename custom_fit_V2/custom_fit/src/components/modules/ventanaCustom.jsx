@@ -1,28 +1,32 @@
-import React, { useState } from "react";
-import Estampado1 from "../../img/logocustomfit.png";
-import Estampado2 from "../../img/diseños/Estampado2.png";
-import Estampado3 from "../../img/diseños/Estampado3.png";
-import Estampado4 from "../../img/diseños/Estampado4.png";
-import Estampado5 from "../../img/diseños/Estampado5.png";
-import Estampado6 from "../../img/diseños/Estampado6.png";
-import Estampado7 from "../../img/diseños/Estampado7.png";
-import Estampado8 from "../../img/diseños/Estampado8.png";
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 
 import "../../scss/personalizar.scss";
 
 const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
   const [modalImage, setModalImage] = useState(null);
+  const [customDesigns, setCustomDesigns] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const customDesigns = [
-    { id: 1, src: Estampado1, alt: "Diseño 1", title: "Logo CustomFit" },
-    { id: 2, src: Estampado2, alt: "Diseño 2", title: "Estampado Deportivo" },
-    { id: 3, src: Estampado3, alt: "Diseño 3", title: "Patrón Geométrico" },
-    { id: 4, src: Estampado4, alt: "Diseño 4", title: "Logo Minimalista" },
-    { id: 5, src: Estampado5, alt: "Diseño 5", title: "Estampado Vintage" },
-    { id: 6, src: Estampado6, alt: "Diseño 6", title: "Diseño Urbano" },
-    { id: 7, src: Estampado7, alt: "Diseño 7", title: "Patrón Floral" },
-    { id: 8, src: Estampado8, alt: "Diseño 8", title: "Logo Corporativo" },
-  ];
+  useEffect(() => {
+    // Obtener diseños desde el backend (solo estampados con rol 'usuario')
+    const fetchDesigns = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get('http://localhost:8000/api/estampados_usuario/');
+        // Esperamos que cada objeto tenga ImgEstampado y NombreEstampado
+        const data = Array.isArray(res.data) ? res.data.map(d => ({ id: d.idEstampado, src: d.ImgEstampado, alt: d.NombreEstampado || 'Diseño', title: d.NombreEstampado || '' })) : [];
+        setCustomDesigns(data);
+      } catch (err) {
+        console.error('Error cargando diseños personalizados:', err);
+        setCustomDesigns([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDesigns();
+  }, []);
 
   const handleApplyImage = (image) => {
     onSelectImage(image.src);
@@ -41,20 +45,24 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
           <div className="modal-body">
             {/* Galería en grid */}
             <div className="gallery-grid">
-              {customDesigns.map((design) => (
-                <div
-                  key={design.id}
-                  className="gallery-item"
-                  onClick={() => setModalImage(design)}
-                >
-                  <img
-                    src={design.src}
-                    alt={design.alt}
-                    className="gallery-img"
-                  />
-                  <div className="gallery-overlay">{design.title}</div>
-                </div>
-              ))}
+              {loading ? (
+                <div className="text-center">Cargando diseños…</div>
+              ) : (
+                customDesigns.map((design) => (
+                  <div
+                    key={design.id}
+                    className="gallery-item"
+                    onClick={() => setModalImage(design)}
+                  >
+                    <img
+                      src={design.src}
+                      alt={design.alt}
+                      className="gallery-img"
+                    />
+                    <div className="gallery-overlay">{design.title}</div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
