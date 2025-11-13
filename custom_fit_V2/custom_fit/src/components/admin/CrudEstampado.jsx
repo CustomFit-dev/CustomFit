@@ -442,6 +442,7 @@ const EstampadoCrud = () => {
                 >
                   <MenuItem value="cliente">Cliente</MenuItem>
                   <MenuItem value="usuario">Usuario</MenuItem>
+                  <MenuItem value="emoji">Emoji</MenuItem>
                 </TextField>
               </Grid>
 

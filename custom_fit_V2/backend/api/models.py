@@ -68,7 +68,7 @@ class Estampado(models.Model):
     NombreEstampado = models.CharField(max_length=45)
     TipoEstampado = models.CharField(max_length=45)
     # Origen del estampado: 'cliente' (propuesto por cliente) o 'usuario' (creado por usuario/admin)
-    rolestampado = models.CharField(max_length=10, choices=(('cliente', 'cliente'), ('usuario', 'usuario')), default='cliente', db_column='rolestampado')
+    rolestampado = models.CharField(max_length=10, choices=(('cliente', 'cliente'), ('usuario', 'usuario'), ('emoji', 'emoji')), default='cliente', db_column='rolestampado')
     ImgEstampado = models.CharField(max_length=100)
     ColorEstampado = models.CharField(max_length=45)
     fecha_agregado = models.DateField(auto_now_add=True)  # ✅ se agrega automáticamente la fecha actual

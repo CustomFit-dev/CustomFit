@@ -1,31 +1,64 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-
 import "../../scss/personalizar.scss";
 
 const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
   const [modalImage, setModalImage] = useState(null);
   const [customDesigns, setCustomDesigns] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [emojiDesigns, setEmojiDesigns] = useState([]);
+  const [loadingUser, setLoadingUser] = useState(false);
+  const [loadingEmoji, setLoadingEmoji] = useState(false);
 
+  // Cargar diseños del rol "usuario"
   useEffect(() => {
-    // Obtener diseños desde el backend (solo estampados con rol 'usuario')
-    const fetchDesigns = async () => {
-      setLoading(true);
+    const fetchUserDesigns = async () => {
+      setLoadingUser(true);
       try {
         const res = await axios.get('http://localhost:8000/api/estampados_usuario/');
-        // Esperamos que cada objeto tenga ImgEstampado y NombreEstampado
-        const data = Array.isArray(res.data) ? res.data.map(d => ({ id: d.idEstampado, src: d.ImgEstampado, alt: d.NombreEstampado || 'Diseño', title: d.NombreEstampado || '' })) : [];
+        const data = Array.isArray(res.data)
+          ? res.data.map(d => ({
+              id: d.idEstampado,
+              src: d.ImgEstampado,
+              alt: d.NombreEstampado || 'Diseño',
+              title: d.NombreEstampado || '',
+            }))
+          : [];
         setCustomDesigns(data);
       } catch (err) {
-        console.error('Error cargando diseños personalizados:', err);
+        console.error('Error cargando diseños de usuario:', err);
         setCustomDesigns([]);
       } finally {
-        setLoading(false);
+        setLoadingUser(false);
       }
     };
 
-    fetchDesigns();
+    fetchUserDesigns();
+  }, []);
+
+  // Cargar diseños del rol "emoji"
+  useEffect(() => {
+    const fetchEmojiDesigns = async () => {
+      setLoadingEmoji(true);
+      try {
+        const res = await axios.get('http://localhost:8000/api/estampados_emoji/');
+        const data = Array.isArray(res.data)
+          ? res.data.map(d => ({
+              id: d.idEstampado,
+              src: d.ImgEstampado,
+              alt: d.NombreEstampado || 'Emoji',
+              title: d.NombreEstampado || '',
+            }))
+          : [];
+        setEmojiDesigns(data);
+      } catch (err) {
+        console.error('Error cargando emojis:', err);
+        setEmojiDesigns([]);
+      } finally {
+        setLoadingEmoji(false);
+      }
+    };
+
+    fetchEmojiDesigns();
   }, []);
 
   const handleApplyImage = (image) => {
@@ -43,10 +76,10 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
           </div>
 
           <div className="modal-body">
-            {/* Galería en grid */}
+            {/* GALERÍA DE USUARIOS */}
             <div className="gallery-grid">
-              {loading ? (
-                <div className="text-center">Cargando diseños…</div>
+              {loadingUser ? (
+                <div className="text-center">Cargando diseños de usuarios…</div>
               ) : (
                 customDesigns.map((design) => (
                   <div
@@ -54,21 +87,41 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
                     className="gallery-item"
                     onClick={() => setModalImage(design)}
                   >
-                    <img
-                      src={design.src}
-                      alt={design.alt}
-                      className="gallery-img"
-                    />
+                    <img src={design.src} alt={design.alt} className="gallery-img" />
                     <div className="gallery-overlay">{design.title}</div>
                   </div>
                 ))
+              )}
+            </div>
+
+            {/* LÍNEA Y TÍTULO */}
+            <hr className="my-3" />
+            <h6 className="text-muted text-center mb-3">🌀 Emojis</h6>
+
+            {/* GALERÍA DE EMOJIS */}
+            <div className="gallery-grid">
+              {loadingEmoji ? (
+                <div className="text-center">Cargando emojis…</div>
+              ) : emojiDesigns.length > 0 ? (
+                emojiDesigns.map((emoji) => (
+                  <div
+                    key={emoji.id}
+                    className="gallery-item"
+                    onClick={() => setModalImage(emoji)}
+                  >
+                    <img src={emoji.src} alt={emoji.alt} className="gallery-img" />
+                    <div className="gallery-overlay">{emoji.title}</div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center text-muted">No hay emojis disponibles.</div>
               )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Modal de vista previa */}
+      {/* MODAL DE VISTA PREVIA */}
       {modalImage && (
         <div
           className="modal show d-block"

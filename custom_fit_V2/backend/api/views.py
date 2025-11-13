@@ -478,6 +478,20 @@ def estampados_usuario_list(request):
         logger.error(f"Error fetching usuario estampados: {e}")
         return Response({'error': 'Error interno al obtener estampados'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def estampados_emoji_list(request):
+    """Endpoint público que devuelve solo estampados con rol 'emoji' (rolestampado='emoji')."""
+    try:
+        estampados = Estampado.objects.filter(rolestampado='emoji')
+        serializer = EstampadoSerializer(estampados, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Exception as e:
+        logger.error(f"Error fetching emoji estampados: {e}")
+        return Response({'error': 'Error interno al obtener estampados'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 @admin_required
