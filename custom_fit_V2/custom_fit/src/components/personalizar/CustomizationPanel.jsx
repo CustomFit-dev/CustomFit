@@ -92,13 +92,6 @@ const CustomizationPanel = ({
           onClick={() => setShowImageModal(true)}>
           <Image size={20} className="me-2" />
         </button>
-
-        {/* Botón para abrir modal de emojis */}
-        <button 
-          className="btnCustom d-flex align-items-center" 
-          onClick={() => setShowEmojiModal(true)}>
-          <Smile size={20} className="me-2" />
-        </button>
       </div>
     </div>
   );
