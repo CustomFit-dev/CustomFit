@@ -54,6 +54,8 @@ class Tela(models.Model):
     Disponibilidad = models.CharField(max_length=45)
     updated_at = models.DateTimeField(auto_now=True)
     precio = models.FloatField(null=True, blank=True)
+    # Nuevo campo que almacena la clase/identificador de color (ej. 'bg-danger' o nombre)
+    Color = models.CharField(max_length=50, null=True, blank=True, db_column='Color')
 
     class Meta:
         db_table = 'tela'
@@ -159,4 +161,3 @@ class ProductosPersonalizadosHasEstampado(models.Model):
         managed = False
         unique_together = (('ProductosPeronalizaos_idProductosPeronalizaos','estampado_idEstampado'),)
 
-        

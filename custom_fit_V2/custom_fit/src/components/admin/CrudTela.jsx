@@ -58,11 +58,13 @@ const TelaCrud = () => {
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [currentTela, setCurrentTela] = useState(null);
+  // Agrego el campo `color` que existe en la BD (puede ser 'bg-danger' u otro identificador)
   const [formData, setFormData] = useState({
     NombreTela: '',
     fecha_agregado: '',
     Disponibilidad: '',
     precio: '',
+    color: '', // nuevo campo
   });
   const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
@@ -86,6 +88,7 @@ const TelaCrud = () => {
       fecha_agregado: today,
       Disponibilidad: 'Si',
       precio: '',
+      color: '', // default vacío o 'bg-white'
     });
     setOpenAddModal(true);
   };
@@ -99,6 +102,8 @@ const TelaCrud = () => {
       fecha_agregado: tela.fecha_agregado || '',
       Disponibilidad: tela.Disponibilidad || 'Si',
       precio: tela.precio || '',
+      // aceptar campo tanto si la API devuelve 'Color' mayúscula o 'color' minúscula
+      color: tela.Color || tela.color || '',
     });
     setOpenEditModal(true);
   };
@@ -170,9 +175,46 @@ const TelaCrud = () => {
     }
   };
 
+  // Opciones de color (ajusta etiquetas/valores según tu catálogo)
+  const colorOptions = [
+    { value: 'bg-danger', label: 'Rojo' },
+    { value: 'bg-primary', label: 'Azul' },
+    { value: 'bg-success', label: 'Verde' },
+    { value: 'bg-white', label: 'Blanco' },
+    { value: 'bg-dark', label: 'Negro' },
+    { value: 'bg-warning', label: 'Amarillo' },
+    { value: 'bg-secondary', label: 'Gris' },
+    { value: 'bg-brown', label: 'Cafe' },
+    { value: 'bg-lila', label: 'Lila' },
+    { value: 'bg-beige', label: 'Beige' },
+    { value: 'bg-turquoise', label: 'Turquesa' },
+    { value: 'bg-fuchsia', label: 'Fucsia' },
+  ];
+  
+  const colorHex = {
+    'bg-danger': '#d32f2f', 'bg-primary': '#1976d2', 'bg-success': '#2e7d32',
+    'bg-white': '#ffffff', 'bg-dark': '#000000', 'bg-warning': '#fbc02d',
+    'bg-secondary': '#9e9e9e', 'bg-brown': '#795548', 'bg-lila': '#c27ba0',
+    'bg-beige': '#e6d7c5', 'bg-turquoise': '#17bebb', 'bg-fuchsia': '#c2185b',
+  };
+
   const columns = [
     { accessorKey: 'idTela', header: 'ID', size: 80 },
     { accessorKey: 'NombreTela', header: 'Nombre', size: 160 },
+    {
+      accessorKey: 'color',
+      header: 'Color',
+      size: 120,
+      Cell: ({ cell }) => {
+        const val = cell.getValue() || cell.row.original.Color || '';
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+            <Box sx={{ width: 22, height: 14, bgcolor: colorHex[val] || '#fff', border: '1px solid #444' }} />
+            <Typography variant="body2" sx={{ color: '#fff' }}>{val || '—'}</Typography>
+          </Box>
+        );
+      }
+    },
     {
       accessorKey: 'precio',
       header: 'Precio',
@@ -307,7 +349,7 @@ const TelaCrud = () => {
                   sx={{ input: { color: 'white' }, label: { color: '#17bebb' } }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   name="fecha_agregado"
@@ -318,7 +360,7 @@ const TelaCrud = () => {
                   sx={{ input: { color: 'white' }, label: { color: '#17bebb' } }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   name="precio"
@@ -340,6 +382,24 @@ const TelaCrud = () => {
                   >
                     <MenuItem value="Si">Disponible</MenuItem>
                     <MenuItem value="No">No Disponible</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel sx={{ color: '#17bebb' }}>Color</InputLabel>
+                  <Select
+                    name="color"
+                    value={formData.color}
+                    onChange={handleInputChange}
+                    sx={{ color: 'white' }}
+                  >
+                    {colorOptions.map(opt => (
+                      <MenuItem key={opt.value} value={opt.value}>
+                        <Box component="span" sx={{ display: 'inline-block', width: 16, height: 12, bgcolor: colorHex[opt.value] || '#fff', mr: 1, border: '1px solid #444' }} />
+                        {opt.label} ({opt.value})
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -378,7 +438,7 @@ const TelaCrud = () => {
                   sx={{ input: { color: 'white' }, label: { color: '#17bebb' } }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   name="fecha_agregado"
@@ -389,7 +449,7 @@ const TelaCrud = () => {
                   sx={{ input: { color: 'white' }, label: { color: '#17bebb' } }}
                 />
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <TextField
                   fullWidth
                   name="precio"
@@ -411,6 +471,24 @@ const TelaCrud = () => {
                   >
                     <MenuItem value="Si">Disponible</MenuItem>
                     <MenuItem value="No">No Disponible</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <FormControl fullWidth>
+                  <InputLabel sx={{ color: '#17bebb' }}>Color</InputLabel>
+                  <Select
+                    name="color"
+                    value={formData.color}
+                    onChange={handleInputChange}
+                    sx={{ color: 'white' }}
+                  >
+                    {colorOptions.map(opt => (
+                      <MenuItem key={opt.value} value={opt.value}>
+                        <Box component="span" sx={{ display: 'inline-block', width: 16, height: 12, bgcolor: colorHex[opt.value] || '#fff', mr: 1, border: '1px solid #444' }} />
+                        {opt.label} ({opt.value})
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Grid>
