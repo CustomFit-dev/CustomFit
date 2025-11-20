@@ -4,10 +4,10 @@ from .views import (
     UserViewSet, delete_user, logout_view, update_user,
     tela_list, tela_detail,
     talla_list, talla_detail, talla_create, talla_update_delete,
-    estampado_list, estampado_detail, estampado_create, estampado_update_delete,
+    estampado_list, estampado_detail, estampado_create, estampado_update_delete, estampados_usuario_list,
     color_list, color_detail, color_create, color_update_delete,
     producto_list, producto_detail, producto_create, producto_update_delete, proveedor_solicitud_list, proveedor_solicitud_detail,
-    productos_personalizados_list, productos_personalizados_detail
+    productos_personalizados_list, productos_personalizados_detail,estampados_emoji_list
 )
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken.views import obtain_auth_token
@@ -38,6 +38,9 @@ urlpatterns = [
     path('api/estampados/<int:pk>/', estampado_detail, name='estampado-detail'),
     path('api/estampados/create/', estampado_create, name='estampado-create'),
     path('api/estampados/<int:pk>/edit/', estampado_update_delete, name='estampado-update-delete'),
+    # Endpoint público para obtener estampados de rol 'usuario'
+    path('api/estampados_usuario/', estampados_usuario_list, name='estampado-usuario-list'),
+    path('api/estampados_emoji/', estampados_emoji_list, name='estampado-emoji-list'),
 
     # Colores
     path('api/colores/', color_list, name='color-list'),

@@ -3,8 +3,7 @@ import React from 'react';
 
 // Importamos los diferentes modales que se usan en la app
 import CustomGaleria from '../modules/ventanaCustom';   // Galería de diseños personalizados
-import TextModal from '../modal/Textmodal';            // Modal para agregar texto
-import EmojiModal from '../modal/EmojiModal';          // Modal para agregar emojis
+import TextModal from '../modal/Textmodal';            // Modal para agregar texto        // Modal para agregar emojis
 import ModalImageUpload from '../modal/imgModal';      // Modal para subir imágenes
 
 // Componente contenedor de todos los modales
@@ -68,13 +67,6 @@ const ModalsContainer = ({
         show={showImageModal}
         setShowImageModal={setShowImageModal}
         handleAddImage={handleAddImage}
-      />
-
-      {/* Modal para seleccionar emojis */}
-      <EmojiModal 
-        show={showEmojiModal}
-        onClose={() => setShowEmojiModal(false)}
-        onSelectEmoji={handleAddEmoji}
       />
     </>
   );

@@ -54,6 +54,8 @@ class Tela(models.Model):
     Disponibilidad = models.CharField(max_length=45)
     updated_at = models.DateTimeField(auto_now=True)
     precio = models.FloatField(null=True, blank=True)
+    # Nuevo campo que almacena la clase/identificador de color (ej. 'bg-danger' o nombre)
+    Color = models.CharField(max_length=50, null=True, blank=True, db_column='Color')
 
     class Meta:
         db_table = 'tela'
@@ -67,6 +69,8 @@ class Estampado(models.Model):
     idEstampado = models.BigAutoField(primary_key=True)
     NombreEstampado = models.CharField(max_length=45)
     TipoEstampado = models.CharField(max_length=45)
+    # Origen del estampado: 'cliente' (propuesto por cliente) o 'usuario' (creado por usuario/admin)
+    rolestampado = models.CharField(max_length=10, choices=(('cliente', 'cliente'), ('usuario', 'usuario'), ('emoji', 'emoji')), default='cliente', db_column='rolestampado')
     ImgEstampado = models.CharField(max_length=100)
     ColorEstampado = models.CharField(max_length=45)
     fecha_agregado = models.DateField(auto_now_add=True)  # ✅ se agrega automáticamente la fecha actual
@@ -157,4 +161,3 @@ class ProductosPersonalizadosHasEstampado(models.Model):
         managed = False
         unique_together = (('ProductosPeronalizaos_idProductosPeronalizaos','estampado_idEstampado'),)
 
-        
