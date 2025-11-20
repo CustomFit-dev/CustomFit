@@ -1,5 +1,5 @@
 # Imagen base de Python
-FROM python:3.11-slim
+FROM python:3.11-bullseye
 
 # Variables de entorno
 ENV PYTHONDONTWRITEBYTECODE=1
