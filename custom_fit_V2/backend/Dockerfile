@@ -1,30 +1,23 @@
-# Imagen base de Python
 FROM python:3.11-bullseye
 
-# Variables de entorno
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-# Instalar dependencias del sistema necesarias
 RUN apt-get update && apt-get install -y \
     default-libmysqlclient-dev build-essential pkg-config \
     mariadb-client curl netcat-openbsd \
     && rm -rf /var/lib/apt/lists/*
 
-# Directorio de trabajo
 WORKDIR /app
 
 # Copiar dependencias
-COPY requirements.txt /app/
+COPY custom_fit_V2/backend/requirements.txt /app/requirements.txt
 
-# Instalar dependencias de Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar todo el backend
-COPY . /app/
+# Copiar el backend completo
+COPY custom_fit_V2/backend /app
 
-# Exponer puerto
 EXPOSE 8000
 
 CMD ["gunicorn", "custom_f.wsgi:application", "--bind", "0.0.0.0:8000"]
-
