@@ -72,11 +72,12 @@ urlpatterns = [
     path('api/proveedorsolicitudes/<int:pk>/', proveedor_solicitud_detail, name='proveedorsolicitud-detail'),
 
     # Carrito por usuario
+    path('api/carrito/obtener/', obtener_carrito, name="carrito-obtener"),
+    path('api/carrito/agregar/', agregar_al_carrito, name="carrito-agregar"),
+    path('api/carrito/actualizar/', actualizar_item, name="carrito-actualizar"),
+    path('api/carrito/eliminar/', eliminar_item, name="carrito-eliminar"),
     
-path('api/carrito/obtener/', obtener_carrito, name="carrito-obtener"),
-path('api/carrito/agregar/', agregar_al_carrito, name="carrito-agregar"),
-path('api/carrito/actualizar/', actualizar_item, name="carrito-actualizar"),
-path('api/carrito/eliminar/', eliminar_item, name="carrito-eliminar"),
+    path('checkout/finalizar/', finalizar_compra, name='finalizar_compra'),
 
-path('checkout/finalizar/', finalizar_compra, name='finalizar_compra'),
+
 ]

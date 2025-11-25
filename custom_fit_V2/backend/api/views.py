@@ -28,6 +28,8 @@ from .serializers import CarritoSerializer
 from .models import Carrito, CarritoItem, Pedido, PedidoItem, Producto
 from .serializers import PedidoSerializer
 from django.db import transaction
+from .serializers import PedidoSerializer, CrearPedidoSerializer
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 logger = logging.getLogger(__name__)
 
 def admin_required(func):
@@ -882,30 +884,3 @@ def finalizar_compra(request):
 
     # Calcular total
     total = sum([item.producto.precio * item.cantidad for item in items])
-
-    # Crear Pedido
-    pedido = Pedido.objects.create(
-        usuario=usuario,
-        direccion=direccion,
-        ciudad=ciudad,
-        metodo_pago=metodo_pago,
-        total=total
-    )
-
-    # Crear PedidoItems
-    for item in items:
-        PedidoItem.objects.create(
-            pedido=pedido,
-            producto=item.producto,
-            cantidad=item.cantidad,
-            precio=item.producto.precio
-        )
-
-    # Vaciar carrito
-    items.delete()
-
-    serializer = PedidoSerializer(pedido)
-    return Response({
-        "message": "Compra realizada con éxito",
-        "pedido": serializer.data
-    })

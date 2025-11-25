@@ -13,14 +13,12 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState({ items: [] });
   const [loading, setLoading] = useState(false);
 
-  // Calcular total de items y total del carrito
   const totalItems = cart.items.reduce((sum, item) => sum + item.cantidad, 0);
   const totalPrice = cart.items.reduce(
     (sum, item) => sum + (item.producto?.PrecioProducto ?? 0) * item.cantidad,
     0
   );
 
-  // Cargar carrito al montar
   useEffect(() => {
     fetchCart();
   }, [authToken]);
@@ -32,7 +30,11 @@ export const CartProvider = ({ children }) => {
       const res = await axios.get("http://localhost:8000/api/carrito/obtener/", {
         headers: { Authorization: `Token ${authToken}` },
       });
-      setCart(res.data ?? { items: [] });
+      const itemsConTalla = res.data.items.map(item => ({
+        ...item,
+        talla: item.talla || "", // inicializamos talla vacía
+      }));
+      setCart({ items: itemsConTalla });
     } catch (err) {
       console.error(err);
       Swal.fire("Error", "No se pudo cargar el carrito.", "error");
@@ -90,6 +92,16 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+  // Actualiza cualquier propiedad de un item (como talla) localmente
+  const updateItem = (itemId, updates) => {
+    setCart(prevCart => ({
+      ...prevCart,
+      items: prevCart.items.map(item =>
+        item.id === itemId ? { ...item, ...updates } : item
+      ),
+    }));
+  };
+
   return (
     <CartContext.Provider
       value={{
@@ -98,6 +110,7 @@ export const CartProvider = ({ children }) => {
         addToCart,
         updateQuantity,
         removeItem,
+        updateItem,
         totalItems,
         totalPrice,
       }}

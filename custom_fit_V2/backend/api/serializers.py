@@ -125,12 +125,12 @@ class CarritoSerializer(serializers.ModelSerializer):
         #PEDIDOS
 
 class PedidoItemSerializer(serializers.ModelSerializer):
-    producto_nombre = serializers.CharField(source="producto.nombre", read_only=True)
-    producto_imagen = serializers.CharField(source="producto.imagen", read_only=True)
+    producto_nombre = serializers.CharField(source="producto.NombreProductos", read_only=True)
+    producto_imagen = serializers.CharField(source="producto.urlFrontal", read_only=True)
 
     class Meta:
         model = PedidoItem
-        fields = ['id', 'producto', 'producto_nombre', 'producto_imagen', 'cantidad', 'precio']
+        fields = ['id', 'producto', 'producto_nombre', 'producto_imagen', 'cantidad', 'precio', 'subtotal']
 
 
 class PedidoSerializer(serializers.ModelSerializer):
@@ -139,4 +139,22 @@ class PedidoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Pedido
-        fields = ['id', 'usuario', 'usuario_nombre', 'fecha', 'direccion', 'ciudad', 'metodo_pago', 'total', 'items']
+        fields = [
+            'id',
+            'usuario',
+            'usuario_nombre',
+            'fecha',
+            'direccion',
+            'ciudad',
+            'metodo_pago',
+            'total',
+            'items',
+            # 'estado',  ← si decides agregarlo
+        ]
+
+
+# Serializador para crear pedido desde Checkout
+class CrearPedidoSerializer(serializers.Serializer):
+    direccion = serializers.CharField()
+    ciudad = serializers.CharField()
+    metodo_pago = serializers.CharField()

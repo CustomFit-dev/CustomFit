@@ -7,7 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Checkout = () => {
-  const { cart, totalPrice, clearCart } = useCart();
+  const { cart, totalPrice, clearCart, removeItem, updateItem } = useCart();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -25,35 +25,117 @@ const Checkout = () => {
     });
   };
 
+  const handleTallaChange = (itemId, talla) => {
+    updateItem(itemId, { talla }); // Actualizamos la talla de este item
+  };
+
   const finalizarPedido = async () => {
-    if (!formData.nombre || !formData.telefono || !formData.direccion || !formData.ciudad || !formData.metodoPago) {
-      Swal.fire("Campos incompletos", "Todos los campos son obligatorios", "warning");
+    // Validación de campos generales
+    if (
+      !formData.nombre ||
+      !formData.telefono ||
+      !formData.direccion ||
+      !formData.ciudad ||
+      !formData.metodoPago
+    ) {
+      Swal.fire(
+        "Campos incompletos",
+        "Todos los campos son obligatorios",
+        "warning"
+      );
+      return;
+    }
+
+    // Validar que todos los productos tengan talla seleccionada
+    const sinTalla = cart.items.filter((item) => !item.talla);
+    if (sinTalla.length > 0) {
+      Swal.fire(
+        "Talla faltante",
+        "Selecciona una talla para todos los productos",
+        "warning"
+      );
       return;
     }
 
     try {
-      await axios.post("http://localhost:8000/api/checkout/", {
-        formulario: formData,
-        carrito: cart.items,
-        total: totalPrice,
-      });
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "http://localhost:8000/api/pedidos/crear/",
+        {
+          direccion: formData.direccion,
+          ciudad: formData.ciudad,
+          metodo_pago: formData.metodoPago,
+          productos: cart.items.map((item) => ({
+            id: item.id,
+            cantidad: item.cantidad,
+            talla: item.talla,
+          })),
+        },
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        }
+      );
 
-      Swal.fire("Pedido completado", "Tu pedido fue registrado correctamente", "success");
+      Swal.fire(
+        "Pedido completado",
+        "Tu pedido fue registrado correctamente",
+        "success"
+      );
       clearCart();
-      navigate("/");
-
+      navigate("/store");
     } catch (error) {
-      console.error(error);
+      console.error(error.response || error);
       Swal.fire("Error", "Ocurrió un problema al registrar el pedido", "error");
     }
   };
 
+  const handleRemoveItem = (itemId) => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Este producto se eliminará del carrito",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        removeItem(itemId);
+        Swal.fire(
+          "Eliminado",
+          "El producto fue eliminado del carrito",
+          "success"
+        );
+      }
+    });
+  };
+
   return (
     <div className="checkout-container">
+      {/* Botón de cerrar */}
+      <div className="close-button">
+        <button onClick={() => navigate("/store")}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
       <h1>Finalizar Compra</h1>
 
       <div className="checkout-content">
-
         {/* LISTA DE PRODUCTOS */}
         <div className="checkout-cart">
           <h3>Productos del Carrito</h3>
@@ -66,7 +148,28 @@ const Checkout = () => {
                 <div>
                   <h4>{item.producto.NombreProductos}</h4>
                   <p>Cantidad: {item.cantidad}</p>
-                  <p>Precio total: ${(item.producto.PrecioProducto * item.cantidad).toLocaleString()}</p>
+                  <p>
+                    Precio total: $
+                    {(item.producto.PrecioProducto * item.cantidad).toLocaleString()}
+                  </p>
+
+                  <select
+                    value={item.talla || ""}
+                    onChange={(e) => handleTallaChange(item.id, e.target.value)}
+                  >
+                    <option value="">Selecciona una talla</option>
+                    <option value="S">S</option>
+                    <option value="M">M</option>
+                    <option value="L">L</option>
+                    <option value="XL">XL</option>
+                  </select>
+
+                  <button
+                    className="btn-eliminar"
+                    onClick={() => handleRemoveItem(item.id)}
+                  >
+                    Eliminar
+                  </button>
                 </div>
               </div>
             ))
@@ -111,7 +214,11 @@ const Checkout = () => {
             onChange={handleChange}
           />
 
-          <select name="metodoPago" value={formData.metodoPago} onChange={handleChange}>
+          <select
+            name="metodoPago"
+            value={formData.metodoPago}
+            onChange={handleChange}
+          >
             <option value="">Método de pago</option>
             <option value="efectivo">Efectivo</option>
             <option value="transferencia">Transferencia</option>

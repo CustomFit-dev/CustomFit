@@ -9,7 +9,7 @@ import {
 // Import component modules
 import PersonalData from '../Crud';
 import PurchaseHistory from './estadisticas';
-import MyOrders from '../modules/dashboard/mis-pedidos';
+import MyOrders from './Crudpedidos';
 import Productos from './crudProductos';
 import ProductosPersonalizados from './crudProductosPersonalizados';
 
