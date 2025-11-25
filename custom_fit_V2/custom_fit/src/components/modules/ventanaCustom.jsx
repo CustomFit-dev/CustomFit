@@ -17,11 +17,12 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
         const res = await axios.get('http://localhost:8000/api/estampados_usuario/');
         const data = Array.isArray(res.data)
           ? res.data.map(d => ({
-              id: d.idEstampado,
-              src: d.ImgEstampado,
-              alt: d.NombreEstampado || 'Diseño',
-              title: d.NombreEstampado || '',
-            }))
+            id: d.idEstampado,
+            src: d.ImgEstampado,
+            alt: d.NombreEstampado || 'Diseño',
+            title: d.NombreEstampado || '',
+            price: d.PrecioEstampado || 0,
+          }))
           : [];
         setCustomDesigns(data);
       } catch (err) {
@@ -43,11 +44,12 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
         const res = await axios.get('http://localhost:8000/api/estampados_emoji/');
         const data = Array.isArray(res.data)
           ? res.data.map(d => ({
-              id: d.idEstampado,
-              src: d.ImgEstampado,
-              alt: d.NombreEstampado || 'Emoji',
-              title: d.NombreEstampado || '',
-            }))
+            id: d.idEstampado,
+            src: d.ImgEstampado,
+            alt: d.NombreEstampado || 'Emoji',
+            title: d.NombreEstampado || '',
+            price: d.PrecioEstampado || 0,
+          }))
           : [];
         setEmojiDesigns(data);
       } catch (err) {
@@ -88,7 +90,12 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
                     onClick={() => setModalImage(design)}
                   >
                     <img src={design.src} alt={design.alt} className="gallery-img" />
-                    <div className="gallery-overlay">{design.title}</div>
+                    <div className="gallery-overlay">
+                      <div>{design.title}</div>
+                      <div style={{ fontSize: '0.85em', marginTop: '4px', color: '#ffd700' }}>
+                        ${design.price ? design.price.toLocaleString('es-CO') : '0'} COP
+                      </div>
+                    </div>
                   </div>
                 ))
               )}
@@ -110,7 +117,12 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
                     onClick={() => setModalImage(emoji)}
                   >
                     <img src={emoji.src} alt={emoji.alt} className="gallery-img" />
-                    <div className="gallery-overlay">{emoji.title}</div>
+                    <div className="gallery-overlay">
+                      <div>{emoji.title}</div>
+                      <div style={{ fontSize: '0.85em', marginTop: '4px', color: '#ffd700' }}>
+                        ${emoji.price ? emoji.price.toLocaleString('es-CO') : '0'} COP
+                      </div>
+                    </div>
                   </div>
                 ))
               ) : (
@@ -149,6 +161,9 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
                   className="img-fluid rounded shadow"
                   style={{ maxHeight: "350px" }}
                 />
+                <div className="mt-3" style={{ fontSize: '1.1em', fontWeight: 'bold', color: '#17BEBB' }}>
+                  Precio: ${modalImage.price ? modalImage.price.toLocaleString('es-CO') : '0'} COP
+                </div>
               </div>
               <div className="modal-footer py-2">
                 <button
