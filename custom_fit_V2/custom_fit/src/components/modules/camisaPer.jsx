@@ -20,7 +20,7 @@ const TShirtCustomizer = () => {
         designElements, setDesignElements,
         getAllElementsCount,
         getCurrentTextElements,
-        getCurrentImageElements, 
+        getCurrentImageElements,
         getCurrentEmojiElements,
         setCurrentTextElements,
         setCurrentImageElements,
@@ -35,11 +35,15 @@ const TShirtCustomizer = () => {
         textColor, setTextColor
     } = useTShirtState();
 
+    // Estado para saber si estamos editando un elemento existente
+    const [editingElementId, setEditingElementId] = useState(null);
+
     const tshirtRef = useRef(null);
     const designAreaRef = useRef(null);
 
     const {
         activeElement,
+        setActiveElement, // Extraemos el setter para controlar la selección
         isDragging,
         handleMouseDown
     } = useDragAndResize({
@@ -52,32 +56,60 @@ const TShirtCustomizer = () => {
     });
 
     const handleBuyClick = () => {
-        handleBuy(tshirtRef, designAreaRef, { 
-            size, 
-            fabric, 
-            tshirtColor, 
-            designElements, 
-            currentView, 
+        handleBuy(tshirtRef, designAreaRef, {
+            size,
+            fabric,
+            tshirtColor,
+            designElements,
+            currentView,
             setCurrentView,
             getAllElementsCount
         });
     };
 
     const handleAddText = () => {
-        const newTextElement = {
-            id: Date.now(),
-            text: newText,
-            font: textFont,
-            size: textSize,
-            color: textColor,
-            x: 50,
-            y: 50
-        };
-        
-        const currentTexts = getCurrentTextElements();
-        setCurrentTextElements([...currentTexts, newTextElement]);
+        if (editingElementId) {
+            // Modo edición: actualizamos el elemento existente
+            const currentTexts = getCurrentTextElements();
+            const updatedTexts = currentTexts.map(el =>
+                el.id === editingElementId
+                    ? { ...el, text: newText, font: textFont, size: textSize, color: textColor }
+                    : el
+            );
+            setCurrentTextElements(updatedTexts);
+            setEditingElementId(null);
+        } else {
+            // Modo creación: creamos un nuevo elemento
+            const newTextElement = {
+                id: Date.now(),
+                text: newText,
+                font: textFont,
+                size: textSize,
+                color: textColor,
+                x: 50,
+                y: 50
+            };
+
+            const currentTexts = getCurrentTextElements();
+            setCurrentTextElements([...currentTexts, newTextElement]);
+        }
         setShowTextModal(false);
         setNewText('');
+    };
+
+    // Función para manejar el click en un elemento (selección)
+    const handleElementClick = (element, elementType) => {
+        setActiveElement({ type: elementType, id: element.id });
+    };
+
+    // Función para iniciar la edición de un texto (doble click)
+    const handleEditText = (element) => {
+        setNewText(element.text);
+        setTextFont(element.font);
+        setTextSize(element.size);
+        setTextColor(element.color);
+        setEditingElementId(element.id);
+        setShowTextModal(true);
     };
 
     const handleAddImage = (event) => {
@@ -146,7 +178,7 @@ const TShirtCustomizer = () => {
                 <h1 className="titl1">¡Crea la camiseta perfecta en tan solo 10 minutos!</h1>
                 <h2 className="titl2">Selecciona el modelo, sube tu diseño y haz tu pedido</h2>
             </div>
-            
+
             <div className="row">
                 <CustomizationPanel
                     fabric={fabric}
@@ -167,6 +199,7 @@ const TShirtCustomizer = () => {
                     imageElements={getCurrentImageElements()}
                     emojiElements={getCurrentEmojiElements()}
                     activeElement={activeElement}
+                    setActiveElement={setActiveElement}
                     isDragging={isDragging}
                     handleMouseDown={handleMouseDown}
                     removeTextElement={removeTextElement}
@@ -174,6 +207,8 @@ const TShirtCustomizer = () => {
                     removeEmojiElement={removeEmojiElement}
                     currentView={currentView}
                     setCurrentView={setCurrentView}
+                    onElementClick={handleElementClick}
+                    onEdit={handleEditText}
                 />
 
                 <InfoPanel
@@ -193,7 +228,10 @@ const TShirtCustomizer = () => {
 
             <ModalsContainer
                 showTextModal={showTextModal}
-                setShowTextModal={setShowTextModal}
+                setShowTextModal={(show) => {
+                    setShowTextModal(show);
+                    if (!show) setEditingElementId(null); // Limpiar estado de edición al cerrar
+                }}
                 showCustomModal={showCustomModal}
                 setShowCustomModal={setShowCustomModal}
                 showImageModal={showImageModal}

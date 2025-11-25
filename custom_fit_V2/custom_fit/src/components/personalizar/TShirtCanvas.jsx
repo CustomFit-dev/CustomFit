@@ -20,7 +20,10 @@ const TShirtCanvas = ({
     removeImageElement,  // Función para eliminar imágenes
     removeEmojiElement,  // Función para eliminar emojis
     currentView,         // Vista actual de la camiseta (frontal, espaldar, manga)
-    setCurrentView       // Función para cambiar la vista
+    setCurrentView,      // Función para cambiar la vista
+    setActiveElement,    // Función para controlar la selección
+    onElementClick,      // Función para manejar click en elementos
+    onEdit               // Función para editar textos
 }) => {
     // Definición de las vistas disponibles
     const views = [
@@ -90,10 +93,10 @@ const TShirtCanvas = ({
 
             {/* Contenedor principal de la camiseta */}
             <div className="position-relative" style={{ height: '700px', width: '100%' }} ref={tshirtRef}>
-                <div 
-                    className="tshirt-container position-relative" 
-                    style={{ 
-                        height: '100%', 
+                <div
+                    className="tshirt-container position-relative"
+                    style={{
+                        height: '100%',
                         width: '100%',
                         display: 'flex',
                         justifyContent: 'center',
@@ -101,18 +104,18 @@ const TShirtCanvas = ({
                     }}
                 >
                     {/* Imagen de la camiseta según vista y color */}
-                    <img 
-                        src={getImageByView(currentView, tshirtColor)} 
-                        alt={`Camiseta ${views.find(v => v.id === currentView)?.name}`} 
-                        className="position-relative" 
-                        style={{ 
+                    <img
+                        src={getImageByView(currentView, tshirtColor)}
+                        alt={`Camiseta ${views.find(v => v.id === currentView)?.name}`}
+                        className="position-relative"
+                        style={{
                             width: '100%',
                             maxWidth: '120%',
                             maxHeight: '140%',
                             zIndex: 1
-                        }} 
+                        }}
                     />
-                
+
                     {/* Área de diseño: aquí se renderizan los elementos personalizados */}
                     <div
                         ref={designAreaRef}
@@ -126,6 +129,12 @@ const TShirtCanvas = ({
                             zIndex: 2,
                             overflow: 'visible',
                         }}
+                        onClick={(e) => {
+                            // Si se hace clic directamente en el área de diseño (fondo), deseleccionar
+                            if (e.target === e.currentTarget) {
+                                setActiveElement(null);
+                            }
+                        }}
                     >
                         {/* Renderizar elementos de texto */}
                         {textElements.map((el) => (
@@ -137,6 +146,8 @@ const TShirtCanvas = ({
                                 isDragging={isDragging}
                                 handleMouseDown={handleMouseDown}
                                 removeElement={removeTextElement}
+                                onElementClick={onElementClick}
+                                onEdit={onEdit}
                             />
                         ))}
 
@@ -150,6 +161,8 @@ const TShirtCanvas = ({
                                 isDragging={isDragging}
                                 handleMouseDown={handleMouseDown}
                                 removeElement={removeImageElement}
+                                onElementClick={onElementClick}
+                                onEdit={onEdit}
                             />
                         ))}
 
@@ -163,6 +176,8 @@ const TShirtCanvas = ({
                                 isDragging={isDragging}
                                 handleMouseDown={handleMouseDown}
                                 removeElement={removeEmojiElement}
+                                onElementClick={onElementClick}
+                                onEdit={onEdit}
                             />
                         ))}
                     </div>
