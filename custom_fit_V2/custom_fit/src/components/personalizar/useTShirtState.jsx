@@ -4,11 +4,12 @@ export const useTShirtState = () => {
     // 🔹 Configuración básica de la camiseta
     const [tshirtColor, setTshirtColor] = useState('bg-white'); // Color de camiseta
     const [fabric, setFabric] = useState(null);                 // Tipo de tela
+    const [fabricPrice, setFabricPrice] = useState(0);          // Precio de la tela seleccionada
     const [size, setSize] = useState('M');                      // Talla de camiseta
-    
+
     // 🔹 Vista actual (frontal, espaldar, manga derecha, manga izquierda)
     const [currentView, setCurrentView] = useState('frontal');
-    
+
     // 🔹 Elementos de diseño organizados por vista
     const [designElements, setDesignElements] = useState({
         frontal: {
@@ -49,7 +50,7 @@ export const useTShirtState = () => {
 
     // Obtiene todos los elementos de la vista actual
     const getCurrentElements = () => designElements[currentView];
-    
+
     // Atajos para obtener elementos específicos
     const getCurrentTextElements = () => designElements[currentView].textElements;
     const getCurrentImageElements = () => designElements[currentView].imageElements;
@@ -89,9 +90,9 @@ export const useTShirtState = () => {
     // Cuenta total de elementos en todas las vistas
     const getAllElementsCount = () => {
         return Object.values(designElements).reduce((total, view) => {
-            return total 
-                + view.textElements.length 
-                + view.imageElements.length 
+            return total
+                + view.textElements.length
+                + view.imageElements.length
                 + view.emojiElements.length;
         }, 0);
     };
@@ -101,12 +102,13 @@ export const useTShirtState = () => {
         // --- Estados generales de la camiseta ---
         tshirtColor, setTshirtColor,
         fabric, setFabric,
+        fabricPrice, setFabricPrice,
         size, setSize,
-        
+
         // --- Vista actual ---
         currentView, setCurrentView,
         designElements, setDesignElements,
-        
+
         // --- Funciones para manejar elementos de la vista actual ---
         getCurrentElements,
         getCurrentTextElements,
@@ -116,19 +118,19 @@ export const useTShirtState = () => {
         setCurrentImageElements,
         setCurrentEmojiElements,
         getAllElementsCount,
-        
+
         // --- Estados de modales ---
         showTextModal, setShowTextModal,
         showImageModal, setShowImageModal,
         showEmojiModal, setShowEmojiModal,
         showCustomModal, setShowCustomModal,
-        
+
         // --- Estados de formularios de texto ---
         newText, setNewText,
         textFont, setTextFont,
         textSize, setTextSize,
         textColor, setTextColor,
-        
+
         // --- Compatibilidad con componentes existentes ---
         // Estos "alias" sirven para usar este hook sin romper código previo
         textElements: getCurrentTextElements(),

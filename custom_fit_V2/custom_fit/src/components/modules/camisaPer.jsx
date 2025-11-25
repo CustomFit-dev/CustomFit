@@ -15,6 +15,7 @@ const TShirtCustomizer = () => {
     const {
         tshirtColor, setTshirtColor,
         fabric, setFabric,
+        fabricPrice, setFabricPrice,
         size, setSize,
         currentView, setCurrentView,
         designElements, setDesignElements,
@@ -183,6 +184,7 @@ const TShirtCustomizer = () => {
                 <CustomizationPanel
                     fabric={fabric}
                     setFabric={setFabric}
+                    setFabricPrice={setFabricPrice}
                     size={size}
                     setSize={setSize}
                     setShowTextModal={setShowTextModal}
@@ -216,6 +218,7 @@ const TShirtCustomizer = () => {
                     setTshirtColor={setTshirtColor}
                     size={size}
                     fabric={fabric}
+                    fabricPrice={fabricPrice}
                     textElements={getCurrentTextElements()}
                     imageElements={getCurrentImageElements()}
                     emojiElements={getCurrentEmojiElements()}

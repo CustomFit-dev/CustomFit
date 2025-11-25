@@ -15,6 +15,7 @@ import axios from 'axios';
 const CustomizationPanel = ({
   fabric,                // Estado actual de la tela seleccionada
   setFabric,             // Función para actualizar la tela
+  setFabricPrice,        // Función para actualizar el precio de la tela
   size,                  // Estado actual de la talla seleccionada
   setSize,               // Función para actualizar la talla
   setShowTextModal,      // Función para abrir el modal de texto
@@ -24,7 +25,7 @@ const CustomizationPanel = ({
 }) => {
 
   const { authToken } = useAuth();
-  
+
   // Estado para almacenar las telas obtenidas de la BD
   const [telas, setTelas] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -58,6 +59,7 @@ const CustomizationPanel = ({
     // Solo permitir selección si está disponible
     if (tela.Disponibilidad?.toLowerCase() === 'si') {
       setFabric(tela.NombreTela);
+      setFabricPrice(tela.precio || 0);
     }
   };
 
@@ -79,32 +81,32 @@ const CustomizationPanel = ({
 
   return (
     <div className="col-md-3">
-      
+
       {/* Título del panel */}
       <div className="mb-4">
         <h4 className="fw-bold titleCam">Camisa Sencilla</h4>
       </div>
-      
+
       {/* Sección de selección de telas */}
       <div className="contTela mb-4">
         <h5 className="fw-bold mb-3">Telas</h5>
-        
+
         {/* Mostrar mensaje de carga */}
         {loading && (
           <p className="text-muted">Cargando telas...</p>
         )}
-        
+
         {/* Mostrar mensaje si no hay telas */}
         {!loading && telas.length === 0 && (
           <p className="text-muted">No hay telas disponibles</p>
         )}
-        
+
         <div className="contela">
           {/* Botón Filtrar siempre presente */}
           <button
             className={`btnTela ${fabric === 'Filtrar' ? "btn-primary" : "btn-outline-secondary"}`}
             onClick={() => setFabric('Filtrar')}
-            style={fabric === 'Filtrar' ? { backgroundColor: '#17BEBB', border: 'none'} : {}}>
+            style={fabric === 'Filtrar' ? { backgroundColor: '#17BEBB', border: 'none' } : {}}>
             Filtrar
           </button>
 
@@ -113,7 +115,7 @@ const CustomizationPanel = ({
             const disponible = tela.Disponibilidad?.toLowerCase() === 'si';
             const color = tela.Color || tela.color;
             const backgroundColor = colorHex[color] || '#ffffff';
-            
+
             return (
               <button
                 key={tela.idTela}
@@ -131,10 +133,10 @@ const CustomizationPanel = ({
                   gap: '5px'
                 }}
                 title={disponible ? tela.NombreTela : `${tela.NombreTela} - No disponible`}>
-                
+
                 {/* Muestra un pequeño indicador de color si existe */}
                 {color && (
-                  <span 
+                  <span
                     style={{
                       display: 'inline-block',
                       width: '12px',
@@ -146,9 +148,9 @@ const CustomizationPanel = ({
                     }}
                   />
                 )}
-                
+
                 {tela.NombreTela}
-                
+
                 {/* Icono de candado si no está disponible */}
                 {!disponible && (
                   <Lock size={14} style={{ marginLeft: '4px' }} />
@@ -158,7 +160,7 @@ const CustomizationPanel = ({
           })}
         </div>
       </div>
-      
+
       {/* Sección de selección de tallas */}
       <div className="mb-4">
         <h5 className="fw-bold mb-3">Tallas</h5>
@@ -174,28 +176,28 @@ const CustomizationPanel = ({
           ))}
         </div>
       </div>
-      
+
       {/* Sección de personalización */}
       <h5 className="fw-bold mb-2">Personalización</h5>
       <div className="ContaSubur d-flex gap-3">
-        
+
         {/* Botón para abrir modal de texto */}
-        <button 
-          className="btnCustom d-flex align-items-center" 
+        <button
+          className="btnCustom d-flex align-items-center"
           onClick={() => setShowTextModal(true)}>
           <Type size={20} className="me-2" />
         </button>
 
         {/* Botón para abrir modal de personalización avanzada */}
-        <button 
-          className="btnCustom d-flex align-items-center" 
+        <button
+          className="btnCustom d-flex align-items-center"
           onClick={() => setShowCustomModal(true)}>
           <Custom size={20} className="me-2" />
         </button>
 
         {/* Botón para abrir modal de imágenes */}
-        <button 
-          className="btnCustom d-flex align-items-center" 
+        <button
+          className="btnCustom d-flex align-items-center"
           onClick={() => setShowImageModal(true)}>
           <Image size={20} className="me-2" />
         </button>

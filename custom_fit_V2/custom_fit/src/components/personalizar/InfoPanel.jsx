@@ -12,6 +12,7 @@ const InfoPanel = ({
   setTshirtColor,       // Función para actualizar el color de la camiseta
   size,                 // Talla seleccionada
   fabric,               // Tela seleccionada
+  fabricPrice,          // Precio de la tela seleccionada
   textElements,         // Lista de elementos de texto agregados
   imageElements,        // Lista de elementos de imagen agregados
   emojiElements,        // Lista de elementos emoji agregados
@@ -31,14 +32,14 @@ const InfoPanel = ({
 
   return (
     <div className="col-md-3">
-      
+
       {/* Sección: Colores de camiseta */}
       <div className="mb-4">
         <h5 className="fw-bold mb-2">Colores de Camiseta</h5>
         <div className="d-flex flex-wrap gap-2">
           {Object.entries(colorImages).map(([colorClass, imageSrc]) => (
-            <button 
-              key={colorClass} 
+            <button
+              key={colorClass}
               className={`btn ${colorClass} rounded-circle`} // Botón circular para mostrar el color
               style={{ width: '3rem', height: '3rem' }}
               title={colorClass} // Tooltip con el nombre de la clase/color
@@ -47,7 +48,7 @@ const InfoPanel = ({
           ))}
         </div>
       </div>
-      
+
       {/* Tarjeta: Información de la selección actual */}
       <div className="card mb-4">
         <div className="card-body">
@@ -56,26 +57,29 @@ const InfoPanel = ({
             <li><strong>Talla:</strong> {size}</li>
             <li><strong>Tela:</strong> {fabric || 'No seleccionada'}</li>
             <li>
-              <strong>Vista actual:</strong> 
+              <strong>Precio tela:</strong> ${fabricPrice ? fabricPrice.toLocaleString('es-CO') : '0'} COP
+            </li>
+            <li>
+              <strong>Vista actual:</strong>
               {views.find(v => v.id === currentView)?.name}
             </li>
             <li>
-              <strong>Elementos vista actual:</strong> 
+              <strong>Elementos vista actual:</strong>
               {textElements.length + imageElements.length + emojiElements.length}
             </li>
             <li>
-              <strong>Total elementos:</strong> 
+              <strong>Total elementos:</strong>
               {getAllElementsCount ? getAllElementsCount() : 0}
             </li>
           </ul>
         </div>
       </div>
-      
+
       {/* Botones de acción */}
       <div className="d-grid gap-3">
         {/* Botón para descargar los diseños */}
-        <button 
-          className="btn btn-success btn-lg fw-bold" 
+        <button
+          className="btn btn-success btn-lg fw-bold"
           onClick={handleBuyClick}>
           Descargar Diseños
         </button>
