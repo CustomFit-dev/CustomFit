@@ -116,7 +116,7 @@ const Form = ({ correo, onClose, onSuccess }) => {
             navigate('/home_domiciliario');
             break;
           case 'administrador':
-            navigate('/Home_L');
+            navigate('/Admin');
             break;
           default:
             console.warn('Rol no reconocido para navegación:', userData.rol);
