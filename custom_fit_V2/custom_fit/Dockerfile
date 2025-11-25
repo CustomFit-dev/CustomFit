@@ -1,20 +1,23 @@
-# Imagen base con Node
+# Imagen base
 FROM node:18
 
-# Establece el directorio de trabajo
 WORKDIR /app
 
-# Copia los archivos necesarios
+# Copiar configuraciones
 COPY package*.json ./
 
-# Instala dependencias
+# Instalar dependencias
 RUN npm install
 
-# Copia el resto del proyecto
+# Construir la aplicación
 COPY . .
+RUN npm run build
 
-# Expone el puerto donde corre React
+# Instalar servidor estático
+RUN npm install -g serve
+
+# Exponer el puerto
 EXPOSE 3000
 
-# Comando para iniciar el frontend
-CMD ["npm", "start"]
+# Servir la build
+CMD ["serve", "-s", "dist", "-l", "3000"]
