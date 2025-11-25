@@ -1,4 +1,5 @@
 from django.urls import path, include
+from . import views   # <-- AGREGA ESTA LÍNEA
 from .views import (
     home, register_user, enviar_codigo_view, login_view,
     UserViewSet, delete_user, logout_view, update_user,
@@ -10,12 +11,10 @@ from .views import (
     proveedor_solicitud_list, proveedor_solicitud_detail,
     productos_personalizados_list, productos_personalizados_detail,
     estampados_emoji_list,
-
-    obtener_carrito,
-    agregar_al_carrito,
-    actualizar_item,
-    eliminar_item
+    obtener_carrito, agregar_al_carrito, actualizar_item, eliminar_item,
+    finalizar_compra   # también puedes agregar este aquí
 )
+
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken.views import obtain_auth_token
 
@@ -79,4 +78,5 @@ path('api/carrito/agregar/', agregar_al_carrito, name="carrito-agregar"),
 path('api/carrito/actualizar/', actualizar_item, name="carrito-actualizar"),
 path('api/carrito/eliminar/', eliminar_item, name="carrito-eliminar"),
 
+path('checkout/finalizar/', finalizar_compra, name='finalizar_compra'),
 ]

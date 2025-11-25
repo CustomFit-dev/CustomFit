@@ -5,6 +5,7 @@ from .models import Carrito, CarritoItem, Producto
 from rest_framework import serializers
 from .models import UserProfile, Project, Rol
 from .models import Tela, Estampado,  Producto, ProveedorSolicitud, ProductosPersonalizados
+from .models import Pedido, PedidoItem
 
 class RolSerializer(serializers.ModelSerializer):
     class Meta:
@@ -120,3 +121,22 @@ class CarritoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Carrito
         fields = ["id", "usuario", "items"]
+
+        #PEDIDOS
+
+class PedidoItemSerializer(serializers.ModelSerializer):
+    producto_nombre = serializers.CharField(source="producto.nombre", read_only=True)
+    producto_imagen = serializers.CharField(source="producto.imagen", read_only=True)
+
+    class Meta:
+        model = PedidoItem
+        fields = ['id', 'producto', 'producto_nombre', 'producto_imagen', 'cantidad', 'precio']
+
+
+class PedidoSerializer(serializers.ModelSerializer):
+    items = PedidoItemSerializer(many=True, read_only=True)
+    usuario_nombre = serializers.CharField(source="usuario.username", read_only=True)
+
+    class Meta:
+        model = Pedido
+        fields = ['id', 'usuario', 'usuario_nombre', 'fecha', 'direccion', 'ciudad', 'metodo_pago', 'total', 'items']

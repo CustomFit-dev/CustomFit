@@ -25,6 +25,9 @@ from functools import wraps;
 from rest_framework.decorators import authentication_classes
 from .models import Carrito, CarritoItem, Producto
 from .serializers import CarritoSerializer
+from .models import Carrito, CarritoItem, Pedido, PedidoItem, Producto
+from .serializers import PedidoSerializer
+from django.db import transaction
 logger = logging.getLogger(__name__)
 
 def admin_required(func):
@@ -817,3 +820,92 @@ def eliminar_item(request):
         return Response(serializer.data)
     except CarritoItem.DoesNotExist:
         return Response({"error": "Item no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+#PEDIDOS
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def finalizar_compra(request):
+    usuario = request.user
+    direccion = request.data.get('direccion')
+    metodo_pago = request.data.get('metodo_pago')
+
+    carrito, _ = Carrito.objects.get_or_create(usuario=usuario)
+    items_carrito = carrito.items.all()
+
+    if not items_carrito:
+        return Response({"error": "El carrito está vacío"}, status=400)
+
+    total = sum(item.cantidad * Producto.objects.get(idProductos=item.producto_id).PrecioProducto for item in items_carrito)
+
+    with transaction.atomic():
+        pedido = Pedido.objects.create(
+            usuario=usuario,
+            direccion=direccion,
+            metodo_pago=metodo_pago,
+            total=total
+        )
+
+        for item in items_carrito:
+            producto = Producto.objects.get(idProductos=item.producto_id)
+            PedidoItem.objects.create(
+                pedido=pedido,
+                producto=producto,
+                cantidad=item.cantidad,
+                talla=getattr(producto, 'Tallas', None),
+                precio_unitario=producto.PrecioProducto
+            )
+
+        # Vaciar carrito
+        items_carrito.delete()
+
+    serializer = PedidoSerializer(pedido)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def finalizar_compra(request):
+    usuario = request.user
+
+    direccion = request.data.get("direccion")
+    ciudad = request.data.get("ciudad")
+    metodo_pago = request.data.get("metodo_pago")
+
+    if not direccion or not ciudad or not metodo_pago:
+        return Response({"error": "Faltan datos del formulario"}, status=400)
+
+    # Obtener carrito
+    carrito, _ = Carrito.objects.get_or_create(usuario=usuario)
+    items = carrito.items.all()
+
+    if not items.exists():
+        return Response({"error": "El carrito está vacío"}, status=400)
+
+    # Calcular total
+    total = sum([item.producto.precio * item.cantidad for item in items])
+
+    # Crear Pedido
+    pedido = Pedido.objects.create(
+        usuario=usuario,
+        direccion=direccion,
+        ciudad=ciudad,
+        metodo_pago=metodo_pago,
+        total=total
+    )
+
+    # Crear PedidoItems
+    for item in items:
+        PedidoItem.objects.create(
+            pedido=pedido,
+            producto=item.producto,
+            cantidad=item.cantidad,
+            precio=item.producto.precio
+        )
+
+    # Vaciar carrito
+    items.delete()
+
+    serializer = PedidoSerializer(pedido)
+    return Response({
+        "message": "Compra realizada con éxito",
+        "pedido": serializer.data
+    })

@@ -193,6 +193,13 @@ const Shop = () => {
         )}
 
         <h4>Total: ${totalPrice.toLocaleString()}</h4>
+
+        <button
+          className="btn btn-success w-100 mt-3"
+          onClick={() => navigate("/checkout")}
+        >
+          Finalizar Compra
+        </button>
       </div>
 
       {/* BOTÓN FLOTANTE */}

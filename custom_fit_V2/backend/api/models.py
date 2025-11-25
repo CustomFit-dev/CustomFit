@@ -176,3 +176,27 @@ class CarritoItem(models.Model):
 
     def __str__(self):
         return f"Producto {self.producto.NombreProductos} x {self.cantidad}"
+
+class Pedido(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    fecha = models.DateTimeField(auto_now_add=True)
+    direccion = models.CharField(max_length=255)
+    ciudad = models.CharField(max_length=100)
+    metodo_pago = models.CharField(max_length=50)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"Pedido #{self.id} de {self.usuario.username}"
+
+
+class PedidoItem(models.Model):
+    pedido = models.ForeignKey(Pedido, related_name="items", on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField(default=1)
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def subtotal(self):
+        return self.cantidad * self.precio
+
+    def __str__(self):
+        return f"{self.producto.nombre} x{self.cantidad}"

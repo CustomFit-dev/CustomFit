@@ -13,6 +13,7 @@ import Personalizar from './components/Personalizar';
 import Admin from './components/admin';
 import FormProveedor from './components/modules/FormProveedor';
 import ProtectedRoute from './components/modules/ProtectedRoute';
+import Checkout from "./components/pages/Checkout"
 import { CartProvider } from "./context/CartContext";
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
           <Route path="/Domi" element={<Domi />} />
           <Route path="/Prove" element={<Proveedor />} />
           <Route path="/Personalizar" element={<Personalizar />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route
             path="/Admin"
             element={
