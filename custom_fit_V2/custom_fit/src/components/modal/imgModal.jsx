@@ -142,9 +142,12 @@ const ModalImageUpload = ({ show, setShowImageModal, handleAddImage }) => {
 
       Swal.fire('Éxito', 'Estampado guardado correctamente', 'success');
 
-      // 4. Add to shirt (Simulate event)
+      // 4. Add to shirt with price
       if (handleAddImage) {
-        handleAddImage({ target: { files: [imageFile] } });
+        handleAddImage({
+          src: imageUrl,
+          price: calculatedPrice
+        });
       }
 
       setShowImageModal(false);

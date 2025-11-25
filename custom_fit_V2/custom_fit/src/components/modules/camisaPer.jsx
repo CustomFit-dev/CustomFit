@@ -20,6 +20,7 @@ const TShirtCustomizer = () => {
         currentView, setCurrentView,
         designElements, setDesignElements,
         getAllElementsCount,
+        getTotalPrice,
         getCurrentTextElements,
         getCurrentImageElements,
         getCurrentEmojiElements,
@@ -44,7 +45,7 @@ const TShirtCustomizer = () => {
 
     const {
         activeElement,
-        setActiveElement, // Extraemos el setter para controlar la selección
+        setActiveElement,
         isDragging,
         handleMouseDown
     } = useDragAndResize({
@@ -70,7 +71,6 @@ const TShirtCustomizer = () => {
 
     const handleAddText = () => {
         if (editingElementId) {
-            // Modo edición: actualizamos el elemento existente
             const currentTexts = getCurrentTextElements();
             const updatedTexts = currentTexts.map(el =>
                 el.id === editingElementId
@@ -80,7 +80,6 @@ const TShirtCustomizer = () => {
             setCurrentTextElements(updatedTexts);
             setEditingElementId(null);
         } else {
-            // Modo creación: creamos un nuevo elemento
             const newTextElement = {
                 id: Date.now(),
                 text: newText,
@@ -98,12 +97,10 @@ const TShirtCustomizer = () => {
         setNewText('');
     };
 
-    // Función para manejar el click en un elemento (selección)
     const handleElementClick = (element, elementType) => {
         setActiveElement({ type: elementType, id: element.id });
     };
 
-    // Función para iniciar la edición de un texto (doble click)
     const handleEditText = (element) => {
         setNewText(element.text);
         setTextFont(element.font);
@@ -113,8 +110,25 @@ const TShirtCustomizer = () => {
         setShowTextModal(true);
     };
 
-    const handleAddImage = (event) => {
-        const file = event.target.files[0];
+    const handleAddImage = (eventOrData) => {
+        // Check if it's an image data object (from imgModal or ventanaCustom)
+        if (eventOrData.src && eventOrData.price !== undefined) {
+            const currentImages = getCurrentImageElements();
+            setCurrentImageElements([...currentImages, {
+                id: Date.now(),
+                src: eventOrData.src,
+                x: 50,
+                y: 50,
+                width: 100,
+                height: 100,
+                price: eventOrData.price
+            }]);
+            setShowImageModal(false);
+            return;
+        }
+
+        // Otherwise, it's a file upload event
+        const file = eventOrData.target?.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -125,7 +139,8 @@ const TShirtCustomizer = () => {
                     x: 50,
                     y: 50,
                     width: 100,
-                    height: 100
+                    height: 100,
+                    price: 0
                 }]);
                 setShowImageModal(false);
             };
@@ -145,15 +160,16 @@ const TShirtCustomizer = () => {
         setShowEmojiModal(false);
     };
 
-    const handleSelectCustomDesign = (imageSrc) => {
+    const handleSelectCustomDesign = (imageData) => {
         const currentImages = getCurrentImageElements();
         setCurrentImageElements([...currentImages, {
             id: Date.now(),
-            src: imageSrc,
+            src: imageData.src || imageData,
             x: 50,
             y: 50,
             width: 100,
-            height: 100
+            height: 100,
+            price: imageData.price || 0
         }]);
         setShowCustomModal(false);
     };
@@ -219,6 +235,7 @@ const TShirtCustomizer = () => {
                     size={size}
                     fabric={fabric}
                     fabricPrice={fabricPrice}
+                    getTotalPrice={getTotalPrice}
                     textElements={getCurrentTextElements()}
                     imageElements={getCurrentImageElements()}
                     emojiElements={getCurrentEmojiElements()}
@@ -233,7 +250,7 @@ const TShirtCustomizer = () => {
                 showTextModal={showTextModal}
                 setShowTextModal={(show) => {
                     setShowTextModal(show);
-                    if (!show) setEditingElementId(null); // Limpiar estado de edición al cerrar
+                    if (!show) setEditingElementId(null);
                 }}
                 showCustomModal={showCustomModal}
                 setShowCustomModal={setShowCustomModal}

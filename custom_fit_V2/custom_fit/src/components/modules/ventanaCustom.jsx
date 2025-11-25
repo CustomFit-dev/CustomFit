@@ -64,7 +64,7 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
   }, []);
 
   const handleApplyImage = (image) => {
-    onSelectImage(image.src);
+    onSelectImage({ src: image.src, price: image.price });
     onClose();
   };
 

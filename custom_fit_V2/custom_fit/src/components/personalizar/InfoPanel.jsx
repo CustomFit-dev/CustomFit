@@ -13,6 +13,7 @@ const InfoPanel = ({
   size,                 // Talla seleccionada
   fabric,               // Tela seleccionada
   fabricPrice,          // Precio de la tela seleccionada
+  getTotalPrice,        // Función para calcular el precio total
   textElements,         // Lista de elementos de texto agregados
   imageElements,        // Lista de elementos de imagen agregados
   emojiElements,        // Lista de elementos emoji agregados
@@ -29,6 +30,12 @@ const InfoPanel = ({
     { id: 'mangaIzquierda', name: 'Manga izquierda' },
     { id: 'espaldar', name: 'Espaldar' }
   ];
+
+  // Calcular el precio total
+  const totalPrice = getTotalPrice ? getTotalPrice() : 0;
+
+  // Contar estampados (solo imágenes)
+  const totalStamps = imageElements.length;
 
   return (
     <div className="col-md-3">
@@ -60,18 +67,24 @@ const InfoPanel = ({
               <strong>Precio tela:</strong> ${fabricPrice ? fabricPrice.toLocaleString('es-CO') : '0'} COP
             </li>
             <li>
-              <strong>Vista actual:</strong>
-              {views.find(v => v.id === currentView)?.name}
+              <strong>Estampados:</strong> {totalStamps}
             </li>
             <li>
-              <strong>Elementos vista actual:</strong>
-              {textElements.length + imageElements.length + emojiElements.length}
+              <strong>Vista actual:</strong>
+              {views.find(v => v.id === currentView)?.name}
             </li>
             <li>
               <strong>Total elementos:</strong>
               {getAllElementsCount ? getAllElementsCount() : 0}
             </li>
           </ul>
+
+          {/* Precio total destacado */}
+          <div className="mt-3 pt-3 border-top">
+            <h5 className="fw-bold text-primary mb-0">
+              TOTAL: ${totalPrice.toLocaleString('es-CO')} COP
+            </h5>
+          </div>
         </div>
       </div>
 

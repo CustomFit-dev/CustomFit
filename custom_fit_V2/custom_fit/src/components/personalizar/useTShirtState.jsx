@@ -97,6 +97,21 @@ export const useTShirtState = () => {
         }, 0);
     };
 
+    // 🔹 Calcula el precio total: tela + todos los estampados
+    const getTotalPrice = () => {
+        // Precio de la tela
+        let total = fabricPrice;
+
+        // Sumar precios de todas las imágenes en todas las vistas
+        Object.values(designElements).forEach(view => {
+            view.imageElements.forEach(img => {
+                total += (img.price || 0);
+            });
+        });
+
+        return total;
+    };
+
     // 🔹 Retorno del hook
     return {
         // --- Estados generales de la camiseta ---
@@ -118,6 +133,7 @@ export const useTShirtState = () => {
         setCurrentImageElements,
         setCurrentEmojiElements,
         getAllElementsCount,
+        getTotalPrice,
 
         // --- Estados de modales ---
         showTextModal, setShowTextModal,
