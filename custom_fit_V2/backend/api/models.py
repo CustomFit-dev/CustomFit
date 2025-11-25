@@ -161,3 +161,18 @@ class ProductosPersonalizadosHasEstampado(models.Model):
         managed = False
         unique_together = (('ProductosPeronalizaos_idProductosPeronalizaos','estampado_idEstampado'),)
 
+#carrtito de compras
+
+class Carrito(models.Model):
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Carrito de {self.usuario.username}"
+
+class CarritoItem(models.Model):
+    carrito = models.ForeignKey(Carrito, on_delete=models.CASCADE, related_name='items')
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)  # ✅ Antes era IntegerField
+    cantidad = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"Producto {self.producto.NombreProductos} x {self.cantidad}"

@@ -13,33 +13,41 @@ import Personalizar from './components/Personalizar';
 import Admin from './components/admin';
 import FormProveedor from './components/modules/FormProveedor';
 import ProtectedRoute from './components/modules/ProtectedRoute';
+import { CartProvider } from "./context/CartContext";
 
 function App() {
   return (
     <div className="App">
-      <Routes>
-        <Route path="/Home" element={<Home />} />
-        <Route path="/Store" element={<Store />} />
-        <Route path="/Registro" element={<Form_r />} />
-        <Route path="/Iniciar" element={<Form_i />} />
-        <Route path="/Verificar" element={<Verificar />} />
-        <Route path="/Crud" element={<Crud />} />
-        <Route path="/Home_L" element={<Home_l />} />
-        <Route path="/Profile" element={<Profile />} />
-        <Route path="*" element={<Navigate to="/Home" />} />
-        <Route path="/Domi" element={<Domi />} />
-        <Route path="/Prove" element={<Proveedor />} />
-        <Route path="/Personalizar" element={<Personalizar />} />
-        <Route
-          path="/Admin"
-          element={
-            <ProtectedRoute roles={['administrador']}>
-              <Admin />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="/FormProveedor" element={<FormProveedor />} />
-      </Routes>
+
+      {/* ⬅️ ENVOLVER TODA LA APP */}
+      <CartProvider>
+
+        <Routes>
+          <Route path="/Home" element={<Home />} />
+          <Route path="/Store" element={<Store />} />
+          <Route path="/Registro" element={<Form_r />} />
+          <Route path="/Iniciar" element={<Form_i />} />
+          <Route path="/Verificar" element={<Verificar />} />
+          <Route path="/Crud" element={<Crud />} />
+          <Route path="/Home_L" element={<Home_l />} />
+          <Route path="/Profile" element={<Profile />} />
+          <Route path="/Domi" element={<Domi />} />
+          <Route path="/Prove" element={<Proveedor />} />
+          <Route path="/Personalizar" element={<Personalizar />} />
+          <Route
+            path="/Admin"
+            element={
+              <ProtectedRoute roles={['administrador']}>
+                <Admin />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/FormProveedor" element={<FormProveedor />} />
+          <Route path="*" element={<Navigate to="/Home" />} />
+        </Routes>
+
+      </CartProvider>
+
     </div>
   );
 }

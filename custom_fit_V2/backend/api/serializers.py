@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import UserProfile, Project, Rol
 from django.contrib.auth.models import User
-
+from .models import Carrito, CarritoItem, Producto
 from rest_framework import serializers
 from .models import UserProfile, Project, Rol
 from .models import Tela, Estampado,  Producto, ProveedorSolicitud, ProductosPersonalizados
@@ -100,3 +100,23 @@ class ProveedorSolicitudSerializer(serializers.ModelSerializer):
         model = ProveedorSolicitud
         fields = '__all__'
         read_only_fields = ['usuario']
+
+#carrito
+class ProductoCarritoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Producto
+        fields = ["idProductos", "NombreProductos", "PrecioProducto", "urlFrontal"]
+
+class CarritoItemSerializer(serializers.ModelSerializer):
+    producto = ProductoCarritoSerializer()  # Serializa el producto completo
+
+    class Meta:
+        model = CarritoItem
+        fields = ["id", "producto", "cantidad"]
+
+class CarritoSerializer(serializers.ModelSerializer):
+    items = CarritoItemSerializer(many=True)
+
+    class Meta:
+        model = Carrito
+        fields = ["id", "usuario", "items"]

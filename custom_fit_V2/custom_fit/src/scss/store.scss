@@ -577,17 +577,18 @@ button {
 
 .cart-panel {
   position: fixed;
-  top: 50px;
+  top: 70px;
   right: -350px;
-  width: 350px;
-  max-height: 80vh;
-  overflow-y: auto;
-  background-color: #fff;
-  border: 2px solid #17bebb;
-  border-radius: 10px;
+  width: 400px;
+  max-height: 80%;
+  background: #000;
+  color: #17bebb;
   padding: 20px;
-  transition: right 0.3s ease;
-  z-index: 1000;
+  border-radius: 10px 0 0 10px;
+  box-shadow: -5px 5px 20px rgba(0, 0, 0, 0.3);
+  transition: right 0.4s ease, opacity 0.4s ease;
+  overflow-y: auto;
+  z-index: 999;
 }
 
 .cart-panel.visible {
@@ -807,8 +808,8 @@ button {
   position: fixed;
   top: 70px;
   right: -350px;
-  width: 300px;
-  max-height: 80%;
+  width: 350px;
+  max-height: 90%;
   background: #000;
   color: #17bebb;
   padding: 20px;
