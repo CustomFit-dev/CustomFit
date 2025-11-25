@@ -1,20 +1,26 @@
-# Imagen base con Node
+# Imagen base
 FROM node:18
 
-# Establece el directorio de trabajo
+# Crear directorio de trabajo
 WORKDIR /app
 
-# Copia los archivos necesarios
+# Copiar package.json y package-lock.json si existe
 COPY package*.json ./
 
-# Instala dependencias
+# Instalar dependencias
 RUN npm install
 
-# Copia el resto del proyecto
+# Copiar todo el proyecto
 COPY . .
 
-# Expone el puerto donde corre React
+# Compilar el frontend
+RUN npm run build
+
+# Instalar servidor estático
+RUN npm install -g serve
+
+# Exponer el puerto
 EXPOSE 3000
 
-# Comando para iniciar el frontend
-CMD ["npm", "start"]
+# Servir la build de CRA
+CMD ["serve", "-s", "build", "-l", "3000"]
