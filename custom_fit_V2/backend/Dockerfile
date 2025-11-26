@@ -11,12 +11,12 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copiar dependencias
-COPY custom_fit_V2/backend/requirements.txt /app/requirements.txt
+COPY requirements.txt /app/requirements.txt
 
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar el backend completo
-COPY custom_fit_V2/backend /app
+COPY  . /app
 
 EXPOSE 8000
 
