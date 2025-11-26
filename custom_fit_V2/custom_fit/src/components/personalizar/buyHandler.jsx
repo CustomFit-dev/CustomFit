@@ -80,7 +80,13 @@ export const handleBuy = async (
 
         setCurrentView(originalView);
 
-        const estampadosIds = [];
+        // Extraer IDs de estampados de TODOS los elementos de imagen
+        const estampadosIds = imageElements
+            .filter(img => img.idEstampado) // Solo los que tienen ID de BD
+            .map(img => img.idEstampado);
+
+        console.log('TODOS los elementos de imagen:', imageElements);
+        console.log('IDs de estampados encontrados:', estampadosIds);
 
         // 2. Mostrar formulario
         const { value: formValues } = await Swal.fire({
@@ -148,6 +154,8 @@ export const handleBuy = async (
             ...uploadedUrls,
             estampados: estampadosIds
         };
+
+        console.log('Payload a enviar:', payload);
 
         if (!authToken) {
             throw new Error("No estás autenticado. Por favor inicia sesión.");

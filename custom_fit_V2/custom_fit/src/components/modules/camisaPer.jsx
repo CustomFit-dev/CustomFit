@@ -10,10 +10,10 @@ import ModalsContainer from '../personalizar/ModalsContainer';
 import { useTShirtState } from '../personalizar/useTShirtState';
 import { useDragAndResize } from '../personalizar/useDragAndResize';
 import { handleBuy } from '../personalizar/buyHandler';
-import { useAuth } from './authcontext'; // Importar AuthContext
+import { useAuth } from './authcontext';
 
 const TShirtCustomizer = () => {
-    const { authToken } = useAuth(); // Obtener token
+    const { authToken } = useAuth();
     const {
         tshirtColor, setTshirtColor,
         fabric, setFabric,
@@ -39,7 +39,6 @@ const TShirtCustomizer = () => {
         textColor, setTextColor
     } = useTShirtState();
 
-    // Estado para saber si estamos editando un elemento existente
     const [editingElementId, setEditingElementId] = useState(null);
 
     const tshirtRef = useRef(null);
@@ -60,7 +59,6 @@ const TShirtCustomizer = () => {
     });
 
     const handleBuyClick = () => {
-        // Validaciones
         if (!fabric) {
             import("sweetalert2").then(Swal => {
                 Swal.default.fire({
@@ -73,7 +71,6 @@ const TShirtCustomizer = () => {
         }
 
         const currentImages = getCurrentImageElements();
-        // Validación: debe haber al menos un estampado, texto o emoji
         if (currentImages.length === 0 && getCurrentTextElements().length === 0 && getCurrentEmojiElements().length === 0) {
             import("sweetalert2").then(Swal => {
                 Swal.default.fire({
@@ -85,6 +82,14 @@ const TShirtCustomizer = () => {
             return;
         }
 
+        // Recopilar TODOS los elementos de imagen de TODAS las vistas
+        const allImageElements = [
+            ...(designElements.frontal?.imageElements || []),
+            ...(designElements.espaldar?.imageElements || []),
+            ...(designElements.mangaDerecha?.imageElements || []),
+            ...(designElements.mangaIzquierda?.imageElements || [])
+        ];
+
         handleBuy(tshirtRef, designAreaRef, {
             size,
             fabric,
@@ -94,8 +99,8 @@ const TShirtCustomizer = () => {
             setCurrentView,
             getAllElementsCount,
             totalPrice: getTotalPrice ? getTotalPrice() : 0,
-            imageElements: currentImages,
-            authToken // Pasar el token
+            imageElements: allImageElements,
+            authToken
         });
     };
 
@@ -141,7 +146,6 @@ const TShirtCustomizer = () => {
     };
 
     const handleAddImage = (eventOrData) => {
-        // Check if it's an image data object (from imgModal or ventanaCustom)
         if (eventOrData.src && eventOrData.price !== undefined) {
             const currentImages = getCurrentImageElements();
             setCurrentImageElements([...currentImages, {
@@ -151,13 +155,14 @@ const TShirtCustomizer = () => {
                 y: 50,
                 width: 100,
                 height: 100,
-                price: eventOrData.price
+                price: eventOrData.price,
+                idEstampado: eventOrData.idEstampado || null,
+                rolestampado: eventOrData.rolestampado || 'cliente'
             }]);
             setShowImageModal(false);
             return;
         }
 
-        // Otherwise, it's a file upload event
         const file = eventOrData.target?.files[0];
         if (file) {
             const reader = new FileReader();
@@ -170,7 +175,9 @@ const TShirtCustomizer = () => {
                     y: 50,
                     width: 100,
                     height: 100,
-                    price: 0
+                    price: 0,
+                    idEstampado: null,
+                    rolestampado: 'cliente'
                 }]);
                 setShowImageModal(false);
             };
@@ -199,7 +206,9 @@ const TShirtCustomizer = () => {
             y: 50,
             width: 100,
             height: 100,
-            price: imageData.price || 0
+            price: imageData.price || 0,
+            idEstampado: imageData.idEstampado || null,
+            rolestampado: imageData.rolestampado || 'cliente'
         }]);
         setShowCustomModal(false);
     };

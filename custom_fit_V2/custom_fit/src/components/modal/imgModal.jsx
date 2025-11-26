@@ -133,20 +133,26 @@ const ModalImageUpload = ({ show, setShowImageModal, handleAddImage }) => {
       };
 
       // 3. Save to backend
-      await axios.post('http://localhost:8000/api/estampados/create/', dataToSend, {
+      const response = await axios.post('http://localhost:8000/api/estampados/create/', dataToSend, {
         headers: {
           Authorization: `Token ${authToken}`,
           'Content-Type': 'application/json'
         }
       });
 
+      // Capture the idEstampado from the response
+      const savedStamp = response.data;
+      const idEstampado = savedStamp.idEstampado;
+
       Swal.fire('Éxito', 'Estampado guardado correctamente', 'success');
 
-      // 4. Add to shirt with price
+      // 4. Add to shirt with price, idEstampado, and rolestampado
       if (handleAddImage) {
         handleAddImage({
           src: imageUrl,
-          price: calculatedPrice
+          price: calculatedPrice,
+          idEstampado: idEstampado,
+          rolestampado: formData.rolestampado
         });
       }
 

@@ -22,6 +22,7 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
             alt: d.NombreEstampado || 'Diseño',
             title: d.NombreEstampado || '',
             price: d.PrecioEstampado || 0,
+            rolestampado: 'usuario'
           }))
           : [];
         setCustomDesigns(data);
@@ -49,6 +50,7 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
             alt: d.NombreEstampado || 'Emoji',
             title: d.NombreEstampado || '',
             price: d.PrecioEstampado || 0,
+            rolestampado: 'emoji'
           }))
           : [];
         setEmojiDesigns(data);
@@ -64,7 +66,12 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
   }, []);
 
   const handleApplyImage = (image) => {
-    onSelectImage({ src: image.src, price: image.price });
+    onSelectImage({
+      src: image.src,
+      price: image.price,
+      idEstampado: image.id,
+      rolestampado: image.rolestampado
+    });
     onClose();
   };
 
