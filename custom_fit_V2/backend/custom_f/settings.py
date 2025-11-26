@@ -5,7 +5,7 @@ Adaptado para Render (producción con MySQL + React)
 
 from pathlib import Path
 import os
-import dj_database_url  # 👈 asegúrate de tenerlo en requirements.txt
+# import dj_database_url  # 👈 asegúrate de tenerlo en requirements.txt
 
 # ----------------------------
 # RUTAS BASE
@@ -84,6 +84,7 @@ MIDDLEWARE = [
 # CORS (para React frontend)
 # ----------------------------
 CORS_ALLOWED_ORIGINS = [
+    
     "http://localhost:3000",  # desarrollo local
     "https://tuappfrontend.onrender.com",  # dominio del frontend en Render
 ]
@@ -110,29 +111,25 @@ REST_FRAMEWORK = {
 ROOT_URLCONF = 'custom_f.urls'
 WSGI_APPLICATION = 'custom_f.wsgi.application'
 
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'customfit_d3',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-        }
-    }
-}
 # ----------------------------
 # BASE DE DATOS (usando dj-database-url)
 # ----------------------------
-#DATABASES = {
-   # 'default': dj_database_url.parse(
-      #  os.environ.get('DATABASE_URL', 'mysql://root@localhost:3306/customfit_d3'),
-      #  conn_max_age=600
-   # )
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'customfit_d3',  
+        'USER': 'root',           
+        'PASSWORD': '',           
+        'HOST': '127.0.0.1',     
+        'PORT': '3306',          
+    }
+}
 
+#'default': dj_database_url.parse( RECORDAR ARRIBA REACTIVAR DJ 
+#        os.
+#        n.get('DATABASE_URL', 'mysql://root@localhost:3306/customfit_d3'),
+#        conn_max_age=600
+#    )
 
 # ----------------------------
 # VALIDACIÓN DE CONTRASEÑAS

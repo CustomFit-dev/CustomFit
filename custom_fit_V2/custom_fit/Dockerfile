@@ -1,26 +1,18 @@
-# Imagen base
-FROM node:18
-
-# Crear directorio de trabajo
-WORKDIR /app
-
-# Copiar package.json y package-lock.json si existe
-COPY package*.json ./
-
-# Instalar dependencias
-RUN npm install
-
-# Copiar todo el proyecto
-COPY . .
-
-# Compilar el frontend
-RUN npm run build
-
-# Instalar servidor estático
-RUN npm install -g serve
-
-# Exponer el puerto
-EXPOSE 3000
-
-# Servir la build de CRA
-CMD ["serve", "-s", "build", "-l", "3000"]
+# Etapa 1: Construir el frontend 
+FROM node:18 AS build 
+WORKDIR /app 
+# Copiar configuración e instalar dependencias 
+COPY package*.json ./ 
+RUN npm install 
+# Copiar el resto del frontend 
+COPY . . 
+# Crear la build optimizada 
+RUN npm run build 
+# Etapa 2: Servir la app con Nginx 
+FROM nginx:alpine 
+# Copiar configuración personalizada de Nginx 
+COPY nginx.conf /etc/nginx/conf.d/default.conf 
+# Copiar la build generada 
+COPY --from=build /app/build /usr/share/nginx/html 
+EXPOSE 80 
+CMD ["nginx", "-g", "daemon off;"] 
