@@ -623,6 +623,20 @@ def productos_personalizados_list(request):
         return Response([], status=status.HTTP_200_OK)
     except Exception as e:
         logger.error(f"Error in productos_personalizados_list: {str(e)}")
+    except Exception as e:
+        logger.error(f"Error in productos_personalizados_list: {str(e)}")
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['GET'])
+@permission_classes([AllowAny]) # Permitir acceso público a la tienda
+def productos_tienda_list(request):
+    try:
+        items = ProductosPersonalizados.objects.filter(rolProducto='tienda')
+        serializer = ProductosPersonalizadosSerializer(items, many=True)
+        return Response(serializer.data)
+    except Exception as e:
+        logger.error(f"Error in productos_tienda_list: {str(e)}")
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 

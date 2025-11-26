@@ -9,7 +9,7 @@ from .views import (
     color_list, color_detail, color_create, color_update_delete,
     producto_list, producto_detail, producto_create, producto_update_delete,
     proveedor_solicitud_list, proveedor_solicitud_detail,
-    productos_personalizados_list, productos_personalizados_detail,
+    productos_personalizados_list, productos_personalizados_detail, productos_tienda_list,
     estampados_emoji_list,
     obtener_carrito, agregar_al_carrito, actualizar_item, eliminar_item,
     finalizar_compra, finalizar_personalizacion
@@ -66,6 +66,7 @@ urlpatterns = [
     # Productos personalizados
     path('api/productos_personalizados/', productos_personalizados_list, name='productos-personalizados-list'),
     path('api/productos_personalizados/<int:pk>/', productos_personalizados_detail, name='productos-personalizados-detail'),
+    path('api/productos_tienda/', productos_tienda_list, name='productos-tienda-list'),
 
     # Proveedores
     path('api/proveedorsolicitudes/', proveedor_solicitud_list, name='proveedor-solicitud-list'),

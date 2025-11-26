@@ -30,7 +30,7 @@ const Shop = () => {
 
   const fetchProductos = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/productos/", {
+      const res = await axios.get("http://localhost:8000/api/productos_tienda/", {
         headers: { Authorization: `Token ${authToken}` },
       });
       setProductos(res.data ?? []);
@@ -56,53 +56,47 @@ const Shop = () => {
 
   const productosFiltrados = (productos ?? [])
     .filter((p) => {
-      if (filtro === "camisas") return p.TipoProductos?.toLowerCase() === "camisas";
-      if (filtro === "personalizadas")
-        return p.TipoProductos?.toLowerCase().includes("personalizada");
+      // Ajustar filtros según los nuevos datos si es necesario
+      // Por ahora, como todos vienen de productos_tienda, asumimos que son válidos
       return true;
     })
-    .sort((a, b) => (filtro === "a-z" ? a.NombreProductos?.localeCompare(b.NombreProductos) : 0));
+    .sort((a, b) => (filtro === "a-z" ? a.NombrePersonalizado?.localeCompare(b.NombrePersonalizado) : 0));
 
   const renderizarProducto = (producto) => {
     const imagen = producto?.urlFrontal || "https://via.placeholder.com/250x250?text=Sin+imagen";
-    const esPersonalizada = producto?.TipoProductos?.toLowerCase().includes("personalizada");
+    // En esta vista, todos son productos personalizados de la tienda
+    const esPersonalizada = true;
 
     return (
-      <div className="col-12 col-sm-6 col-md-4 mb-4" key={producto?.idProductos}>
+      <div className="col-12 col-sm-6 col-md-4 mb-4" key={producto?.idProductosPeronalizaos}>
         <div className="card card-producto animate__animated animate__fadeInUp">
           <div className="image-container">
             <img
               src={imagen}
               className="card-img-top"
-              alt={producto?.NombreProductos ?? "Producto"}
+              alt={producto?.NombrePersonalizado ?? "Producto"}
               style={{ width: "100%", height: "250px", objectFit: "contain" }}
             />
             <div className="hover-buttons">
-              {esPersonalizada ? (
-                <button
-                  className="btn-22"
-                  onClick={() => navigate("/personalizar", { state: { producto } })}
-                >
-                  Personalizar
-                </button>
-              ) : (
-                <button className="btn-22" onClick={() => abrirModalVerCamisa(producto)}>
-                  Ver Camisa
-                </button>
-              )}
-              <button className="btn-33" onClick={() => addToCart(producto)}>
+              {/* Opción para ver detalle o personalizar más */}
+              <button className="btn-22" onClick={() => abrirModalVerCamisa(producto)}>
+                Ver Detalle
+              </button>
+
+              <button className="btn-33" onClick={() => addToCart(producto, 1, true)}>
+                {/* Pasamos true para indicar que es personalizado */}
                 Comprar Ahora
               </button>
             </div>
           </div>
 
           <div className="card-body">
-            <h5 className="card-title">{producto?.NombreProductos ?? "Sin nombre"}</h5>
-            <p className="card-text">{producto?.Descripcion ?? ""}</p>
-            <p className="precio-texto">${((producto?.PrecioProducto) ?? 0).toLocaleString()}</p>
+            <h5 className="card-title">{producto?.NombrePersonalizado ?? "Sin nombre"}</h5>
+            <p className="card-text">Diseño exclusivo de la tienda</p>
+            <p className="precio-texto">${((producto?.precioPersonalizado) ?? 0).toLocaleString()}</p>
             <button
               className="btn btn-carrito d-flex align-items-center justify-content-center"
-              onClick={() => addToCart(producto)}
+              onClick={() => addToCart(producto, 1, true)}
             >
               <ShoppingCartIcon className="icon-carrito" />
               Agregar al carrito
