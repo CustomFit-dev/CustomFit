@@ -11,9 +11,11 @@ import { useTShirtState } from '../personalizar/useTShirtState';
 import { useDragAndResize } from '../personalizar/useDragAndResize';
 import { handleBuy } from '../personalizar/buyHandler';
 import { useAuth } from './authcontext';
+import { useCart } from '../../context/CartContext';
 
 const TShirtCustomizer = () => {
     const { authToken } = useAuth();
+    const { addToCart } = useCart();
     const {
         tshirtColor, setTshirtColor,
         fabric, setFabric,
@@ -104,6 +106,11 @@ const TShirtCustomizer = () => {
             authToken,
             lastSavedDesign,
             setLastSavedDesign
+        }).then((newProduct) => {
+            if (newProduct) {
+                // Agregar al carrito automáticamente
+                addToCart(newProduct, 1, true); // true indica que es personalizado
+            }
         });
     };
 

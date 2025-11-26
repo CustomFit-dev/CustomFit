@@ -21,7 +21,7 @@ const Shop = () => {
     verCamisaVisible: false,
     productoSeleccionado: null,
   });
-  const [cartVisible, setCartVisible] = useState(false);
+
   const [filtro, setFiltro] = useState("todos");
 
   useEffect(() => {
@@ -158,74 +158,12 @@ const Shop = () => {
         producto={modalData.productoSeleccionado}
       />
 
-      {/* PANEL CARRITO */}
-      <div className={`cart-panel ${cartVisible ? "visible" : ""}`}>
-        <h3>Carrito {totalItems} Productos</h3>
-        <button className="close-cart" onClick={() => setCartVisible(false)}>X</button>
-
-        {!cart?.items || cart.items.length === 0 ? (
-          <p>Tu carrito está vacío</p>
-        ) : (
-          <ul>
-            {cart.items.map((item) => (
-              <li key={item.id} className="cart-item">
-                <img
-                  src={item.producto?.urlFrontal || "https://via.placeholder.com/50"}
-                  alt={item.producto?.NombreProductos || "Producto"}
-                />
-                <div className="cart-item-info">
-                  <h4>{item.producto?.NombreProductos || "Sin nombre"}</h4>
-                  <p>
-                    ${item.producto?.PrecioProducto?.toLocaleString() || 0} x {item.cantidad} ={" "}
-                    ${(item.producto?.PrecioProducto * item.cantidad)?.toLocaleString() || 0}
-                  </p>
-                  <input
-                    type="number"
-                    min={1}
-                    value={item.cantidad}
-                    onChange={(e) => updateQuantity(item.id, parseInt(e.target.value) || 1)}
-                  />
-                </div>
-                <button onClick={() => removeItem(item.id)}>Eliminar</button>
-              </li>
-            ))}
-          </ul>
-        )}
-
-        <h4>Total: ${totalPrice.toLocaleString()}</h4>
-
-        <button
-          className="btn btn-success w-100 mt-3"
-          onClick={() => navigate("/checkout")}
-        >
-          Finalizar Compra
-        </button>
-      </div>
-
-      {/* BOTÓN FLOTANTE */}
-      <button
-        className="floating-cart-btn"
-        onClick={() => setCartVisible(true)}
-        style={{
-          position: "fixed",
-          bottom: "25px",
-          right: "25px",
-          background: "#17BEBB",
-          borderRadius: "50%",
-          width: "65px",
-          height: "65px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
-          color: "#fff",
-          fontSize: "22px",
-          zIndex: 9999,
-        }}
-      >
-        <ShoppingCartIcon />
-        <span style={{ marginLeft: "4px", fontSize: "14px" }}>{totalItems}</span>
-      </button>
+      {/* MODAL */}
+      <VerC
+        estado={modalData.verCamisaVisible}
+        cambiarEstado={cerrarModales}
+        producto={modalData.productoSeleccionado}
+      />
     </div>
   );
 };

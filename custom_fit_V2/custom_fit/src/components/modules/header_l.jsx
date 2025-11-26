@@ -20,7 +20,18 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './Themes';
+
 import logo from './mod_img/Logo-prin-f.png';
+import { useCart } from '../../context/CartContext';
+import '../../scss/cartDrawer.scss';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import Badge from '@mui/material/Badge';
 
 const pages = [
   { name: 'Inicio', route: '/Home_L#home' },
@@ -36,11 +47,20 @@ const settings = [
   { name: 'Cerrar sesión', route: '#', icon: <ExitToAppIcon /> },
 ];
 
-function Header_l({ cartItems, removeFromCart, onCheckout }) {
+function Header_l() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const { cart, removeItem, totalItems, totalPrice } = useCart();
+  const [cartOpen, setCartOpen] = useState(false);
+
+  const toggleCart = (open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setCartOpen(open);
+  };
 
   const handleOpenNavMenu = (event) => setAnchorElNav(event.currentTarget);
   const handleCloseNavMenu = () => setAnchorElNav(null);
@@ -204,7 +224,12 @@ function Header_l({ cartItems, removeFromCart, onCheckout }) {
 
             {/* Usuario y Carrito */}
             <Box sx={{ flexGrow: 0, display: 'flex', alignItems: 'center' }}>
-              
+
+              <IconButton color="inherit" onClick={toggleCart(true)} sx={{ marginRight: 2 }}>
+                <Badge badgeContent={totalItems} color="error">
+                  <ShoppingCartIcon />
+                </Badge>
+              </IconButton>
 
               {isAuthenticated ? (
                 <>
@@ -256,6 +281,73 @@ function Header_l({ cartItems, removeFromCart, onCheckout }) {
           </Toolbar>
         </Container>
       </AppBar>
+      <Drawer anchor="right" open={cartOpen} onClose={toggleCart(false)}>
+        <div className="cart-drawer-container" role="presentation">
+          <div className="cart-header">
+            <h2>
+              <ShoppingCartIcon /> Tu Carrito
+            </h2>
+            <button className="close-btn" onClick={toggleCart(false)}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+          </div>
+
+          {cart.items.length === 0 ? (
+            <div className="cart-empty">
+              <ShoppingCartIcon />
+              <p>Tu carrito está vacío</p>
+            </div>
+          ) : (
+            <div className="cart-items-list">
+              {cart.items.map((item) => {
+                const producto = item.producto || item.producto_personalizado;
+                const isPersonalized = !!item.producto_personalizado;
+                const nombre = isPersonalized ? producto?.NombrePersonalizado : producto?.NombreProductos;
+                const imagen = producto?.urlFrontal || "https://via.placeholder.com/150";
+                const precio = isPersonalized ? producto?.precioPersonalizado : producto?.PrecioProducto;
+
+                return (
+                  <div className="cart-item" key={item.id}>
+                    <div className="item-image">
+                      <img src={imagen} alt={nombre} />
+                    </div>
+                    <div className="item-details">
+                      <h4>{nombre}</h4>
+                      <div className="item-meta">
+                        <span>Cant: {item.cantidad}</span>
+                        {isPersonalized && <span className="badge-personalizado">Personalizado</span>}
+                      </div>
+                      <div className="item-price">
+                        ${(precio * item.cantidad).toLocaleString()}
+                      </div>
+                    </div>
+                    <button className="delete-btn" onClick={() => removeItem(item.id)}>
+                      <DeleteIcon fontSize="small" />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="cart-footer">
+            <div className="total-row">
+              <span>Total estimado</span>
+              <strong>${totalPrice.toLocaleString()}</strong>
+            </div>
+            <button
+              className="checkout-btn"
+              onClick={() => {
+                setCartOpen(false);
+                navigate('/checkout');
+              }}
+              disabled={cart.items.length === 0}
+            >
+              FINALIZAR COMPRA
+            </button>
+          </div>
+        </div>
+      </Drawer>
     </ThemeProvider>
   );
 }

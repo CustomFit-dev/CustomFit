@@ -194,6 +194,7 @@ export const handleBuy = async (
                 icon: "success",
                 confirmButtonText: 'Aceptar'
             });
+            return response.data; // Retornar el producto creado
         }
 
     } catch (error) {

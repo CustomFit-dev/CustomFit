@@ -13,9 +13,13 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState({ items: [] });
   const [loading, setLoading] = useState(false);
 
+
   const totalItems = cart.items.reduce((sum, item) => sum + item.cantidad, 0);
   const totalPrice = cart.items.reduce(
-    (sum, item) => sum + (item.producto?.PrecioProducto ?? 0) * item.cantidad,
+    (sum, item) => {
+      const price = item.producto?.PrecioProducto || item.producto_personalizado?.precioPersonalizado || 0;
+      return sum + price * item.cantidad;
+    },
     0
   );
 
@@ -43,13 +47,17 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const addToCart = async (producto, cantidad = 1) => {
+  const addToCart = async (producto, cantidad = 1, isPersonalized = false) => {
     if (!authToken) return Swal.fire("Error", "Debes iniciar sesión.", "warning");
+
+    const payload = isPersonalized
+      ? { producto_personalizado_id: producto.idProductosPeronalizaos, cantidad }
+      : { producto_id: producto.idProductos, cantidad };
 
     try {
       await axios.post(
         "http://localhost:8000/api/carrito/agregar/",
-        { producto_id: producto.idProductos, cantidad },
+        payload,
         { headers: { Authorization: `Token ${authToken}` } }
       );
       fetchCart();

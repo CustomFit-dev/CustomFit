@@ -102,25 +102,32 @@ class ProveedorSolicitudSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['usuario']
 
-#carrito
-class ProductoCarritoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Producto
-        fields = ["idProductos", "NombreProductos", "PrecioProducto", "urlFrontal"]
-
 class CarritoItemSerializer(serializers.ModelSerializer):
-    producto = ProductoCarritoSerializer()  # Serializa el producto completo
+    producto = ProductoSerializer(read_only=True)
+    producto_personalizado = ProductosPersonalizadosSerializer(read_only=True)
+    subtotal = serializers.SerializerMethodField()
 
     class Meta:
         model = CarritoItem
-        fields = ["id", "producto", "cantidad"]
+        fields = ['id', 'producto', 'producto_personalizado', 'cantidad', 'subtotal']
+
+    def get_subtotal(self, obj):
+        if obj.producto:
+            return obj.cantidad * obj.producto.PrecioProducto
+        elif obj.producto_personalizado:
+            return obj.cantidad * obj.producto_personalizado.precioPersonalizado
+        return 0
 
 class CarritoSerializer(serializers.ModelSerializer):
-    items = CarritoItemSerializer(many=True)
+    items = CarritoItemSerializer(many=True, read_only=True)
+    total = serializers.SerializerMethodField()
 
     class Meta:
         model = Carrito
-        fields = ["id", "usuario", "items"]
+        fields = ['id', 'usuario', 'items', 'total']
+
+    def get_total(self, obj):
+        return sum(item.cantidad * (item.producto.PrecioProducto if item.producto else item.producto_personalizado.precioPersonalizado) for item in obj.items.all())
 
         #PEDIDOS
 

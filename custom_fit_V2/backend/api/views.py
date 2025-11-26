@@ -727,7 +727,6 @@ def proveedor_solicitud_detail(request, pk):
         solicitud = ProveedorSolicitud.objects.get(pk=pk)
     except ProveedorSolicitud.DoesNotExist:
         return Response({'error': 'Solicitud no encontrada'}, status=status.HTTP_404_NOT_FOUND)
-
     if request.method == 'GET':
         serializer = ProveedorSolicitudSerializer(solicitud)
         return Response(serializer.data)
@@ -743,8 +742,6 @@ def proveedor_solicitud_detail(request, pk):
         solicitud.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class CarritoView(APIView):
-    permission_classes = [IsAuthenticated]
 # Obtener el carrito del usuario
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -753,45 +750,48 @@ def obtener_carrito(request):
     serializer = CarritoSerializer(carrito)
     return Response(serializer.data)
 
-# Agregar un producto al carrito
+# Agregar al carrito
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def agregar_al_carrito(request):
-    try:
-        usuario = request.user
-        producto_id = request.data.get('producto_id')
-        cantidad = int(request.data.get('cantidad', 1))
+    usuario = request.user
+    producto_id = request.data.get('producto_id')
+    producto_personalizado_id = request.data.get('producto_personalizado_id')
+    cantidad = int(request.data.get('cantidad', 1))
 
-        # Obtener el objeto producto
-        producto = Producto.objects.get(idProductos=producto_id)
+    carrito, created = Carrito.objects.get_or_create(usuario=usuario)
 
-        # Obtener o crear el carrito del usuario
-        carrito, _ = Carrito.objects.get_or_create(usuario=usuario)
-
-        # Obtener o crear el item en el carrito
-        item, item_created = CarritoItem.objects.get_or_create(
-    carrito=carrito,
-    producto=producto,  # Ahora sí funciona
-    defaults={'cantidad': cantidad}
-)
-
-        if not item_created:
-            # Si el item ya existía, solo actualizamos la cantidad
-            item.cantidad += cantidad
+    if producto_id:
+        try:
+            producto = Producto.objects.get(idProductos=producto_id)
+            # Buscar si ya existe el item con ese producto
+            item, created = CarritoItem.objects.get_or_create(carrito=carrito, producto=producto)
+            if not created:
+                item.cantidad += cantidad
+            else:
+                item.cantidad = cantidad
             item.save()
+        except Producto.DoesNotExist:
+            return Response({"error": "Producto no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+    elif producto_personalizado_id:
+        try:
+            producto_personalizado = ProductosPersonalizados.objects.get(idProductosPeronalizaos=producto_personalizado_id)
+            # Buscar si ya existe el item con ese producto personalizado
+            item, created = CarritoItem.objects.get_or_create(carrito=carrito, producto_personalizado=producto_personalizado)
+            if not created:
+                item.cantidad += cantidad
+            else:
+                item.cantidad = cantidad
+            item.save()
+        except ProductosPersonalizados.DoesNotExist:
+            return Response({"error": "Producto personalizado no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+    else:
+        return Response({"error": "Debe especificar un producto o producto personalizado"}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response({
-            'message': 'Producto agregado al carrito',
-            'item_id': item.id,
-            'cantidad': item.cantidad
-        })
+    serializer = CarritoSerializer(carrito)
+    return Response(serializer.data)
 
-    except Producto.DoesNotExist:
-        return Response({'error': 'Producto no encontrado'}, status=404)
-    except Exception as e:
-        return Response({'error': str(e)}, status=500)
-
-# Actualizar cantidad de un item
+# Actualizar un item del carrito
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def actualizar_item(request):

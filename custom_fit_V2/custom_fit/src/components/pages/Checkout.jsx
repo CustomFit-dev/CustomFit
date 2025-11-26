@@ -142,37 +142,52 @@ const Checkout = () => {
           {cart.items.length === 0 ? (
             <p>No hay productos en el carrito.</p>
           ) : (
-            cart.items.map((item) => (
-              <div className="checkout-item" key={item.id}>
-                <img src={item.producto.urlFrontal} alt="" />
-                <div>
-                  <h4>{item.producto.NombreProductos}</h4>
-                  <p>Cantidad: {item.cantidad}</p>
-                  <p>
-                    Precio total: $
-                    {(item.producto.PrecioProducto * item.cantidad).toLocaleString()}
-                  </p>
+            cart.items.map((item) => {
+              const product = item.producto || item.producto_personalizado;
+              const isPersonalized = !!item.producto_personalizado;
 
-                  <select
-                    value={item.talla || ""}
-                    onChange={(e) => handleTallaChange(item.id, e.target.value)}
-                  >
-                    <option value="">Selecciona una talla</option>
-                    <option value="S">S</option>
-                    <option value="M">M</option>
-                    <option value="L">L</option>
-                    <option value="XL">XL</option>
-                  </select>
+              const image = isPersonalized ? product.urlFrontal : product.urlFrontal;
+              const name = isPersonalized ? product.NombrePersonalizado : product.NombreProductos;
+              const price = isPersonalized ? product.precioPersonalizado : product.PrecioProducto;
 
-                  <button
-                    className="btn-eliminar"
-                    onClick={() => handleRemoveItem(item.id)}
-                  >
-                    Eliminar
-                  </button>
+              return (
+                <div className="checkout-item" key={item.id}>
+                  <img src={image} alt={name} />
+                  <div>
+                    <h4>{name} {isPersonalized && <span className="badge-personalizado">(Personalizado)</span>}</h4>
+                    <p>Cantidad: {item.cantidad}</p>
+                    <p>
+                      Precio total: $
+                      {(price * item.cantidad).toLocaleString()}
+                    </p>
+
+                    {isPersonalized ? (
+                      <p className="talla-display">
+                        <strong>Talla:</strong> {product.talla || "No seleccionada"}
+                      </p>
+                    ) : (
+                      <select
+                        value={item.talla || ""}
+                        onChange={(e) => handleTallaChange(item.id, e.target.value)}
+                      >
+                        <option value="">Selecciona una talla</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                      </select>
+                    )}
+
+                    <button
+                      className="btn-eliminar"
+                      onClick={() => handleRemoveItem(item.id)}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           )}
 
           <h2>Total: ${totalPrice.toLocaleString()}</h2>
