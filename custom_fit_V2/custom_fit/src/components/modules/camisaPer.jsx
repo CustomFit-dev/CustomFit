@@ -10,8 +10,10 @@ import ModalsContainer from '../personalizar/ModalsContainer';
 import { useTShirtState } from '../personalizar/useTShirtState';
 import { useDragAndResize } from '../personalizar/useDragAndResize';
 import { handleBuy } from '../personalizar/buyHandler';
+import { useAuth } from './authcontext'; // Importar AuthContext
 
 const TShirtCustomizer = () => {
+    const { authToken } = useAuth(); // Obtener token
     const {
         tshirtColor, setTshirtColor,
         fabric, setFabric,
@@ -58,6 +60,31 @@ const TShirtCustomizer = () => {
     });
 
     const handleBuyClick = () => {
+        // Validaciones
+        if (!fabric) {
+            import("sweetalert2").then(Swal => {
+                Swal.default.fire({
+                    icon: 'warning',
+                    title: 'Falta seleccionar tela',
+                    text: 'Por favor selecciona un tipo de tela antes de continuar.'
+                });
+            });
+            return;
+        }
+
+        const currentImages = getCurrentImageElements();
+        // Validación: debe haber al menos un estampado, texto o emoji
+        if (currentImages.length === 0 && getCurrentTextElements().length === 0 && getCurrentEmojiElements().length === 0) {
+            import("sweetalert2").then(Swal => {
+                Swal.default.fire({
+                    icon: 'warning',
+                    title: 'Diseño vacío',
+                    text: 'Por favor agrega al menos un estampado, texto o emoji.'
+                });
+            });
+            return;
+        }
+
         handleBuy(tshirtRef, designAreaRef, {
             size,
             fabric,
@@ -65,7 +92,10 @@ const TShirtCustomizer = () => {
             designElements,
             currentView,
             setCurrentView,
-            getAllElementsCount
+            getAllElementsCount,
+            totalPrice: getTotalPrice ? getTotalPrice() : 0,
+            imageElements: currentImages,
+            authToken // Pasar el token
         });
     };
 

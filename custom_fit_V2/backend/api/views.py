@@ -18,7 +18,7 @@ import string
 from django.core.mail import send_mail
 from django.db import OperationalError
 from .serializers import TelaSerializer,EstampadoSerializer,ProductoSerializer, ProveedorSolicitudSerializer, ProductosPersonalizadosSerializer
-from .models import ProductosPersonalizados
+from .models import ProductosPersonalizados, ProductosPersonalizadosHasEstampado
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from functools import wraps;
@@ -865,22 +865,49 @@ def finalizar_compra(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def finalizar_compra(request):
-    usuario = request.user
+def finalizar_personalizacion(request):
+    try:
+        data = request.data
+        
+        # Validar que el producto base existe
+        producto_base_id = data.get('productos_idProductos', 1) # Default a 1 si no viene
+        try:
+            producto_base = Producto.objects.get(idProductos=producto_base_id)
+        except Producto.DoesNotExist:
+            return Response({"error": f"El producto base con ID {producto_base_id} no existe."}, status=400)
 
-    direccion = request.data.get("direccion")
-    ciudad = request.data.get("ciudad")
-    metodo_pago = request.data.get("metodo_pago")
+        # 1. Crear el producto personalizado
+        producto_personalizado = ProductosPersonalizados.objects.create(
+            NombrePersonalizado=data.get('NombrePersonalizado'),
+            precioPersonalizado=data.get('precioPersonalizado'),
+            rolProducto=data.get('rolProducto', 'cliente'),
+            stock=data.get('stock', 1),
+            productos_idProductos=producto_base, # Asignar instancia directamente
+            urlFrontal=data.get('urlFrontal'),
+            urlEspadarl=data.get('urlEspadarl'), 
+            urlMangaDerecha=data.get('urlMangaDerecha'),
+            urlMangaIzquierda=data.get('urlMangaIzquierda')
+        )
 
-    if not direccion or not ciudad or not metodo_pago:
-        return Response({"error": "Faltan datos del formulario"}, status=400)
+        # 2. Asociar estampados (si los hay)
+        estampados_ids = data.get('estampados', [])
+        if estampados_ids:
+            for est_id in estampados_ids:
+                 try:
+                     estampado = Estampado.objects.get(idEstampado=est_id)
+                     ProductosPersonalizadosHasEstampado.objects.create(
+                         ProductosPeronalizaos_idProductosPeronalizaos=producto_personalizado,
+                         estampado_idEstampado=estampado
+                     )
+                 except Estampado.DoesNotExist:
+                     print(f"Estampado con ID {est_id} no encontrado.")
+                     pass 
 
-    # Obtener carrito
-    carrito, _ = Carrito.objects.get_or_create(usuario=usuario)
-    items = carrito.items.all()
+        serializer = ProductosPersonalizadosSerializer(producto_personalizado)
+        return Response(serializer.data, status=201)
 
-    if not items.exists():
-        return Response({"error": "El carrito está vacío"}, status=400)
-
-    # Calcular total
-    total = sum([item.producto.precio * item.cantidad for item in items])
+    except Exception as e:
+        import traceback
+        traceback.print_exc() # Imprimir traceback en consola del servidor
+        print(f"Error en finalizar_personalizacion: {e}")
+        return Response({'error': str(e)}, status=500)

@@ -12,7 +12,7 @@ from .views import (
     productos_personalizados_list, productos_personalizados_detail,
     estampados_emoji_list,
     obtener_carrito, agregar_al_carrito, actualizar_item, eliminar_item,
-    finalizar_compra   # también puedes agregar este aquí
+    finalizar_compra, finalizar_personalizacion
 )
 
 from rest_framework.routers import DefaultRouter
@@ -78,6 +78,6 @@ urlpatterns = [
     path('api/carrito/eliminar/', eliminar_item, name="carrito-eliminar"),
     
     path('checkout/finalizar/', finalizar_compra, name='finalizar_compra'),
-
+    path('api/personalizar/finalizar/', finalizar_personalizacion, name='finalizar_personalizacion'),
 
 ]

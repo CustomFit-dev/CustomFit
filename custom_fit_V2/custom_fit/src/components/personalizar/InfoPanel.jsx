@@ -94,7 +94,7 @@ const InfoPanel = ({
         <button
           className="btn btn-success btn-lg fw-bold"
           onClick={handleBuyClick}>
-          Descargar Diseños
+          Finalizar Personalización
         </button>
 
         {/* Botón para agregar al carrito */}

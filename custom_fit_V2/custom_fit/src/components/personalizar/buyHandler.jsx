@@ -1,129 +1,201 @@
 import html2canvas from "html2canvas";
 import Swal from "sweetalert2";
+import axios from "axios";
+
+// Función auxiliar para subir a Cloudinary
+const uploadToCloudinary = async (blob) => {
+    const data = new FormData();
+    data.append('file', blob);
+    data.append('upload_preset', 'customfit_upload');
+    data.append('cloud_name', 'dxaooh0kz');
+    data.append('folder', 'productos_personalizados');
+
+    try {
+        const res = await axios.post('https://api.cloudinary.com/v1_1/dxaooh0kz/image/upload', data);
+        return res.data.secure_url;
+    } catch (err) {
+        console.error('Error uploading to Cloudinary:', err);
+        return null;
+    }
+};
 
 export const handleBuy = async (
-    tshirtRef, 
+    tshirtRef,
     designAreaRef,
-    { 
-        size, 
-        fabric, 
-        tshirtColor, 
-        designElements, 
-        currentView, 
+    {
+        size,
+        fabric,
+        tshirtColor,
+        designElements,
+        currentView,
         setCurrentView,
-        getAllElementsCount 
+        getAllElementsCount,
+        totalPrice,
+        imageElements,
+        authToken
     }
 ) => {
     if (!tshirtRef.current) return;
 
-    const views = ['frontal', 'espaldar', 'mangaDerecha', 'mangaIzquierda'];
+    const views = ['frontal', 'mangaDerecha', 'mangaIzquierda', 'espaldar'];
     const viewNames = {
-        frontal: 'Frontal',
-        espaldar: 'Espaldar', 
-        mangaDerecha: 'Manga_Derecha',
-        mangaIzquierda: 'Manga_Izquierda'
+        frontal: 'urlFrontal',
+        espaldar: 'urlEspadarl',
+        mangaDerecha: 'urlMangaDerecha',
+        mangaIzquierda: 'urlMangaIzquierda'
     };
 
-    const downloadedImages = [];
     const originalView = currentView;
+    const uploadedUrls = {};
+
+    Swal.fire({
+        title: 'Procesando...',
+        html: 'Generando imágenes y guardando tu diseño.<br>Por favor espera.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
 
     try {
-        // Crear las imágenes de cada vista
+        // 1. Capturar y subir imágenes
         for (const view of views) {
-            // Cambiar a la vista actual
             setCurrentView(view);
-            
-            // Esperar un momento para que React actualice el DOM
             await new Promise(resolve => setTimeout(resolve, 500));
 
-            // Capturar la imagen de esta vista
             const canvas = await html2canvas(tshirtRef.current, {
                 backgroundColor: null,
                 scale: 2,
                 useCORS: true,
                 logging: false,
-                useCORS: true,
                 allowTaint: true
             });
 
-            const imgData = canvas.toDataURL("image/png");
-            downloadedImages.push({
-                view: view,
-                name: viewNames[view],
-                data: imgData
-            });
+            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+            const url = await uploadToCloudinary(blob);
+            if (!url) throw new Error(`Error al subir imagen de ${view}`);
 
-            // Descargar la imagen automáticamente
-            const link = document.createElement("a");
-            link.download = `camiseta_${viewNames[view]}.png`;
-            link.href = imgData;
-            link.click();
+            uploadedUrls[viewNames[view]] = url;
         }
 
-        // Restaurar la vista original
         setCurrentView(originalView);
 
-        // Crear un ZIP con todas las imágenes (opcional, requiere JSZip)
-        // Si tienes JSZip instalado, puedes descommentar esto:
-        /*
-        const JSZip = require('jszip');
-        const zip = new JSZip();
-        
-        downloadedImages.forEach(img => {
-            const base64Data = img.data.split(',')[1];
-            zip.file(`${img.name}.png`, base64Data, {base64: true});
-        });
+        const estampadosIds = [];
 
-        const zipContent = await zip.generateAsync({type: "blob"});
-        const zipLink = document.createElement("a");
-        zipLink.download = "camiseta_completa.zip";
-        zipLink.href = URL.createObjectURL(zipContent);
-        zipLink.click();
-        */
-
-        // Crear el HTML para mostrar todas las imágenes en el modal
-        const imagesHTML = downloadedImages.map(img => 
-            `<div style="margin-bottom: 15px;">
-                <h6 style="color: #333; margin-bottom: 5px;">${img.name}</h6>
-                <img src="${img.data}" alt="${img.name}" style="width:100%; max-width:200px; border:1px solid #ccc; border-radius:8px;"/>
-            </div>`
-        ).join('');
-
-        // Mostrar el modal con todas las vistas
-        Swal.fire({
-            title: "¡Diseños descargados!",
+        // 2. Mostrar formulario
+        const { value: formValues } = await Swal.fire({
+            title: 'Finalizar Personalización',
             html: `
-                <div style="text-align: left;">
-                    <p><strong>Talla:</strong> ${size}</p>
-                    <p><strong>Tela:</strong> ${fabric || 'No seleccionada'}</p>
-                    <p><strong>Color:</strong> ${tshirtColor}</p>
-                    <p><strong>Total elementos:</strong> ${getAllElementsCount ? getAllElementsCount() : 0}</p>
-                    <p><strong>Vistas descargadas:</strong> ${downloadedImages.length}</p>
-                    <hr style="margin: 15px 0;"/>
-                    <h6 style="color: #333; margin-bottom: 15px;">Vista previa de todos los diseños:</h6>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-height: 400px; overflow-y: auto;">
-                        ${imagesHTML}
-                    </div>
+                <div style="text-align: left; max-height: 400px; overflow-y: auto;">
+                    <label for="swal-nombre" style="display: block; margin-bottom: 5px; font-weight: bold;">Nombre del Diseño *</label>
+                    <input id="swal-nombre" class="swal2-input" placeholder="Ej: Mi Camiseta Personalizada" style="width: 90%; margin-bottom: 15px;">
+                    
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Precio Total</label>
+                    <input value="${totalPrice || 0} COP" class="swal2-input" readonly style="width: 90%; margin-bottom: 15px; background-color: #f0f0f0;">
+                    
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Rol del Producto</label>
+                    <input value="personalizado" class="swal2-input" readonly style="width: 90%; margin-bottom: 15px; background-color: #f0f0f0;">
+                    
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Stock Inicial</label>
+                    <input value="0" class="swal2-input" readonly style="width: 90%; margin-bottom: 15px; background-color: #f0f0f0;">
+                    
+                    <hr style="margin: 15px 0;">
+                    <h4 style="margin-bottom: 10px;">Imágenes Generadas</h4>
+                    
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Vista Frontal</label>
+                    <input value="${uploadedUrls.urlFrontal || 'N/A'}" class="swal2-input" readonly style="width: 90%; margin-bottom: 10px; background-color: #f0f0f0; font-size: 11px;">
+                    
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Vista Espaldar</label>
+                    <input value="${uploadedUrls.urlEspadarl || 'N/A'}" class="swal2-input" readonly style="width: 90%; margin-bottom: 10px; background-color: #f0f0f0; font-size: 11px;">
+                    
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Manga Derecha</label>
+                    <input value="${uploadedUrls.urlMangaDerecha || 'N/A'}" class="swal2-input" readonly style="width: 90%; margin-bottom: 10px; background-color: #f0f0f0; font-size: 11px;">
+                    
+                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Manga Izquierda</label>
+                    <input value="${uploadedUrls.urlMangaIzquierda || 'N/A'}" class="swal2-input" readonly style="width: 90%; background-color: #f0f0f0; font-size: 11px;">
                 </div>
             `,
-            width: '800px',
-            confirmButtonText: 'Perfecto',
-            customClass: {
-                popup: 'rounded-xl'
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: 'Guardar Diseño',
+            cancelButtonText: 'Cancelar',
+            width: '600px',
+            preConfirm: () => {
+                const nombre = document.getElementById('swal-nombre').value;
+                if (!nombre || nombre.trim() === '') {
+                    Swal.showValidationMessage('Por favor ingresa un nombre para tu diseño');
+                    return false;
+                }
+                return { nombre: nombre.trim() };
             }
         });
 
+        if (!formValues) {
+            Swal.fire({
+                title: 'Cancelado',
+                text: 'No se guardó la personalización.',
+                icon: 'info'
+            });
+            return;
+        }
+
+        const payload = {
+            NombrePersonalizado: formValues.nombre,
+            precioPersonalizado: totalPrice || 0,
+            rolProducto: 'personalizado',
+            stock: 0,
+            productos_idProductos: 2,
+            ...uploadedUrls,
+            estampados: estampadosIds
+        };
+
+        if (!authToken) {
+            throw new Error("No estás autenticado. Por favor inicia sesión.");
+        }
+
+        Swal.fire({
+            title: 'Guardando...',
+            text: 'Enviando tu diseño al servidor.',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const response = await axios.post('http://localhost:8000/api/personalizar/finalizar/', payload, {
+            headers: {
+                'Authorization': `Token ${authToken}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.status === 201) {
+            Swal.fire({
+                title: "¡Personalización Finalizada!",
+                text: `Tu diseño "${formValues.nombre}" ha sido guardado exitosamente.`,
+                icon: "success",
+                confirmButtonText: 'Aceptar'
+            });
+        }
+
     } catch (error) {
-        console.error('Error al generar las imágenes:', error);
-        
-        // Restaurar la vista original en caso de error
+        console.error('Error en el proceso:', error);
+        console.error('Error response:', error.response?.data);
         setCurrentView(originalView);
-        
+
+        let errorMessage = "Hubo un problema al guardar tu diseño. Intenta nuevamente.";
+
+        if (error.response?.data?.error) {
+            errorMessage = error.response.data.error;
+        } else if (error.message) {
+            errorMessage = error.message;
+        }
+
         Swal.fire({
             title: "Error",
-            text: "Hubo un problema al generar las imágenes. Por favor, intenta nuevamente.",
+            text: errorMessage,
             icon: "error",
-            confirmButtonText: 'Entendido'
+            confirmButtonText: 'Aceptar'
         });
     }
 };
