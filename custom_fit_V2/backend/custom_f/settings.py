@@ -110,15 +110,29 @@ REST_FRAMEWORK = {
 ROOT_URLCONF = 'custom_f.urls'
 WSGI_APPLICATION = 'custom_f.wsgi.application'
 
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'customfit_d3',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': 'localhost',
+        'PORT': '3306',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+        }
+    }
+}
 # ----------------------------
 # BASE DE DATOS (usando dj-database-url)
 # ----------------------------
-DATABASES = {
-    'default': dj_database_url.parse(
-        os.environ.get('DATABASE_URL', 'mysql://root@localhost:3306/customfit_d3'),
-        conn_max_age=600
-    )
-}
+#DATABASES = {
+   # 'default': dj_database_url.parse(
+      #  os.environ.get('DATABASE_URL', 'mysql://root@localhost:3306/customfit_d3'),
+      #  conn_max_age=600
+   # )
+
 
 # ----------------------------
 # VALIDACIÓN DE CONTRASEÑAS
