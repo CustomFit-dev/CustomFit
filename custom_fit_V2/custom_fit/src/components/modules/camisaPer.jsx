@@ -40,6 +40,7 @@ const TShirtCustomizer = () => {
     } = useTShirtState();
 
     const [editingElementId, setEditingElementId] = useState(null);
+    const [lastSavedDesign, setLastSavedDesign] = useState(null);
 
     const tshirtRef = useRef(null);
     const designAreaRef = useRef(null);
@@ -100,7 +101,9 @@ const TShirtCustomizer = () => {
             getAllElementsCount,
             totalPrice: getTotalPrice ? getTotalPrice() : 0,
             imageElements: allImageElements,
-            authToken
+            authToken,
+            lastSavedDesign,
+            setLastSavedDesign
         });
     };
 

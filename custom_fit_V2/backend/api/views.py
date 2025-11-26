@@ -876,6 +876,15 @@ def finalizar_personalizacion(request):
         except Producto.DoesNotExist:
             return Response({"error": f"El producto base con ID {producto_base_id} no existe."}, status=400)
 
+        # Obtener la tela si viene telaid
+        tela_obj = None
+        telaid = data.get('telaid')
+        if telaid:
+            try:
+                tela_obj = Tela.objects.get(idTela=telaid)
+            except Tela.DoesNotExist:
+                print(f"Tela con ID {telaid} no encontrada, se guardará como NULL")
+
         # 1. Crear el producto personalizado
         producto_personalizado = ProductosPersonalizados.objects.create(
             NombrePersonalizado=data.get('NombrePersonalizado'),
@@ -886,7 +895,10 @@ def finalizar_personalizacion(request):
             urlFrontal=data.get('urlFrontal'),
             urlEspadarl=data.get('urlEspadarl'), 
             urlMangaDerecha=data.get('urlMangaDerecha'),
-            urlMangaIzquierda=data.get('urlMangaIzquierda')
+            urlMangaIzquierda=data.get('urlMangaIzquierda'),
+            talla=data.get('talla'),
+            color=data.get('color'),
+            telaid=tela_obj
         )
 
         # 2. Asociar estampados (si los hay)

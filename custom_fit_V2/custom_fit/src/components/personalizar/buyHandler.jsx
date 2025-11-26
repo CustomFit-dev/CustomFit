@@ -32,10 +32,29 @@ export const handleBuy = async (
         getAllElementsCount,
         totalPrice,
         imageElements,
-        authToken
+        authToken,
+        lastSavedDesign,
+        setLastSavedDesign
     }
 ) => {
     if (!tshirtRef.current) return;
+
+    // Verificar duplicados
+    const currentDesignSignature = JSON.stringify({
+        size,
+        fabricId: fabric?.idTela,
+        tshirtColor,
+        designElements
+    });
+
+    if (lastSavedDesign === currentDesignSignature) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Sin cambios',
+            text: 'Este diseño ya ha sido guardado. Realiza alguna modificación para guardar una nueva versión.'
+        });
+        return;
+    }
 
     const views = ['frontal', 'mangaDerecha', 'mangaIzquierda', 'espaldar'];
     const viewNames = {
@@ -87,38 +106,25 @@ export const handleBuy = async (
 
         console.log('TODOS los elementos de imagen:', imageElements);
         console.log('IDs de estampados encontrados:', estampadosIds);
+        console.log('Valores recibidos - Size:', size, 'Fabric:', fabric, 'Color:', tshirtColor);
 
         // 2. Mostrar formulario
         const { value: formValues } = await Swal.fire({
             title: 'Finalizar Personalización',
             html: `
-                <div style="text-align: left; max-height: 400px; overflow-y: auto;">
+                <div style="text-align: left;">
                     <label for="swal-nombre" style="display: block; margin-bottom: 5px; font-weight: bold;">Nombre del Diseño *</label>
                     <input id="swal-nombre" class="swal2-input" placeholder="Ej: Mi Camiseta Personalizada" style="width: 90%; margin-bottom: 15px;">
                     
-                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Precio Total</label>
-                    <input value="${totalPrice || 0} COP" class="swal2-input" readonly style="width: 90%; margin-bottom: 15px; background-color: #f0f0f0;">
-                    
-                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Rol del Producto</label>
-                    <input value="personalizado" class="swal2-input" readonly style="width: 90%; margin-bottom: 15px; background-color: #f0f0f0;">
-                    
-                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Stock Inicial</label>
-                    <input value="0" class="swal2-input" readonly style="width: 90%; margin-bottom: 15px; background-color: #f0f0f0;">
-                    
-                    <hr style="margin: 15px 0;">
-                    <h4 style="margin-bottom: 10px;">Imágenes Generadas</h4>
-                    
-                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Vista Frontal</label>
-                    <input value="${uploadedUrls.urlFrontal || 'N/A'}" class="swal2-input" readonly style="width: 90%; margin-bottom: 10px; background-color: #f0f0f0; font-size: 11px;">
-                    
-                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Vista Espaldar</label>
-                    <input value="${uploadedUrls.urlEspadarl || 'N/A'}" class="swal2-input" readonly style="width: 90%; margin-bottom: 10px; background-color: #f0f0f0; font-size: 11px;">
-                    
-                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Manga Derecha</label>
-                    <input value="${uploadedUrls.urlMangaDerecha || 'N/A'}" class="swal2-input" readonly style="width: 90%; margin-bottom: 10px; background-color: #f0f0f0; font-size: 11px;">
-                    
-                    <label style="display: block; margin-bottom: 5px; font-weight: bold;">Manga Izquierda</label>
-                    <input value="${uploadedUrls.urlMangaIzquierda || 'N/A'}" class="swal2-input" readonly style="width: 90%; background-color: #f0f0f0; font-size: 11px;">
+                    <p style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                        Se guardará tu diseño con la configuración actual:
+                        <br>
+                        <strong>Talla:</strong> ${size || 'No seleccionada'} | 
+                        <strong>Color:</strong> ${tshirtColor || 'No seleccionado'} | 
+                        <strong>Tela:</strong> ${fabric?.NombreTela || 'No seleccionada'}
+                        <br>
+                        <strong>Precio Total:</strong> ${totalPrice || 0} COP
+                    </p>
                 </div>
             `,
             focusConfirm: false,
@@ -151,6 +157,9 @@ export const handleBuy = async (
             rolProducto: 'personalizado',
             stock: 0,
             productos_idProductos: 2,
+            talla: size || null,
+            color: tshirtColor || null,
+            telaid: fabric?.idTela || null,
             ...uploadedUrls,
             estampados: estampadosIds
         };
@@ -178,6 +187,7 @@ export const handleBuy = async (
         });
 
         if (response.status === 201) {
+            setLastSavedDesign(currentDesignSignature); // Actualizar estado de guardado
             Swal.fire({
                 title: "¡Personalización Finalizada!",
                 text: `Tu diseño "${formValues.nombre}" ha sido guardado exitosamente.`,

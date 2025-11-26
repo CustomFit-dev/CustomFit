@@ -137,15 +137,18 @@ class ProductosPersonalizados(models.Model):
     rolProducto = models.CharField(max_length=45, null=True, blank=True, db_column='rolProducto')
     stock = models.IntegerField(default=0, db_column='stock')
     productos_idProductos = models.ForeignKey('Producto', on_delete=models.CASCADE, db_column='productos_idProductos')
-    urlFrontal = models.CharField(max_length=100, null=True, blank=True, db_column='urlFrontal')
-    urlEspadarl = models.CharField(max_length=100, null=True, blank=True, db_column='urlEspadarl')
-    urlMangaDerecha = models.CharField(max_length=100, null=True, blank=True, db_column='urlMangaDerecha')
-    urlMangaIzquierda = models.CharField(max_length=100, null=True, blank=True, db_column='urlMangaIzquierda')
+    urlFrontal = models.CharField(max_length=250, null=True, blank=True, db_column='urlFrontal')
+    urlEspadarl = models.CharField(max_length=250, null=True, blank=True, db_column='urlEspadarl')
+    urlMangaDerecha = models.CharField(max_length=250, null=True, blank=True, db_column='urlMangaDerecha')
+    urlMangaIzquierda = models.CharField(max_length=250, null=True, blank=True, db_column='urlMangaIzquierda')
+    color = models.CharField(max_length=50, null=True, blank=True, db_column='color')
+    talla = models.CharField(max_length=20, null=True, blank=True, db_column='talla')
+    telaid = models.ForeignKey('Tela', on_delete=models.DO_NOTHING, db_column='telaid', null=True, blank=True)
     estampados = models.ManyToManyField('Estampado', through='ProductosPersonalizadosHasEstampado', related_name='personalizados', blank=True)
 
     class Meta:
         db_table = 'productosperonalizaos'
-        managed = False  # usamos tabla existente
+        managed = True  # Changed to True to fix schema issues
 
     def __str__(self):
         return self.NombrePersonalizado or f"Personalizado {self.idProductosPeronalizaos}"
@@ -171,11 +174,16 @@ class Carrito(models.Model):
 
 class CarritoItem(models.Model):
     carrito = models.ForeignKey(Carrito, on_delete=models.CASCADE, related_name='items')
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)  # ✅ Antes era IntegerField
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True, blank=True)
+    producto_personalizado = models.ForeignKey(ProductosPersonalizados, on_delete=models.CASCADE, null=True, blank=True)
     cantidad = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return f"Producto {self.producto.NombreProductos} x {self.cantidad}"
+        if self.producto:
+            return f"Producto {self.producto.NombreProductos} x {self.cantidad}"
+        elif self.producto_personalizado:
+            return f"Personalizado {self.producto_personalizado.NombrePersonalizado} x {self.cantidad}"
+        return f"Item desconocido x {self.cantidad}"
 
 class Pedido(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)

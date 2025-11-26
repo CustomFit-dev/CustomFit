@@ -58,7 +58,7 @@ const CustomizationPanel = ({
   const handleTelaClick = (tela) => {
     // Solo permitir selección si está disponible
     if (tela.Disponibilidad?.toLowerCase() === 'si') {
-      setFabric(tela.NombreTela);
+      setFabric(tela);
       setFabricPrice(tela.precio || 0);
     }
   };
@@ -119,11 +119,11 @@ const CustomizationPanel = ({
             return (
               <button
                 key={tela.idTela}
-                className={`btnTela ${fabric === tela.NombreTela ? "btn-primary" : "btn-outline-secondary"} ${!disponible ? 'disabled' : ''}`}
+                className={`btnTela ${fabric?.idTela === tela.idTela ? "btn-primary" : "btn-outline-secondary"} ${!disponible ? 'disabled' : ''}`}
                 onClick={() => handleTelaClick(tela)}
                 disabled={!disponible}
                 style={{
-                  ...(fabric === tela.NombreTela ? { backgroundColor: '#17BEBB', border: 'none' } : {}),
+                  ...(fabric?.idTela === tela.idTela ? { backgroundColor: '#17BEBB', border: 'none' } : {}),
                   position: 'relative',
                   opacity: disponible ? 1 : 0.5,
                   cursor: disponible ? 'pointer' : 'not-allowed',

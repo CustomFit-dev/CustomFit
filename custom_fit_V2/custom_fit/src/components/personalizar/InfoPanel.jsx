@@ -62,7 +62,7 @@ const InfoPanel = ({
           <h6 className="card-title fw-bold mb-2">Tu Selección</h6>
           <ul className="list-unstyled">
             <li><strong>Talla:</strong> {size}</li>
-            <li><strong>Tela:</strong> {fabric || 'No seleccionada'}</li>
+            <li><strong>Tela:</strong> {fabric?.NombreTela || 'No seleccionada'}</li>
             <li>
               <strong>Precio tela:</strong> ${fabricPrice ? fabricPrice.toLocaleString('es-CO') : '0'} COP
             </li>
