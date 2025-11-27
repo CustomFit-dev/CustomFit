@@ -31,16 +31,13 @@ export const useDragAndResize = ({
         // Marcamos este elemento como activo
         setActiveElement({ type: elementType, id: element.id });
 
-        // Si la acción es "mover"
-        if (action === 'move') {
-            setIsDragging(true);
-            setStartPos({ x: e.clientX, y: e.clientY }); // posición inicial del mouse
-            setOrigPos({ x: element.x, y: element.y });  // posición inicial del elemento
-        }
-        // Si la acción es "redimensionar"
-        else if (action === 'resize') {
-            setIsResizing(true);
+        // Si la acción es "mover" o "redimensionar", necesitamos saber el tamaño para los límites
+        if (action === 'move' || action === 'resize') {
+            if (action === 'move') setIsDragging(true);
+            if (action === 'resize') setIsResizing(true);
+
             setStartPos({ x: e.clientX, y: e.clientY });
+            if (action === 'move') setOrigPos({ x: element.x, y: element.y });
 
             // Guardamos tamaño inicial según el tipo de elemento
             if (elementType === 'image') {
@@ -62,8 +59,14 @@ export const useDragAndResize = ({
                     height: parseFloat(element.size || 48)
                 });
             } else if (elementType === 'text') {
+                // Estimación aproximada para texto si no hay ref directa, 
+                // pero idealmente deberíamos medir el elemento DOM real.
+                // Por ahora usamos el tamaño de fuente como proxy de altura y un estimado para ancho
+                // O mejor, intentamos obtener el elemento del DOM si es posible, pero no tenemos ID fácil para texto.
+                // Vamos a usar un estimado basado en longitud * tamaño * 0.6 (aprox)
+                const estimatedWidth = (element.text.length * element.size * 0.6);
                 setElementSize({
-                    width: element.size,
+                    width: estimatedWidth,
                     height: element.size
                 });
             }
@@ -79,11 +82,31 @@ export const useDragAndResize = ({
             const dx = e.clientX - startPos.x; // diferencia horizontal
             const dy = e.clientY - startPos.y; // diferencia vertical
 
+            let newX = origPos.x + dx;
+            let newY = origPos.y + dy;
+
+            // Aplicar límites si tenemos la referencia del área de diseño
+            if (designAreaRef && designAreaRef.current) {
+                const containerWidth = designAreaRef.current.offsetWidth;
+                const containerHeight = designAreaRef.current.offsetHeight;
+
+                // Asegurar que no se salga por la izquierda/arriba
+                newX = Math.max(0, newX);
+                newY = Math.max(0, newY);
+
+                // Asegurar que no se salga por derecha/abajo
+                // Usamos elementSize que capturamos en mouseDown
+                if (elementSize) {
+                    newX = Math.min(newX, containerWidth - elementSize.width);
+                    newY = Math.min(newY, containerHeight - elementSize.height);
+                }
+            }
+
             // Dependiendo del tipo, actualizamos la lista correspondiente
             if (activeElement.type === 'text') {
                 const updatedElements = designElements[currentView].textElements.map(el =>
                     el.id === activeElement.id
-                        ? { ...el, x: origPos.x + dx, y: origPos.y + dy }
+                        ? { ...el, x: newX, y: newY }
                         : el
                 );
                 setCurrentTextElements(updatedElements);
@@ -91,7 +114,7 @@ export const useDragAndResize = ({
             } else if (activeElement.type === 'image') {
                 const updatedElements = designElements[currentView].imageElements.map(el =>
                     el.id === activeElement.id
-                        ? { ...el, x: origPos.x + dx, y: origPos.y + dy }
+                        ? { ...el, x: newX, y: newY }
                         : el
                 );
                 setCurrentImageElements(updatedElements);
@@ -99,7 +122,7 @@ export const useDragAndResize = ({
             } else if (activeElement.type === 'emoji') {
                 const updatedElements = designElements[currentView].emojiElements.map(el =>
                     el.id === activeElement.id
-                        ? { ...el, x: origPos.x + dx, y: origPos.y + dy }
+                        ? { ...el, x: newX, y: newY }
                         : el
                 );
                 setCurrentEmojiElements(updatedElements);
@@ -114,7 +137,27 @@ export const useDragAndResize = ({
             let newHeight;
 
             if (activeElement.type === 'image') {
+                // Obtener dimensiones del contenedor para límites
+                let maxWidth = 500; // Tamaño máximo por defecto
+                let maxHeight = 500;
+
+                if (designAreaRef && designAreaRef.current) {
+                    const containerWidth = designAreaRef.current.offsetWidth;
+                    const containerHeight = designAreaRef.current.offsetHeight;
+                    maxWidth = Math.min(containerWidth * 0.8, 500); // Máximo 80% del contenedor o 500px
+                    maxHeight = Math.min(containerHeight * 0.8, 500);
+                }
+
+                // Limitar el ancho al máximo permitido
+                newWidth = Math.min(newWidth, maxWidth);
                 newHeight = newWidth / aspectRatio;
+
+                // Si la altura excede el máximo, ajustar por altura
+                if (newHeight > maxHeight) {
+                    newHeight = maxHeight;
+                    newWidth = newHeight * aspectRatio;
+                }
+
                 const updatedElements = designElements[currentView].imageElements.map(el =>
                     el.id === activeElement.id
                         ? { ...el, width: newWidth, height: newHeight }
@@ -123,7 +166,9 @@ export const useDragAndResize = ({
                 setCurrentImageElements(updatedElements);
 
             } else if (activeElement.type === 'emoji') {
-                const newSize = Math.max(20, elementSize.width + dx);
+                // Limitar tamaño máximo de emoji a 200px
+                const maxSize = 200;
+                const newSize = Math.min(Math.max(20, elementSize.width + dx), maxSize);
                 const updatedElements = designElements[currentView].emojiElements.map(el =>
                     el.id === activeElement.id
                         ? { ...el, size: newSize }
@@ -132,7 +177,9 @@ export const useDragAndResize = ({
                 setCurrentEmojiElements(updatedElements);
 
             } else if (activeElement.type === 'text') {
-                const newSize = Math.max(10, elementSize.width + dx * 0.5);
+                // Limitar tamaño máximo de texto a 150px
+                const maxSize = 150;
+                const newSize = Math.min(Math.max(10, elementSize.width + dx * 0.5), maxSize);
                 const updatedElements = designElements[currentView].textElements.map(el =>
                     el.id === activeElement.id
                         ? { ...el, size: newSize }

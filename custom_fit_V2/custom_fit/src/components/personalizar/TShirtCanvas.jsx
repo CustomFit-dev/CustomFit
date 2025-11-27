@@ -37,26 +37,26 @@ const TShirtCanvas = ({
     const getViewConfig = (view) => {
         const configs = {
             frontal: {
-                width: '47%',
-                height: '70%',
+                width: '60%',
+                height: '85%',
                 top: '55%',
                 left: '50%'
             },
             espaldar: {
-                width: '47%',
-                height: '75%',
+                width: '60%',
+                height: '85%',
                 top: '55%',
                 left: '50%'
             },
             mangaDerecha: {
-                width: '30%',
-                height: '85%',
+                width: '40%',
+                height: '90%',
                 top: '55%',
                 left: '49%'
             },
             mangaIzquierda: {
-                width: '30%',
-                height: '85%',
+                width: '40%',
+                height: '90%',
                 top: '55%',
                 left: '50%'
             }
@@ -119,7 +119,7 @@ const TShirtCanvas = ({
                     {/* Área de diseño: aquí se renderizan los elementos personalizados */}
                     <div
                         ref={designAreaRef}
-                        className="position-absolute border border-2 border-danger border-dashed"
+                        className="position-absolute"
                         style={{
                             width: viewConfig.width,
                             height: viewConfig.height,
