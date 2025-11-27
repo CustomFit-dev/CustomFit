@@ -1,0 +1,79 @@
+Documentación: Envío de código por correo con SendGrid (Anymail)
+
+1) Objetivo
+- Enviar el código de verificación (OTP) por email al iniciar sesión, usando SendGrid a través de django-anymail, en vez de imprimirlo en consola.
+
+2) Cambios realizados en el backend
+- Archivo: backend/custom_f/settings.py
+  - Agregado 'anymail' a INSTALLED_APPS.
+  - Carga explícita de variables de entorno desde BASE_DIR/.env con load_dotenv(BASE_DIR / '.env').
+  - Configuración de Anymail para SendGrid (solo SendGrid; se retiró Mailgun):
+    ANYMAIL = {
+        'SENDGRID_API_KEY': os.environ.get('SENDGRID_API_KEY', ''),
+    }
+    if SENDGRID_API_KEY:
+        EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
+    else:
+        EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'no-reply@localhost')
+
+- Archivo: backend/api/views.py
+  - Endpoint enviar_codigo_view: se usa send_mail con from_email=None para usar DEFAULT_FROM_EMAIL.
+  - Se agregó logging para depurar: resultado del envío, backend activo y remitente.
+
+3) Dependencias
+- Instalado: django-anymail[mailgun] (funciona para múltiples proveedores, incluido SendGrid). Versión instalada: 13.1
+  Comando usado: pip install django-anymail[mailgun]
+
+4) Variables de entorno (.env)
+- Ubicación: backend/.env (cargado automáticamente en settings.py)
+- Claves requeridas para SendGrid:
+  - SENDGRID_API_KEY=SG.xxxxxxx
+  - DEFAULT_FROM_EMAIL=remitente_verificado@dominio.com
+- Ejemplo actual del proyecto:
+  - SENDGRID_API_KEY=(proporcionada por el usuario)
+  - DEFAULT_FROM_EMAIL=custom.fit.team@gmail.com
+
+5) Configuración en SendGrid
+- Crear cuenta en SendGrid.
+- Verificar remitente:
+  - Single Sender Verification (rápido para desarrollo) o Domain Authentication (mejor para producción).
+- Crear API Key (permisos Mail Send / Full Access) y colocarla en .env.
+
+6) Flujo para enviar el código
+- Endpoint: POST /api/enviar_codigo/
+- Body JSON: { "correo_electronico": "correo_existente@dominio.com" }
+- Lógica:
+  - Busca el UserProfile por correo.
+  - Genera un código de 6 dígitos y lo guarda en user_profile.codigo_verificacion.
+  - Envía el correo usando send_mail y el backend configurado (SendGrid por Anymail).
+
+7) Pruebas y verificación
+- Reiniciar el servidor de Django tras modificar .env.
+- Probar el endpoint y revisar:
+  - Logs del backend: "OTP email dispatched: result=..., backend=..." (result=1 indica enviado).
+  - Bandeja de entrada (y spam) del destinatario.
+  - Dashboard de SendGrid > Activity en caso de fallos (bounces/blocks).
+
+8) Solución de problemas
+- Si backend muestra django.core.mail.backends.console.EmailBackend:
+  - Falta SENDGRID_API_KEY en .env o no se reinició el servidor.
+- Si SendGrid bloquea el envío:
+  - Verificar que el remitente esté verificado.
+  - Revisar Activity para ver causa (bounce, blocked, etc.).
+- Si el endpoint responde "Usuario no encontrado":
+  - Asegurar que el correo exista en UserProfile.
+
+9) Seguridad
+- No comprometer la API Key en repositorios públicos.
+- Rotar la API Key en SendGrid si se compartió.
+- Usar variables de entorno para secretos (como está configurado).
+
+10) Notas
+- El proyecto originalmente estaba configurado con Mailgun por consola; se migró a SendGrid solo.
+- Si en el futuro se quiere usar otro proveedor soportado por Anymail, basta con ajustar settings y variables .env.
+
+Resumen
+- Se integró SendGrid (Anymail) para envío de OTP por email.
+- Configuración en settings.py y .env lista.
+- Endpoint /api/enviar_codigo/ envía correos reales tras verificar remitente y API Key.

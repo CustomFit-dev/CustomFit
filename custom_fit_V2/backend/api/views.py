@@ -30,6 +30,7 @@ from .serializers import PedidoSerializer
 from django.db import transaction
 from .serializers import PedidoSerializer, CrearPedidoSerializer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -173,12 +174,15 @@ def enviar_codigo_view(request):
         user_profile.codigo_verificacion = codigo
         user_profile.save()
 
-        send_mail(
+        result = send_mail(
             'Tu código de verificación',
             f'Tu código es {codigo}',
-            'noreply@tuapp.com',
+            None,  # usa DEFAULT_FROM_EMAIL de settings
             [correo_electronico],
             fail_silently=False,
+        )
+        logger.info(
+            f"OTP email dispatched: result={result}, backend={settings.EMAIL_BACKEND}, to={correo_electronico}, from={getattr(settings, 'DEFAULT_FROM_EMAIL', None)}"
         )
         return Response({'status': 'ok', 'message': 'Código enviado'}, status=status.HTTP_200_OK)
     except UserProfile.DoesNotExist:

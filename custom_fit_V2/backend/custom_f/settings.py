@@ -9,12 +9,12 @@ import os
 
 # Cargar variables de entorno desde .env
 from dotenv import load_dotenv
-load_dotenv()
 
 # ----------------------------
 # RUTAS BASE
 # ----------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / '.env')
 
 # ----------------------------
 # VARIABLES DE ENTORNO (seguras)
@@ -61,12 +61,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # Paquetes externos
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'anymail',
 
-    # Tus apps
     'api',
 ]
 
@@ -173,15 +172,23 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-# ----------------------------
-# EMAILS (opcional)
-# ----------------------------
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'tu_correo@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'tu_app_password')
+ANYMAIL = {
+    'SENDGRID_API_KEY': os.environ.get('SENDGRID_API_KEY', ''),
+}
+
+_SENDGRID_KEY = os.environ.get('SENDGRID_API_KEY')
+if _SENDGRID_KEY:
+    EMAIL_BACKEND = 'anymail.backends.sendgrid.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'no-reply@localhost')
+
+EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587')) if os.environ.get('EMAIL_PORT') else None
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 
 # ----------------------------
 # CLAVE AUTO
