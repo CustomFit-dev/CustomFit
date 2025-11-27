@@ -90,6 +90,8 @@ export default function TextEditorModal({
   setTextSize,
   textColor,
   setTextColor,
+  textCurve,
+  setTextCurve,
   handleAddText
 }) {
   const loadedRef = useRef(new Set());
@@ -231,6 +233,19 @@ export default function TextEditorModal({
             }}
           />
 
+          <label style={{ color: "#fff", fontSize: 13, marginTop: 8 }}>Curvatura: {textCurve}</label>
+          <input
+            type="range"
+            min="-100"
+            max="100"
+            value={textCurve}
+            onChange={(e) => setTextCurve(Number(e.target.value))}
+            style={{
+              width: "100%",
+              cursor: "pointer"
+            }}
+          />
+
           <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
             <button
               type="button"
@@ -292,7 +307,23 @@ export default function TextEditorModal({
                 lineHeight: 1.2
               }}
             >
-              {newText || "Tu texto aparecerá aquí"}
+              {textCurve !== 0 ? (
+                <svg width="200" height="100" viewBox="0 0 200 100" style={{ overflow: 'visible' }}>
+                  <path id="preview-curve" d={`M 0 50 Q 100 ${50 - (textCurve * 0.5)} 200 50`} fill="transparent" />
+                  <text width="200" style={{
+                    fontFamily: fontFamilyStyle(textFont),
+                    fontSize: "20px",
+                    fill: textColor,
+                    textAnchor: "middle"
+                  }}>
+                    <textPath xlinkHref="#preview-curve" startOffset="50%">
+                      {newText || "Tu texto"}
+                    </textPath>
+                  </text>
+                </svg>
+              ) : (
+                newText || "Tu texto aparecerá aquí"
+              )}
             </div>
             <div style={{ marginTop: 10, fontSize: 12, color: "#666" }}>
               Fuente: {textFont} · Vista previa (tamaño fijo)

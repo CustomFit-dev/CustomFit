@@ -38,7 +38,8 @@ const TShirtCustomizer = () => {
         newText, setNewText,
         textFont, setTextFont,
         textSize, setTextSize,
-        textColor, setTextColor
+        textColor, setTextColor,
+        textCurve, setTextCurve
     } = useTShirtState();
 
     const [editingElementId, setEditingElementId] = useState(null);
@@ -119,7 +120,7 @@ const TShirtCustomizer = () => {
             const currentTexts = getCurrentTextElements();
             const updatedTexts = currentTexts.map(el =>
                 el.id === editingElementId
-                    ? { ...el, text: newText, font: textFont, size: textSize, color: textColor }
+                    ? { ...el, text: newText, font: textFont, size: textSize, color: textColor, curve: textCurve }
                     : el
             );
             setCurrentTextElements(updatedTexts);
@@ -131,6 +132,8 @@ const TShirtCustomizer = () => {
                 font: textFont,
                 size: textSize,
                 color: textColor,
+                curve: textCurve,
+                rotation: 0,
                 x: 50,
                 y: 50
             };
@@ -151,6 +154,7 @@ const TShirtCustomizer = () => {
         setTextFont(element.font);
         setTextSize(element.size);
         setTextColor(element.color);
+        setTextCurve(element.curve || 0);
         setEditingElementId(element.id);
         setShowTextModal(true);
     };
@@ -315,6 +319,8 @@ const TShirtCustomizer = () => {
                 setTextSize={setTextSize}
                 textColor={textColor}
                 setTextColor={setTextColor}
+                textCurve={textCurve}
+                setTextCurve={setTextCurve}
                 handleAddText={handleAddText}
                 handleAddImage={handleAddImage}
                 handleAddEmoji={handleAddEmoji}

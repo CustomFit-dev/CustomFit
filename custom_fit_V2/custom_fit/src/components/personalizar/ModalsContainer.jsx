@@ -30,6 +30,8 @@ const ModalsContainer = ({
   setTextSize,             // Función para actualizar tamaño
   textColor,               // Color del texto
   setTextColor,            // Función para actualizar color
+  textCurve,               // Curvatura del texto
+  setTextCurve,            // Función para actualizar curvatura
 
   // Handlers de acciones principales
   handleAddText,           // Agregar texto a la camiseta
@@ -40,7 +42,7 @@ const ModalsContainer = ({
   return (
     <>
       {/* Modal para agregar y configurar texto */}
-      <TextModal 
+      <TextModal
         show={showTextModal}
         setShow={setShowTextModal}
         newText={newText}
@@ -51,19 +53,21 @@ const ModalsContainer = ({
         setTextSize={setTextSize}
         textColor={textColor}
         setTextColor={setTextColor}
+        textCurve={textCurve}
+        setTextCurve={setTextCurve}
         handleAddText={handleAddText}
       />
 
       {/* Modal de galería de diseños personalizados (se renderiza solo si está abierto) */}
       {showCustomModal && (
-        <CustomGaleria 
+        <CustomGaleria
           onSelectImage={handleSelectCustomDesign}    // Selección de diseño
           onClose={() => setShowCustomModal(false)}   // Cierra modal
         />
       )}
 
       {/* Modal para subir imágenes */}
-      <ModalImageUpload 
+      <ModalImageUpload
         show={showImageModal}
         setShowImageModal={setShowImageModal}
         handleAddImage={handleAddImage}

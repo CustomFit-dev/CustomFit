@@ -19,6 +19,64 @@ const uploadToCloudinary = async (blob) => {
     }
 };
 
+// Helper para convertir SVGs a imágenes antes de capturar
+const convertSvgsToImages = async (element) => {
+    const svgs = element.querySelectorAll('svg');
+    const replacements = [];
+
+    for (const svg of svgs) {
+        const svgData = new XMLSerializer().serializeToString(svg);
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+
+        // Definir dimensiones
+        const rect = svg.getBoundingClientRect();
+        canvas.width = rect.width;
+        canvas.height = rect.height;
+
+        // Crear Blob SVG
+        const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+
+        await new Promise((resolve, reject) => {
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0);
+                URL.revokeObjectURL(url);
+                resolve();
+            };
+            img.onerror = reject;
+            img.src = url;
+        });
+
+        // Crear imagen de reemplazo
+        const replacementImg = document.createElement('img');
+        replacementImg.src = canvas.toDataURL('image/png');
+        replacementImg.style.width = `${rect.width}px`;
+        replacementImg.style.height = `${rect.height}px`;
+        replacementImg.style.position = 'absolute';
+        replacementImg.style.left = svg.style.left;
+        replacementImg.style.top = svg.style.top;
+        replacementImg.style.transform = svg.style.transform;
+        replacementImg.className = svg.className; // Mantener clases si las hay
+
+        // Guardar referencia para restaurar
+        replacements.push({ parent: svg.parentNode, old: svg, new: replacementImg });
+
+        // Reemplazar
+        svg.parentNode.replaceChild(replacementImg, svg);
+    }
+    return replacements;
+};
+
+const restoreSvgs = (replacements) => {
+    replacements.forEach(({ parent, old, new: replacement }) => {
+        if (parent.contains(replacement)) {
+            parent.replaceChild(old, replacement);
+        }
+    });
+};
+
 export const handleBuy = async (
     tshirtRef,
     designAreaRef,
@@ -82,19 +140,27 @@ export const handleBuy = async (
             setCurrentView(view);
             await new Promise(resolve => setTimeout(resolve, 500));
 
-            const canvas = await html2canvas(tshirtRef.current, {
-                backgroundColor: null,
-                scale: 2,
-                useCORS: true,
-                logging: false,
-                allowTaint: true
-            });
+            // Convertir SVGs a imágenes temporalmente
+            const replacements = await convertSvgsToImages(tshirtRef.current);
 
-            const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-            const url = await uploadToCloudinary(blob);
-            if (!url) throw new Error(`Error al subir imagen de ${view}`);
+            try {
+                const canvas = await html2canvas(tshirtRef.current, {
+                    backgroundColor: null,
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    allowTaint: true
+                });
 
-            uploadedUrls[viewNames[view]] = url;
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                const url = await uploadToCloudinary(blob);
+                if (!url) throw new Error(`Error al subir imagen de ${view}`);
+
+                uploadedUrls[viewNames[view]] = url;
+            } finally {
+                // Restaurar SVGs originales
+                restoreSvgs(replacements);
+            }
         }
 
         setCurrentView(originalView);

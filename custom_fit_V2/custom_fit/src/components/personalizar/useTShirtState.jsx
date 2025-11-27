@@ -45,6 +45,7 @@ export const useTShirtState = () => {
     const [textFont, setTextFont] = useState('Arial');   // Fuente del texto
     const [textSize, setTextSize] = useState(20);        // Tamaño de fuente
     const [textColor, setTextColor] = useState('#000000');// Color del texto
+    const [textCurve, setTextCurve] = useState(0);       // Curvatura del texto (-100 a 100)
 
     // --- 🔹 Funciones utilitarias ---
 
@@ -146,6 +147,7 @@ export const useTShirtState = () => {
         textFont, setTextFont,
         textSize, setTextSize,
         textColor, setTextColor,
+        textCurve, setTextCurve,
 
         // --- Compatibilidad con componentes existentes ---
         // Estos "alias" sirven para usar este hook sin romper código previo
