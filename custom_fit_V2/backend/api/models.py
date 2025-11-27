@@ -212,6 +212,12 @@ class Pedido(models.Model):
     estado = models.ForeignKey(EstadoPedido, on_delete=models.CASCADE)
     transportadora = models.ForeignKey(Transportadora, on_delete=models.SET_NULL, null=True, blank=True)
     numero_guia = models.CharField(max_length=100, null=True, blank=True)
+    
+    # Campos para PayPal
+    paypal_order_id = models.CharField(max_length=100, null=True, blank=True, help_text="ID de la orden de PayPal")
+    paypal_transaction_id = models.CharField(max_length=100, null=True, blank=True, help_text="ID de la transacción de PayPal")
+    paypal_payer_email = models.EmailField(null=True, blank=True, help_text="Email del pagador en PayPal")
+    paypal_payer_name = models.CharField(max_length=200, null=True, blank=True, help_text="Nombre del pagador en PayPal")
 
     def __str__(self):
         return f"Pedido #{self.id} de {self.usuario}"

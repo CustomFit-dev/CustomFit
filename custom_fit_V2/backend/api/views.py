@@ -990,3 +990,244 @@ class PedidoViewSet(viewsets.ModelViewSet):
         elif hasattr(user, 'userprofile'):
              return Pedido.objects.filter(usuario=user.userprofile).order_by('-fecha')
         return Pedido.objects.none()
+
+
+# ==================== PAYPAL INTEGRATION ====================
+
+from .paypal import PayPalService
+from decimal import Decimal
+import json
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def paypal_create_order(request):
+    """
+    Crea una orden de pago en PayPal
+    
+    Espera en el body:
+    {
+        "amount": 45000,
+        "currency": "USD",  // opcional, default USD
+        "cart_items": [...],  // opcional, para referencia
+        "direccion": "...",
+        "ciudad": "..."
+    }
+    
+    Retorna:
+    {
+        "order_id": "...",
+        "approval_url": "https://www.sandbox.paypal.com/checkoutnow?token=..."
+    }
+    """
+    try:
+        # Obtener datos del request
+        amount = request.data.get('amount')
+        currency = request.data.get('currency', 'USD')
+        cart_items = request.data.get('cart_items', [])
+        direccion = request.data.get('direccion')
+        ciudad = request.data.get('ciudad')
+        
+        # Validar amount
+        if not amount:
+            return Response({
+                'error': 'El campo amount es requerido'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            amount = Decimal(str(amount))
+            if amount <= 0:
+                raise ValueError("Amount must be positive")
+        except (ValueError, TypeError) as e:
+            return Response({
+                'error': f'Monto inválido: {str(e)}'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Inicializar servicio de PayPal
+        paypal_service = PayPalService()
+        
+        # Crear orden en PayPal
+        order_result = paypal_service.create_order(
+            amount=amount,
+            currency=currency,
+            return_url=f"http://localhost:3000/checkout/success",
+            cancel_url=f"http://localhost:3000/checkout/cancel"
+        )
+        
+        # Guardar información temporal en sesión o base de datos
+        # (opcional: puedes crear un modelo TemporalOrder para tracking)
+        
+        logger.info(f"PayPal order created: {order_result['order_id']} for user {request.user.username}")
+        
+        return Response({
+            'success': True,
+            'order_id': order_result['order_id'],
+            'approval_url': order_result['approval_url'],
+            'status': order_result['status']
+        }, status=status.HTTP_201_CREATED)
+    
+    except Exception as e:
+        logger.error(f"Error creating PayPal order: {str(e)}")
+        return Response({
+            'error': f'Error al crear orden de PayPal: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def paypal_capture_order(request):
+    """
+    Captura (completa) una orden de PayPal después de que el usuario la aprobó
+    
+    Espera en el body:
+    {
+        "order_id": "PAYPAL_ORDER_ID",
+        "direccion": "Calle 123",
+        "ciudad": "Bogotá",
+        "productos": [
+            {"id": 1, "cantidad": 2, "talla": "M"},
+            ...
+        ]
+    }
+    
+    Retorna:
+    {
+        "success": true,
+        "transaction_id": "...",
+        "pedido_id": 123
+    }
+    """
+    try:
+        # Obtener datos del request
+        order_id = request.data.get('order_id')
+        direccion = request.data.get('direccion')
+        ciudad = request.data.get('ciudad')
+        productos = request.data.get('productos', [])
+        
+        # Validaciones
+        if not order_id:
+            return Response({
+                'error': 'El campo order_id es requerido'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        if not direccion or not ciudad:
+            return Response({
+                'error': 'Los campos direccion y ciudad son requeridos'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Inicializar servicio de PayPal
+        paypal_service = PayPalService()
+        
+        # Capturar la orden en PayPal
+        capture_result = paypal_service.capture_order(order_id)
+        
+        # Verificar que el pago fue exitoso
+        if capture_result['status'] != 'COMPLETED':
+            return Response({
+                'error': f"Pago no completado. Estado: {capture_result['status']}"
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Obtener el usuario
+        try:
+            usuario_profile = request.user.userprofile
+        except UserProfile.DoesNotExist:
+            return Response({
+                'error': 'Perfil de usuario no encontrado'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Obtener estado "Pendiente" (o crear si no existe)
+        estado_pendiente, _ = EstadoPedido.objects.get_or_create(
+            nombre="Pendiente",
+            defaults={'descripcion': 'Pedido pendiente de procesamiento'}
+        )
+        
+        # Crear el pedido en la base de datos
+        with transaction.atomic():
+            # Calcular total desde los productos
+            total = Decimal('0.00')
+            items_data = []
+            
+            for item_data in productos:
+                item_id = item_data.get('id')
+                cantidad = item_data.get('cantidad', 1)
+                talla = item_data.get('talla')
+                
+                # Buscar el item del carrito
+                try:
+                    carrito_item = CarritoItem.objects.get(
+                        id=item_id,
+                        carrito__usuario=request.user  # Cambiado: usar request.user en lugar de usuario_profile
+                    )
+                    
+                    # Determinar el producto y precio
+                    if carrito_item.producto:
+                        producto = carrito_item.producto
+                        precio = Decimal(str(producto.PrecioProducto))  # Convertir float a Decimal
+                        producto_personalizado = None
+                    elif carrito_item.producto_personalizado:
+                        producto_personalizado = carrito_item.producto_personalizado
+                        precio = Decimal(str(producto_personalizado.precioPersonalizado))  # Convertir float a Decimal
+                        producto = None
+                    else:
+                        continue
+                    
+                    subtotal = precio * cantidad
+                    total += subtotal
+                    
+                    items_data.append({
+                        'producto': producto,
+                        'producto_personalizado': producto_personalizado,
+                        'cantidad': cantidad,
+                        'precio_unitario': precio,
+                        'talla': talla or ''
+                    })
+                
+                except CarritoItem.DoesNotExist:
+                    logger.warning(f"CarritoItem {item_id} not found for user {usuario_profile.user.username}")
+                    continue
+            
+            # Crear el pedido
+            pedido = Pedido.objects.create(
+                usuario=usuario_profile,
+                direccion=direccion,
+                ciudad=ciudad,
+                total=total,
+                estado=estado_pendiente,
+                metodo_pago='paypal',
+                paypal_order_id=order_id,
+                paypal_transaction_id=capture_result.get('transaction_id'),
+                paypal_payer_email=capture_result.get('payer_email'),
+                paypal_payer_name=capture_result.get('payer_name')
+            )
+            
+            # Crear los items del pedido
+            for item_data in items_data:
+                PedidoItem.objects.create(
+                    pedido=pedido,
+                    producto=item_data['producto'],
+                    producto_personalizado=item_data['producto_personalizado'],
+                    cantidad=item_data['cantidad'],
+                    precio=item_data['precio_unitario']
+                )
+            
+            # Limpiar el carrito
+            Carrito.objects.filter(usuario=request.user).delete()
+        
+        logger.info(f"PayPal order captured: {order_id}, Pedido created: {pedido.id}")
+        
+        return Response({
+            'success': True,
+            'transaction_id': capture_result.get('transaction_id'),
+            'order_id': order_id,
+            'pedido_id': pedido.id,
+            'total': float(total),
+            'status': capture_result['status']
+        }, status=status.HTTP_201_CREATED)
+    
+    except Exception as e:
+        logger.error(f"Error capturing PayPal order: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return Response({
+            'error': f'Error al procesar el pago: {str(e)}'
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

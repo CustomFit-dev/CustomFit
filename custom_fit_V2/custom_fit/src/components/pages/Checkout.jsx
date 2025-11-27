@@ -6,6 +6,7 @@ import "../../scss/checkout.scss";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 const Checkout = () => {
   const { cart, totalPrice, clearCart, removeItem, updateItem } = useCart();
@@ -18,41 +19,12 @@ const Checkout = () => {
     telefono: "",
     direccion: "",
     ciudad: "",
-    metodoPago: "simulado",
-    // Datos de tarjeta simulada
-    numeroTarjeta: "",
-    nombreTitular: "",
-    fechaExpiracion: "",
-    cvv: "",
   });
 
   const handleChange = (e) => {
-    let value = e.target.value;
-    const name = e.target.name;
-
-    // Formatear número de tarjeta (espacios cada 4 dígitos)
-    if (name === "numeroTarjeta") {
-      value = value.replace(/\s/g, "").replace(/(\d{4})/g, "$1 ").trim();
-      if (value.length > 19) value = value.substring(0, 19);
-    }
-
-    // Formatear fecha de expiración (MM/YY)
-    if (name === "fechaExpiracion") {
-      value = value.replace(/\D/g, "");
-      if (value.length >= 2) {
-        value = value.substring(0, 2) + "/" + value.substring(2, 4);
-      }
-      if (value.length > 5) value = value.substring(0, 5);
-    }
-
-    // Limitar CVV a 3 dígitos
-    if (name === "cvv") {
-      value = value.replace(/\D/g, "").substring(0, 3);
-    }
-
     setFormData({
       ...formData,
-      [name]: value,
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -86,122 +58,7 @@ const Checkout = () => {
       return false;
     }
 
-    // Validar datos de tarjeta
-    if (!formData.numeroTarjeta || formData.numeroTarjeta.replace(/\s/g, "").length < 16) {
-      Swal.fire("Error", "Número de tarjeta inválido", "warning");
-      return false;
-    }
-
-    if (!formData.nombreTitular || formData.nombreTitular.length < 3) {
-      Swal.fire("Error", "Nombre del titular inválido", "warning");
-      return false;
-    }
-
-    if (!formData.fechaExpiracion || formData.fechaExpiracion.length !== 5) {
-      Swal.fire("Error", "Fecha de expiración inválida (MM/YY)", "warning");
-      return false;
-    }
-
-    if (!formData.cvv || formData.cvv.length !== 3) {
-      Swal.fire("Error", "CVV inválido", "warning");
-      return false;
-    }
-
     return true;
-  };
-
-  const simularPago = async () => {
-    // Simular procesamiento de pago (2 segundos)
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        // Simular éxito del pago con 95% de probabilidad
-        const exito = Math.random() > 0.05;
-        resolve({
-          exito,
-          transaccionId: `TXN-${Date.now()}-${Math.floor(Math.random() * 10000)}`,
-          mensaje: exito ? "Pago procesado exitosamente" : "Pago rechazado",
-        });
-      }, 2000);
-    });
-  };
-
-  const procesarPago = async () => {
-    if (!validarFormulario()) return;
-
-    setProcessingPayment(true);
-
-    try {
-      // Mostrar mensaje de procesamiento
-      Swal.fire({
-        title: "Procesando pago...",
-        html: "Por favor espera mientras procesamos tu pago",
-        allowOutsideClick: false,
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
-
-      // Simular el pago
-      const resultadoPago = await simularPago();
-
-      if (!resultadoPago.exito) {
-        Swal.fire({
-          icon: "error",
-          title: "Pago rechazado",
-          text: "Tu tarjeta fue rechazada. Por favor intenta con otra tarjeta.",
-        });
-        setProcessingPayment(false);
-        return;
-      }
-
-      // Crear pedido en el backend
-      await axios.post(
-        "http://localhost:8000/checkout/finalizar/",
-        {
-          direccion: formData.direccion,
-          ciudad: formData.ciudad,
-          metodo_pago: "tarjeta_simulada",
-          detalles_pago: {
-            transaccion_id: resultadoPago.transaccionId,
-            ultimos_digitos: formData.numeroTarjeta.slice(-4),
-            titular: formData.nombreTitular,
-          },
-          productos: cart.items.map((item) => ({
-            id: item.id,
-            cantidad: item.cantidad,
-            talla: item.talla,
-          })),
-        },
-        {
-          headers: {
-            Authorization: `Token ${authToken}`,
-          },
-        }
-      );
-
-      Swal.fire({
-        icon: "success",
-        title: "¡Pago exitoso!",
-        html: `
-          <p>Tu pedido ha sido confirmado</p>
-          <p><strong>ID de transacción:</strong> ${resultadoPago.transaccionId}</p>
-          <p><strong>Total pagado:</strong> $${totalPrice.toLocaleString()}</p>
-        `,
-        confirmButtonText: "Ver mis pedidos",
-      });
-
-      clearCart();
-      navigate("/store");
-    } catch (error) {
-      console.error(error.response || error);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Ocurrió un problema al procesar tu pedido. Por favor intenta nuevamente.",
-      });
-    } finally {
-      setProcessingPayment(false);
-    }
   };
 
   const handleRemoveItem = (itemId) => {
@@ -222,6 +79,13 @@ const Checkout = () => {
         );
       }
     });
+  };
+
+  // Configuración de PayPal
+  const paypalOptions = {
+    "client-id": "ARF2Hh6yUJtcnNkm7p9xLrpAXuBX0O-Xn82DMuMfPgHy2pnt41EIHs5Tr1nTE2rks1suIOWW4TdNIcOu",
+    currency: "USD",
+    intent: "capture",
   };
 
   return (
@@ -342,58 +206,152 @@ const Checkout = () => {
             onChange={handleChange}
           />
 
-          <h3 style={{ marginTop: "30px" }}>Datos de Pago</h3>
-          <p style={{ fontSize: "14px", color: "#666", marginBottom: "15px" }}>
-            💳 Pago simulado - Usa cualquier número de tarjeta de 16 dígitos
-          </p>
-
-          <input
-            type="text"
-            name="numeroTarjeta"
-            placeholder="Número de tarjeta (16 dígitos)"
-            value={formData.numeroTarjeta}
-            onChange={handleChange}
-            maxLength="19"
-          />
-
-          <input
-            type="text"
-            name="nombreTitular"
-            placeholder="Nombre del titular"
-            value={formData.nombreTitular}
-            onChange={handleChange}
-          />
-
-          <div style={{ display: "flex", gap: "10px" }}>
-            <input
-              type="text"
-              name="fechaExpiracion"
-              placeholder="MM/YY"
-              value={formData.fechaExpiracion}
-              onChange={handleChange}
-              style={{ flex: 1 }}
-            />
-
-            <input
-              type="text"
-              name="cvv"
-              placeholder="CVV"
-              value={formData.cvv}
-              onChange={handleChange}
-              style={{ flex: 1 }}
-            />
+          <div style={{ marginBottom: "15px", marginTop: "30px" }}>
+            <label style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>
+              💳 Método de pago: PayPal
+            </label>
+            <p style={{ fontSize: "14px", color: "#666" }}>
+              Pago seguro procesado por PayPal (Sandbox)
+            </p>
           </div>
 
-          <button
-            className="btn-finalizar"
-            onClick={procesarPago}
-            disabled={processingPayment}
-          >
-            {processingPayment ? "Procesando..." : `Pagar $${totalPrice.toLocaleString()}`}
-          </button>
+          {/* PayPal Buttons */}
+          <PayPalScriptProvider options={paypalOptions}>
+            <div style={{ marginTop: "20px" }}>
+              <PayPalButtons
+                style={{
+                  layout: "vertical",
+                  color: "gold",
+                  shape: "rect",
+                  label: "paypal"
+                }}
+                disabled={processingPayment}
+                createOrder={async (data, actions) => {
+                  // Validar formulario antes de crear la orden
+                  if (!validarFormulario()) {
+                    return Promise.reject("Formulario incompleto");
+                  }
 
-          <p style={{ fontSize: "12px", color: "#999", marginTop: "10px", textAlign: "center" }}>
-            🔒 Pago seguro simulado - No se procesarán cargos reales
+                  setProcessingPayment(true);
+
+                  try {
+                    // Llamar al backend para crear la orden en PayPal
+                    const response = await axios.post(
+                      "http://localhost:8000/api/paypal/create-order/",
+                      {
+                        amount: totalPrice,
+                        currency: "USD",
+                        direccion: formData.direccion,
+                        ciudad: formData.ciudad,
+                        cart_items: cart.items
+                      },
+                      {
+                        headers: {
+                          Authorization: `Token ${authToken}`,
+                        },
+                      }
+                    );
+
+                    if (response.data.success) {
+                      return response.data.order_id;
+                    } else {
+                      throw new Error("Error al crear la orden");
+                    }
+                  } catch (error) {
+                    console.error("Error creating PayPal order:", error);
+                    Swal.fire({
+                      icon: "error",
+                      title: "Error",
+                      text: "No se pudo crear la orden de pago. Por favor intenta nuevamente.",
+                    });
+                    setProcessingPayment(false);
+                    return Promise.reject(error);
+                  }
+                }}
+                onApprove={async (data, actions) => {
+                  try {
+                    // Mostrar loading
+                    Swal.fire({
+                      title: "Procesando pago...",
+                      html: "Por favor espera mientras confirmamos tu pago",
+                      allowOutsideClick: false,
+                      didOpen: () => {
+                        Swal.showLoading();
+                      },
+                    });
+
+                    // Llamar al backend para capturar el pago
+                    const response = await axios.post(
+                      "http://localhost:8000/api/paypal/capture-order/",
+                      {
+                        order_id: data.orderID,
+                        direccion: formData.direccion,
+                        ciudad: formData.ciudad,
+                        productos: cart.items.map((item) => ({
+                          id: item.id,
+                          cantidad: item.cantidad,
+                          talla: item.talla,
+                        })),
+                      },
+                      {
+                        headers: {
+                          Authorization: `Token ${authToken}`,
+                        },
+                      }
+                    );
+
+                    if (response.data.success) {
+                      Swal.fire({
+                        icon: "success",
+                        title: "¡Pago exitoso!",
+                        html: `
+                          <p>Tu pedido ha sido confirmado</p>
+                          <p><strong>ID de transacción:</strong> ${response.data.transaction_id}</p>
+                          <p><strong>Pedido #:</strong> ${response.data.pedido_id}</p>
+                          <p><strong>Total pagado:</strong> $${response.data.total.toLocaleString()}</p>
+                        `,
+                        confirmButtonText: "Ir a la tienda",
+                      });
+
+                      clearCart();
+                      navigate("/store");
+                    } else {
+                      throw new Error(response.data.error || "Error al procesar el pago");
+                    }
+                  } catch (error) {
+                    console.error("Error capturing PayPal order:", error);
+                    Swal.fire({
+                      icon: "error",
+                      title: "Error",
+                      text: error.response?.data?.error || "Ocurrió un problema al procesar tu pago. Por favor contacta soporte.",
+                    });
+                  } finally {
+                    setProcessingPayment(false);
+                  }
+                }}
+                onError={(err) => {
+                  console.error("PayPal Error:", err);
+                  Swal.fire({
+                    icon: "error",
+                    title: "Error de PayPal",
+                    text: "Hubo un error con el pago de PayPal. Por favor intenta nuevamente.",
+                  });
+                  setProcessingPayment(false);
+                }}
+                onCancel={() => {
+                  Swal.fire({
+                    icon: "info",
+                    title: "Pago cancelado",
+                    text: "Has cancelado el pago. Puedes intentarlo nuevamente cuando quieras.",
+                  });
+                  setProcessingPayment(false);
+                }}
+              />
+            </div>
+          </PayPalScriptProvider>
+
+          <p style={{ fontSize: "12px", color: "#999", marginTop: "15px", textAlign: "center" }}>
+            🔒 Pago seguro con PayPal Sandbox (modo de prueba)
           </p>
         </div>
       </div>

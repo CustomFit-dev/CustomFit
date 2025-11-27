@@ -13,7 +13,8 @@ from .views import (
     estampados_emoji_list,
     obtener_carrito, agregar_al_carrito, actualizar_item, eliminar_item,
     finalizar_compra, finalizar_personalizacion,
-    EstadoPedidoViewSet, TransportadoraViewSet, PedidoViewSet
+    EstadoPedidoViewSet, TransportadoraViewSet, PedidoViewSet,
+    paypal_create_order, paypal_capture_order  # <-- NUEVAS VISTAS PAYPAL
 )
 
 from rest_framework.routers import DefaultRouter
@@ -85,4 +86,9 @@ urlpatterns = [
     path('checkout/finalizar/', finalizar_compra, name='finalizar_compra'),
     path('api/personalizar/finalizar/', finalizar_personalizacion, name='finalizar_personalizacion'),
 
+    # PayPal Integration
+    path('api/paypal/create-order/', paypal_create_order, name='paypal-create-order'),
+    path('api/paypal/capture-order/', paypal_capture_order, name='paypal-capture-order'),
+
 ]
+

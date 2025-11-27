@@ -7,6 +7,10 @@ from pathlib import Path
 import os
 # import dj_database_url  # 👈 asegúrate de tenerlo en requirements.txt
 
+# Cargar variables de entorno desde .env
+from dotenv import load_dotenv
+load_dotenv()
+
 # ----------------------------
 # RUTAS BASE
 # ----------------------------
@@ -15,8 +19,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ----------------------------
 # VARIABLES DE ENTORNO (seguras)
 # ----------------------------
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'clave-insegura-local')
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'clave-insegura-local')
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = os.environ.get(
     'ALLOWED_HOSTS', 'localhost,127.0.0.1'
@@ -183,3 +187,12 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'tu_app_password')
 # CLAVE AUTO
 # ----------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+# ----------------------------
+# PAYPAL CONFIGURATION
+# ----------------------------
+PAYPAL_CLIENT_ID = os.environ.get('PAYPAL_CLIENT_ID')
+PAYPAL_SECRET = os.environ.get('PAYPAL_SECRET')
+PAYPAL_API = os.environ.get('PAYPAL_API', 'https://api-m.sandbox.paypal.com')
+PAYPAL_MODE = os.environ.get('PAYPAL_MODE', 'sandbox')  # 'sandbox' o 'live'
+

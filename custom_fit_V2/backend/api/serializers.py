@@ -186,7 +186,12 @@ class PedidoSerializer(serializers.ModelSerializer):
             'estado_nombre',
             'transportadora',
             'transportadora_nombre',
-            'numero_guia'
+            'numero_guia',
+            # Campos PayPal
+            'paypal_order_id',
+            'paypal_transaction_id',
+            'paypal_payer_email',
+            'paypal_payer_name'
         ]
 
 
