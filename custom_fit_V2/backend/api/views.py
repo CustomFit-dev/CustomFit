@@ -907,7 +907,7 @@ def finalizar_personalizacion(request):
             stock=data.get('stock', 1),
             productos_idProductos=producto_base, # Asignar instancia directamente
             urlFrontal=data.get('urlFrontal'),
-            urlEspadarl=data.get('urlEspadarl'), 
+            urlEspadarl=data.get('urlEspaldar'), 
             urlMangaDerecha=data.get('urlMangaDerecha'),
             urlMangaIzquierda=data.get('urlMangaIzquierda'),
             talla=data.get('talla'),

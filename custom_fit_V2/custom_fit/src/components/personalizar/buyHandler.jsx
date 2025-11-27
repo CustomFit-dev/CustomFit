@@ -59,7 +59,7 @@ export const handleBuy = async (
     const views = ['frontal', 'mangaDerecha', 'mangaIzquierda', 'espaldar'];
     const viewNames = {
         frontal: 'urlFrontal',
-        espaldar: 'urlEspadarl',
+        espaldar: 'urlEspaldar',
         mangaDerecha: 'urlMangaDerecha',
         mangaIzquierda: 'urlMangaIzquierda'
     };

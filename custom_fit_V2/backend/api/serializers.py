@@ -2,8 +2,6 @@ from rest_framework import serializers
 from .models import UserProfile, Project, Rol
 from django.contrib.auth.models import User
 from .models import Carrito, CarritoItem, Producto
-from rest_framework import serializers
-from .models import UserProfile, Project, Rol
 from .models import Tela, Estampado,  Producto, ProveedorSolicitud, ProductosPersonalizados
 from .models import Pedido, PedidoItem
 
@@ -54,11 +52,6 @@ class ProjectSerializer(serializers.ModelSerializer):
         model = Project
         fields = ['id', 'name', 'start_date', 'end_date', 'comentarios', 'status', 'created', 'modificado']
 
-class RolSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Rol
-        fields = ['id', 'nombrerol', 'descripcion']
-
 class TelaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tela
@@ -81,10 +74,17 @@ class ProductoSerializer(serializers.ModelSerializer):
 class ProductosPersonalizadosSerializer(serializers.ModelSerializer):
     # Incluir estampados relacionados (ImgEstampado, NombreEstampado, id, etc.)
     estampados = EstampadoSerializer(many=True, read_only=True)
+    
+    # Campo personalizado para compatibilidad con frontend (traduce urlEspadarl -> urlEspaldar)
+    urlEspaldar = serializers.SerializerMethodField()
 
     class Meta:
         model = ProductosPersonalizados
         fields = '__all__'  # la declaración de 'estampados' será agregada automáticamente al serializer
+    
+    def get_urlEspaldar(self, obj):
+        """Retorna el valor de urlEspadarl con el nombre correcto urlEspaldar"""
+        return obj.urlEspadarl
 
 
 class UserSerializer(serializers.ModelSerializer):
