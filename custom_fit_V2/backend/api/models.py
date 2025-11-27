@@ -185,27 +185,47 @@ class CarritoItem(models.Model):
             return f"Personalizado {self.producto_personalizado.NombrePersonalizado} x {self.cantidad}"
         return f"Item desconocido x {self.cantidad}"
 
+class EstadoPedido(models.Model):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
+class Transportadora(models.Model):
+    nombre = models.CharField(max_length=100)
+    pagina_rastreo = models.CharField(max_length=255, null=True, blank=True)
+    telefono = models.CharField(max_length=20, null=True, blank=True)
+    direccion = models.CharField(max_length=255, null=True, blank=True)
+    ciudad = models.CharField(max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return self.nombre
+
 class Pedido(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     fecha = models.DateTimeField(auto_now_add=True)
     direccion = models.CharField(max_length=255)
     ciudad = models.CharField(max_length=100)
-    metodo_pago = models.CharField(max_length=50)
+    metodo_pago = models.CharField(max_length=50, default='Transferencia')
     total = models.DecimalField(max_digits=10, decimal_places=2)
+    estado = models.ForeignKey(EstadoPedido, on_delete=models.CASCADE)
+    transportadora = models.ForeignKey(Transportadora, on_delete=models.SET_NULL, null=True, blank=True)
+    numero_guia = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
-        return f"Pedido #{self.id} de {self.usuario.username}"
-
+        return f"Pedido #{self.id} de {self.usuario}"
 
 class PedidoItem(models.Model):
     pedido = models.ForeignKey(Pedido, related_name="items", on_delete=models.CASCADE)
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
-    cantidad = models.PositiveIntegerField(default=1)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, null=True, blank=True)
+    producto_personalizado = models.ForeignKey(ProductosPersonalizados, on_delete=models.CASCADE, null=True, blank=True)
+    cantidad = models.IntegerField(default=1)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
 
     def subtotal(self):
         return self.cantidad * self.precio
 
     def __str__(self):
-        return f"{self.producto.nombre} x{self.cantidad}"
+        return f"Item {self.id} del pedido {self.pedido.id}"
 

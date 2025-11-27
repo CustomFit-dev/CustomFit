@@ -12,7 +12,8 @@ from .views import (
     productos_personalizados_list, productos_personalizados_detail, productos_tienda_list,
     estampados_emoji_list,
     obtener_carrito, agregar_al_carrito, actualizar_item, eliminar_item,
-    finalizar_compra, finalizar_personalizacion
+    finalizar_compra, finalizar_personalizacion,
+    EstadoPedidoViewSet, TransportadoraViewSet, PedidoViewSet
 )
 
 from rest_framework.routers import DefaultRouter
@@ -20,6 +21,9 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 router = DefaultRouter()
 router.register(r'userprofiles', UserViewSet)
+router.register(r'estados-pedido', EstadoPedidoViewSet)
+router.register(r'transportadoras', TransportadoraViewSet)
+router.register(r'pedidos', PedidoViewSet)
 
 urlpatterns = [
     path('', home, name='home'),

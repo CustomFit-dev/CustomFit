@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 from rest_framework.exceptions import ValidationError
 from django.core.mail import send_mail
 from .serializers import UserProfileSerializer, ProjectSerializer, RolSerializer
-from .models import UserProfile, Project, Rol, Tela, Estampado, Producto, ProveedorSolicitud
+from .models import UserProfile, Project, Rol, Tela, Estampado, Producto, ProveedorSolicitud, EstadoPedido, Transportadora
 import random
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authtoken.models import Token
@@ -17,7 +17,7 @@ import logging
 import string
 from django.core.mail import send_mail
 from django.db import OperationalError
-from .serializers import TelaSerializer,EstampadoSerializer,ProductoSerializer, ProveedorSolicitudSerializer, ProductosPersonalizadosSerializer
+from .serializers import TelaSerializer,EstampadoSerializer,ProductoSerializer, ProveedorSolicitudSerializer, ProductosPersonalizadosSerializer, EstadoPedidoSerializer, TransportadoraSerializer
 from .models import ProductosPersonalizados, ProductosPersonalizadosHasEstampado
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
@@ -30,6 +30,7 @@ from .serializers import PedidoSerializer
 from django.db import transaction
 from .serializers import PedidoSerializer, CrearPedidoSerializer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+
 logger = logging.getLogger(__name__)
 
 def admin_required(func):
@@ -48,6 +49,7 @@ def admin_required(func):
 def home(request):
     """Vista de inicio."""
     return HttpResponse("Principal")
+
 class UserViewSet(viewsets.ModelViewSet):
     """Vista para gestionar el perfil del usuario."""
     queryset = UserProfile.objects.all()
@@ -841,34 +843,60 @@ def eliminar_item(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def finalizar_compra(request):
-    usuario = request.user
+    try:
+        usuario_profile = request.user.userprofile
+    except UserProfile.DoesNotExist:
+        return Response({"error": "Perfil de usuario no encontrado"}, status=400)
+
     direccion = request.data.get('direccion')
+    ciudad = request.data.get('ciudad')
     metodo_pago = request.data.get('metodo_pago')
 
-    carrito, _ = Carrito.objects.get_or_create(usuario=usuario)
+    if not direccion or not ciudad or not metodo_pago:
+        return Response({"error": "Faltan datos requeridos (direccion, ciudad, metodo_pago)"}, status=400)
+
+    carrito, _ = Carrito.objects.get_or_create(usuario=request.user)
     items_carrito = carrito.items.all()
 
     if not items_carrito:
         return Response({"error": "El carrito está vacío"}, status=400)
 
-    total = sum(item.cantidad * Producto.objects.get(idProductos=item.producto_id).PrecioProducto for item in items_carrito)
+    # Calculate total
+    total = 0
+    for item in items_carrito:
+        if item.producto:
+            total += item.cantidad * item.producto.PrecioProducto
+        elif item.producto_personalizado:
+            total += item.cantidad * item.producto_personalizado.precioPersonalizado
+
+    # Get default state
+    estado_pendiente = EstadoPedido.objects.filter(nombre="Pendiente").first()
+    if not estado_pendiente:
+        estado_pendiente = EstadoPedido.objects.create(nombre="Pendiente", descripcion="Pedido recibido")
 
     with transaction.atomic():
         pedido = Pedido.objects.create(
-            usuario=usuario,
+            usuario=usuario_profile,
             direccion=direccion,
+            ciudad=ciudad,
             metodo_pago=metodo_pago,
-            total=total
+            total=total,
+            estado=estado_pendiente
         )
 
         for item in items_carrito:
-            producto = Producto.objects.get(idProductos=item.producto_id)
+            price = 0
+            if item.producto:
+                price = item.producto.PrecioProducto
+            elif item.producto_personalizado:
+                price = item.producto_personalizado.precioPersonalizado
+            
             PedidoItem.objects.create(
                 pedido=pedido,
-                producto=producto,
+                producto=item.producto,
+                producto_personalizado=item.producto_personalizado,
                 cantidad=item.cantidad,
-                talla=getattr(producto, 'Tallas', None),
-                precio_unitario=producto.PrecioProducto
+                precio=price
             )
 
         # Vaciar carrito
@@ -928,7 +956,7 @@ def finalizar_personalizacion(request):
                  except Estampado.DoesNotExist:
                      print(f"Estampado con ID {est_id} no encontrado.")
                      pass 
-
+        
         serializer = ProductosPersonalizadosSerializer(producto_personalizado)
         return Response(serializer.data, status=201)
 
@@ -937,3 +965,28 @@ def finalizar_personalizacion(request):
         traceback.print_exc() # Imprimir traceback en consola del servidor
         print(f"Error en finalizar_personalizacion: {e}")
         return Response({'error': str(e)}, status=500)
+
+
+class EstadoPedidoViewSet(viewsets.ModelViewSet):
+    queryset = EstadoPedido.objects.all()
+    serializer_class = EstadoPedidoSerializer
+    permission_classes = [IsAuthenticated]
+
+class TransportadoraViewSet(viewsets.ModelViewSet):
+    queryset = Transportadora.objects.all()
+    serializer_class = TransportadoraSerializer
+    permission_classes = [IsAuthenticated]
+
+class PedidoViewSet(viewsets.ModelViewSet):
+    queryset = Pedido.objects.all()
+    serializer_class = PedidoSerializer
+    permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        user = self.request.user
+        # Si es admin (rol 2), ve todos. Si no, solo los suyos.
+        if hasattr(user, 'userprofile') and user.userprofile.rol.id == 2:
+             return Pedido.objects.all().order_by('-fecha')
+        elif hasattr(user, 'userprofile'):
+             return Pedido.objects.filter(usuario=user.userprofile).order_by('-fecha')
+        return Pedido.objects.none()

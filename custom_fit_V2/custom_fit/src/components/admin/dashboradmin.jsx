@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../scss/dashboard.scss';
 import {
   LogOut, UserSearch, ShoppingCart, BarChart3,
-  Package, Menu, ChevronDown, Layers, Palette, Shirt, Ruler, Scissors
+  Package, Menu, ChevronDown, Layers, Palette, Shirt, Ruler, Scissors, Truck
 } from 'lucide-react';
 
 // Import component modules
@@ -18,6 +18,7 @@ import TelasCrud from './CrudTela';
 import ColoresCrud from './CrudColores';
 import EstampadosCrud from './CrudEstampado';
 import TallasCrud from './CrudTalla';
+import TransportadorasCrud from './CrudTransportadoras';
 
 const App = () => {
   const [activeMenu, setActiveMenu] = useState('Estadisticas');
@@ -40,6 +41,7 @@ const App = () => {
     { id: 'colores', name: 'Colores', icon: <Palette size={16} />, component: <ColoresCrud /> },
     { id: 'estampados', name: 'Estampados', icon: <Shirt size={16} />, component: <EstampadosCrud /> },
     { id: 'tallas', name: 'Tallas', icon: <Ruler size={16} />, component: <TallasCrud /> },
+    { id: 'transportadoras', name: 'Transportadoras', icon: <Truck size={16} />, component: <TransportadorasCrud /> },
   ];
 
   const activeComponent =

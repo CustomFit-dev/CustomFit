@@ -3,7 +3,7 @@ from .models import UserProfile, Project, Rol
 from django.contrib.auth.models import User
 from .models import Carrito, CarritoItem, Producto
 from .models import Tela, Estampado,  Producto, ProveedorSolicitud, ProductosPersonalizados
-from .models import Pedido, PedidoItem
+from .models import Pedido, PedidoItem, EstadoPedido, Transportadora
 
 class RolSerializer(serializers.ModelSerializer):
     class Meta:
@@ -131,18 +131,44 @@ class CarritoSerializer(serializers.ModelSerializer):
 
         #PEDIDOS
 
+class EstadoPedidoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EstadoPedido
+        fields = '__all__'
+
+class TransportadoraSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transportadora
+        fields = '__all__'
+
 class PedidoItemSerializer(serializers.ModelSerializer):
-    producto_nombre = serializers.CharField(source="producto.NombreProductos", read_only=True)
-    producto_imagen = serializers.CharField(source="producto.urlFrontal", read_only=True)
+    producto_nombre = serializers.SerializerMethodField()
+    producto_imagen = serializers.SerializerMethodField()
 
     class Meta:
         model = PedidoItem
-        fields = ['id', 'producto', 'producto_nombre', 'producto_imagen', 'cantidad', 'precio', 'subtotal']
+        fields = ['id', 'producto', 'producto_personalizado', 'producto_nombre', 'producto_imagen', 'cantidad', 'precio', 'subtotal']
+
+    def get_producto_nombre(self, obj):
+        if obj.producto:
+            return obj.producto.NombreProductos
+        elif obj.producto_personalizado:
+            return obj.producto_personalizado.NombrePersonalizado
+        return "Desconocido"
+
+    def get_producto_imagen(self, obj):
+        if obj.producto:
+            return obj.producto.urlFrontal
+        elif obj.producto_personalizado:
+            return obj.producto_personalizado.urlFrontal
+        return None
 
 
 class PedidoSerializer(serializers.ModelSerializer):
     items = PedidoItemSerializer(many=True, read_only=True)
-    usuario_nombre = serializers.CharField(source="usuario.username", read_only=True)
+    usuario_nombre = serializers.CharField(source="usuario.nombre_usuario", read_only=True)
+    estado_nombre = serializers.CharField(source="estado.nombre", read_only=True)
+    transportadora_nombre = serializers.CharField(source="transportadora.nombre", read_only=True)
 
     class Meta:
         model = Pedido
@@ -156,7 +182,11 @@ class PedidoSerializer(serializers.ModelSerializer):
             'metodo_pago',
             'total',
             'items',
-            # 'estado',  ← si decides agregarlo
+            'estado',
+            'estado_nombre',
+            'transportadora',
+            'transportadora_nombre',
+            'numero_guia'
         ]
 
 
