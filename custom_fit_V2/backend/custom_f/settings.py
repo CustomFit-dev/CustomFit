@@ -4,7 +4,8 @@ Adaptado para Render (producción con MySQL + React)
 """
 
 from pathlib import Path
-import os
+import os 
+
 # import dj_database_url  # 👈 asegúrate de tenerlo en requirements.txt
 
 # Cargar variables de entorno desde .env
@@ -117,22 +118,21 @@ WSGI_APPLICATION = 'custom_f.wsgi.application'
 # ----------------------------
 # BASE DE DATOS (usando dj-database-url)
 # ----------------------------
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'customfit_d3',  
-        'USER': 'root',           
-        'PASSWORD': '',           
-        'HOST': '127.0.0.1',     
-        'PORT': '3306',          
+        'NAME': os.environ.get('MYSQLDATABASE'),
+        'USER': os.environ.get('MYSQLUSER'),
+        'PASSWORD': os.environ.get('MYSQLPASSWORD'),
+        'HOST': os.environ.get('MYSQLHOST'),
+        'PORT': os.environ.get('MYSQLPORT'),
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        }
     }
 }
 
-#'default': dj_database_url.parse( RECORDAR ARRIBA REACTIVAR DJ 
-#        os.
-#        n.get('DATABASE_URL', 'mysql://root@localhost:3306/customfit_d3'),
-#        conn_max_age=600
-#    )
 
 # ----------------------------
 # VALIDACIÓN DE CONTRASEÑAS
