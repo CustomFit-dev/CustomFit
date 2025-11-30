@@ -2,7 +2,7 @@ import axios from 'axios';
 
 function axiosp() {
   const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL, // URL del backend
+    baseURL: import.meta.env.VITE_API_URL,
   });
 
   const sendUserData = async (userData) => {
@@ -20,3 +20,4 @@ function axiosp() {
 }
 
 export default axiosp;
+2
