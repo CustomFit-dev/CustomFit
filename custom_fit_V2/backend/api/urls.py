@@ -12,9 +12,10 @@ from .views import (
     productos_personalizados_list, productos_personalizados_detail, productos_tienda_list,
     estampados_emoji_list,
     obtener_carrito, agregar_al_carrito, actualizar_item, eliminar_item,
-    finalizar_compra, finalizar_personalizacion,
+    finalizar_compra, finalizar_personalizacion, 
     EstadoPedidoViewSet, TransportadoraViewSet, PedidoViewSet,
-    paypal_create_order, paypal_capture_order  # <-- NUEVAS VISTAS PAYPAL
+    paypal_create_order, paypal_capture_order,  # <-- NUEVAS VISTAS PAYPAL
+    prueba_conexion
 )
 
 from rest_framework.routers import DefaultRouter
@@ -28,6 +29,7 @@ router.register(r'pedidos', PedidoViewSet)
 
 urlpatterns = [
     path('', home, name='home'),
+    path('test-db/', prueba_conexion),
 
     # Auth
     path('api/register/', register_user, name='register_user'),

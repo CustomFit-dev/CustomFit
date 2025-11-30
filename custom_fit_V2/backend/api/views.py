@@ -31,8 +31,19 @@ from django.db import transaction
 from .serializers import PedidoSerializer, CrearPedidoSerializer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from django.conf import settings
+from django.http import JsonResponse
+from django.db import connection
 
 logger = logging.getLogger(__name__)
+
+def prueba_conexion(request):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1;")
+            resultado = cursor.fetchone()
+        return JsonResponse({"status": "ok", "resultado": resultado})
+    except Exception as e:
+        return JsonResponse({"status": "error", "detalle": str(e)})
 
 def admin_required(func):
     @wraps(func)
