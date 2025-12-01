@@ -1100,3 +1100,22 @@ def paypal_capture_order(request):
             'error': f'Error al procesar el pago: {str(e)}'
         }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+#historial
+class MisPedidosView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            user_profile = UserProfile.objects.get(user=request.user)
+            pedidos = Pedido.objects.filter(usuario=user_profile)
+            
+            serializer = PedidoSerializer(pedidos, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except UserProfile.DoesNotExist:
+            return Response(
+                {"detail": "Perfil de usuario no encontrado"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+
