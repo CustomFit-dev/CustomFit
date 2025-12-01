@@ -11,55 +11,57 @@ const Form_I = ({ onClose }) => {
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const navigate = useNavigate();
 
-  const handleEnviarCodigo = async () => {
-    // Validar que el correo no esté vacío
-    if (!correoElectronico || !correoElectronico.trim()) {
-      setError('Por favor ingresa tu correo electrónico');
-      return;
-    }
+const handleEnviarCodigo = async () => {
+  // Validar que el correo no esté vacío
+  if (!correoElectronico || !correoElectronico.trim()) {
+    setError('Por favor ingresa tu correo electrónico');
+    return;
+  }
 
-    // Validación básica de formato de correo
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(correoElectronico)) {
-      setError('Por favor ingresa un correo electrónico válido');
-      return;
-    }
+  // Validación básica de formato de correo
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(correoElectronico)) {
+    setError('Por favor ingresa un correo electrónico válido');
+    return;
+  }
 
-    try {
-      setLoading(true);
-      setError(''); // Limpiar errores previos
-      
-      // Llamada al endpoint para enviar código
-      const response = await axios.post('http://localhost:8000/api/enviar_codigo/', {
+  try {
+    setLoading(true);
+    setError(''); // Limpiar errores previos
+
+    // Llamada al endpoint para enviar código
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}enviar_codigo/`,
+      {
         correo_electronico: correoElectronico,
-      });
+      }
+    );
 
-      console.log('Respuesta del servidor:', response.data);
-      
-      if (response.data && response.status === 200) {
-        // No mostrar alert aquí para mejorar la experiencia de usuario
-        setShowVerifyModal(true); // Mostrar el modal de verificación
-      } else {
-        throw new Error('Respuesta inesperada del servidor');
-      }
-    } catch (error) {
-      console.error('Error en la solicitud:', error);
-      
-      // Mostrar mensaje de error apropiado
-      if (error.response) {
-        // El servidor respondió con un código de error
-        setError(error.response.data.message || 'Error al enviar el código. Inténtalo nuevamente.');
-      } else if (error.request) {
-        // No se recibió respuesta del servidor
-        setError('No se pudo conectar con el servidor. Verifica tu conexión.');
-      } else {
-        // Error en la configuración de la solicitud
-        setError('Error al enviar el código. Inténtalo nuevamente.');
-      }
-    } finally {
-      setLoading(false);
+    console.log('Respuesta del servidor:', response.data);
+
+    if (response.data && response.status === 200) {
+      setShowVerifyModal(true); // Mostrar modal de verificación
+    } else {
+      throw new Error('Respuesta inesperada del servidor');
     }
-  };
+  } catch (error) {
+    console.error('Error en la solicitud:', error);
+
+    if (error.response) {
+      setError(
+        error.response.data.message ||
+        'Error al enviar el código. Inténtalo nuevamente.'
+      );
+    } else if (error.request) {
+      setError('No se pudo conectar con el servidor. Verifica tu conexión.');
+    } else {
+      setError('Error al enviar el código. Inténtalo nuevamente.');
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // Manejar la tecla Enter en el input
   const handleKeyDown = (e) => {

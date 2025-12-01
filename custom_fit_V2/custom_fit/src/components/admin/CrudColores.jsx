@@ -37,14 +37,18 @@ const ColorCrud = () => {
 
   const fetchColores = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/colores/', {
-        headers: { Authorization: `Token ${authToken}` }
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_API_URL}colores/`,
+        {
+          headers: { Authorization: `Token ${authToken}` }
+        }
+      );
       setColores(res.data);
     } catch (err) {
       console.error('Error al obtener colores', err);
     }
   };
+
 
   const handleOpenModal = (color = null) => {
     if (color) {

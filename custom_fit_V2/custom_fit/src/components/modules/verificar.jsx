@@ -146,15 +146,21 @@ const Form = ({ correo, onClose, onSuccess }) => {
 
     setIsLoading(true);
     try {
-      await axios.post('http://localhost:8000/api/enviar_codigo/', { correo_electronico: correo });
+      await axios.post(`${import.meta.env.VITE_API_URL}/api/enviar_codigo/`, {
+        correo_electronico: correo
+      });
+
       alert('Se ha enviado un nuevo código a tu correo electrónico');
       setCodigo(['', '', '', '', '', '']);
       inputsRef.current[0]?.focus();
     } catch (error) {
       console.error('Error al reenviar el código:', error);
-      if (error.response) setError(error.response.data.message || 'No se pudo reenviar el código');
-      else if (error.request) setError('Error de conexión. Verifica tu conexión a internet.');
-      else setError('Error al reenviar el código');
+      if (error.response)
+        setError(error.response.data?.message || 'No se pudo reenviar el código');
+      else if (error.request)
+        setError('Error de conexión. Verifica tu conexión a internet.');
+      else
+        setError('Error al reenviar el código');
     } finally {
       setIsLoading(false);
     }
