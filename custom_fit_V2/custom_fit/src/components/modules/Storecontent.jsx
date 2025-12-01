@@ -94,6 +94,13 @@ const Shop = () => {
             <h5 className="card-title">{producto?.NombrePersonalizado ?? "Sin nombre"}</h5>
             <p className="card-text">Diseño exclusivo de la tienda</p>
             <p className="precio-texto">${((producto?.precioPersonalizado) ?? 0).toLocaleString()}</p>
+            {/* Low stock alert badge */}
+            {producto?.stock < 10 && (
+              <div className="alert alert-warning low-stock-alert" role="alert">
+                <i className="fas fa-exclamation-triangle me-2"></i>
+                ¡Pocas unidades! Solo quedan {producto?.stock} en stock
+              </div>
+            )}
             <button
               className="btn btn-carrito d-flex align-items-center justify-content-center"
               onClick={() => addToCart(producto, 1, true)}

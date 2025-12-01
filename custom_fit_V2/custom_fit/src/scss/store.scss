@@ -869,3 +869,44 @@ button {
     }
   }
 }
+
+/* Low Stock Alert Badge */
+.low-stock-alert {
+  background-color: #ff9800 !important; /* Orange background */
+  color: #fff !important;
+  border: none !important;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: pulseAlert 2s ease-in-out infinite;
+  box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);
+  
+  i {
+    font-size: 14px;
+    margin-right: 6px;
+  }
+}
+
+@keyframes pulseAlert {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.02);
+  }
+}
+
+/* Responsive adjustments for low stock alert */
+@media (max-width: 768px) {
+  .low-stock-alert {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+}
