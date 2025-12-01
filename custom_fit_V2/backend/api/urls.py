@@ -4,9 +4,7 @@ from .views import (
     home, register_user, enviar_codigo_view, login_view,
     UserViewSet, delete_user, logout_view, update_user,
     tela_list, tela_detail,
-    talla_list, talla_detail, talla_create, talla_update_delete,
     estampado_list, estampado_detail, estampado_create, estampado_update_delete, estampados_usuario_list,
-    color_list, color_detail, color_create, color_update_delete,
     producto_list, producto_detail, producto_create, producto_update_delete,
     proveedor_solicitud_list, proveedor_solicitud_detail,
     productos_personalizados_list, productos_personalizados_detail, productos_tienda_list,
@@ -41,13 +39,7 @@ urlpatterns = [
     # Telas
     path('api/telas/', tela_list, name='tela-list'),
     path('api/telas/<int:pk>/', tela_detail, name='tela-detail'),
-
-    # Tallas
-    path('api/tallas/', talla_list, name='talla-list'),
-    path('api/tallas/<int:pk>/', talla_detail, name='talla-detail'),
-    path('api/tallas/create/', talla_create, name='talla-create'),
-    path('api/tallas/<int:pk>/edit/', talla_update_delete, name='talla-update-delete'),
-
+    
     # Estampados
     path('api/estampados/', estampado_list, name='estampado-list'),
     path('api/estampados/<int:pk>/', estampado_detail, name='estampado-detail'),
@@ -55,13 +47,6 @@ urlpatterns = [
     path('api/estampados/<int:pk>/edit/', estampado_update_delete, name='estampado-update-delete'),
     path('api/estampados_usuario/', estampados_usuario_list, name='estampado-usuario-list'),
     path('api/estampados_emoji/', estampados_emoji_list, name='estampado-emoji-list'),
-
-    # Colores
-    path('api/colores/', color_list, name='color-list'),
-    path('api/colores/<int:pk>/', color_detail, name='color-detail'),
-    path('api/colores/create/', color_create, name='color-create'),
-    path('api/colores/<int:pk>/edit/', color_update_delete, name='color-update-delete'),
-
     # Productos
     path('api/productos/', producto_list, name='producto-list'),
     path('api/productos/<int:pk>/', producto_detail, name='producto-detail'),

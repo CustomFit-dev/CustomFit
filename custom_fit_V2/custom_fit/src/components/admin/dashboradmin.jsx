@@ -15,9 +15,7 @@ import ProductosPersonalizados from './crudProductosPersonalizados';
 
 // IMPORT CRUD de gestión
 import TelasCrud from './CrudTela';
-import ColoresCrud from './CrudColores';
 import EstampadosCrud from './CrudEstampado';
-import TallasCrud from './CrudTalla';
 import TransportadorasCrud from './CrudTransportadoras';
 
 const App = () => {
@@ -38,9 +36,7 @@ const App = () => {
   // Gestión subitems con iconos específicos
   const gestionItems = [
     { id: 'telas', name: 'Telas', icon: <Scissors size={16} />, component: <TelasCrud /> },
-    { id: 'colores', name: 'Colores', icon: <Palette size={16} />, component: <ColoresCrud /> },
     { id: 'estampados', name: 'Estampados', icon: <Shirt size={16} />, component: <EstampadosCrud /> },
-    { id: 'tallas', name: 'Tallas', icon: <Ruler size={16} />, component: <TallasCrud /> },
     { id: 'transportadoras', name: 'Transportadoras', icon: <Truck size={16} />, component: <TransportadorasCrud /> },
   ];
 
