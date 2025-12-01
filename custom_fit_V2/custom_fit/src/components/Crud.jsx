@@ -167,78 +167,120 @@ const Crud = () => {
     });
   };
 
-  const handleAddUser = async () => {
-    try {
-      // Asegurar que confirmar_correo está presente
-      const payload = { ...formData };
-      if (!payload.confirmar_correo) payload.confirmar_correo = payload.correo_electronico;
+const handleAddUser = async () => {
+  try {
+    // Asegurar que confirmar_correo está presente
+    const payload = { ...formData };
+    if (!payload.confirmar_correo) {
+      payload.confirmar_correo = payload.correo_electronico;
+    }
 
-      const response = await axios.post('http://localhost:8000/api/register/', payload, {
+    const response = await axios.post( //NUEVO LOCALCHOST CONST
+      `${import.meta.env.VITE_API_URL}register/`,
+      payload,
+      {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-      });
-
-      if (response.status === 201) {
-        // Actualizar la lista de usuarios
-        const updatedUsers = await fetchData();
-        setUserProfiles(updatedUsers);
-        setOpenAddModal(false);
-        Swal.fire('Éxito', 'Usuario agregado correctamente', 'success');
       }
-    } catch (error) {
-      console.error('Error al agregar usuario:', error.response?.data || error.message);
-      const serverMessage = error.response?.data?.error || error.response?.data?.message || JSON.stringify(error.response?.data) || error.message;
-      Swal.fire('Error', serverMessage || 'Error al agregar usuario', 'error');
+    );
+
+    if (response.status === 201) {
+      // Actualizar la lista de usuarios
+      const updatedUsers = await fetchData();
+      setUserProfiles(updatedUsers);
+      setOpenAddModal(false);
+      Swal.fire("Éxito", "Usuario agregado correctamente", "success");
     }
-  };
+  } catch (error) {
+    console.error("Error al agregar usuario:", error.response?.data || error.message);
+    const serverMessage =
+      error.response?.data?.error ||
+      error.response?.data?.message ||
+      JSON.stringify(error.response?.data) ||
+      error.message;
 
-  const handleEditUser = async () => {
-    if (!userToEdit) return;
-    
-    try {
-      const response = await axios.put(`http://localhost:8000/api/update-user/${userToEdit.id}/`, formData, {
-      headers: { Authorization: `Token ${authToken}` }
-    });
+    Swal.fire("Error", serverMessage || "Error al agregar usuario", "error");
+  }
+};
 
-      if (response.status === 200) {
-        // Actualizar la lista de usuarios
-        const updatedUsers = await fetchData();
-        setUserProfiles(updatedUsers);
-        handleCloseEditModal();
-        Swal.fire('Éxito', 'Usuario actualizado correctamente', 'success');
+
+const handleEditUser = async () => {
+  if (!userToEdit) return;
+
+  try {
+    const response = await axios.put(
+      `${import.meta.env.VITE_API_URL}update-user/${userToEdit.id}/`,
+      formData,
+      {
+        headers: { Authorization: `Token ${authToken}` }
       }
-    } catch (error) {
-      console.error('Error al actualizar usuario:', error.response?.data || error.message);
-      const serverMessage = error.response?.data?.error || error.response?.data?.message || JSON.stringify(error.response?.data) || error.message;
-      Swal.fire('Error', serverMessage || 'Error al actualizar usuario', 'error');
+    );
+
+    if (response.status === 200) {
+      // Actualizar la lista de usuarios
+      const updatedUsers = await fetchData();
+      setUserProfiles(updatedUsers);
+      handleCloseEditModal();
+      Swal.fire("Éxito", "Usuario actualizado correctamente", "success");
     }
-  };
+  } catch (error) {
+    console.error(
+      "Error al actualizar usuario:",
+      error.response?.data || error.message
+    );
 
-  const handleDeleteUser = async () => {
-    if (!userToDelete) return;
-    
-    try {
-      const response = await axios.delete(`http://localhost:8000/api/delete-user/${userToDelete.id}/`, {
-      headers: { Authorization: `Token ${authToken}` }
-    });
+    const serverMessage =
+      error.response?.data?.error ||
+      error.response?.data?.message ||
+      JSON.stringify(error.response?.data) ||
+      error.message;
 
-      if (response.status === 204) {
-        // Usuario eliminado correctamente
-        setUserProfiles((prevProfiles) =>
-          prevProfiles.filter((profile) => profile.id !== userToDelete.id)
-        );
-        handleCloseDeleteDialog();
-        Swal.fire('Éxito', 'Usuario eliminado correctamente', 'success');
-      } else {
-        throw new Error(`Respuesta inesperada: ${response.status}`);
+    Swal.fire("Error", serverMessage || "Error al actualizar usuario", "error");
+  }
+};
+
+
+const handleDeleteUser = async () => {
+  if (!userToDelete) return;
+
+  try {
+    const response = await axios.delete(
+      `${import.meta.env.VITE_API_URL}delete-user/${userToDelete.id}/`,
+      {
+        headers: { Authorization: `Token ${authToken}` }
       }
-    } catch (error) {
-      console.error('Error al borrar el usuario:', error.response?.data || error.message);
-      const serverMessage = error.response?.data?.error || error.response?.data?.message || JSON.stringify(error.response?.data) || error.message;
-      Swal.fire('Error', serverMessage || 'Error al eliminar usuario', 'error');
+    );
+
+    if (response.status === 204) {
+      // Usuario eliminado correctamente
+      setUserProfiles((prevProfiles) =>
+        prevProfiles.filter((profile) => profile.id !== userToDelete.id)
+      );
+      handleCloseDeleteDialog();
+      Swal.fire("Éxito", "Usuario eliminado correctamente", "success");
+    } else {
+      throw new Error(`Respuesta inesperada: ${response.status}`);
     }
-  };
+  } catch (error) {
+    console.error(
+      "Error al borrar el usuario:",
+      error.response?.data || error.message
+    );
+    const serverMessage =
+      error.response?.data?.error ||
+      error.response?.data?.message ||
+      JSON.stringify(error.response?.data) ||
+      error.message;
+
+    Swal.fire(
+      "Error",
+      serverMessage || "Error al eliminar usuario",
+      "error"
+    );
+  }
+};
+
 
   // no necesitamos handleCloseSnackbar porque usamos Swal
 
