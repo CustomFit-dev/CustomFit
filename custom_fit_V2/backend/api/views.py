@@ -1003,10 +1003,10 @@ def paypal_capture_order(request):
                 'error': 'Perfil de usuario no encontrado'
             }, status=status.HTTP_400_BAD_REQUEST)
         
-        # Obtener estado "Pendiente" (o crear si no existe)
-        estado_pendiente, _ = EstadoPedido.objects.get_or_create(
-            nombre="Pendiente",
-            defaults={'descripcion': 'Pedido pendiente de procesamiento'}
+        # Obtener estado "Pagado" (o crear si no existe)
+        estado_pagado, _ = EstadoPedido.objects.get_or_create(
+            nombre="Pagado",
+            defaults={'descripcion': 'Pedido pagado exitosamente'}
         )
         
         # Crear el pedido en la base de datos
@@ -1060,7 +1060,7 @@ def paypal_capture_order(request):
                 direccion=direccion,
                 ciudad=ciudad,
                 total=total,
-                estado=estado_pendiente,
+                estado=estado_pagado,
                 metodo_pago='paypal',
                 paypal_order_id=order_id,
                 paypal_transaction_id=capture_result.get('transaction_id'),
