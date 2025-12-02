@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Form from './Form';
+import '../../scss/iniciar.scss';
+import Form from '../modules/verificar'; // Modal de verificación
 
 const Form_I = ({ onClose }) => {
   const [correoElectronico, setCorreoElectronico] = useState('');
@@ -10,9 +11,8 @@ const Form_I = ({ onClose }) => {
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const navigate = useNavigate();
 
-  const API = process.env.REACT_APP_API_URL || process.env.API_URL;
-
   const handleEnviarCodigo = async () => {
+
     if (!correoElectronico || !correoElectronico.trim()) {
       setError('Por favor ingresa tu correo electrónico');
       return;
@@ -29,7 +29,7 @@ const Form_I = ({ onClose }) => {
       setError('');
 
       const response = await axios.post(
-        `${API}enviar_codigo/`,
+        `${process.env.REACT_APP_API_URL}enviar_codigo/`,
         { correo_electronico: correoElectronico }
       );
 
@@ -42,6 +42,7 @@ const Form_I = ({ onClose }) => {
       }
 
     } catch (error) {
+
       console.error('Error en la solicitud:', error);
 
       if (error.response) {
@@ -61,7 +62,9 @@ const Form_I = ({ onClose }) => {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter') handleEnviarCodigo();
+    if (e.key === 'Enter') {
+      handleEnviarCodigo();
+    }
   };
 
   const handleCloseVerifyModal = () => {
@@ -84,8 +87,6 @@ const Form_I = ({ onClose }) => {
       case 3:
         navigate('/Prove');
         break;
-      default:
-        break;
     }
   };
 
@@ -102,7 +103,7 @@ const Form_I = ({ onClose }) => {
           <div className="login-card">
             <div className="close-button">
               <button onClick={onClose}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" stroke="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18"></line>
                   <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
@@ -115,9 +116,7 @@ const Form_I = ({ onClose }) => {
                 <div className="accent-line"></div>
               </div>
 
-              <p className="login-description">
-                Déjanos tu correo y te enviaremos un código para que puedas continuar.
-              </p>
+              <p className="login-description">Déjanos tu correo y te enviaremos un código para que puedas continuar.</p>
 
               <div className="form-group">
                 <div className="input-container-i">
@@ -129,13 +128,19 @@ const Form_I = ({ onClose }) => {
                     onKeyDown={handleKeyDown}
                     className={`${error ? 'error' : ''} ${correoElectronico.trim() ? 'not-empty' : ''}`}
                     aria-invalid={!!error}
+                    aria-describedby={error ? 'login-email-error' : undefined}
                     required
+                    autoComplete="email"
                   />
+
                   <label htmlFor="correo-electronico">Correo Electrónico</label>
                   <div className="input-line"></div>
                 </div>
-
-                {error && <p className="error-message">{error}</p>}
+                {error && (
+                  <p id="login-email-error" role="alert" className="error-message">
+                    {error}
+                  </p>
+                )}
               </div>
 
               <p className="help-text">¿Problemas para iniciar sesión?</p>
