@@ -38,7 +38,7 @@ const ColorCrud = () => {
   const fetchColores = async () => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}colores/`,
+        `${process.env.REACT_APP_API_URL}colores/`,
         {
           headers: { Authorization: `Token ${authToken}` }
         }
@@ -48,6 +48,7 @@ const ColorCrud = () => {
       console.error('Error al obtener colores', err);
     }
   };
+
 
 
   const handleOpenModal = (color = null) => {

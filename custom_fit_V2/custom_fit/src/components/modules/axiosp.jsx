@@ -2,7 +2,7 @@ import axios from 'axios';
 
 function axiosp() {
   const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
+    baseURL: process.env.REACT_APP_API_URL,  // ← AQUI EL CAMBIO
   });
 
   const sendUserData = async (userData) => {
@@ -20,4 +20,3 @@ function axiosp() {
 }
 
 export default axiosp;
-2

@@ -169,14 +169,13 @@ const Crud = () => {
 
 const handleAddUser = async () => {
   try {
-    // Asegurar que confirmar_correo está presente
     const payload = { ...formData };
     if (!payload.confirmar_correo) {
       payload.confirmar_correo = payload.correo_electronico;
     }
 
-    const response = await axios.post( //NUEVO LOCALCHOST CONST
-      `${import.meta.env.VITE_API_URL}register/`,
+    const response = await axios.post(
+      `${process.env.REACT_APP_API_URL}register/`,
       payload,
       {
         headers: {
@@ -186,14 +185,17 @@ const handleAddUser = async () => {
     );
 
     if (response.status === 201) {
-      // Actualizar la lista de usuarios
       const updatedUsers = await fetchData();
       setUserProfiles(updatedUsers);
       setOpenAddModal(false);
       Swal.fire("Éxito", "Usuario agregado correctamente", "success");
     }
   } catch (error) {
-    console.error("Error al agregar usuario:", error.response?.data || error.message);
+    console.error(
+      "Error al agregar usuario:",
+      error.response?.data || error.message
+    );
+
     const serverMessage =
       error.response?.data?.error ||
       error.response?.data?.message ||
@@ -210,7 +212,7 @@ const handleEditUser = async () => {
 
   try {
     const response = await axios.put(
-      `${import.meta.env.VITE_API_URL}update-user/${userToEdit.id}/`,
+      `${process.env.REACT_APP_API_URL}update-user/${userToEdit.id}/`,
       formData,
       {
         headers: { Authorization: `Token ${authToken}` }
@@ -218,7 +220,6 @@ const handleEditUser = async () => {
     );
 
     if (response.status === 200) {
-      // Actualizar la lista de usuarios
       const updatedUsers = await fetchData();
       setUserProfiles(updatedUsers);
       handleCloseEditModal();
@@ -241,19 +242,19 @@ const handleEditUser = async () => {
 };
 
 
+
 const handleDeleteUser = async () => {
   if (!userToDelete) return;
 
   try {
     const response = await axios.delete(
-      `${import.meta.env.VITE_API_URL}delete-user/${userToDelete.id}/`,
+      `${process.env.REACT_APP_API_URL}delete-user/${userToDelete.id}/`,
       {
         headers: { Authorization: `Token ${authToken}` }
       }
     );
 
     if (response.status === 204) {
-      // Usuario eliminado correctamente
       setUserProfiles((prevProfiles) =>
         prevProfiles.filter((profile) => profile.id !== userToDelete.id)
       );

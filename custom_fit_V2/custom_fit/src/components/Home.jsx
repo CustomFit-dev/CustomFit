@@ -7,9 +7,6 @@ import Footer from './modules/footer'
 import Chatbot from './modules/FloatingButton';
 
 const Home = () => {
-    console.log("IMPORT META:", import.meta.env);
-   console.log("VITE_API_URL:", import.meta.env.VITE_API_URL);
-
   return (
     <div>
         <Header />

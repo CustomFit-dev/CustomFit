@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import '../../scss/iniciar.scss';
-import Form from '../modules/verificar'; // Modal de verificación
+import Form from './Form';
 
 const Form_I = ({ onClose }) => {
   const [correoElectronico, setCorreoElectronico] = useState('');
@@ -11,95 +10,88 @@ const Form_I = ({ onClose }) => {
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const navigate = useNavigate();
 
-const handleEnviarCodigo = async () => {
-  // Validar que el correo no esté vacío
-  if (!correoElectronico || !correoElectronico.trim()) {
-    setError('Por favor ingresa tu correo electrónico');
-    return;
-  }
+  const API = process.env.REACT_APP_API_URL || process.env.API_URL;
 
-  // Validación básica de formato de correo
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(correoElectronico)) {
-    setError('Por favor ingresa un correo electrónico válido');
-    return;
-  }
-
-  try {
-    setLoading(true);
-    setError(''); // Limpiar errores previos
-
-    // Llamada al endpoint para enviar código
-    const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}enviar_codigo/`,
-      {
-        correo_electronico: correoElectronico,
-      }
-    );
-
-    console.log('Respuesta del servidor:', response.data);
-
-    if (response.data && response.status === 200) {
-      setShowVerifyModal(true); // Mostrar modal de verificación
-    } else {
-      throw new Error('Respuesta inesperada del servidor');
+  const handleEnviarCodigo = async () => {
+    if (!correoElectronico || !correoElectronico.trim()) {
+      setError('Por favor ingresa tu correo electrónico');
+      return;
     }
-  } catch (error) {
-    console.error('Error en la solicitud:', error);
 
-    if (error.response) {
-      setError(
-        error.response.data.message ||
-        'Error al enviar el código. Inténtalo nuevamente.'
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(correoElectronico)) {
+      setError('Por favor ingresa un correo electrónico válido');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError('');
+
+      const response = await axios.post(
+        `${API}enviar_codigo/`,
+        { correo_electronico: correoElectronico }
       );
-    } else if (error.request) {
-      setError('No se pudo conectar con el servidor. Verifica tu conexión.');
-    } else {
-      setError('Error al enviar el código. Inténtalo nuevamente.');
-    }
-  } finally {
-    setLoading(false);
-  }
-};
 
+      console.log('Respuesta del servidor:', response.data);
 
-  // Manejar la tecla Enter en el input
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      handleEnviarCodigo();
+      if (response.data && response.status === 200) {
+        setShowVerifyModal(true);
+      } else {
+        throw new Error('Respuesta inesperada del servidor');
+      }
+
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+
+      if (error.response) {
+        setError(
+          error.response.data.message ||
+          'Error al enviar el código. Inténtalo nuevamente.'
+        );
+      } else if (error.request) {
+        setError('No se pudo conectar con el servidor. Verifica tu conexión.');
+      } else {
+        setError('Error al enviar el código. Inténtalo nuevamente.');
+      }
+
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Cerrar el modal de verificación y volver al inicio
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') handleEnviarCodigo();
+  };
+
   const handleCloseVerifyModal = () => {
     setShowVerifyModal(false);
-    // Opcionalmente, limpiar el correo después de cerrar
     setCorreoElectronico('');
   };
 
-  // Redirigir después de verificación exitosa
-const handleSuccessfulVerification = (userData) => {
-  setShowVerifyModal(false);
+  const handleSuccessfulVerification = (userData) => {
+    setShowVerifyModal(false);
 
-  const roleId = userData.rol_id || (userData.rol && userData.rol.id);
+    const roleId = userData.rol_id || (userData.rol && userData.rol.id);
 
-switch(roleId) {
-  case 1:
-    navigate('/Home_L'); // Cliente
-    break;
-  case 2:
-    navigate('/Admin');
-    break;
-  case 3:
-    navigate('/Prove');
-    break;
-}
-};
+    switch (roleId) {
+      case 1:
+        navigate('/Home_L');
+        break;
+      case 2:
+        navigate('/Admin');
+        break;
+      case 3:
+        navigate('/Prove');
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <>
       {!showVerifyModal ? (
-        // Solo mostrar el formulario de correo si no se está mostrando el modal de verificación
         <div className="login-container">
           <div className="bg-particles">
             <div className="particle particle-1"></div>
@@ -110,7 +102,7 @@ switch(roleId) {
           <div className="login-card">
             <div className="close-button">
               <button onClick={onClose}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" stroke="currentColor">
                   <line x1="18" y1="6" x2="6" y2="18"></line>
                   <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
@@ -123,7 +115,9 @@ switch(roleId) {
                 <div className="accent-line"></div>
               </div>
 
-              <p className="login-description">Déjanos tu correo y te enviaremos un código para que puedas continuar.</p>
+              <p className="login-description">
+                Déjanos tu correo y te enviaremos un código para que puedas continuar.
+              </p>
 
               <div className="form-group">
                 <div className="input-container-i">
@@ -135,19 +129,13 @@ switch(roleId) {
                     onKeyDown={handleKeyDown}
                     className={`${error ? 'error' : ''} ${correoElectronico.trim() ? 'not-empty' : ''}`}
                     aria-invalid={!!error}
-                    aria-describedby={error ? 'login-email-error' : undefined}
                     required
-                    autoComplete="email"
                   />
-
                   <label htmlFor="correo-electronico">Correo Electrónico</label>
                   <div className="input-line"></div>
                 </div>
-                {error && (
-                  <p id="login-email-error" role="alert" className="error-message">
-                    {error}
-                  </p>
-                )}
+
+                {error && <p className="error-message">{error}</p>}
               </div>
 
               <p className="help-text">¿Problemas para iniciar sesión?</p>
@@ -164,8 +152,7 @@ switch(roleId) {
           </div>
         </div>
       ) : (
-        // Mostrar el componente de verificación cuando showVerifyModal es true
-        <Form 
+        <Form
           correo={correoElectronico}
           onClose={handleCloseVerifyModal}
           onSuccess={handleSuccessfulVerification}

@@ -142,19 +142,24 @@ const Form = ({ correo, onClose, onSuccess }) => {
 
   const handleReenviarCodigo = async (e) => {
     e.preventDefault();
+
     if (!correo) return setError('No se ha proporcionado un correo electrónico');
 
     setIsLoading(true);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/enviar_codigo/`, {
-        correo_electronico: correo
-      });
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/enviar_codigo/`,
+        {
+          correo_electronico: correo
+        }
+      );
 
       alert('Se ha enviado un nuevo código a tu correo electrónico');
       setCodigo(['', '', '', '', '', '']);
       inputsRef.current[0]?.focus();
     } catch (error) {
       console.error('Error al reenviar el código:', error);
+
       if (error.response)
         setError(error.response.data?.message || 'No se pudo reenviar el código');
       else if (error.request)
@@ -165,6 +170,7 @@ const Form = ({ correo, onClose, onSuccess }) => {
       setIsLoading(false);
     }
   };
+
 
   const handlePaste = (e) => {
     e.preventDefault();
