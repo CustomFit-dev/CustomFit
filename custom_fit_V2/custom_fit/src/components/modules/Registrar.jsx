@@ -37,18 +37,19 @@ const Form_R = () => {
         return Object.values(errores).every(error => !error);
     };
 
-    const handleSubmit = async (e) => {
+   const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (!validateForm()) {
             Swal.fire({
-                icon: 'error',
-                title: 'Formulario inválido',
-                text: 'Por favor, revisa los campos del formulario.',
-                confirmButtonColor: '#3085d6'
+            icon: 'error',
+            title: 'Formulario inválido',
+            text: 'Por favor, revisa los campos del formulario.',
+            confirmButtonColor: '#3085d6'
             });
             return;
         }
+
         setLoading(true);
 
         const formData = {
@@ -64,44 +65,48 @@ const Form_R = () => {
         };
 
         try {
-            const response = await fetch('http://localhost:8000/api/register/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
+            const url = `${process.env.REACT_APP_API_URL}register/`;
+            console.log('Enviando registro a:', url, formData);
+
+            const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData),
             });
 
             if (response.ok) {
-                const data = await response.json();
-                console.log('Registro exitoso:', data);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Registro exitoso',
-                    text: 'Datos enviados. Por favor, confirma que todo está correcto.',
-                    confirmButtonColor: '#3085d6'
-                });
-                navigate('/Iniciar');
+            const data = await response.json();
+            console.log('Registro exitoso:', data);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Registro exitoso',
+                text: 'Datos enviados. Por favor, confirma que todo está correcto.',
+                confirmButtonColor: '#3085d6'
+            });
+
+            navigate('/Iniciar');
             } else {
-                const errorData = await response.json();
-                console.error('Error en el registro:', errorData);
-                if (errorData.errors) {
-                    setErrors(errorData.errors);
-                }
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Error al enviar los datos. Por favor, inténtalo de nuevo.',
-                    confirmButtonColor: '#d33'
-                });
-            }
-        } catch (error) {
-            console.error('Error:', error);
+            const errorData = await response.json();
+            console.error('Error en el registro:', errorData);
+
+            if (errorData.errors) setErrors(errorData.errors);
+
             Swal.fire({
                 icon: 'error',
-                title: 'Error de conexión',
-                text: 'Por favor, verifica tu conexión a internet y vuelve a intentarlo.',
+                title: 'Error',
+                text: 'Error al enviar los datos. Por favor, inténtalo de nuevo.',
                 confirmButtonColor: '#d33'
+            });
+            }
+        } catch (error) {
+            console.error('Error de conexión:', error);
+
+            Swal.fire({
+            icon: 'error',
+            title: 'Error de conexión',
+            text: 'Por favor, verifica tu conexión a internet y vuelve a intentarlo.',
+            confirmButtonColor: '#d33'
             });
         } finally {
             setLoading(false);

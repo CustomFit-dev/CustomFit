@@ -27,24 +27,31 @@ const CrudTransportadoras = () => {
     }, [authToken]);
 
     const fetchTransportadoras = async () => {
-        if (!authToken) {
-            setError("No hay token de autorización disponible");
-            return;
-        }
-        try {
-            setLoading(true);
-            setError(null);
-            const response = await axios.get('http://localhost:8000/api/transportadoras/', {
-                headers: { Authorization: `Token ${authToken}` }
-            });
-            setTransportadoras(response.data);
-        } catch (error) {
-            console.error('Error al obtener transportadoras:', error);
-            setError('Error al obtener transportadoras');
-        } finally {
-            setLoading(false);
-        }
+    if (!authToken) {
+        setError("No hay token de autorización disponible");
+        return;
+    }
+
+    try {
+        setLoading(true);
+        setError(null);
+
+        const url = `${process.env.REACT_APP_API_URL}transportadoras/`;
+        console.log('Obteniendo transportadoras de:', url);
+
+        const response = await axios.get(url, {
+        headers: { Authorization: `Token ${authToken}` }
+        });
+
+        setTransportadoras(response.data);
+    } catch (error) {
+        console.error('Error al obtener transportadoras:', error);
+        setError('Error al obtener transportadoras');
+    } finally {
+        setLoading(false);
+    }
     };
+
 
     const handleOpenModal = (transportadora = null) => {
         if (transportadora) {
@@ -60,40 +67,55 @@ const CrudTransportadoras = () => {
     };
 
     const handleSave = async () => {
-        try {
-            if (editMode) {
-                await axios.put(`http://localhost:8000/api/transportadoras/${currentTransportadora.id}/`, formData, {
-                    headers: { Authorization: `Token ${authToken}` }
-                });
-                alert('Transportadora actualizada correctamente');
-            } else {
-                await axios.post('http://localhost:8000/api/transportadoras/', formData, {
-                    headers: { Authorization: `Token ${authToken}` }
-                });
-                alert('Transportadora creada correctamente');
-            }
-            setOpenModal(false);
-            fetchTransportadoras();
-        } catch (error) {
-            console.error('Error al guardar:', error);
-            alert('No se pudo guardar la transportadora.');
+    try {
+        if (editMode) {
+        const urlEdit = `${process.env.REACT_APP_API_URL}transportadoras/${currentTransportadora.id}/`;
+        console.log('Actualizando transportadora en:', urlEdit, formData);
+
+        await axios.put(urlEdit, formData, {
+            headers: { Authorization: `Token ${authToken}` }
+        });
+
+        alert('Transportadora actualizada correctamente');
+        } else {
+        const urlCreate = `${process.env.REACT_APP_API_URL}transportadoras/`;
+        console.log('Creando transportadora en:', urlCreate, formData);
+
+        await axios.post(urlCreate, formData, {
+            headers: { Authorization: `Token ${authToken}` }
+        });
+
+        alert('Transportadora creada correctamente');
         }
+
+        setOpenModal(false);
+        fetchTransportadoras();
+    } catch (error) {
+        console.error('Error al guardar:', error);
+        alert('No se pudo guardar la transportadora.');
+    }
     };
 
+
     const handleDelete = async (transportadora) => {
-        if (window.confirm(`¿Estás seguro de eliminar la transportadora "${transportadora.nombre}"?`)) {
-            try {
-                await axios.delete(`http://localhost:8000/api/transportadoras/${transportadora.id}/`, {
-                    headers: { Authorization: `Token ${authToken}` }
-                });
-                alert('Transportadora eliminada correctamente');
-                fetchTransportadoras();
-            } catch (error) {
-                console.error('Error al eliminar:', error);
-                alert('No se pudo eliminar la transportadora.');
-            }
+    if (window.confirm(`¿Estás seguro de eliminar la transportadora "${transportadora.nombre}"?`)) {
+        try {
+        const urlDelete = `${process.env.REACT_APP_API_URL}transportadoras/${transportadora.id}/`;
+        console.log('Eliminando transportadora en:', urlDelete);
+
+        await axios.delete(urlDelete, {
+            headers: { Authorization: `Token ${authToken}` }
+        });
+
+        alert('Transportadora eliminada correctamente');
+        fetchTransportadoras();
+        } catch (error) {
+        console.error('Error al eliminar transportadora:', error);
+        alert('No se pudo eliminar la transportadora.');
         }
+    }
     };
+
 
     return (
         <Box p={3} sx={{ bgcolor: '#000', minHeight: '100vh' }}>

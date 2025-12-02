@@ -33,12 +33,18 @@ const TallaCrud = () => {
       setError("No hay token de autorización disponible");
       return;
     }
+
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get('http://localhost:8000/api/tallas/', {
+
+      const url = `${process.env.REACT_APP_API_URL}tallas/`;
+      console.log('Obteniendo tallas de:', url);
+
+      const response = await axios.get(url, {
         headers: { Authorization: `Token ${authToken}` }
       });
+
       setTallas(response.data);
     } catch (error) {
       console.error('Error al obtener tallas:', error);
@@ -51,6 +57,7 @@ const TallaCrud = () => {
       setLoading(false);
     }
   };
+
 
   const handleOpenModal = (talla = null) => {
     if (talla) {
@@ -69,16 +76,25 @@ const TallaCrud = () => {
     try {
       if (editMode) {
         const { updated_at, ...dataToSend } = formData;
-        await axios.put(`http://localhost:8000/api/tallas/${currentTalla.idTallas}/edit/`, dataToSend, {
+        const urlEdit = `${process.env.REACT_APP_API_URL}tallas/${currentTalla.idTallas}/edit/`;
+        console.log('Actualizando talla en:', urlEdit, dataToSend);
+
+        await axios.put(urlEdit, dataToSend, {
           headers: { Authorization: `Token ${authToken}` }
         });
+
         alert('Talla actualizada correctamente');
       } else {
-        await axios.post('http://localhost:8000/api/tallas/create/', formData, {
+        const urlCreate = `${process.env.REACT_APP_API_URL}tallas/create/`;
+        console.log('Creando talla en:', urlCreate, formData);
+
+        await axios.post(urlCreate, formData, {
           headers: { Authorization: `Token ${authToken}` }
         });
+
         alert('Talla creada correctamente');
       }
+
       setOpenModal(false);
       fetchTallas();
     } catch (error) {
@@ -87,12 +103,17 @@ const TallaCrud = () => {
     }
   };
 
+
   const handleDelete = async (talla) => {
     if (window.confirm(`¿Estás seguro de eliminar la talla "${talla.Talla}"?`)) {
       try {
-        await axios.delete(`http://localhost:8000/api/tallas/${talla.idTallas}/edit/`, {
+        const urlDelete = `${process.env.REACT_APP_API_URL}tallas/${talla.idTallas}/edit/`;
+        console.log('Eliminando talla en:', urlDelete);
+
+        await axios.delete(urlDelete, {
           headers: { Authorization: `Token ${authToken}` }
         });
+
         alert('Talla eliminada correctamente');
         fetchTallas();
       } catch (error) {
@@ -101,6 +122,7 @@ const TallaCrud = () => {
       }
     }
   };
+
 
   return (
     <Box p={3} sx={{ bgcolor: '#000', minHeight: '100vh' }}>

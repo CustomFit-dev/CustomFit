@@ -52,16 +52,20 @@ const ProductoCrud = () => {
   }, []);
 
   const fetchProductos = async () => {
-    try {
-      const res = await axios.get("http://localhost:8000/api/productos/", {
-        headers: { Authorization: `Token ${authToken}` }
-      });
-      setProductos(res.data);
-    } catch (err) {
-      console.error(err);
-      Swal.fire('Error', 'No se pudieron cargar los productos. Revisa la consola para más detalles.', 'error');
-    }
-  };
+  try {
+    const url = `${process.env.REACT_APP_API_URL}productos/`;
+    console.log('Obteniendo productos de:', url);
+
+    const res = await axios.get(url, {
+      headers: { Authorization: `Token ${authToken}` }
+    });
+
+    setProductos(res.data);
+  } catch (err) {
+    console.error('Error al obtener productos:', err);
+    Swal.fire('Error', 'No se pudieron cargar los productos. Revisa la consola para más detalles.', 'error');
+  }
+};
 
   const openForm = (prod = null) => {
     if (prod) {
@@ -129,21 +133,26 @@ const ProductoCrud = () => {
         Tela_idTela: formData.Tela_idTela ? parseInt(formData.Tela_idTela) : null,
       };
 
-      if (editMode) {
-        await axios.put(
-          `http://localhost:8000/api/productos/${current.idProductos}/edit/`,
-          payload,
-          { headers: { Authorization: `Token ${authToken}` } }
-        );
-        Swal.fire('Éxito', 'Producto actualizado correctamente', 'success');
-      } else {
-        await axios.post(
-          'http://localhost:8000/api/productos/create/',
-          payload,
-          { headers: { Authorization: `Token ${authToken}` } }
-        );
-        Swal.fire('Éxito', 'Producto creado correctamente', 'success');
-      }
+    if (editMode) {
+      const urlEdit = `${process.env.REACT_APP_API_URL}productos/${current.idProductos}/edit/`;
+      console.log('Actualizando producto en:', urlEdit, payload);
+
+      await axios.put(urlEdit, payload, {
+        headers: { Authorization: `Token ${authToken}` }
+      });
+
+      Swal.fire('Éxito', 'Producto actualizado correctamente', 'success');
+    } else {
+      const urlCreate = `${process.env.REACT_APP_API_URL}productos/create/`;
+      console.log('Creando producto en:', urlCreate, payload);
+
+      await axios.post(urlCreate, payload, {
+        headers: { Authorization: `Token ${authToken}` }
+      });
+
+      Swal.fire('Éxito', 'Producto creado correctamente', 'success');
+    }
+
 
       fetchProductos();
       closeForm();
@@ -154,18 +163,23 @@ const ProductoCrud = () => {
     }
   };
 
-  const erase = async id => {
+  const erase = async (id) => {
     const res = await Swal.fire({
       title: 'Confirmar eliminación',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Sí, eliminar'
     });
+
     if (res.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:8000/api/productos/${id}/edit/`, {
+        const urlDelete = `${process.env.REACT_APP_API_URL}productos/${id}/edit/`;
+        console.log('Eliminando producto en:', urlDelete);
+
+        await axios.delete(urlDelete, {
           headers: { Authorization: `Token ${authToken}` }
         });
+
         Swal.fire('Eliminado', 'Producto eliminado correctamente', 'success');
         fetchProductos();
       } catch (err) {
@@ -174,6 +188,7 @@ const ProductoCrud = () => {
       }
     }
   };
+
 
   const verImagenes = (producto) => {
     setSelectedProducto(producto);

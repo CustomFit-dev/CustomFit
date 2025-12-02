@@ -11,20 +11,25 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
 
   // Cargar diseños del rol "usuario"
   useEffect(() => {
-    const fetchUserDesigns = async () => {
+   const fetchUserDesigns = async () => {
       setLoadingUser(true);
+
       try {
-        const res = await axios.get('http://localhost:8000/api/estampados_usuario/');
+        const url = `${process.env.REACT_APP_API_URL}estampados_usuario/`;
+        console.log('Obteniendo diseños de usuario desde:', url);
+
+        const res = await axios.get(url);
         const data = Array.isArray(res.data)
           ? res.data.map(d => ({
-            id: d.idEstampado,
-            src: d.ImgEstampado,
-            alt: d.NombreEstampado || 'Diseño',
-            title: d.NombreEstampado || '',
-            price: d.PrecioEstampado || 0,
-            rolestampado: 'usuario'
-          }))
+              id: d.idEstampado,
+              src: d.ImgEstampado,
+              alt: d.NombreEstampado || 'Diseño',
+              title: d.NombreEstampado || '',
+              price: d.PrecioEstampado || 0,
+              rolestampado: 'usuario'
+            }))
           : [];
+
         setCustomDesigns(data);
       } catch (err) {
         console.error('Error cargando diseños de usuario:', err);
@@ -34,17 +39,22 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
       }
     };
 
+
     fetchUserDesigns();
   }, []);
 
   // Cargar diseños del rol "emoji"
   useEffect(() => {
-    const fetchEmojiDesigns = async () => {
-      setLoadingEmoji(true);
-      try {
-        const res = await axios.get('http://localhost:8000/api/estampados_emoji/');
-        const data = Array.isArray(res.data)
-          ? res.data.map(d => ({
+  const fetchEmojiDesigns = async () => {
+    setLoadingEmoji(true);
+
+    try {
+      const url = `${process.env.REACT_APP_API_URL}estampados_emoji/`;
+      console.log('Obteniendo diseños emoji desde:', url);
+
+      const res = await axios.get(url);
+      const data = Array.isArray(res.data)
+        ? res.data.map(d => ({
             id: d.idEstampado,
             src: d.ImgEstampado,
             alt: d.NombreEstampado || 'Emoji',
@@ -52,15 +62,17 @@ const CustomDesignsGallery = ({ onSelectImage, onClose }) => {
             price: d.PrecioEstampado || 0,
             rolestampado: 'emoji'
           }))
-          : [];
-        setEmojiDesigns(data);
-      } catch (err) {
-        console.error('Error cargando emojis:', err);
-        setEmojiDesigns([]);
-      } finally {
-        setLoadingEmoji(false);
-      }
-    };
+        : [];
+
+      setEmojiDesigns(data);
+    } catch (err) {
+      console.error('Error cargando emojis:', err);
+      setEmojiDesigns([]);
+    } finally {
+      setLoadingEmoji(false);
+    }
+  };
+
 
     fetchEmojiDesigns();
   }, []);

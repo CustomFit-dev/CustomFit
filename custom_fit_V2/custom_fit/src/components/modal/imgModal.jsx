@@ -133,12 +133,18 @@ const ModalImageUpload = ({ show, setShowImageModal, handleAddImage }) => {
       };
 
       // 3. Save to backend
-      const response = await axios.post('http://localhost:8000/api/estampados/create/', dataToSend, {
+    const response = await axios.post(
+      `${process.env.REACT_APP_API_URL}estampados/create/`,
+      dataToSend,
+      {
         headers: {
           Authorization: `Token ${authToken}`,
           'Content-Type': 'application/json'
         }
-      });
+      }
+    );
+    console.log('Estampado creado:', response.data);
+
 
       // Capture the idEstampado from the response
       const savedStamp = response.data;

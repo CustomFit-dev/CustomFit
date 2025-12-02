@@ -38,10 +38,12 @@ const CustomizationPanel = ({
     fetchTelas();
   }, []);
 
+  const API_URL = process.env.REACT_APP_API_URL;
+
   const fetchTelas = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:8000/api/telas/', {
+      const response = await axios.get(`${API_URL}telas/`, {
         headers: { Authorization: `Token ${authToken}` }
       });
       setTelas(response.data);
@@ -49,10 +51,10 @@ const CustomizationPanel = ({
     } catch (error) {
       console.error('Error al cargar las telas:', error);
       setLoading(false);
-      // En caso de error, mantener array vacío
       setTelas([]);
     }
   };
+
 
   // Función para manejar la selección de tela
   const handleTelaClick = (tela) => {

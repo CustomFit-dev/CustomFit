@@ -94,7 +94,7 @@ function PersonalDataForm() {
       const headers = authToken ? { Authorization: `Bearer ${authToken}` } : {};
 
       const response = await axios.delete(
-        `http://localhost:8000/api/delete-user/${user.id}/`,
+        `${process.env.REACT_APP_API_URL}delete-user/${user.id}/`,
         { headers }
       );
 

@@ -51,15 +51,21 @@ const CrudProductosPersonalizados = () => {
   useEffect(() => { fetchItems(); }, []);
 
   const fetchItems = async () => {
-    try {
-      const res = await axios.get('http://localhost:8000/api/productos_personalizados/', 
-        { headers: { Authorization: `Token ${authToken}` } });
-      setItems(res.data);
-    } catch (err) {
-      console.error(err);
-      Swal.fire('Error', 'No se pudieron cargar los productos personalizados', 'error');
-    }
+  try {
+    const url = `${process.env.REACT_APP_API_URL}productos_personalizados/`;
+    console.log('Obteniendo productos personalizados de:', url);
+
+    const res = await axios.get(url, {
+      headers: { Authorization: `Token ${authToken}` }
+    });
+
+    setItems(res.data);
+  } catch (err) {
+    console.error('Error al obtener productos personalizados:', err);
+    Swal.fire('Error', 'No se pudieron cargar los productos personalizados', 'error');
+  }
   };
+
 
   const openNew = () => {
     setEditMode(false);
@@ -92,7 +98,7 @@ const CrudProductosPersonalizados = () => {
   const change = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const save = async () => {
-    // Validaciones simples
+  // Validaciones simples
     if (!formData.NombrePersonalizado) return Swal.fire('Atención', 'El nombre es requerido', 'warning');
     const precio = parseFloat(formData.precioPersonalizado);
     if (isNaN(precio) || precio < 0) return Swal.fire('Atención', 'Precio inválido', 'warning');
@@ -101,33 +107,53 @@ const CrudProductosPersonalizados = () => {
     try {
       const payload = { ...formData, precioPersonalizado: precio };
       if (editMode && current) {
-  await axios.put(`http://localhost:8000/api/productos_personalizados/${current.idProductosPeronalizaos}/`, payload, { headers: { Authorization: `Token ${authToken}` } });
+        const urlEdit = `${process.env.REACT_APP_API_URL}productos_personalizados/${current.idProductosPeronalizaos}/`;
+        console.log('Actualizando producto personalizado en:', urlEdit, payload);
+
+        await axios.put(urlEdit, payload, { headers: { Authorization: `Token ${authToken}` } });
         Swal.fire('Éxito', 'Producto personalizado actualizado', 'success');
       } else {
-        await axios.post('http://localhost:8000/api/productos_personalizados/', payload, { headers: { Authorization: `Token ${authToken}` } });
+        const urlCreate = `${process.env.REACT_APP_API_URL}productos_personalizados/`;
+        console.log('Creando producto personalizado en:', urlCreate, payload);
+
+        await axios.post(urlCreate, payload, { headers: { Authorization: `Token ${authToken}` } });
         Swal.fire('Éxito', 'Producto personalizado creado', 'success');
       }
       fetchItems();
       closeForm();
     } catch (err) {
-      console.error(err);
+      console.error('Error al guardar producto personalizado:', err);
       Swal.fire('Error', 'No se pudo guardar el producto personalizado', 'error');
     }
   };
 
+
   const erase = async (id) => {
-    const res = await Swal.fire({ title: 'Confirmar eliminación', icon: 'warning', showCancelButton: true, confirmButtonText: 'Sí, eliminar' });
+    const res = await Swal.fire({
+      title: 'Confirmar eliminación',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar'
+    });
+
     if (res.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:8000/api/productos_personalizados/${id}/`, { headers: { Authorization: `Token ${authToken}` } });
+        const urlDelete = `${process.env.REACT_APP_API_URL}productos_personalizados/${id}/`;
+        console.log('Eliminando producto personalizado en:', urlDelete);
+
+        await axios.delete(urlDelete, {
+          headers: { Authorization: `Token ${authToken}` }
+        });
+
         Swal.fire('Éxito', 'Eliminado', 'success');
         fetchItems();
       } catch (err) {
-        console.error(err);
+        console.error('Error al eliminar producto personalizado:', err);
         Swal.fire('Error', 'No se pudo eliminar', 'error');
       }
     }
   };
+
 
   // Abrir modal para ver imágenes del producto (urlFrontal, urlEspaldar, urlMangas)
   const verImagenesProducto = (item) => {

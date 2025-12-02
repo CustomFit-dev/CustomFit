@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+const API_URL = process.env.REACT_APP_API_URL;
 
 const Checkout = () => {
   const { cart, totalPrice, clearCart, removeItem, updateItem } = useCart();
@@ -234,39 +235,47 @@ const Checkout = () => {
 
                   setProcessingPayment(true);
 
-                  try {
-                    // Llamar al backend para crear la orden en PayPal
-                    const response = await axios.post(
-                      "http://localhost:8000/api/paypal/create-order/",
-                      {
-                        amount: totalPrice,
-                        currency: "USD",
-                        direccion: formData.direccion,
-                        ciudad: formData.ciudad,
-                        cart_items: cart.items
-                      },
-                      {
-                        headers: {
-                          Authorization: `Token ${authToken}`,
-                        },
-                      }
-                    );
+             try {
+                const url = `${process.env.REACT_APP_API_URL}paypal/create-order/`;
+                console.log('Creando orden PayPal en:', url, {
+                  amount: totalPrice,
+                  currency: "USD",
+                  direccion: formData.direccion,
+                  ciudad: formData.ciudad,
+                  cart_items: cart.items
+                });
 
-                    if (response.data.success) {
-                      return response.data.order_id;
-                    } else {
-                      throw new Error("Error al crear la orden");
-                    }
-                  } catch (error) {
-                    console.error("Error creating PayPal order:", error);
-                    Swal.fire({
-                      icon: "error",
-                      title: "Error",
-                      text: "No se pudo crear la orden de pago. Por favor intenta nuevamente.",
-                    });
-                    setProcessingPayment(false);
-                    return Promise.reject(error);
+                const response = await axios.post(
+                  url,
+                  {
+                    amount: totalPrice,
+                    currency: "USD",
+                    direccion: formData.direccion,
+                    ciudad: formData.ciudad,
+                    cart_items: cart.items
+                  },
+                  {
+                    headers: {
+                      Authorization: `Token ${authToken}`,
+                    },
                   }
+                );
+
+                if (response.data.success) {
+                  return response.data.order_id;
+                } else {
+                  throw new Error("Error al crear la orden");
+                }
+              } catch (error) {
+                console.error("Error creating PayPal order:", error);
+                Swal.fire({
+                  icon: "error",
+                  title: "Error",
+                  text: "No se pudo crear la orden de pago. Por favor intenta nuevamente.",
+                });
+                setProcessingPayment(false);
+                return Promise.reject(error);
+              }
                 }}
                 onApprove={async (data, actions) => {
                   try {
@@ -281,24 +290,24 @@ const Checkout = () => {
                     });
 
                     // Llamar al backend para capturar el pago
-                    const response = await axios.post(
-                      "http://localhost:8000/api/paypal/capture-order/",
-                      {
-                        order_id: data.orderID,
-                        direccion: formData.direccion,
-                        ciudad: formData.ciudad,
-                        productos: cart.items.map((item) => ({
-                          id: item.id,
-                          cantidad: item.cantidad,
-                          talla: item.talla,
-                        })),
+                  const response = await axios.post(
+                    `${API_URL}paypal/capture-order/`,
+                    {
+                      order_id: data.orderID,
+                      direccion: formData.direccion,
+                      ciudad: formData.ciudad,
+                      productos: cart.items.map((item) => ({
+                        id: item.id,
+                        cantidad: item.cantidad,
+                        talla: item.talla,
+                      })),
+                    },
+                    {
+                      headers: {
+                        Authorization: `Token ${authToken}`,
                       },
-                      {
-                        headers: {
-                          Authorization: `Token ${authToken}`,
-                        },
-                      }
-                    );
+                    }
+                  );
 
                     if (response.data.success) {
                       Swal.fire({

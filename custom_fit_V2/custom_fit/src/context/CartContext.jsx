@@ -27,25 +27,24 @@ export const CartProvider = ({ children }) => {
     fetchCart();
   }, [authToken]);
 
-  const fetchCart = async () => {
-    if (!authToken) return;
-    setLoading(true);
+  const API_URL = process.env.REACT_APP_API_URL;
+
+  const fetchTelas = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/carrito/obtener/", {
-        headers: { Authorization: `Token ${authToken}` },
+      setLoading(true);
+      const response = await axios.get(`${API_URL}telas/`, {
+        headers: { Authorization: `Token ${authToken}` }
       });
-      const itemsConTalla = res.data.items.map(item => ({
-        ...item,
-        talla: item.talla || "", // inicializamos talla vacía
-      }));
-      setCart({ items: itemsConTalla });
-    } catch (err) {
-      console.error(err);
-      Swal.fire("Error", "No se pudo cargar el carrito.", "error");
-    } finally {
+      setTelas(response.data);
       setLoading(false);
+    } catch (error) {
+      console.error('Error al cargar las telas:', error);
+      setLoading(false);
+      setTelas([]);
     }
   };
+
+
 
   const addToCart = async (producto, cantidad = 1, isPersonalized = false) => {
     if (!authToken) return Swal.fire("Error", "Debes iniciar sesión.", "warning");
@@ -56,7 +55,7 @@ export const CartProvider = ({ children }) => {
 
     try {
       await axios.post(
-        "http://localhost:8000/api/carrito/agregar/",
+        `${API_URL}carrito/agregar/`,
         payload,
         { headers: { Authorization: `Token ${authToken}` } }
       );
@@ -73,7 +72,7 @@ export const CartProvider = ({ children }) => {
 
     try {
       await axios.post(
-        "http://localhost:8000/api/carrito/actualizar/",
+        `${API_URL}carrito/actualizar/`,
         { item_id: itemId, cantidad },
         { headers: { Authorization: `Token ${authToken}` } }
       );
@@ -84,12 +83,13 @@ export const CartProvider = ({ children }) => {
     }
   };
 
+
   const removeItem = async (itemId) => {
     if (!authToken) return;
 
     try {
       await axios.post(
-        "http://localhost:8000/api/carrito/eliminar/",
+        `${API_URL}carrito/eliminar/`,
         { item_id: itemId },
         { headers: { Authorization: `Token ${authToken}` } }
       );
@@ -99,6 +99,7 @@ export const CartProvider = ({ children }) => {
       Swal.fire("Error", "No se pudo eliminar el producto.", "error");
     }
   };
+
 
   // Actualiza cualquier propiedad de un item (como talla) localmente
   const updateItem = (itemId, updates) => {

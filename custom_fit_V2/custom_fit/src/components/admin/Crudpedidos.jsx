@@ -27,24 +27,34 @@ const PedidosCrud = () => {
   }, [authToken]);
 
   const fetchData = async () => {
-    if (!authToken) return;
-    try {
-      setLoading(true);
-      const [pedidosRes, estadosRes, transpRes] = await Promise.all([
-        axios.get('http://localhost:8000/api/pedidos/', { headers: { Authorization: `Token ${authToken}` } }),
-        axios.get('http://localhost:8000/api/estados-pedido/', { headers: { Authorization: `Token ${authToken}` } }),
-        axios.get('http://localhost:8000/api/transportadoras/', { headers: { Authorization: `Token ${authToken}` } })
-      ]);
-      setPedidos(pedidosRes.data);
-      setEstados(estadosRes.data);
-      setTransportadoras(transpRes.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      setError('Error al cargar los datos.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (!authToken) return;
+
+  try {
+    setLoading(true);
+
+    const pedidosUrl = `${process.env.REACT_APP_API_URL}pedidos/`;
+    const estadosUrl = `${process.env.REACT_APP_API_URL}estados-pedido/`;
+    const transportadorasUrl = `${process.env.REACT_APP_API_URL}transportadoras/`;
+
+    console.log('Obteniendo datos de:', { pedidosUrl, estadosUrl, transportadorasUrl });
+
+    const [pedidosRes, estadosRes, transpRes] = await Promise.all([
+      axios.get(pedidosUrl, { headers: { Authorization: `Token ${authToken}` } }),
+      axios.get(estadosUrl, { headers: { Authorization: `Token ${authToken}` } }),
+      axios.get(transportadorasUrl, { headers: { Authorization: `Token ${authToken}` } })
+    ]);
+
+    setPedidos(pedidosRes.data);
+    setEstados(estadosRes.data);
+    setTransportadoras(transpRes.data);
+
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    setError('Error al cargar los datos.');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleOpenModal = (pedido) => {
     setCurrentPedido(pedido);
@@ -57,18 +67,23 @@ const PedidosCrud = () => {
   };
 
   const handleSave = async () => {
-    try {
-      await axios.patch(`http://localhost:8000/api/pedidos/${currentPedido.id}/`, formData, {
-        headers: { Authorization: `Token ${authToken}` }
-      });
-      alert('Pedido actualizado correctamente');
-      setOpenModal(false);
-      fetchData();
-    } catch (error) {
-      console.error('Error updating pedido:', error);
-      alert('Error al actualizar el pedido.');
-    }
-  };
+  try {
+    const url = `${process.env.REACT_APP_API_URL}pedidos/${currentPedido.id}/`;
+    console.log('Actualizando pedido en:', url, formData);
+
+    await axios.patch(url, formData, {
+      headers: { Authorization: `Token ${authToken}` }
+    });
+
+    alert('Pedido actualizado correctamente');
+    setOpenModal(false);
+    fetchData();
+  } catch (error) {
+    console.error('Error updating pedido:', error);
+    alert('Error al actualizar el pedido.');
+  }
+};
+
 
   const getEstadoColor = (estadoNombre) => {
     switch (estadoNombre?.toLowerCase()) {

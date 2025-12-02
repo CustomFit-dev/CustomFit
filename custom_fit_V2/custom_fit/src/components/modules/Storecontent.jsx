@@ -28,17 +28,22 @@ const Shop = () => {
     fetchProductos();
   }, []);
 
-  const fetchProductos = async () => {
+ const fetchProductos = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/productos_tienda/", {
+      const url = `${process.env.REACT_APP_API_URL}productos_tienda/`;
+      console.log('Obteniendo productos de tienda desde:', url);
+
+      const res = await axios.get(url, {
         headers: { Authorization: `Token ${authToken}` },
       });
+
       setProductos(res.data ?? []);
     } catch (err) {
-      console.error(err);
+      console.error('Error al cargar productos:', err);
       Swal.fire("Error", "No se pudieron cargar los productos.", "error");
     }
   };
+
 
   const abrirModalVerCamisa = (producto) => {
     setModalData({

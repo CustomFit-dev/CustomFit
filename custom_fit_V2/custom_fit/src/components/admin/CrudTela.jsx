@@ -72,14 +72,20 @@ const TelaCrud = () => {
 
   const fetchTelas = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/telas/', {
+      const url = `${process.env.REACT_APP_API_URL}telas/`;
+      console.log('Obteniendo telas de:', url);
+
+      const response = await axios.get(url, {
         headers: { Authorization: `Token ${authToken}` }
       });
+
       setTelas(response.data);
-    } catch {
+    } catch (error) {
+      console.error('Error al obtener telas:', error);
       setSnackbar({ open: true, message: 'Error al cargar las telas', severity: 'error' });
     }
   };
+
 
   const handleOpenAddModal = () => {
     const today = new Date().toISOString().split('T')[0]; // Fecha actual YYYY-MM-DD
@@ -117,34 +123,46 @@ const TelaCrud = () => {
 
   const handleAddTela = async () => {
     try {
-      const response = await axios.post('http://localhost:8000/api/telas/', formData, {
+      const url = `${process.env.REACT_APP_API_URL}telas/`;
+      console.log('Agregando tela en:', url, formData);
+
+      const response = await axios.post(url, formData, {
         headers: { Authorization: `Token ${authToken}` }
       });
+
       if (response.status === 201) {
         fetchTelas();
         setOpenAddModal(false);
         setSnackbar({ open: true, message: 'Tela agregada correctamente', severity: 'success' });
       }
-    } catch {
+    } catch (error) {
+      console.error('Error al agregar tela:', error);
       setSnackbar({ open: true, message: 'Error al agregar tela', severity: 'error' });
     }
   };
 
   const handleEditTela = async () => {
     if (!currentTela) return;
+
     try {
-      const response = await axios.put(`http://localhost:8000/api/telas/${currentTela.idTela}/`, formData, {
+      const url = `${process.env.REACT_APP_API_URL}telas/${currentTela.idTela}/`;
+      console.log('Actualizando tela en:', url, formData);
+
+      const response = await axios.put(url, formData, {
         headers: { Authorization: `Token ${authToken}` }
       });
+
       if (response.status === 200) {
         fetchTelas();
         handleCloseEditModal();
         setSnackbar({ open: true, message: 'Tela actualizada correctamente', severity: 'success' });
       }
-    } catch {
+    } catch (error) {
+      console.error('Error al actualizar tela:', error);
       setSnackbar({ open: true, message: 'Error al actualizar tela', severity: 'error' });
     }
   };
+
 
   const handleDeleteTela = async (tela) => {
     const result = await Swal.fire({
@@ -162,18 +180,24 @@ const TelaCrud = () => {
 
     if (result.isConfirmed) {
       try {
-        const response = await axios.delete(`http://localhost:8000/api/telas/${tela.idTela}/`, {
+        const urlDelete = `${process.env.REACT_APP_API_URL}telas/${tela.idTela}/`;
+        console.log('Eliminando tela en:', urlDelete);
+
+        const response = await axios.delete(urlDelete, {
           headers: { Authorization: `Token ${authToken}` }
         });
+
         if (response.status === 204) {
           fetchTelas();
           Swal.fire('Eliminado', 'Tela eliminada correctamente', 'success');
         }
-      } catch {
+      } catch (error) {
+        console.error('Error al eliminar tela:', error);
         Swal.fire('Error', 'No se pudo eliminar la tela', 'error');
       }
     }
   };
+
 
   // Opciones de color (ajusta etiquetas/valores según tu catálogo)
   const colorOptions = [

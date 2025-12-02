@@ -58,15 +58,16 @@ const FormularioProveedor = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
-  };
+      const { name, value, type, checked } = e.target;
+      setFormData({
+        ...formData,
+        [name]: type === "checkbox" ? checked : value,
+      });
+    };
 
-  const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) return;
@@ -74,8 +75,11 @@ const FormularioProveedor = () => {
     setIsSubmitting(true);
 
     try {
+      const url = `${process.env.REACT_APP_API_URL}proveedorsolicitudes/`;
+      console.log('Enviando solicitud de proveedor a:', url, formData);
+
       await axios.post(
-        "http://localhost:8000/api/proveedorsolicitudes/",
+        url,
         {
           nit_cedula: formData.nit_cedula,
           direccion: formData.direccion,
@@ -85,7 +89,7 @@ const FormularioProveedor = () => {
         },
         {
           headers: {
-            Authorization: `Token ${authToken}`, // Aquí cambié Bearer por Token
+            Authorization: `Token ${authToken}`,
           },
         }
       );
@@ -110,7 +114,6 @@ const FormularioProveedor = () => {
       console.error("Error al enviar solicitud:", error);
 
       if (error.response && error.response.data) {
-        // Mostrar errores específicos de backend si los hay
         const backendErrors = error.response.data;
         const newErrors = {};
 
@@ -138,6 +141,7 @@ const FormularioProveedor = () => {
       setIsSubmitting(false);
     }
   };
+
 
   return (
     <div className="proveedor-container">

@@ -63,11 +63,16 @@ const EstampadoCrud = () => {
 
   const fetchEstampados = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/estampados/', {
+      const url = `${process.env.REACT_APP_API_URL}estampados/`;
+      console.log('Obteniendo estampados de:', url);
+
+      const res = await axios.get(url, {
         headers: { Authorization: `Token ${authToken}` },
       });
+
       setEstampados(Array.isArray(res.data) ? res.data : []);
-    } catch {
+    } catch (error) {
+      console.error('Error al obtener estampados:', error);
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -78,6 +83,7 @@ const EstampadoCrud = () => {
       });
     }
   };
+
 
   const handleInput = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -137,93 +143,96 @@ const EstampadoCrud = () => {
   };
 
   // ✅ Corregida: función completa
-  const handleSave = async () => {
-    try {
-      // Validar campos antes de enviar
-      if (!formData.NombreEstampado || !formData.TipoEstampado || !formData.PrecioEstampado) {
+const handleSave = async () => {
+  try {
+    // Validar campos antes de enviar
+    if (!formData.NombreEstampado || !formData.TipoEstampado || !formData.PrecioEstampado) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Campos incompletos',
+        text: 'Por favor llena todos los campos obligatorios.',
+        background: '#1a1a1a',
+        color: '#fff',
+        confirmButtonColor: '#17bebb'
+      });
+      return;
+    }
+
+    let imageUrl = formData.ImgEstampado;
+
+    if (imageFile) {
+      const uploadedUrl = await uploadToCloudinary();
+      if (uploadedUrl) {
+        imageUrl = uploadedUrl;
+      } else {
         Swal.fire({
-          icon: 'warning',
-          title: 'Campos incompletos',
-          text: 'Por favor llena todos los campos obligatorios.',
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo subir la imagen.',
           background: '#1a1a1a',
           color: '#fff',
           confirmButtonColor: '#17bebb'
         });
         return;
       }
+    }
 
-      let imageUrl = formData.ImgEstampado;
+    const dataToSend = {
+      NombreEstampado: formData.NombreEstampado.trim(),
+      TipoEstampado: formData.TipoEstampado.trim(),
+      rolestampado: formData.rolestampado || 'cliente',
+      PrecioEstampado: parseFloat(formData.PrecioEstampado),
+      ImgEstampado: imageUrl || '',
+      ColorEstampado: formData.ColorEstampado.trim()
+    };
 
-      if (imageFile) {
-        const uploadedUrl = await uploadToCloudinary();
-        if (uploadedUrl) {
-          imageUrl = uploadedUrl;
-        } else {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'No se pudo subir la imagen.',
-            background: '#1a1a1a',
-            color: '#fff',
-            confirmButtonColor: '#17bebb'
-          });
-          return;
-        }
-      }
+    console.log("Datos enviados al backend:", dataToSend);
 
-      const dataToSend = {
-        NombreEstampado: formData.NombreEstampado.trim(),
-        TipoEstampado: formData.TipoEstampado.trim(),
-        rolestampado: formData.rolestampado || 'cliente',
-        PrecioEstampado: parseFloat(formData.PrecioEstampado),
-        ImgEstampado: imageUrl || '',
-        ColorEstampado: formData.ColorEstampado.trim()
-      };
+    // URL usando variable de entorno
+    const url = editMode
+      ? `${process.env.REACT_APP_API_URL}estampados/${currentId}/edit/`
+      : `${process.env.REACT_APP_API_URL}estampados/create/`;
 
-      console.log("Datos enviados al backend:", dataToSend);
+    const method = editMode ? axios.put : axios.post;
 
-      const url = editMode
-        ? `http://localhost:8000/api/estampados/${currentId}/edit/`
-        : 'http://localhost:8000/api/estampados/create/';
-      const method = editMode ? axios.put : axios.post;
+    const res = await method(url, dataToSend, {
+      headers: {
+        Authorization: `Token ${authToken}`,
+        'Content-Type': 'application/json'
+      },
+    });
 
-      const res = await method(url, dataToSend, {
-        headers: {
-          Authorization: `Token ${authToken}`,
-          'Content-Type': 'application/json'
-        },
-      });
-
-      if (res.status === 200 || res.status === 201) {
-        fetchEstampados();
-        handleCloseModal();
-        Swal.fire({
-          icon: 'success',
-          title: editMode ? 'Actualizado' : 'Creado',
-          text: editMode
-            ? 'Estampado actualizado correctamente'
-            : 'Estampado agregado correctamente',
-          background: '#1a1a1a',
-          color: '#fff',
-          confirmButtonColor: '#17bebb'
-        });
-      }
-
-    } catch (err) {
-      console.error("Error completo:", err);
-      if (err.response?.data) {
-        console.error("Error del backend:", err.response.data);
-      }
+    if (res.status === 200 || res.status === 201) {
+      fetchEstampados();
+      handleCloseModal();
       Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Error al guardar el estampado',
+        icon: 'success',
+        title: editMode ? 'Actualizado' : 'Creado',
+        text: editMode
+          ? 'Estampado actualizado correctamente'
+          : 'Estampado agregado correctamente',
         background: '#1a1a1a',
         color: '#fff',
         confirmButtonColor: '#17bebb'
       });
     }
-  };
+
+  } catch (err) {
+    console.error("Error completo:", err);
+    if (err.response?.data) {
+      console.error("Error del backend:", err.response.data);
+    }
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Error al guardar el estampado',
+      background: '#1a1a1a',
+      color: '#fff',
+      confirmButtonColor: '#17bebb'
+    });
+  }
+};
+
 
   const handleDelete = async (id, nombre) => {
     const result = await Swal.fire({
@@ -241,9 +250,13 @@ const EstampadoCrud = () => {
 
     if (result.isConfirmed) {
       try {
-        await axios.delete(`http://localhost:8000/api/estampados/${id}/edit/`, {
+        const urlDelete = `${process.env.REACT_APP_API_URL}estampados/${id}/edit/`;
+        console.log('Eliminando estampado en:', urlDelete);
+
+        await axios.delete(urlDelete, {
           headers: { Authorization: `Token ${authToken}` },
         });
+
         fetchEstampados();
         Swal.fire({
           icon: 'success',
@@ -254,7 +267,7 @@ const EstampadoCrud = () => {
           confirmButtonColor: '#17bebb'
         });
       } catch (err) {
-        console.error(err);
+        console.error('Error al eliminar estampado:', err);
         Swal.fire({
           icon: 'error',
           title: 'Error',

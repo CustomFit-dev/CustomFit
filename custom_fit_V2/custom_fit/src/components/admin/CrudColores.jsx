@@ -75,32 +75,43 @@ const ColorCrud = () => {
     try {
       const today = new Date().toISOString(); // 👈 fecha actual
 
+      // URL base usando la variable de entorno
+      const apiBase = `${process.env.REACT_APP_API_URL}colores/`;
+
       if (editMode) {
+        // PUT para editar
+        const urlEdit = `${apiBase}${current.IdColor}/edit/`;
+        console.log('Editando color en:', urlEdit, { ...formData, updated_at: today });
+
         await axios.put(
-          `http://localhost:8000/api/colores/${current.IdColor}/edit/`,
-          { ...formData, updated_at: today }, // 👈 se agrega updated_at
-          {
-            headers: { Authorization: `Token ${authToken}` }
-          }
+          urlEdit,
+          { ...formData, updated_at: today },
+          { headers: { Authorization: `Token ${authToken}` } }
         );
+
         Swal.fire('Actualizado', 'Color actualizado correctamente', 'success');
       } else {
+        // POST para crear
+        const urlCreate = `${apiBase}create/`;
+        console.log('Creando color en:', urlCreate, { ...formData, updated_at: today });
+
         await axios.post(
-          'http://localhost:8000/api/colores/create/',
-          { ...formData, updated_at: today }, // 👈 se agrega updated_at
-          {
-            headers: { Authorization: `Token ${authToken}` }
-          }
+          urlCreate,
+          { ...formData, updated_at: today },
+          { headers: { Authorization: `Token ${authToken}` } }
         );
+
         Swal.fire('Creado', 'Color creado correctamente', 'success');
       }
+
+      // Refrescar lista y cerrar modal
       fetchColores();
       handleCloseModal();
     } catch (error) {
+      console.error('Error al guardar color:', error);
       Swal.fire('Error', 'Ocurrió un error al guardar', 'error');
     }
   };
-
   const handleDelete = async (id) => {
     const result = await Swal.fire({
       title: '¿Eliminar?',
@@ -113,17 +124,24 @@ const ColorCrud = () => {
       color: '#fff'
     });
 
-    if (result.isConfirmed) {
-      try {
-        await axios.delete(`http://localhost:8000/api/colores/${id}/edit/` , {
-          headers: { Authorization: `Token ${authToken}` }
-        });
-        Swal.fire('Eliminado', 'Color eliminado', 'success');
-        fetchColores();
-      } catch (error) {
-        Swal.fire('Error', 'No se pudo eliminar', 'error');
-      }
+      if (result.isConfirmed) {
+    try {
+      // URL usando la variable de entorno
+      const urlDelete = `${process.env.REACT_APP_API_URL}colores/${id}/edit/`;
+      console.log('Eliminando color en:', urlDelete);
+
+      await axios.delete(urlDelete, {
+        headers: { Authorization: `Token ${authToken}` }
+      });
+
+      Swal.fire('Eliminado', 'Color eliminado', 'success');
+      fetchColores();
+    } catch (error) {
+      console.error('Error al eliminar color:', error);
+      Swal.fire('Error', 'No se pudo eliminar', 'error');
     }
+  }
+  
   };
 
   const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });

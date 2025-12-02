@@ -1,6 +1,7 @@
 import html2canvas from "html2canvas";
 import Swal from "sweetalert2";
 import axios from "axios";
+const API_URL = process.env.REACT_APP_API_URL;
 
 // Función auxiliar para subir a Cloudinary
 const uploadToCloudinary = async (blob) => {
@@ -245,12 +246,25 @@ export const handleBuy = async (
             }
         });
 
-        const response = await axios.post('http://localhost:8000/api/personalizar/finalizar/', payload, {
+        const response = await axios.post(
+        `${API_URL}paypal/capture-order/`,
+        {
+            order_id: data.orderID,
+            direccion: formData.direccion,
+            ciudad: formData.ciudad,
+            productos: cart.items.map((item) => ({
+            id: item.id,
+            cantidad: item.cantidad,
+            talla: item.talla,
+            })),
+        },
+        {
             headers: {
-                'Authorization': `Token ${authToken}`,
-                'Content-Type': 'application/json'
-            }
-        });
+            Authorization: `Token ${authToken}`,
+            },
+        }
+        );
+
 
         if (response.status === 201) {
             setLastSavedDesign(currentDesignSignature); // Actualizar estado de guardado

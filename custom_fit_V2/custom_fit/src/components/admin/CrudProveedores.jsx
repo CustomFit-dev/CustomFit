@@ -33,14 +33,17 @@ const CrudProveedorSolicitudes = () => {
       setLoading(true);
       setError(null);
 
-      const response = await axios.get(
-        "http://localhost:8000/api/proveedorsolicitudes/",
-        {
-          headers: {
-            Authorization: `Token ${authToken}`,
-          },
-        }
-      );
+  const response = await axios.get(
+    `${process.env.REACT_APP_API_URL}proveedorsolicitudes/`,
+    {
+      headers: {
+        Authorization: `Token ${authToken}`,
+      },
+    }
+  );
+
+console.log('Solicitudes de proveedor obtenidas:', response.data);
+
       setSolicitudes(response.data);
     } catch (error) {
       console.error("Error al obtener solicitudes:", error);
@@ -62,8 +65,11 @@ const CrudProveedorSolicitudes = () => {
 
   const aceptarSolicitud = async (id) => {
     try {
+      const url = `${process.env.REACT_APP_API_URL}proveedorsolicitudes/${id}/`;
+      console.log('Aceptando solicitud en:', url);
+
       await axios.patch(
-        `http://localhost:8000/api/proveedorsolicitudes/${id}/`,
+        url,
         { estado: "Aceptado" },
         {
           headers: {
@@ -71,6 +77,7 @@ const CrudProveedorSolicitudes = () => {
           },
         }
       );
+
       fetchSolicitudes();
     } catch (error) {
       console.error("Error al aceptar solicitud:", error);
@@ -78,17 +85,19 @@ const CrudProveedorSolicitudes = () => {
     }
   };
 
+
   const eliminarSolicitud = async (id) => {
     if (window.confirm("¿Estás seguro de eliminar esta solicitud?")) {
       try {
-        await axios.delete(
-          `http://localhost:8000/api/proveedorsolicitudes/${id}/`,
-          {
-            headers: {
-              Authorization: `Token ${authToken}`,
-            },
-          }
-        );
+        const url = `${process.env.REACT_APP_API_URL}proveedorsolicitudes/${id}/`;
+        console.log('Eliminando solicitud en:', url);
+
+        await axios.delete(url, {
+          headers: {
+            Authorization: `Token ${authToken}`,
+          },
+        });
+
         fetchSolicitudes();
       } catch (error) {
         console.error("Error al eliminar solicitud:", error);
@@ -96,6 +105,7 @@ const CrudProveedorSolicitudes = () => {
       }
     }
   };
+
 
   return (
     <Box p={3} sx={{ bgcolor: "#000", minHeight: "100vh" }}>
