@@ -16,6 +16,9 @@ const HistorialPedidos = () => {
   const [error, setError] = useState(null);
   const [selectedPedido, setSelectedPedido] = useState(null);
 
+  // ➜ Modal que solo muestra un mensaje
+  const [modalFactura, setModalFactura] = useState(false);
+
   useEffect(() => {
     if (authToken) fetchPedidos();
   }, [authToken]);
@@ -46,23 +49,19 @@ const HistorialPedidos = () => {
     }
   };
 
+  // ➜ Ahora esta función SOLO abre el modal, no descarga nada
+  const mostrarMensajeFactura = () => {
+    setModalFactura(true);
+  };
+
   return (
     <Box className="historial-container">
 
       {loading && <CircularProgress sx={{ color: '#17bebb' }} />}
       {error && <Alert severity="error">{error}</Alert>}
 
-      {/* MENSAJE CUANDO NO HAY PEDIDOS */}
       {!loading && !error && pedidos.length === 0 && (
-        <Typography
-          sx={{
-            textAlign: "center",
-            mt: 4,
-            fontSize: "1.3rem",
-            color: "#444",
-            fontWeight: 500
-          }}
-        >
+        <Typography sx={{ textAlign: "center", mt: 4, fontSize: "1.3rem", color: "#444", fontWeight: 500 }}>
           No tienes pedidos registrados aún.
         </Typography>
       )}
@@ -82,11 +81,7 @@ const HistorialPedidos = () => {
                 <Typography className="fecha">
                   {new Date(pedido.fecha).toLocaleDateString()}
                 </Typography>
-                <Chip
-                  label={pedido.estado_nombre}
-                  color={getEstadoColor(pedido.estado_nombre)}
-                  size="small"
-                />
+                <Chip label={pedido.estado_nombre} color={getEstadoColor(pedido.estado_nombre)} size="small" />
                 <Typography className="total">Total: ${pedido.total}</Typography>
 
                 <Button
@@ -102,13 +97,8 @@ const HistorialPedidos = () => {
         ))}
       </Grid>
 
-      {/* MODAL DE DETALLES */}
-      <Dialog
-        open={!!selectedPedido}
-        onClose={() => setSelectedPedido(null)}
-        maxWidth="md"
-        fullWidth
-      >
+      {/* MODAL DETALLES */}
+      <Dialog open={!!selectedPedido} onClose={() => setSelectedPedido(null)} maxWidth="md" fullWidth>
         {selectedPedido && (
           <>
             <DialogTitle className="modal-title">
@@ -118,11 +108,7 @@ const HistorialPedidos = () => {
             <DialogContent className="modal-body">
               {selectedPedido.items.map((item, i) => (
                 <Box key={i} className="producto-box">
-                  <img
-                    src={item.producto_imagen}
-                    alt={item.producto_nombre}
-                    className="producto-img"
-                  />
+                  <img src={item.producto_imagen} alt={item.producto_nombre} className="producto-img" />
                   <Box>
                     <Typography className="prod-nombre">{item.producto_nombre}</Typography>
                     <Typography>Cantidad: {item.cantidad}</Typography>
@@ -131,25 +117,46 @@ const HistorialPedidos = () => {
                 </Box>
               ))}
 
-              <Typography className="total-modal">
-                Total: ${selectedPedido.total}
-              </Typography>
+              <Typography className="total-modal">Total: ${selectedPedido.total}</Typography>
             </DialogContent>
 
             <DialogActions className="modal-actions">
-              <Button
-                variant="outlined"
-                onClick={() => setSelectedPedido(null)}
-              >
+              <Button variant="outlined" onClick={() => setSelectedPedido(null)}>
                 Cerrar
               </Button>
-              <Button variant="contained" sx={{ bgcolor: "#17bebb", color: "#000" }}>
-                Descargar Factura PDF
+
+              {/* ➜ AHORA SOLO MUESTRA EL MENSAJE */}
+              <Button
+                variant="contained"
+                sx={{ bgcolor: "#17bebb", color: "#000" }}
+                onClick={mostrarMensajeFactura}
+              >
+                Enviar Factura
               </Button>
             </DialogActions>
           </>
         )}
       </Dialog>
+
+      {/* MODAL MENSAJE FACTURA */}
+      <Dialog open={modalFactura} onClose={() => setModalFactura(false)}>
+        <DialogTitle>Factura enviada</DialogTitle>
+        <DialogContent>
+          <Typography>
+            La factura ha sido enviada correctamente a tu correo electrónico.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setModalFactura(false)}
+            variant="contained"
+            sx={{ bgcolor: "#17bebb", color: "#000" }}
+          >
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </Box>
   );
 };
