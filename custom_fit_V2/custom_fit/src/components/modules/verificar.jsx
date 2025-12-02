@@ -54,92 +54,96 @@ const Form = ({ correo, onClose, onSuccess }) => {
   const isCodeComplete = () => codigo.every(digit => digit !== '');
 
   const handleVerificarCodigo = async (e) => {
-    e.preventDefault();
-    if (!isCodeComplete()) {
-      setError('Por favor ingresa el código completo de 6 dígitos');
-      return;
-    }
-    if (!correo) {
-      setError('No se ha proporcionado un correo electrónico');
-      return;
-    }
+  e.preventDefault();
 
-    const codigoVerificacion = codigo.join('');
-    setIsLoading(true);
+  if (!isCodeComplete()) {
+    setError('Por favor ingresa el código completo de 6 dígitos');
+    return;
+  }
 
-    try {
-      console.log('Enviando solicitud con:', { correo_electronico: correo, codigo_verificacion: codigoVerificacion });
+  if (!correo) {
+    setError('No se ha proporcionado un correo electrónico');
+    return;
+  }
 
-      const response = await axios.post('http://localhost:8000/api/login/', {
-        correo_electronico: correo,
-        codigo_verificacion: codigoVerificacion,
-      });
+  const codigoVerificacion = codigo.join('');
+  setIsLoading(true);
 
-      console.log('Respuesta del servidor:', response.data);
+  try {
+    // URL usando la variable de entorno, igual que en handleDeleteUser
+    const apiUrl = `${process.env.REACT_APP_API_URL}login/`;
 
-      const responseData = response.data;
+    console.log('Enviando solicitud con:', { correo_electronico: correo, codigo_verificacion: codigoVerificacion });
 
-      if (response.status === 200 && responseData.status === 'ok') {
-        if (!responseData.token) throw new Error('Respuesta incompleta del servidor: falta token');
+    const response = await axios.post(apiUrl, {
+      correo_electronico: correo,
+      codigo_verificacion: codigoVerificacion,
+    });
 
-        // Mapear rol numérico a string
-        const mapRolNumericoAString = (rolNumerico) => {
-          const rolesMap = { 1: 'usuario', 2: 'administrador', 3: 'proveedor', 4: 'domiciliario' };
-          return rolesMap[rolNumerico] || 'usuario';
-        };
+    console.log('Respuesta del servidor:', response.data);
 
-        const userData = {
-          nombreUsuario: responseData.nombre_usuario || '',
-          nombres: responseData.nombres || '',
-          apellidos: responseData.apellidos || '',
-          correoElectronico: responseData.correo_electronico || correo,
-          avatarUrl: responseData.avatar_url || '',
-          celular: responseData.celular || '',
-          rol: mapRolNumericoAString(responseData.rol),
-        };
+    const responseData = response.data;
 
-        // Guardar token en localStorage
-        localStorage.setItem('authToken', responseData.token);
+    if (response.status === 200 && responseData.status === 'ok') {
+      if (!responseData.token) throw new Error('Respuesta incompleta del servidor: falta token');
 
-        // Login con auth context
-        login(userData, responseData.token);
+      // Mapear rol numérico a string
+      const mapRolNumericoAString = (rolNumerico) => {
+        const rolesMap = { 1: 'usuario', 2: 'administrador', 3: 'proveedor', 4: 'domiciliario' };
+        return rolesMap[rolNumerico] || 'usuario';
+      };
 
-        console.log('Redirigiendo según rol:', userData.rol);
-        switch (userData.rol) {
-          case 'usuario':
-            navigate('/Home_L');
-            break;
-          case 'proveedor':
-            navigate('/Prove');
-            break;
-          case 'domiciliario':
-            navigate('/home_domiciliario');
-            break;
-          case 'administrador':
-            navigate('/Admin');
-            break;
-          default:
-            console.warn('Rol no reconocido para navegación:', userData.rol);
-        }
+      const userData = {
+        nombreUsuario: responseData.nombre_usuario || '',
+        nombres: responseData.nombres || '',
+        apellidos: responseData.apellidos || '',
+        correoElectronico: responseData.correo_electronico || correo,
+        avatarUrl: responseData.avatar_url || '',
+        celular: responseData.celular || '',
+        rol: mapRolNumericoAString(responseData.rol),
+      };
 
-        if (onSuccess) onSuccess(userData);
-      } else {
-        throw new Error(responseData.message || 'Error de autenticación');
+      // Guardar token en localStorage
+      localStorage.setItem('authToken', responseData.token);
+
+      // Login con auth context
+      login(userData, responseData.token);
+
+      console.log('Redirigiendo según rol:', userData.rol);
+      switch (userData.rol) {
+        case 'usuario':
+          navigate('/Home_L');
+          break;
+        case 'proveedor':
+          navigate('/Prove');
+          break;
+        case 'domiciliario':
+          navigate('/home_domiciliario');
+          break;
+        case 'administrador':
+          navigate('/Admin');
+          break;
+        default:
+          console.warn('Rol no reconocido para navegación:', userData.rol);
       }
-    } catch (error) {
-      console.error('Error en la verificación:', error);
-      if (error.response) {
-        setError(error.response.data.message || 'Código incorrecto o expirado');
-      } else if (error.request) {
-        setError('Error de conexión. Por favor, inténtalo nuevamente.');
-      } else {
-        setError(error.message || 'Error al verificar el código');
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
+      if (onSuccess) onSuccess(userData);
+    } else {
+      throw new Error(responseData.message || 'Error de autenticación');
+    }
+  } catch (error) {
+    console.error('Error en la verificación:', error);
+    if (error.response) {
+      setError(error.response.data.message || 'Código incorrecto o expirado');
+    } else if (error.request) {
+      setError('Error de conexión. Por favor, inténtalo nuevamente.');
+    } else {
+      setError(error.message || 'Error al verificar el código');
+    }
+  } finally {
+    setIsLoading(false);
+  }
+};
   const handleReenviarCodigo = async (e) => {
     e.preventDefault();
 
