@@ -4,9 +4,10 @@ import {
   Card, CardContent, CardMedia, Button, Dialog, DialogTitle,
   DialogContent, DialogActions, Grid
 } from '@mui/material';
-import { Visibility } from '@mui/icons-material';
+import { Visibility, Download } from '@mui/icons-material';
 import axios from 'axios';
 import { useAuth } from "../../modules/authcontext";
+import Swal from 'sweetalert2';
 import "../../../scss/historialp.scss";
 
 const HistorialPedidos = () => {
@@ -15,9 +16,7 @@ const HistorialPedidos = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedPedido, setSelectedPedido] = useState(null);
-
-  // ➜ Modal que solo muestra un mensaje
-  const [modalFactura, setModalFactura] = useState(false);
+  const [downloadingReceipt, setDownloadingReceipt] = useState(false);
 
   useEffect(() => {
     if (authToken) fetchPedidos();
@@ -30,6 +29,7 @@ const HistorialPedidos = () => {
       case 'enviado': return 'primary';
       case 'entregado': return 'success';
       case 'cancelado': return 'error';
+      case 'pagado': return 'success';
       default: return 'default';
     }
   };
@@ -49,9 +49,58 @@ const HistorialPedidos = () => {
     }
   };
 
-  // ➜ Ahora esta función SOLO abre el modal, no descarga nada
-  const mostrarMensajeFactura = () => {
-    setModalFactura(true);
+  const descargarComprobante = async (pedidoId) => {
+    try {
+      setDownloadingReceipt(true);
+
+      // Mostrar loading
+      Swal.fire({
+        title: 'Generando comprobante...',
+        html: 'Por favor espera un momento',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+
+      const receiptUrl = `http://localhost:8000/api/pedidos/${pedidoId}/comprobante/`;
+      const response = await axios.get(receiptUrl, {
+        headers: {
+          Authorization: `Token ${authToken}`,
+        },
+        responseType: 'blob', // Importante para descargar archivos
+      });
+
+      // Crear un link temporal para descargar el PDF
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = `comprobante_pedido_${pedidoId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(downloadUrl);
+
+      // Mostrar mensaje de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Comprobante descargado!',
+        text: 'El comprobante de pago se ha descargado correctamente',
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+    } catch (error) {
+      console.error('Error descargando comprobante:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo descargar el comprobante. Por favor intenta nuevamente.',
+      });
+    } finally {
+      setDownloadingReceipt(false);
+    }
   };
 
   return (
@@ -125,36 +174,18 @@ const HistorialPedidos = () => {
                 Cerrar
               </Button>
 
-              {/* ➜ AHORA SOLO MUESTRA EL MENSAJE */}
               <Button
                 variant="contained"
-                sx={{ bgcolor: "#17bebb", color: "#000" }}
-                onClick={mostrarMensajeFactura}
+                startIcon={<Download />}
+                sx={{ bgcolor: "#17bebb", color: "#000", '&:hover': { bgcolor: '#0e8f8f' } }}
+                onClick={() => descargarComprobante(selectedPedido.id)}
+                disabled={downloadingReceipt}
               >
-                Enviar Factura
+                {downloadingReceipt ? 'Descargando...' : 'Descargar Comprobante'}
               </Button>
             </DialogActions>
           </>
         )}
-      </Dialog>
-
-      {/* MODAL MENSAJE FACTURA */}
-      <Dialog open={modalFactura} onClose={() => setModalFactura(false)}>
-        <DialogTitle>Factura enviada</DialogTitle>
-        <DialogContent>
-          <Typography>
-            La factura ha sido enviada correctamente a tu correo electrónico.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setModalFactura(false)}
-            variant="contained"
-            sx={{ bgcolor: "#17bebb", color: "#000" }}
-          >
-            Aceptar
-          </Button>
-        </DialogActions>
       </Dialog>
 
     </Box>

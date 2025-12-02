@@ -1015,6 +1015,30 @@ def paypal_capture_order(request):
             total = Decimal('0.00')
             items_data = []
             
+            # VALIDAR STOCK ANTES DE PROCESAR
+            for item_data in productos:
+                item_id = item_data.get('id')
+                cantidad = item_data.get('cantidad', 1)
+                
+                try:
+                    carrito_item = CarritoItem.objects.get(
+                        id=item_id,
+                        carrito__usuario=request.user
+                    )
+                    
+                    # Validar stock para productos personalizados de tienda
+                    if carrito_item.producto_personalizado:
+                        producto_pers = carrito_item.producto_personalizado
+                        if producto_pers.rolProducto == 'tienda':
+                            if producto_pers.stock < cantidad:
+                                return Response({
+                                    'error': f'Stock insuficiente para {producto_pers.NombrePersonalizado}. Disponible: {producto_pers.stock}, Solicitado: {cantidad}'
+                                }, status=status.HTTP_400_BAD_REQUEST)
+                
+                except CarritoItem.DoesNotExist:
+                    continue
+            
+            # PROCESAR ITEMS Y CALCULAR TOTAL
             for item_data in productos:
                 item_id = item_data.get('id')
                 cantidad = item_data.get('cantidad', 1)
@@ -1068,7 +1092,7 @@ def paypal_capture_order(request):
                 paypal_payer_name=capture_result.get('payer_name')
             )
             
-            # Crear los items del pedido
+            # Crear los items del pedido y REDUCIR STOCK
             for item_data in items_data:
                 PedidoItem.objects.create(
                     pedido=pedido,
@@ -1077,6 +1101,14 @@ def paypal_capture_order(request):
                     cantidad=item_data['cantidad'],
                     precio=item_data['precio_unitario']
                 )
+                
+                # Reducir stock para productos personalizados de tienda
+                if item_data['producto_personalizado']:
+                    producto_pers = item_data['producto_personalizado']
+                    if producto_pers.rolProducto == 'tienda':
+                        producto_pers.stock -= item_data['cantidad']
+                        producto_pers.save()
+                        logger.info(f"Stock reducido para {producto_pers.NombrePersonalizado}: {item_data['cantidad']} unidades. Stock restante: {producto_pers.stock}")
             
             # Limpiar el carrito
             Carrito.objects.filter(usuario=request.user).delete()
@@ -1118,4 +1150,62 @@ class MisPedidosView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+
+# ==================== COMPROBANTE DE PAGO ====================
+
+from django.http import HttpResponse
+from .receipt_generator import generate_payment_receipt
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def generar_comprobante_pago(request, pedido_id):
+    """
+    Genera y descarga un comprobante de pago en PDF para un pedido específico.
+    
+    Args:
+        pedido_id: ID del pedido
+        
+    Returns:
+        HttpResponse con el PDF del comprobante
+    """
+    try:
+        # Obtener el pedido
+        try:
+            pedido = Pedido.objects.get(id=pedido_id)
+        except Pedido.DoesNotExist:
+            return Response(
+                {'error': 'Pedido no encontrado'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Verificar que el usuario tenga acceso al pedido
+        # Admin puede ver todos, usuarios solo los suyos
+        user_profile = request.user.userprofile
+        is_admin = user_profile.rol.id == 2
+        
+        if not is_admin and pedido.usuario != user_profile:
+            return Response(
+                {'error': 'No tienes permiso para acceder a este pedido'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Generar el PDF
+        pdf_buffer = generate_payment_receipt(pedido)
+        
+        # Crear la respuesta HTTP con el PDF
+        response = HttpResponse(pdf_buffer.getvalue(), content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="comprobante_pedido_{pedido.id}.pdf"'
+        
+        logger.info(f"Comprobante de pago generado para pedido {pedido.id} por usuario {request.user.username}")
+        
+        return response
+    
+    except Exception as e:
+        logger.error(f"Error generando comprobante de pago: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return Response(
+            {'error': f'Error al generar el comprobante: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
 

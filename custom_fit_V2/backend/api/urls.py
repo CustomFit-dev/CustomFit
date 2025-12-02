@@ -12,7 +12,8 @@ from .views import (
     obtener_carrito, agregar_al_carrito, actualizar_item, eliminar_item,
     finalizar_compra, finalizar_personalizacion,
     EstadoPedidoViewSet, TransportadoraViewSet, PedidoViewSet,
-    paypal_create_order, paypal_capture_order,MisPedidosView  # <-- NUEVAS VISTAS PAYPAL
+    paypal_create_order, paypal_capture_order, MisPedidosView,
+    generar_comprobante_pago  # <-- NUEVO ENDPOINT PARA COMPROBANTE
 )
 
 from rest_framework.routers import DefaultRouter
@@ -74,6 +75,9 @@ urlpatterns = [
     # PayPal Integration
     path('api/paypal/create-order/', paypal_create_order, name='paypal-create-order'),
     path('api/paypal/capture-order/', paypal_capture_order, name='paypal-capture-order'),
+
+    # Comprobante de pago
+    path('api/pedidos/<int:pedido_id>/comprobante/', generar_comprobante_pago, name='generar-comprobante-pago'),
 
     path('mis-pedidos/', MisPedidosView.as_view(), name='mis-pedidos'),
 

@@ -301,6 +301,33 @@ const Checkout = () => {
                     );
 
                     if (response.data.success) {
+                      const pedidoId = response.data.pedido_id;
+
+                      // Descargar automáticamente el comprobante de pago
+                      try {
+                        const receiptUrl = `http://localhost:8000/api/pedidos/${pedidoId}/comprobante/`;
+                        const receiptResponse = await axios.get(receiptUrl, {
+                          headers: {
+                            Authorization: `Token ${authToken}`,
+                          },
+                          responseType: 'blob', // Importante para descargar archivos
+                        });
+
+                        // Crear un link temporal para descargar el PDF
+                        const blob = new Blob([receiptResponse.data], { type: 'application/pdf' });
+                        const downloadUrl = window.URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = downloadUrl;
+                        link.download = `comprobante_pedido_${pedidoId}.pdf`;
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
+                        window.URL.revokeObjectURL(downloadUrl);
+                      } catch (receiptError) {
+                        console.error("Error descargando comprobante:", receiptError);
+                        // No bloqueamos el flujo si falla la descarga del comprobante
+                      }
+
                       Swal.fire({
                         icon: "success",
                         title: "¡Pago exitoso!",
@@ -309,6 +336,7 @@ const Checkout = () => {
                           <p><strong>ID de transacción:</strong> ${response.data.transaction_id}</p>
                           <p><strong>Pedido #:</strong> ${response.data.pedido_id}</p>
                           <p><strong>Total pagado:</strong> $${response.data.total.toLocaleString()}</p>
+                          <p style="color: #17BEBB; margin-top: 10px;">📄 Tu comprobante de pago se ha descargado automáticamente</p>
                         `,
                         confirmButtonText: "Ir a la tienda",
                       });
