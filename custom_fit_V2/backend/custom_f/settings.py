@@ -90,7 +90,7 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     
     "http://localhost:3000",  # desarrollo local
-    "https://tuappfrontend.onrender.com",  # dominio del frontend en Render
+    "https://customfit-1-ple0.onrender.com",  # dominio del frontend en Render
 ]
 CORS_ALLOW_CREDENTIALS = True
 
