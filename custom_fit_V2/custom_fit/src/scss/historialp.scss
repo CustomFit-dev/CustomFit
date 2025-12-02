@@ -1,0 +1,163 @@
+/* 🎨 Historial de pedidos - Modo oscuro profesional */
+.historial-container {
+  padding: 25px;
+  min-height: 100vh;
+  background: #1c1c1c;
+  color: #eaeaea;
+}
+
+/* 🟥 Cards de cada pedido */
+.pedido-card {
+  background: #1b1d1f important;
+  border-radius: 14px;
+  padding: 12px;
+  border: 1px solid #242628;
+  box-shadow: 0 4px 10px rgba(23, 190, 187, 0.15);
+  transition: all 0.25s ease-in-out;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-5px);
+    border-color: #17bebb;
+    box-shadow: 0 8px 25px rgba(23, 190, 187, 0.4);
+  }
+
+  .pedido-id {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #17bebb;
+    margin-bottom: 5px;
+  }
+
+  .fecha {
+    font-size: 0.9rem;
+    color: #bbb;
+    margin-bottom: 8px;
+  }
+
+  .total {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 8px;
+    color: #fff;
+  }
+
+  .btn-detalles {
+    margin-top: 10px;
+    background-color: transparent !important;
+    border: 1px solid #17bebb !important;
+    color: #17bebb !important;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 6px 14px;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: #17bebb !important;
+      color: #000 !important;
+      transform: translateY(-1px);
+    }
+  }
+
+  img {
+    border-radius: 10px 10px 0 0;
+  }
+}
+
+/* 🏷 Chips */
+.MuiChip-root {
+  margin-top: 6px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+/* 🟦 Estilo del Modal */
+.MuiDialog-paper {
+  background: #1d1f21 !important;
+  color: #fff !important;
+  border-radius: 18px !important;
+  padding-bottom: 10px;
+}
+
+.modal-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  border-bottom: 1px solid #2b2d2f;
+  padding-bottom: 10px;
+  color: #17bebb;
+}
+
+.modal-body {
+  padding-top: 15px;
+}
+
+.producto-box {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  padding: 12px;
+  background: #242628;
+  border-radius: 12px;
+  margin-bottom: 10px;
+
+  .producto-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+
+  .prod-nombre {
+    font-size: 1.05rem;
+    font-weight: bold;
+    color: #17bebb;
+  }
+}
+
+.total-modal {
+  margin-top: 12px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  text-align: right;
+  color: #17bebb;
+}
+
+.modal-actions {
+  border-top: 1px solid #2b2d2f;
+  padding-top: 10px;
+
+  button {
+    font-weight: bold !important;
+  }
+}
+
+/* 🔁 Transiciones suaves */
+.MuiDialog-root {
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* 📱 Responsive */
+@media (max-width: 600px) {
+  .pedido-card {
+    padding: 10px;
+  }
+
+  .producto-box {
+    flex-direction: column;
+    text-align: center;
+
+    .producto-img {
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+

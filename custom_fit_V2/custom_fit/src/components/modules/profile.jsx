@@ -26,7 +26,6 @@ const App = () => {
   const menuItems = [
     { id: 'personal-data', name: 'Datos Personales', icon: <UserCheck size={20} />, component: <PersonalData /> },
     { id: 'purchase-history', name: 'Historial de compras', icon: <ShoppingBag size={20} />, component: <PurchaseHistory /> },
-    { id: 'my-orders', name: 'Mis pedidos', icon: <Package size={20} />, component: <MyOrders /> },
   ];
 
   const activeComponent = menuItems.find(item => item.name === activeMenu)?.component;
