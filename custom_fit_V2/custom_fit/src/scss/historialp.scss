@@ -8,7 +8,7 @@
 
 /* 🟥 Cards de cada pedido */
 .pedido-card {
-  background: #1b1d1f important;
+  background: #1b1d1f;
   border-radius: 14px;
   padding: 12px;
   border: 1px solid #242628;
@@ -161,3 +161,82 @@
   }
 }
 
+.historial-container {
+  background-color: #121212;
+  min-height: 100vh;
+  padding: 20px;
+  color: #fff;
+
+  .titulo {
+    margin-bottom: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    color: #17beb7;
+  }
+
+  .spinner {
+    display: block;
+    margin: auto;
+    color: #17beb7;
+  }
+
+  .pedido-card {
+    background-color: #1c1c1c; // 🔥 Fondo oscuro de las tarjetas
+    color: #fff;
+    border: 1px solid #333;
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0px 4px 12px rgba(0, 255, 200, 0.25);
+    }
+
+    .pedido-id {
+      font-weight: bold;
+      color: #17beb7;
+    }
+
+    .fecha {
+      color: #cfcfcf;
+      font-size: 14px;
+    }
+
+    .total {
+      margin-top: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #00ffc3;
+    }
+
+    .btn-detalles {
+      margin-top: 12px;
+      width: 100%;
+      background-color: #17beb7;
+      color: #000;
+      font-weight: bold;
+
+      &:hover {
+        background-color: #13a39f;
+      }
+    }
+  }
+
+  /* Tarjetas dentro del modal */
+  .producto-card {
+    background-color: #1c1c1c;
+    color: #fff;
+    margin-bottom: 10px;
+    border: 1px solid #333;
+
+    .MuiCardContent-root {
+      padding: 10px;
+    }
+  }
+}
+
+/* Modal dark mode */
+.MuiDialog-paper {
+  background-color: #1e1e1e !important;
+  color: #fff !important;
+}
