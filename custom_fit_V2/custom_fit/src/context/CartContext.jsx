@@ -5,46 +5,64 @@ import Swal from "sweetalert2";
 import { useAuth } from "../components/modules/authcontext";
 
 const CartContext = createContext();
-
 export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
   const { authToken } = useAuth();
   const [cart, setCart] = useState({ items: [] });
+  const [telas, setTelas] = useState([]);
   const [loading, setLoading] = useState(false);
-
-
-  const totalItems = cart.items.reduce((sum, item) => sum + item.cantidad, 0);
-  const totalPrice = cart.items.reduce(
-    (sum, item) => {
-      const price = item.producto?.PrecioProducto || item.producto_personalizado?.precioPersonalizado || 0;
-      return sum + price * item.cantidad;
-    },
-    0
-  );
-
-  useEffect(() => {
-    fetchCart();
-  }, [authToken]);
 
   const API_URL = process.env.REACT_APP_API_URL;
 
-  const fetchTelas = async () => {
+  // FETCH CARRO
+  const fetchCart = async () => {
+    if (!authToken) return;
+    setLoading(true);
     try {
-      setLoading(true);
-      const response = await axios.get(`${API_URL}telas/`, {
-        headers: { Authorization: `Token ${authToken}` }
+      const res = await axios.get(`${API_URL}carrito/obtener/`, {
+        headers: { Authorization: `Token ${authToken}` },
       });
-      setTelas(response.data);
+      const itemsConTalla = res.data.items.map(item => ({
+        ...item,
+        talla: item.talla || "",
+      }));
+      setCart({ items: itemsConTalla });
+    } catch (err) {
+      console.error(err);
+      Swal.fire("Error", "No se pudo cargar el carrito.", "error");
+    } finally {
       setLoading(false);
-    } catch (error) {
-      console.error('Error al cargar las telas:', error);
-      setLoading(false);
-      setTelas([]);
     }
   };
 
+  // FETCH TELAS
+  const fetchTelas = async () => {
+    if (!authToken) return;
+    setLoading(true);
+    try {
+      const res = await axios.get(`${API_URL}telas/`, {
+        headers: { Authorization: `Token ${authToken}` },
+      });
+      setTelas(res.data);
+    } catch (err) {
+      console.error("Error al cargar las telas:", err);
+      setTelas([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    fetchCart();
+    fetchTelas();
+  }, [authToken]);
+
+  const totalItems = cart.items.reduce((sum, item) => sum + item.cantidad, 0);
+  const totalPrice = cart.items.reduce((sum, item) => {
+    const price = item.producto?.PrecioProducto || item.producto_personalizado?.precioPersonalizado || 0;
+    return sum + price * item.cantidad;
+  }, 0);
 
   const addToCart = async (producto, cantidad = 1, isPersonalized = false) => {
     if (!authToken) return Swal.fire("Error", "Debes iniciar sesión.", "warning");
@@ -54,11 +72,9 @@ export const CartProvider = ({ children }) => {
       : { producto_id: producto.idProductos, cantidad };
 
     try {
-      await axios.post(
-        `${API_URL}carrito/agregar/`,
-        payload,
-        { headers: { Authorization: `Token ${authToken}` } }
-      );
+      await axios.post(`${API_URL}carrito/agregar/`, payload, {
+        headers: { Authorization: `Token ${authToken}` },
+      });
       fetchCart();
       Swal.fire("Agregado", "Producto agregado al carrito.", "success");
     } catch (err) {
@@ -69,13 +85,10 @@ export const CartProvider = ({ children }) => {
 
   const updateQuantity = async (itemId, cantidad) => {
     if (!authToken) return;
-
     try {
-      await axios.post(
-        `${API_URL}carrito/actualizar/`,
-        { item_id: itemId, cantidad },
-        { headers: { Authorization: `Token ${authToken}` } }
-      );
+      await axios.post(`${API_URL}carrito/actualizar/`, { item_id: itemId, cantidad }, {
+        headers: { Authorization: `Token ${authToken}` },
+      });
       fetchCart();
     } catch (err) {
       console.error(err);
@@ -83,16 +96,12 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-
   const removeItem = async (itemId) => {
     if (!authToken) return;
-
     try {
-      await axios.post(
-        `${API_URL}carrito/eliminar/`,
-        { item_id: itemId },
-        { headers: { Authorization: `Token ${authToken}` } }
-      );
+      await axios.post(`${API_URL}carrito/eliminar/`, { item_id: itemId }, {
+        headers: { Authorization: `Token ${authToken}` },
+      });
       fetchCart();
     } catch (err) {
       console.error(err);
@@ -100,8 +109,6 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-
-  // Actualiza cualquier propiedad de un item (como talla) localmente
   const updateItem = (itemId, updates) => {
     setCart(prevCart => ({
       ...prevCart,
@@ -111,14 +118,13 @@ export const CartProvider = ({ children }) => {
     }));
   };
 
-  const clearCart = () => {
-    setCart({ items: [] });
-  };
+  const clearCart = () => setCart({ items: [] });
 
   return (
     <CartContext.Provider
       value={{
         cart,
+        telas,
         loading,
         addToCart,
         updateQuantity,
@@ -127,6 +133,8 @@ export const CartProvider = ({ children }) => {
         clearCart,
         totalItems,
         totalPrice,
+        fetchCart,
+        fetchTelas,
       }}
     >
       {children}
